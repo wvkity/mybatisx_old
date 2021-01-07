@@ -1,0 +1,3 @@
+# Auto Configure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.wvkity.mybatis.spring.boot.autoconfigure.jdbc.ReadWriteDataSourceAutoConfiguration

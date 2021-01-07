@@ -1,0 +1,60 @@
+{
+    "groups": [
+        {
+            "sourceType": "com.wvkity.mybatis.spring.boot.autoconfigure.jdbc.ReadWriteDataSourceProperties",
+            "name": "spring.datasource.dynamic",
+            "type": "com.wvkity.mybatis.spring.boot.autoconfigure.jdbc.ReadWriteDataSourceProperties"
+        },
+        {
+            "sourceType": "com.wvkity.mybatis.spring.boot.autoconfigure.jdbc.ReadWriteDataSourceProperties",
+            "name": "spring.datasource.dynamic.master",
+            "sourceMethod": "getMaster()",
+            "type": "com.wvkity.mybatis.spring.boot.autoconfigure.jdbc.ReadWriteDataSourceProperties$MasterDataSourceProperties"
+        },
+        {
+            "sourceType": "com.wvkity.mybatis.spring.boot.autoconfigure.jdbc.ReadWriteDataSourceProperties",
+            "name": "spring.datasource.dynamic.slave",
+            "sourceMethod": "getSlave()",
+            "type": "com.wvkity.mybatis.spring.boot.autoconfigure.jdbc.ReadWriteDataSourceProperties$SlaveDataSourceProperties"
+        }
+    ],
+    "properties": [
+        {
+            "name": "spring.datasource.dynamic.master.list",
+            "type": "java.util.List<com.wvkity.mybatis.spring.boot.autoconfigure.jdbc.ReadWriteDataSourceProperties.DataSourceProperties>",
+            "description": "主数据源List集合.",
+            "sourceType": "com.wvkity.mybatis.spring.boot.autoconfigure.jdbc.ReadWriteDataSourceProperties$MasterDataSourceProperties"
+        },
+        {
+            "name": "spring.datasource.dynamic.master.map",
+            "type": "java.util.Map<java.lang.String,com.wvkity.mybatis.spring.boot.autoconfigure.jdbc.ReadWriteDataSourceProperties.DataSourceProperties>",
+            "description": "主数据源Map集合.",
+            "sourceType": "com.wvkity.mybatis.spring.boot.autoconfigure.jdbc.ReadWriteDataSourceProperties$MasterDataSourceProperties"
+        },
+        {
+            "name": "spring.datasource.dynamic.slave.list",
+            "type": "java.util.List<com.wvkity.mybatis.spring.boot.autoconfigure.jdbc.ReadWriteDataSourceProperties.DataSourceProperties>",
+            "description": "从数据源List集合.",
+            "sourceType": "com.wvkity.mybatis.spring.boot.autoconfigure.jdbc.ReadWriteDataSourceProperties$SlaveDataSourceProperties"
+        },
+        {
+            "name": "spring.datasource.dynamic.slave.map",
+            "type": "java.util.Map<java.lang.String,com.wvkity.mybatis.spring.boot.autoconfigure.jdbc.ReadWriteDataSourceProperties.DataSourceProperties>",
+            "description": "从数据源Map集合.",
+            "sourceType": "com.wvkity.mybatis.spring.boot.autoconfigure.jdbc.ReadWriteDataSourceProperties$SlaveDataSourceProperties"
+        }
+    ],
+    "hints": [
+        {
+            "name": "spring.datasource.dynamic.master.map.values",
+            "providers": [
+                {
+                    "name": "class-reference",
+                    "parameters": {
+                        "target": "com.wvkity.mybatis.spring.boot.autoconfigure.jdbc.ReadWriteDataSourceProperties$DataSourceProperties"
+                    }
+                }
+            ]
+        }
+    ]
+}
