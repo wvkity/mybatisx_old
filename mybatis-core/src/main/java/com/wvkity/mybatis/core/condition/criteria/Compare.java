@@ -19,6 +19,8 @@ import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.convert.Property;
 import com.wvkity.mybatis.core.convert.converter.PropertyConverter;
 
+import java.util.Map;
+
 /**
  * 比较条件
  * @author wvkity
@@ -300,14 +302,349 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
     // endregion
 
     // region Less than
+
+    /**
+     * 小于
+     * @param property 属性
+     * @param value    值
+     * @param <V>      属性类型
+     * @return {@link Chain}
+     */
+    default <V> Chain propLt(final Property<T, V> property, final V value) {
+        return propLt(property, value, Slot.AND);
+    }
+
+    /**
+     * 小于
+     * @param property 属性
+     * @param value    值
+     * @param slot     {@link Slot}
+     * @param <V>      属性类型
+     * @return {@link Chain}
+     */
+    <V> Chain propLt(final Property<T, V> property, final V value, final Slot slot);
+
+    /**
+     * 小于
+     * @param property 属性
+     * @param value    值
+     * @return {@link Chain}
+     */
+    default Chain propLt(final String property, final Object value) {
+        return propLt(property, value, Slot.AND);
+    }
+
+    /**
+     * 小于
+     * @param property 属性
+     * @param value    值
+     * @param slot     {@link Slot}
+     * @return {@link Chain}
+     */
+    Chain propLt(final String property, final Object value, final Slot slot);
+
+    /**
+     * 小于
+     * @param column 属性
+     * @param value  值
+     * @return {@link Chain}
+     */
+    default Chain colLt(final String column, final Object value) {
+        return colLt(column, value, Slot.AND);
+    }
+
+    /**
+     * 大于
+     * @param column 属性
+     * @param value  值
+     * @param slot   {@link Slot}
+     * @return {@link Chain}
+     */
+    Chain colLt(final String column, final Object value, final Slot slot);
+
     // endregion
 
     // region Less than or equal to
+
+    /**
+     * 大于或等于
+     * @param property 属性
+     * @param value    值
+     * @param <V>      属性类型
+     * @return {@link Chain}
+     */
+    default <V> Chain propLe(final Property<T, V> property, final V value) {
+        return propLe(property, value, Slot.AND);
+    }
+
+    /**
+     * 大于或等于
+     * @param property 属性
+     * @param value    值
+     * @param slot     {@link Slot}
+     * @param <V>      属性类型
+     * @return {@link Chain}
+     */
+    <V> Chain propLe(final Property<T, V> property, final V value, final Slot slot);
+
+    /**
+     * 大于或等于
+     * @param property 属性
+     * @param value    值
+     * @return {@link Chain}
+     */
+    default Chain propLe(final String property, final Object value) {
+        return propLe(property, value, Slot.AND);
+    }
+
+    /**
+     * 大于或等于
+     * @param property 属性
+     * @param value    值
+     * @param slot     {@link Slot}
+     * @return {@link Chain}
+     */
+    Chain propLe(final String property, final Object value, final Slot slot);
+
+    /**
+     * 大于或等于
+     * @param column 字段
+     * @param value  值
+     * @return {@link Chain}
+     */
+    default Chain colLe(final String column, final Object value) {
+        return colLe(column, value, Slot.AND);
+    }
+
+    /**
+     * 大于或等于
+     * @param column 字段
+     * @param value  值
+     * @param slot   {@link Slot}
+     * @return {@link Chain}
+     */
+    Chain colLe(final String column, final Object value, final Slot slot);
+
     // endregion
 
     // endregion
 
     // region Multiple properties
+
+    /**
+     * 等于
+     * @param p1   属性1
+     * @param v1   属性1对应值
+     * @param p2   属性2
+     * @param v2   属性2对应值
+     * @param <V1> 属性1类型
+     * @param <V2> 属性2类型
+     * @return {@link Chain}
+     */
+    default <V1, V2> Chain propEq(final Property<T, V1> p1, final V1 v1, final Property<T, V2> p2, final V2 v2) {
+        return propEq(p1, v1, p2, v2, Slot.AND);
+    }
+
+    /**
+     * 等于
+     * @param p1   属性1
+     * @param v1   属性1对应值
+     * @param p2   属性2
+     * @param v2   属性2对应值
+     * @param slot {@link Slot}
+     * @param <V1> 属性1类型
+     * @param <V2> 属性2类型
+     * @return {@link Chain}
+     */
+    default <V1, V2> Chain propEq(final Property<T, V1> p1, final V1 v1, final Property<T, V2> p2, final V2 v2,
+                                  final Slot slot) {
+        return this.propEq(p1, v1, slot).propEq(p2, v2, slot);
+    }
+
+    /**
+     * 等于
+     * @param p1   属性1
+     * @param v1   属性1对应值
+     * @param p2   属性2
+     * @param v2   属性2对应值
+     * @param p3   属性3
+     * @param v3   属性3对应值
+     * @param <V1> 属性1类型
+     * @param <V2> 属性2类型
+     * @param <V3> 属性3类型
+     * @return {@link Chain}
+     */
+    default <V1, V2, V3> Chain propEq(final Property<T, V1> p1, final V1 v1, final Property<T, V2> p2, final V2 v2,
+                                      final Property<T, V3> p3, final V3 v3) {
+        return propEq(p1, v1, p2, v2, p3, v3, Slot.AND);
+    }
+
+    /**
+     * 等于
+     * @param p1   属性1
+     * @param v1   属性1对应值
+     * @param p2   属性2
+     * @param v2   属性2对应值
+     * @param p3   属性3
+     * @param v3   属性3对应值
+     * @param slot {@link Slot}
+     * @param <V1> 属性1类型
+     * @param <V2> 属性2类型
+     * @param <V3> 属性3类型
+     * @return {@link Chain}
+     */
+    default <V1, V2, V3> Chain propEq(final Property<T, V1> p1, final V1 v1, final Property<T, V2> p2, final V2 v2,
+                                      final Property<T, V3> p3, final V3 v3, final Slot slot) {
+        return this.propEq(p1, v1, slot).propEq(p2, v2, slot).propEq(p3, v3, slot);
+    }
+
+
+    /**
+     * 等于
+     * @param p1 属性1
+     * @param v1 属性1对应值
+     * @param p2 属性2
+     * @param v2 属性2对应值
+     * @return {@link Chain}
+     */
+    default Chain propEq(final String p1, final Object v1, final String p2, final Object v2) {
+        return propEq(p1, v1, p2, v2, Slot.AND);
+    }
+
+    /**
+     * 等于
+     * @param p1   属性1
+     * @param v1   属性1对应值
+     * @param p2   属性2
+     * @param v2   属性2对应值
+     * @param slot {@link Slot}
+     * @return {@link Chain}
+     */
+    default Chain propEq(final String p1, final Object v1, final String p2, final Object v2, final Slot slot) {
+        return this.propEq(p1, v1, slot).propEq(p2, v2, slot);
+    }
+
+    /**
+     * 等于
+     * @param p1 属性1
+     * @param v1 属性1对应值
+     * @param p2 属性2
+     * @param v2 属性2对应值
+     * @param p3 属性3
+     * @param v3 属性3对应值
+     * @return {@link Chain}
+     */
+    default Chain propEq(final String p1, final Object v1, final String p2, final Object v2,
+                         final String p3, final Object v3) {
+        return propEq(p1, v1, p2, v2, p3, v3, Slot.AND);
+    }
+
+    /**
+     * 等于
+     * @param p1   属性1
+     * @param v1   属性1对应值
+     * @param p2   属性2
+     * @param v2   属性2对应值
+     * @param p3   属性3
+     * @param v3   属性3对应值
+     * @param slot {@link Slot}
+     * @return {@link Chain}
+     */
+    default Chain propEq(final String p1, final Object v1, final String p2, final Object v2,
+                         final String p3, final Object v3, final Slot slot) {
+        return this.propEq(p1, v1, slot).propEq(p2, v2, slot).propEq(p3, v3, slot);
+    }
+
+
+    /**
+     * 等于
+     * @param properties 属性-值集合
+     * @return {@link Chain}
+     */
+    default Chain propEq(final Map<String, Object> properties) {
+        return propEq(properties, Slot.AND);
+    }
+
+    /**
+     * 等于
+     * @param properties 属性-值集合
+     * @param slot       {@link Slot}
+     * @return {@link Chain}
+     */
+    Chain propEq(final Map<String, Object> properties, final Slot slot);
+
+    /**
+     * 等于
+     * @param c1 字段1
+     * @param v1 字段1对应值
+     * @param c2 字段2
+     * @param v2 字段2对应值
+     * @return {@link Chain}
+     */
+    default Chain colEq(final String c1, final Object v1, final String c2, final Object v2) {
+        return this.colEq(c1, v1, c2, v2, Slot.AND);
+    }
+
+    /**
+     * 等于
+     * @param c1   字段1
+     * @param v1   字段1对应值
+     * @param c2   字段2
+     * @param v2   字段2对应值
+     * @param slot {@link Slot}
+     * @return {@link Chain}
+     */
+    default Chain colEq(final String c1, final Object v1, final String c2, final Object v2, final Slot slot) {
+        return this.colEq(c1, v1, slot).colEq(c2, v2, slot);
+    }
+
+    /**
+     * 等于
+     * @param c1 字段1
+     * @param v1 字段1对应值
+     * @param c2 字段2
+     * @param v2 字段2对应值
+     * @param c3 字段3
+     * @param v3 字段3对应值
+     * @return {@link Chain}
+     */
+    default Chain colEq(final String c1, final Object v1, final String c2,
+                        final Object v2, final String c3, final Object v3) {
+        return this.colEq(c1, v1, c2, v2, c3, v3, Slot.AND);
+    }
+
+    /**
+     * 等于
+     * @param c1   字段1
+     * @param v1   字段1对应值
+     * @param c2   字段2
+     * @param v2   字段2对应值
+     * @param c3   字段3
+     * @param v3   字段3对应值
+     * @param slot {@link Slot}
+     * @return {@link Chain}
+     */
+    default Chain colEq(final String c1, final Object v1, final String c2,
+                        final Object v2, final String c3, final Object v3, final Slot slot) {
+        return this.colEq(c1, v1, slot).colEq(c2, v2, slot).colEq(c3, v3, slot);
+    }
+
+    /**
+     * 等于
+     * @param properties 字段-值集合
+     * @return {@link Chain}
+     */
+    default Chain colEq(final Map<String, Object> properties) {
+        return colEq(properties, Slot.AND);
+    }
+
+    /**
+     * 等于
+     * @param properties 字段-值集合
+     * @param slot       {@link Slot}
+     * @return {@link Chain}
+     */
+    Chain colEq(final Map<String, Object> properties, final Slot slot);
 
     // endregion
 }

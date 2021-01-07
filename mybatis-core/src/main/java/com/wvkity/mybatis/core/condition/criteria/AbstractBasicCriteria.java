@@ -24,7 +24,11 @@ import com.wvkity.mybatis.core.condition.expression.IdEqual;
 import com.wvkity.mybatis.core.condition.expression.ImmediateEqual;
 import com.wvkity.mybatis.core.condition.expression.ImmediateGreaterThan;
 import com.wvkity.mybatis.core.condition.expression.ImmediateGreaterThanOrEqual;
+import com.wvkity.mybatis.core.condition.expression.ImmediateLessThan;
+import com.wvkity.mybatis.core.condition.expression.ImmediateLessThanOrEqual;
 import com.wvkity.mybatis.core.condition.expression.ImmediateNotEqual;
+import com.wvkity.mybatis.core.condition.expression.LessThan;
+import com.wvkity.mybatis.core.condition.expression.LessThanOrEqual;
 import com.wvkity.mybatis.core.condition.expression.NotEqual;
 import com.wvkity.mybatis.core.constant.Constants;
 import com.wvkity.mybatis.core.constant.Slot;
@@ -246,6 +250,64 @@ public abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriter
     @Override
     public Chain colGe(String column, Object value, Slot slot) {
         return add(ImmediateGreaterThanOrEqual.create().criteria(this).column(column).slot(slot).value(value).build());
+    }
+
+    @Override
+    public <V> Chain propLt(Property<T, V> property, V value, Slot slot) {
+        return add(LessThan.create().criteria(this).property(property).slot(slot).value(value).build());
+    }
+
+    @Override
+    public Chain propLt(String property, Object value, Slot slot) {
+        return add(LessThan.create().criteria(this).property(property).slot(slot).value(value).build());
+    }
+
+    @Override
+    public Chain colLt(String column, Object value, Slot slot) {
+        return add(ImmediateLessThan.create().criteria(this).column(column).slot(slot).value(value).build());
+    }
+
+    @Override
+    public <V> Chain propLe(Property<T, V> property, V value, Slot slot) {
+        return add(LessThanOrEqual.create().criteria(this).property(property).slot(slot).value(value).build());
+    }
+
+    @Override
+    public Chain propLe(String property, Object value, Slot slot) {
+        return add(LessThanOrEqual.create().criteria(this).property(property).slot(slot).value(value).build());
+    }
+
+    @Override
+    public Chain colLe(String column, Object value, Slot slot) {
+        return add(ImmediateLessThanOrEqual.create().criteria(this).column(column).slot(slot).value(value).build());
+    }
+
+    @Override
+    public Chain propEq(Map<String, Object> properties, Slot slot) {
+        if (Objects.isNotEmpty(properties)) {
+            for (Map.Entry<String, Object> entry : properties.entrySet()) {
+                final String property = entry.getKey();
+                if (Objects.isNotBlank(property)) {
+                    this.add(Equal.create().criteria(this).property(property).value(entry.getValue())
+                        .slot(slot).build());
+                }
+            }
+        }
+        return this.context;
+    }
+
+    @Override
+    public Chain colEq(Map<String, Object> properties, Slot slot) {
+        if (Objects.isNotEmpty(properties)) {
+            for (Map.Entry<String, Object> entry : properties.entrySet()) {
+                final String column = entry.getKey();
+                if (Objects.isNotBlank(column)) {
+                    this.add(ImmediateEqual.create().criteria(this).column(column).value(entry.getValue())
+                        .slot(slot).build());
+                }
+            }
+        }
+        return this.context;
     }
 
     // endregion
