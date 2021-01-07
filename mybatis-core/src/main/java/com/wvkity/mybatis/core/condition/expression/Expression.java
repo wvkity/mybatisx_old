@@ -38,7 +38,7 @@ public interface Expression extends Fragment {
      * @param criteria {@link Criteria}
      * @return {@link Expression}
      */
-    Expression setCriteria(final Criteria<?> criteria);
+    Expression criteria(final Criteria<?> criteria);
 
     /**
      * 获取{@link Slot}对象
@@ -57,7 +57,7 @@ public interface Expression extends Fragment {
      * @param value 值
      * @return {@link Expression}
      */
-    Expression setValue(final Object value);
+    Expression value(final Object value);
 
     /**
      * 获取表别名
@@ -79,7 +79,7 @@ public interface Expression extends Fragment {
      */
     default Expression setIfNecessary(final Criteria<?> criteria) {
         if (getCriteria() == null) {
-            setCriteria(criteria);
+            criteria(criteria);
         }
         return this;
     }

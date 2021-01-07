@@ -550,7 +550,7 @@ public final class Scripts implements Constants {
             builder.append(tableAlias).append(DOT);
         }
         final Symbol it = symbol == null ? Symbol.EQ : symbol;
-        builder.append(column).append(SPACE).append(symbol.getSegment()).append(SPACE);
+        builder.append(column).append(SPACE).append(it.getSegment()).append(SPACE);
         if (Symbol.filter(it) && Objects.isNotEmpty(placeholders)) {
             switch (it) {
                 case EQ:

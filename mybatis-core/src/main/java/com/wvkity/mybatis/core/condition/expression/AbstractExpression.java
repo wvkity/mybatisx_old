@@ -74,7 +74,7 @@ public abstract class AbstractExpression<E> implements Expression, PlaceholderCo
     }
 
     @Override
-    public AbstractExpression<E> setCriteria(Criteria<?> criteria) {
+    public AbstractExpression<E> criteria(Criteria<?> criteria) {
         this.criteria = criteria;
         return this;
     }
@@ -101,7 +101,7 @@ public abstract class AbstractExpression<E> implements Expression, PlaceholderCo
     }
 
     @Override
-    public AbstractExpression<E> setValue(Object value) {
+    public AbstractExpression<E> value(Object value) {
         this.value = value;
         return this;
     }

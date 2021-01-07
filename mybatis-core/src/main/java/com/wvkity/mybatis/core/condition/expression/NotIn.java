@@ -16,26 +16,45 @@
 package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractRangeExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.metadata.Column;
 
+import java.util.Collection;
+import java.util.Optional;
+
 /**
- * 基础条件表达式
+ * NOT IN条件表达式
  * @author wvkity
- * @created 2021-01-06
+ * @created 2021-01-07
  * @since 1.0.0
  */
-public class BasicExpression extends AbstractColumnExpression {
+public class NotIn extends AbstractRangeExpression {
 
-    private static final long serialVersionUID = -2711714146874396946L;
+    private static final long serialVersionUID = 2448932045855706827L;
 
-    public BasicExpression(Criteria<?> criteria, Column column, Symbol symbol, Slot slot, Object value) {
+    public NotIn(Criteria<?> criteria, Column column, Slot slot, Collection<Object> values) {
         this.criteria = criteria;
         this.target = column;
-        this.symbol = symbol;
         this.slot = slot;
-        this.value = value;
+        this.values = values;
+        this.symbol = Symbol.NOT_IN;
     }
 
+    public static NotIn.Builder create() {
+        return new NotIn.Builder();
+    }
+
+    public static final class Builder extends AbstractRangeExprBuilder<NotIn> {
+
+        private Builder() {
+        }
+
+        @Override
+        public NotIn build() {
+            return Optional.ofNullable(this.getRealColumn()).map(it ->
+                new NotIn(this.criteria, it, this.slot, this.values)).orElse(null);
+        }
+    }
 }

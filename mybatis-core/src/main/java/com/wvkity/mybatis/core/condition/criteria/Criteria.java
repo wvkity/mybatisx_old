@@ -64,10 +64,10 @@ public interface Criteria<T> extends Search<T>, PropertyConverter<T>, Placeholde
 
     /**
      * 属性不匹配是否抛出异常
-     * @param matching 是否抛异常
+     * @param throwing 是否抛异常
      * @return {@link Criteria}
      */
-    Criteria<T> notMatchingWithThrows(final boolean matching);
+    Criteria<T> notMatchingWithThrows(final boolean throwing);
 
     /**
      * 添加多个{@link Expression}

@@ -22,7 +22,7 @@ import com.wvkity.mybatis.core.convert.converter.PropertyConverter;
 import java.util.Map;
 
 /**
- * 比较条件
+ * 基本条件
  * @author wvkity
  * @created 2021-01-05
  * @since 1.0.0
@@ -57,8 +57,8 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param <V>      属性类型
      * @return {@link Chain}
      */
-    default <V> Chain propEq(final Property<T, V> property, final V value) {
-        return propEq(property, value, Slot.AND);
+    default <V> Chain eq(final Property<T, V> property, final V value) {
+        return eq(property, value, Slot.AND);
     }
 
     /**
@@ -69,7 +69,7 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param <V>      属性类型
      * @return {@link Chain}
      */
-    <V> Chain propEq(final Property<T, V> property, final V value, final Slot slot);
+    <V> Chain eq(final Property<T, V> property, final V value, final Slot slot);
 
     /**
      * 等于
@@ -77,8 +77,8 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param value    值
      * @return {@link Chain}
      */
-    default Chain propEq(final String property, final Object value) {
-        return propEq(property, value, Slot.AND);
+    default Chain eq(final String property, final Object value) {
+        return eq(property, value, Slot.AND);
     }
 
     /**
@@ -88,7 +88,7 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    Chain propEq(final String property, final Object value, final Slot slot);
+    Chain eq(final String property, final Object value, final Slot slot);
 
     /**
      * 等于
@@ -120,8 +120,8 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param <V>      属性类型
      * @return {@link Chain}
      */
-    default <V> Chain propNe(final Property<T, V> property, final V value) {
-        return propNe(property, value, Slot.AND);
+    default <V> Chain ne(final Property<T, V> property, final V value) {
+        return ne(property, value, Slot.AND);
     }
 
     /**
@@ -132,7 +132,7 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param <V>      属性类型
      * @return {@link Chain}
      */
-    <V> Chain propNe(final Property<T, V> property, final V value, final Slot slot);
+    <V> Chain ne(final Property<T, V> property, final V value, final Slot slot);
 
     /**
      * 不等于
@@ -140,8 +140,8 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param value    值
      * @return {@link Chain}
      */
-    default Chain propNe(final String property, final Object value) {
-        return propNe(property, value, Slot.AND);
+    default Chain ne(final String property, final Object value) {
+        return ne(property, value, Slot.AND);
     }
 
     /**
@@ -151,7 +151,7 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    Chain propNe(final String property, final Object value, final Slot slot);
+    Chain ne(final String property, final Object value, final Slot slot);
 
 
     /**
@@ -184,8 +184,8 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param <V>      属性类型
      * @return {@link Chain}
      */
-    default <V> Chain propGt(final Property<T, V> property, final V value) {
-        return propGt(property, value, Slot.AND);
+    default <V> Chain gt(final Property<T, V> property, final V value) {
+        return gt(property, value, Slot.AND);
     }
 
     /**
@@ -196,7 +196,7 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param <V>      属性类型
      * @return {@link Chain}
      */
-    <V> Chain propGt(final Property<T, V> property, final V value, final Slot slot);
+    <V> Chain gt(final Property<T, V> property, final V value, final Slot slot);
 
     /**
      * 大于
@@ -204,8 +204,8 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param value    值
      * @return {@link Chain}
      */
-    default Chain propGt(final String property, final Object value) {
-        return propGt(property, value, Slot.AND);
+    default Chain gt(final String property, final Object value) {
+        return gt(property, value, Slot.AND);
     }
 
     /**
@@ -215,7 +215,7 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    Chain propGt(final String property, final Object value, final Slot slot);
+    Chain gt(final String property, final Object value, final Slot slot);
 
     /**
      * 大于
@@ -247,8 +247,8 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param <V>      属性类型
      * @return {@link Chain}
      */
-    default <V> Chain propGe(final Property<T, V> property, final V value) {
-        return propGe(property, value, Slot.AND);
+    default <V> Chain ge(final Property<T, V> property, final V value) {
+        return ge(property, value, Slot.AND);
     }
 
     /**
@@ -259,7 +259,7 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param <V>      属性类型
      * @return {@link Chain}
      */
-    <V> Chain propGe(final Property<T, V> property, final V value, final Slot slot);
+    <V> Chain ge(final Property<T, V> property, final V value, final Slot slot);
 
     /**
      * 大于或等于
@@ -267,8 +267,8 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param value    值
      * @return {@link Chain}
      */
-    default Chain propGe(final String property, final Object value) {
-        return propGe(property, value, Slot.AND);
+    default Chain ge(final String property, final Object value) {
+        return ge(property, value, Slot.AND);
     }
 
     /**
@@ -278,7 +278,7 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    Chain propGe(final String property, final Object value, final Slot slot);
+    Chain ge(final String property, final Object value, final Slot slot);
 
     /**
      * 大于或等于
@@ -310,8 +310,8 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param <V>      属性类型
      * @return {@link Chain}
      */
-    default <V> Chain propLt(final Property<T, V> property, final V value) {
-        return propLt(property, value, Slot.AND);
+    default <V> Chain lt(final Property<T, V> property, final V value) {
+        return lt(property, value, Slot.AND);
     }
 
     /**
@@ -322,7 +322,7 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param <V>      属性类型
      * @return {@link Chain}
      */
-    <V> Chain propLt(final Property<T, V> property, final V value, final Slot slot);
+    <V> Chain lt(final Property<T, V> property, final V value, final Slot slot);
 
     /**
      * 小于
@@ -330,8 +330,8 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param value    值
      * @return {@link Chain}
      */
-    default Chain propLt(final String property, final Object value) {
-        return propLt(property, value, Slot.AND);
+    default Chain lt(final String property, final Object value) {
+        return lt(property, value, Slot.AND);
     }
 
     /**
@@ -341,7 +341,7 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    Chain propLt(final String property, final Object value, final Slot slot);
+    Chain lt(final String property, final Object value, final Slot slot);
 
     /**
      * 小于
@@ -373,8 +373,8 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param <V>      属性类型
      * @return {@link Chain}
      */
-    default <V> Chain propLe(final Property<T, V> property, final V value) {
-        return propLe(property, value, Slot.AND);
+    default <V> Chain le(final Property<T, V> property, final V value) {
+        return le(property, value, Slot.AND);
     }
 
     /**
@@ -385,7 +385,7 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param <V>      属性类型
      * @return {@link Chain}
      */
-    <V> Chain propLe(final Property<T, V> property, final V value, final Slot slot);
+    <V> Chain le(final Property<T, V> property, final V value, final Slot slot);
 
     /**
      * 大于或等于
@@ -393,8 +393,8 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param value    值
      * @return {@link Chain}
      */
-    default Chain propLe(final String property, final Object value) {
-        return propLe(property, value, Slot.AND);
+    default Chain le(final String property, final Object value) {
+        return le(property, value, Slot.AND);
     }
 
     /**
@@ -404,7 +404,7 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    Chain propLe(final String property, final Object value, final Slot slot);
+    Chain le(final String property, final Object value, final Slot slot);
 
     /**
      * 大于或等于
@@ -441,8 +441,8 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param <V2> 属性2类型
      * @return {@link Chain}
      */
-    default <V1, V2> Chain propEq(final Property<T, V1> p1, final V1 v1, final Property<T, V2> p2, final V2 v2) {
-        return propEq(p1, v1, p2, v2, Slot.AND);
+    default <V1, V2> Chain eq(final Property<T, V1> p1, final V1 v1, final Property<T, V2> p2, final V2 v2) {
+        return eq(p1, v1, p2, v2, Slot.AND);
     }
 
     /**
@@ -456,9 +456,9 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param <V2> 属性2类型
      * @return {@link Chain}
      */
-    default <V1, V2> Chain propEq(final Property<T, V1> p1, final V1 v1, final Property<T, V2> p2, final V2 v2,
-                                  final Slot slot) {
-        return this.propEq(p1, v1, slot).propEq(p2, v2, slot);
+    default <V1, V2> Chain eq(final Property<T, V1> p1, final V1 v1, final Property<T, V2> p2, final V2 v2,
+                              final Slot slot) {
+        return this.eq(p1, v1, slot).eq(p2, v2, slot);
     }
 
     /**
@@ -474,9 +474,9 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param <V3> 属性3类型
      * @return {@link Chain}
      */
-    default <V1, V2, V3> Chain propEq(final Property<T, V1> p1, final V1 v1, final Property<T, V2> p2, final V2 v2,
-                                      final Property<T, V3> p3, final V3 v3) {
-        return propEq(p1, v1, p2, v2, p3, v3, Slot.AND);
+    default <V1, V2, V3> Chain eq(final Property<T, V1> p1, final V1 v1, final Property<T, V2> p2, final V2 v2,
+                                  final Property<T, V3> p3, final V3 v3) {
+        return eq(p1, v1, p2, v2, p3, v3, Slot.AND);
     }
 
     /**
@@ -493,9 +493,9 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param <V3> 属性3类型
      * @return {@link Chain}
      */
-    default <V1, V2, V3> Chain propEq(final Property<T, V1> p1, final V1 v1, final Property<T, V2> p2, final V2 v2,
-                                      final Property<T, V3> p3, final V3 v3, final Slot slot) {
-        return this.propEq(p1, v1, slot).propEq(p2, v2, slot).propEq(p3, v3, slot);
+    default <V1, V2, V3> Chain eq(final Property<T, V1> p1, final V1 v1, final Property<T, V2> p2, final V2 v2,
+                                  final Property<T, V3> p3, final V3 v3, final Slot slot) {
+        return this.eq(p1, v1, slot).eq(p2, v2, slot).eq(p3, v3, slot);
     }
 
 
@@ -507,8 +507,8 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param v2 属性2对应值
      * @return {@link Chain}
      */
-    default Chain propEq(final String p1, final Object v1, final String p2, final Object v2) {
-        return propEq(p1, v1, p2, v2, Slot.AND);
+    default Chain eq(final String p1, final Object v1, final String p2, final Object v2) {
+        return eq(p1, v1, p2, v2, Slot.AND);
     }
 
     /**
@@ -520,8 +520,8 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param slot {@link Slot}
      * @return {@link Chain}
      */
-    default Chain propEq(final String p1, final Object v1, final String p2, final Object v2, final Slot slot) {
-        return this.propEq(p1, v1, slot).propEq(p2, v2, slot);
+    default Chain eq(final String p1, final Object v1, final String p2, final Object v2, final Slot slot) {
+        return this.eq(p1, v1, slot).eq(p2, v2, slot);
     }
 
     /**
@@ -534,9 +534,9 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param v3 属性3对应值
      * @return {@link Chain}
      */
-    default Chain propEq(final String p1, final Object v1, final String p2, final Object v2,
-                         final String p3, final Object v3) {
-        return propEq(p1, v1, p2, v2, p3, v3, Slot.AND);
+    default Chain eq(final String p1, final Object v1, final String p2, final Object v2,
+                     final String p3, final Object v3) {
+        return eq(p1, v1, p2, v2, p3, v3, Slot.AND);
     }
 
     /**
@@ -550,9 +550,9 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param slot {@link Slot}
      * @return {@link Chain}
      */
-    default Chain propEq(final String p1, final Object v1, final String p2, final Object v2,
-                         final String p3, final Object v3, final Slot slot) {
-        return this.propEq(p1, v1, slot).propEq(p2, v2, slot).propEq(p3, v3, slot);
+    default Chain eq(final String p1, final Object v1, final String p2, final Object v2,
+                     final String p3, final Object v3, final Slot slot) {
+        return this.eq(p1, v1, slot).eq(p2, v2, slot).eq(p3, v3, slot);
     }
 
 
@@ -561,8 +561,8 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param properties 属性-值集合
      * @return {@link Chain}
      */
-    default Chain propEq(final Map<String, Object> properties) {
-        return propEq(properties, Slot.AND);
+    default Chain eq(final Map<String, Object> properties) {
+        return eq(properties, Slot.AND);
     }
 
     /**
@@ -571,7 +571,7 @@ public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyCon
      * @param slot       {@link Slot}
      * @return {@link Chain}
      */
-    Chain propEq(final Map<String, Object> properties, final Slot slot);
+    Chain eq(final Map<String, Object> properties, final Slot slot);
 
     /**
      * 等于

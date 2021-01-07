@@ -16,26 +16,45 @@
 package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractRangeExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.metadata.Column;
 
+import java.util.Collection;
+import java.util.Optional;
+
 /**
- * 基础条件表达式
+ * IN条件表达式
  * @author wvkity
- * @created 2021-01-06
+ * @created 2021-01-07
  * @since 1.0.0
  */
-public class BasicExpression extends AbstractColumnExpression {
+public class In extends AbstractRangeExpression {
 
-    private static final long serialVersionUID = -2711714146874396946L;
+    private static final long serialVersionUID = 5462592687934802949L;
 
-    public BasicExpression(Criteria<?> criteria, Column column, Symbol symbol, Slot slot, Object value) {
+    public In(Criteria<?> criteria, Column column, Slot slot, Collection<Object> values) {
         this.criteria = criteria;
         this.target = column;
-        this.symbol = symbol;
         this.slot = slot;
-        this.value = value;
+        this.values = values;
+        this.symbol = Symbol.IN;
     }
 
+    public static In.Builder create() {
+        return new In.Builder();
+    }
+
+    public static final class Builder extends AbstractRangeExprBuilder<In> {
+
+        private Builder() {
+        }
+
+        @Override
+        public In build() {
+            return Optional.ofNullable(this.getRealColumn()).map(it ->
+                new In(this.criteria, it, this.slot, this.values)).orElse(null);
+        }
+    }
 }

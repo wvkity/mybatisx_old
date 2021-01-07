@@ -15,27 +15,33 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
-import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.constant.Slot;
-import com.wvkity.mybatis.core.constant.Symbol;
-import com.wvkity.mybatis.core.metadata.Column;
+import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
+
+import java.util.Collection;
 
 /**
- * 基础条件表达式
+ * 范围条件表达式
  * @author wvkity
- * @created 2021-01-06
+ * @created 2021-01-07
  * @since 1.0.0
  */
-public class BasicExpression extends AbstractColumnExpression {
+public abstract class AbstractImmediateRangeExpression extends AbstractImmediateExpression {
 
-    private static final long serialVersionUID = -2711714146874396946L;
+    private static final long serialVersionUID = 4889740887152306508L;
 
-    public BasicExpression(Criteria<?> criteria, Column column, Symbol symbol, Slot slot, Object value) {
-        this.criteria = criteria;
-        this.target = column;
-        this.symbol = symbol;
-        this.slot = slot;
-        this.value = value;
+    /**
+     * 多个值
+     */
+    protected Collection<Object> values;
+
+    @Override
+    public String getSegment() {
+        return Scripts.convertToConditionArg(this.symbol, this.slot, this.getAlias(), this.target,
+            this.defPlaceholders(this.values));
     }
 
+    public AbstractImmediateRangeExpression values(Collection<Object> values) {
+        this.values = values;
+        return this;
+    }
 }

@@ -16,20 +16,28 @@
 package com.wvkity.mybatis.core.condition.criteria;
 
 import com.wvkity.mybatis.core.condition.basic.SegmentManager;
+import com.wvkity.mybatis.core.condition.expression.Between;
 import com.wvkity.mybatis.core.condition.expression.Equal;
 import com.wvkity.mybatis.core.condition.expression.Expression;
 import com.wvkity.mybatis.core.condition.expression.GreaterThan;
 import com.wvkity.mybatis.core.condition.expression.GreaterThanOrEqual;
 import com.wvkity.mybatis.core.condition.expression.IdEqual;
+import com.wvkity.mybatis.core.condition.expression.ImmediateBetween;
 import com.wvkity.mybatis.core.condition.expression.ImmediateEqual;
 import com.wvkity.mybatis.core.condition.expression.ImmediateGreaterThan;
 import com.wvkity.mybatis.core.condition.expression.ImmediateGreaterThanOrEqual;
+import com.wvkity.mybatis.core.condition.expression.ImmediateIn;
 import com.wvkity.mybatis.core.condition.expression.ImmediateLessThan;
 import com.wvkity.mybatis.core.condition.expression.ImmediateLessThanOrEqual;
+import com.wvkity.mybatis.core.condition.expression.ImmediateNotBetween;
 import com.wvkity.mybatis.core.condition.expression.ImmediateNotEqual;
+import com.wvkity.mybatis.core.condition.expression.ImmediateNotIn;
+import com.wvkity.mybatis.core.condition.expression.In;
 import com.wvkity.mybatis.core.condition.expression.LessThan;
 import com.wvkity.mybatis.core.condition.expression.LessThanOrEqual;
+import com.wvkity.mybatis.core.condition.expression.NotBetween;
 import com.wvkity.mybatis.core.condition.expression.NotEqual;
+import com.wvkity.mybatis.core.condition.expression.NotIn;
 import com.wvkity.mybatis.core.constant.Constants;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.convert.Property;
@@ -185,7 +193,7 @@ public abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriter
 
     // endregion
 
-    // region Compare condition
+    // region Compare conditions
 
     @Override
     public Chain idEq(Object value, Slot slot) {
@@ -193,12 +201,12 @@ public abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriter
     }
 
     @Override
-    public <V> Chain propEq(Property<T, V> property, V value, Slot slot) {
+    public <V> Chain eq(Property<T, V> property, V value, Slot slot) {
         return add(Equal.create().criteria(this).property(property).slot(slot).value(value).build());
     }
 
     @Override
-    public Chain propEq(String property, Object value, Slot slot) {
+    public Chain eq(String property, Object value, Slot slot) {
         return add(Equal.create().criteria(this).property(property).slot(slot).value(value).build());
     }
 
@@ -208,12 +216,12 @@ public abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriter
     }
 
     @Override
-    public <V> Chain propNe(Property<T, V> property, V value, Slot slot) {
+    public <V> Chain ne(Property<T, V> property, V value, Slot slot) {
         return add(NotEqual.create().criteria(this).property(property).slot(slot).value(value).build());
     }
 
     @Override
-    public Chain propNe(String property, Object value, Slot slot) {
+    public Chain ne(String property, Object value, Slot slot) {
         return add(NotEqual.create().criteria(this).property(property).slot(slot).value(value).build());
     }
 
@@ -223,12 +231,12 @@ public abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriter
     }
 
     @Override
-    public <V> Chain propGt(Property<T, V> property, V value, Slot slot) {
+    public <V> Chain gt(Property<T, V> property, V value, Slot slot) {
         return add(GreaterThan.create().criteria(this).property(property).slot(slot).value(value).build());
     }
 
     @Override
-    public Chain propGt(String property, Object value, Slot slot) {
+    public Chain gt(String property, Object value, Slot slot) {
         return add(GreaterThan.create().criteria(this).property(property).slot(slot).value(value).build());
     }
 
@@ -238,12 +246,12 @@ public abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriter
     }
 
     @Override
-    public <V> Chain propGe(Property<T, V> property, V value, Slot slot) {
+    public <V> Chain ge(Property<T, V> property, V value, Slot slot) {
         return add(GreaterThanOrEqual.create().criteria(this).property(property).slot(slot).value(value).build());
     }
 
     @Override
-    public Chain propGe(String property, Object value, Slot slot) {
+    public Chain ge(String property, Object value, Slot slot) {
         return add(GreaterThanOrEqual.create().criteria(this).property(property).slot(slot).value(value).build());
     }
 
@@ -253,12 +261,12 @@ public abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriter
     }
 
     @Override
-    public <V> Chain propLt(Property<T, V> property, V value, Slot slot) {
+    public <V> Chain lt(Property<T, V> property, V value, Slot slot) {
         return add(LessThan.create().criteria(this).property(property).slot(slot).value(value).build());
     }
 
     @Override
-    public Chain propLt(String property, Object value, Slot slot) {
+    public Chain lt(String property, Object value, Slot slot) {
         return add(LessThan.create().criteria(this).property(property).slot(slot).value(value).build());
     }
 
@@ -268,12 +276,12 @@ public abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriter
     }
 
     @Override
-    public <V> Chain propLe(Property<T, V> property, V value, Slot slot) {
+    public <V> Chain le(Property<T, V> property, V value, Slot slot) {
         return add(LessThanOrEqual.create().criteria(this).property(property).slot(slot).value(value).build());
     }
 
     @Override
-    public Chain propLe(String property, Object value, Slot slot) {
+    public Chain le(String property, Object value, Slot slot) {
         return add(LessThanOrEqual.create().criteria(this).property(property).slot(slot).value(value).build());
     }
 
@@ -283,7 +291,7 @@ public abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriter
     }
 
     @Override
-    public Chain propEq(Map<String, Object> properties, Slot slot) {
+    public Chain eq(Map<String, Object> properties, Slot slot) {
         if (Objects.isNotEmpty(properties)) {
             for (Map.Entry<String, Object> entry : properties.entrySet()) {
                 final String property = entry.getKey();
@@ -308,6 +316,80 @@ public abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriter
             }
         }
         return this.context;
+    }
+
+    // endregion
+
+    // region Range conditions
+
+    @Override
+    @SuppressWarnings({"unchecked"})
+    public <V> Chain in(Property<T, V> property, Collection<V> values, Slot slot) {
+        return add(In.create().values((Collection<Object>) values).criteria(this).property(property)
+            .slot(slot).build());
+    }
+
+    @Override
+    public Chain in(String property, Collection<Object> values, Slot slot) {
+        return add(In.create().values(values).criteria(this).property(property)
+            .slot(slot).build());
+    }
+
+    @Override
+    public Chain colIn(String column, Collection<Object> values, Slot slot) {
+        return add(ImmediateIn.create().values(values).criteria(this).column(column).slot(slot).build());
+    }
+
+    @Override
+    @SuppressWarnings({"unchecked"})
+    public <V> Chain notIn(Property<T, V> property, Collection<V> values, Slot slot) {
+        return add(NotIn.create().values((Collection<Object>) values).criteria(this).property(property)
+            .slot(slot).build());
+    }
+
+    @Override
+    public Chain notIn(String property, Collection<Object> values, Slot slot) {
+        return add(NotIn.create().values(values).criteria(this).property(property)
+            .slot(slot).build());
+    }
+
+    @Override
+    public Chain colNotIn(String column, Collection<Object> values, Slot slot) {
+        return add(ImmediateNotIn.create().values(values).criteria(this).column(column).slot(slot).build());
+    }
+
+    // endregion
+
+    // region Between conditions
+
+    @Override
+    public <V> Chain between(Property<T, V> property, V begin, V end, Slot slot) {
+        return add(Between.create().begin(begin).end(end).criteria(this).property(property).slot(slot).build());
+    }
+
+    @Override
+    public Chain between(String property, Object begin, Object end, Slot slot) {
+        return add(Between.create().begin(begin).end(end).criteria(this).property(property).slot(slot).build());
+    }
+
+    @Override
+    public Chain colBetween(String column, Object begin, Object end, Slot slot) {
+        return add(ImmediateBetween.create().begin(begin).end(end).criteria(this).column(column).slot(slot).build());
+    }
+
+    @Override
+    public <V> Chain notBetween(Property<T, V> property, V begin, V end, Slot slot) {
+        return add(NotBetween.create().begin(begin).end(end).criteria(this).property(property).slot(slot).build());
+    }
+
+    @Override
+    public Chain notBetween(String property, Object begin, Object end, Slot slot) {
+        return add(NotBetween.create().begin(begin).end(end).criteria(this).property(property).slot(slot).build());
+    }
+
+    @Override
+    public Chain colNotBetween(String column, Object begin, Object end, Slot slot) {
+        return add(ImmediateNotBetween.create().begin(begin).end(end).criteria(this).column(column).slot(slot).build());
     }
 
     // endregion
@@ -345,8 +427,8 @@ public abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriter
     }
 
     @Override
-    public Chain notMatchingWithThrows(boolean matching) {
-        this.notMatchingWithThrows.compareAndSet(!matching, matching);
+    public Chain notMatchingWithThrows(boolean throwing) {
+        this.notMatchingWithThrows.compareAndSet(!throwing, throwing);
         return this.context;
     }
 

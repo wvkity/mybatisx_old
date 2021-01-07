@@ -13,27 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.criteria;
+package com.wvkity.mybatis.core.condition.expression.builder;
 
-import com.wvkity.mybatis.core.convert.Property;
+import java.util.Collection;
 
 /**
- * 条件接口包装器
- * @param <T>     泛型类
- * @param <Chain> 子类
+ * 抽象范围条件表达式构建器
  * @author wvkity
- * @created 2021-01-05
+ * @created 2021-01-07
  * @since 1.0.0
  */
-public interface CriteriaWrapper<T, Chain extends CriteriaWrapper<T, Chain>> extends Criteria<T>,
-    Compare<T, Chain>, Range<T, Chain> {
+public abstract class AbstractImmediateRangeExprBuilder<T> extends AbstractImmediateExprBuilder<T> {
 
     /**
-     * 根据方法获取属性名
-     * @param property {@link Property}
-     * @param <E>      泛型类型
-     * @param <V>      属性类型
-     * @return 属性名
+     * 多个值
      */
-    <E, V> String methodToProperty(final Property<E, V> property);
+    protected Collection<Object> values;
+
+    public AbstractImmediateRangeExprBuilder<T> values(Collection<Object> values) {
+        this.values = values;
+        return this;
+    }
 }

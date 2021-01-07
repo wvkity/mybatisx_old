@@ -16,26 +16,45 @@
 package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractBetweenExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.metadata.Column;
 
+import java.util.Optional;
+
 /**
- * 基础条件表达式
+ * Between范围条件表达式
  * @author wvkity
- * @created 2021-01-06
+ * @created 2021-01-07
  * @since 1.0.0
  */
-public class BasicExpression extends AbstractColumnExpression {
+public class Between extends AbstractBetweenExpression {
 
-    private static final long serialVersionUID = -2711714146874396946L;
+    private static final long serialVersionUID = -5335171321951491035L;
 
-    public BasicExpression(Criteria<?> criteria, Column column, Symbol symbol, Slot slot, Object value) {
+    public Between(Criteria<?> criteria, Column column, Slot slot, Object begin, Object end) {
         this.criteria = criteria;
         this.target = column;
-        this.symbol = symbol;
         this.slot = slot;
-        this.value = value;
+        this.symbol = Symbol.BETWEEN;
+        this.begin = begin;
+        this.end = end;
     }
 
+    public static Between.Builder create() {
+        return new Between.Builder();
+    }
+
+    public static final class Builder extends AbstractBetweenExprBuilder<Between> {
+
+        private Builder() {
+        }
+
+        @Override
+        public Between build() {
+            return Optional.ofNullable(this.getRealColumn()).map(it ->
+                new Between(this.criteria, it, this.slot, this.begin, this.end)).orElse(null);
+        }
+    }
 }

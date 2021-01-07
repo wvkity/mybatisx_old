@@ -26,6 +26,7 @@ import com.wvkity.mybatis.core.constant.Symbol;
  * @since 1.0.0
  */
 public class BasicImmediateExpression extends AbstractImmediateExpression {
+
     private static final long serialVersionUID = 2800029176385396206L;
 
     public BasicImmediateExpression(Criteria<?> criteria, String column, Symbol symbol, Slot slot, Object value) {
