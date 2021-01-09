@@ -26,7 +26,7 @@ import com.wvkity.mybatis.core.convert.Property;
  * @since 1.0.0
  */
 public interface CriteriaWrapper<T, Chain extends CriteriaWrapper<T, Chain>> extends Criteria<T>,
-    Compare<T, Chain>, Range<T, Chain> {
+    Compare<T, Chain>, Range<T, Chain>, Fuzzy<T, Chain>, Nullable<T, Chain>, Nested<Chain> {
 
     /**
      * 根据方法获取属性名
@@ -36,4 +36,5 @@ public interface CriteriaWrapper<T, Chain extends CriteriaWrapper<T, Chain>> ext
      * @return 属性名
      */
     <E, V> String methodToProperty(final Property<E, V> property);
+
 }

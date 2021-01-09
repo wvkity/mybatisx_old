@@ -80,8 +80,8 @@ public abstract class AbstractColumnExprBuilder<T> implements ExprBuilder<T> {
         return this;
     }
 
-    public AbstractColumnExprBuilder<T> property(Property<?, ?> lambdaProperty) {
-        this.lambdaProperty = lambdaProperty;
+    public AbstractColumnExprBuilder<T> property(Property<?, ?> property) {
+        this.lambdaProperty = property;
         return this;
     }
 

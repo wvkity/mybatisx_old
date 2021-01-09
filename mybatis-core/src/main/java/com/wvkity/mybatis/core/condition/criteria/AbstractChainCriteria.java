@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * @since 1.0.0
  */
 @SuppressWarnings({"serial"})
-public abstract class AbstractChainCriteria<T, Chain extends AbstractChainCriteria<T, Chain>> extends
+abstract class AbstractChainCriteria<T, Chain extends AbstractChainCriteria<T, Chain>> extends
     AbstractBasicCriteria<T, Chain> {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractChainCriteria.class);
@@ -67,7 +67,7 @@ public abstract class AbstractChainCriteria<T, Chain extends AbstractChainCriter
             return null;
         }
         final Column column = PropertiesMappingCache.getColumn(this.entityClass, property);
-        if(column == null) {
+        if (column == null) {
             if (this.notMatchingWithThrows.get()) {
                 throw new MyBatisException("The field mapping information for the entity class(" +
                     this.entityClass.getName() + ") cannot be found based on the `" + property + "` " +

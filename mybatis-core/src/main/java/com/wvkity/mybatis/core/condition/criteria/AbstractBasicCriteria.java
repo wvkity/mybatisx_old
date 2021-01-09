@@ -29,16 +29,26 @@ import com.wvkity.mybatis.core.condition.expression.ImmediateGreaterThanOrEqual;
 import com.wvkity.mybatis.core.condition.expression.ImmediateIn;
 import com.wvkity.mybatis.core.condition.expression.ImmediateLessThan;
 import com.wvkity.mybatis.core.condition.expression.ImmediateLessThanOrEqual;
+import com.wvkity.mybatis.core.condition.expression.ImmediateLike;
 import com.wvkity.mybatis.core.condition.expression.ImmediateNotBetween;
 import com.wvkity.mybatis.core.condition.expression.ImmediateNotEqual;
 import com.wvkity.mybatis.core.condition.expression.ImmediateNotIn;
+import com.wvkity.mybatis.core.condition.expression.ImmediateNotLike;
+import com.wvkity.mybatis.core.condition.expression.ImmediateNotNull;
+import com.wvkity.mybatis.core.condition.expression.ImmediateNull;
 import com.wvkity.mybatis.core.condition.expression.In;
 import com.wvkity.mybatis.core.condition.expression.LessThan;
 import com.wvkity.mybatis.core.condition.expression.LessThanOrEqual;
+import com.wvkity.mybatis.core.condition.expression.Like;
+import com.wvkity.mybatis.core.condition.expression.Nesting;
 import com.wvkity.mybatis.core.condition.expression.NotBetween;
 import com.wvkity.mybatis.core.condition.expression.NotEqual;
 import com.wvkity.mybatis.core.condition.expression.NotIn;
+import com.wvkity.mybatis.core.condition.expression.NotLike;
+import com.wvkity.mybatis.core.condition.expression.NotNull;
+import com.wvkity.mybatis.core.condition.expression.Null;
 import com.wvkity.mybatis.core.constant.Constants;
+import com.wvkity.mybatis.core.constant.LikeMode;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.convert.Property;
 import com.wvkity.mybatis.core.utils.Objects;
@@ -50,6 +60,8 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -62,7 +74,7 @@ import java.util.stream.Collectors;
  * @since 1.0.0
  */
 @SuppressWarnings({"serial"})
-public abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, Chain>> implements
+abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, Chain>> implements
     CriteriaWrapper<T, Chain> {
 
     // region Basic fields
@@ -131,11 +143,11 @@ public abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriter
     /**
      * 表别名
      */
-    protected String tableAlias;
+    protected AtomicReference<String> tableAlias;
     /**
      * 是否使用别名
      */
-    protected boolean useAlias;
+    protected AtomicBoolean useAlias;
     /**
      * 默认别名
      */
@@ -145,13 +157,16 @@ public abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriter
 
     /**
      * 初始化方法
+     * @param alias 表别名
      */
-    protected void inits() {
+    protected void inits(final String alias) {
         this.parameterValueMapping = new ConcurrentHashMap<>();
         this.parameterSequence = new AtomicInteger(0);
         this.segmentManager = new SegmentManager();
         this.notMatchingWithThrows = new AtomicBoolean(true);
         this.tableAliasSequence = new AtomicInteger(0);
+        this.useAlias = new AtomicBoolean(false);
+        this.tableAlias = new AtomicReference<>(Objects.isBlank(alias) ? Constants.EMPTY : alias);
         this.defTableAlias = DEF_TABLE_ALIAS_PREFIX + this.tableAliasSequence.incrementAndGet();
     }
 
@@ -213,6 +228,34 @@ public abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriter
     @Override
     public Chain colEq(String column, Object value, Slot slot) {
         return add(ImmediateEqual.create().criteria(this).column(column).slot(slot).value(value).build());
+    }
+
+    @Override
+    public Chain eq(Map<String, Object> properties, Slot slot) {
+        if (Objects.isNotEmpty(properties)) {
+            for (Map.Entry<String, Object> entry : properties.entrySet()) {
+                final String property = entry.getKey();
+                if (Objects.isNotBlank(property)) {
+                    this.add(Equal.create().criteria(this).property(property).value(entry.getValue())
+                        .slot(slot).build());
+                }
+            }
+        }
+        return this.context;
+    }
+
+    @Override
+    public Chain colEq(Map<String, Object> properties, Slot slot) {
+        if (Objects.isNotEmpty(properties)) {
+            for (Map.Entry<String, Object> entry : properties.entrySet()) {
+                final String column = entry.getKey();
+                if (Objects.isNotBlank(column)) {
+                    this.add(ImmediateEqual.create().criteria(this).column(column).value(entry.getValue())
+                        .slot(slot).build());
+                }
+            }
+        }
+        return this.context;
     }
 
     @Override
@@ -288,34 +331,6 @@ public abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriter
     @Override
     public Chain colLe(String column, Object value, Slot slot) {
         return add(ImmediateLessThanOrEqual.create().criteria(this).column(column).slot(slot).value(value).build());
-    }
-
-    @Override
-    public Chain eq(Map<String, Object> properties, Slot slot) {
-        if (Objects.isNotEmpty(properties)) {
-            for (Map.Entry<String, Object> entry : properties.entrySet()) {
-                final String property = entry.getKey();
-                if (Objects.isNotBlank(property)) {
-                    this.add(Equal.create().criteria(this).property(property).value(entry.getValue())
-                        .slot(slot).build());
-                }
-            }
-        }
-        return this.context;
-    }
-
-    @Override
-    public Chain colEq(Map<String, Object> properties, Slot slot) {
-        if (Objects.isNotEmpty(properties)) {
-            for (Map.Entry<String, Object> entry : properties.entrySet()) {
-                final String column = entry.getKey();
-                if (Objects.isNotBlank(column)) {
-                    this.add(ImmediateEqual.create().criteria(this).column(column).value(entry.getValue())
-                        .slot(slot).build());
-                }
-            }
-        }
-        return this.context;
     }
 
     // endregion
@@ -394,7 +409,172 @@ public abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriter
 
     // endregion
 
+    // region Fuzzy conditions
+
+    @Override
+    public <V> Chain like(Property<T, V> property, V value, LikeMode mode, Character escape, Slot slot) {
+        return add(Like.create().escape(escape).mode(mode).criteria(this).property(property)
+            .slot(slot).value(value).build());
+    }
+
+    @Override
+    public Chain like(String property, Object value, LikeMode mode, Character escape, Slot slot) {
+        return add(Like.create().escape(escape).mode(mode).criteria(this).property(property)
+            .slot(slot).value(value).build());
+    }
+
+    @Override
+    public Chain colLike(String column, Object value, LikeMode mode, Character escape, Slot slot) {
+        return add(ImmediateLike.create().escape(escape).mode(mode).criteria(this).column(column)
+            .slot(slot).value(value).build());
+    }
+
+    @Override
+    public <V> Chain notLike(Property<T, V> property, V value, LikeMode mode, Character escape, Slot slot) {
+        return add(NotLike.create().escape(escape).mode(mode).criteria(this).property(property)
+            .slot(slot).value(value).build());
+    }
+
+    @Override
+    public Chain notLike(String property, Object value, LikeMode mode, Character escape, Slot slot) {
+        return add(NotLike.create().escape(escape).mode(mode).criteria(this).property(property)
+            .slot(slot).value(value).build());
+    }
+
+    @Override
+    public Chain colNotLike(String column, Object value, LikeMode mode, Character escape, Slot slot) {
+        return add(ImmediateNotLike.create().escape(escape).mode(mode).criteria(this).column(column)
+            .slot(slot).value(value).build());
+    }
+
+    // endregion
+
+    // region Nullable conditions
+
+    @Override
+    public <V> Chain isNull(Property<T, V> property, Slot slot) {
+        return add(Null.create().criteria(this).property(property).slot(slot).build());
+    }
+
+    @Override
+    public Chain isNull(String property, Slot slot) {
+        return add(Null.create().criteria(this).property(property).slot(slot).build());
+    }
+
+    @Override
+    public Chain colIsNull(String column, Slot slot) {
+        return add(ImmediateNull.create().criteria(this).column(column).slot(slot).build());
+    }
+
+    @Override
+    public <V> Chain notNull(Property<T, V> property, Slot slot) {
+        return add(NotNull.create().criteria(this).property(property).slot(slot).build());
+    }
+
+    @Override
+    public Chain notNull(String property, Slot slot) {
+        return add(NotNull.create().criteria(this).property(property).slot(slot).build());
+    }
+
+    @Override
+    public Chain colNotNull(String column, Slot slot) {
+        return add(ImmediateNotNull.create().criteria(this).column(column).slot(slot).build());
+    }
+
+    // endregion
+
+    // region Nested conditions
+
+    @Override
+    public Chain and(boolean not, List<Expression> conditions) {
+        return add(Nesting.create().criteria(this).slot(Slot.AND).not(not).conditions(conditions).build());
+    }
+
+    @Override
+    public Chain and(boolean not, Criteria<?> criteria, List<Expression> conditions) {
+        return add(Nesting.create().criteria(criteria).slot(Slot.AND).not(not).conditions(conditions).build());
+    }
+
+    @Override
+    public Chain and(Function<Chain, Chain> apply, boolean not) {
+        return this.doIt(apply, true, not);
+    }
+
+    @Override
+    public Chain or(boolean not, List<Expression> conditions) {
+        return add(Nesting.create().criteria(this).slot(Slot.OR).not(not).conditions(conditions).build());
+    }
+
+    @Override
+    public Chain or(boolean not, Criteria<?> criteria, List<Expression> conditions) {
+        return add(Nesting.create().criteria(criteria).slot(Slot.OR).not(not).conditions(conditions).build());
+    }
+
+    @Override
+    public Chain or(Function<Chain, Chain> apply, boolean not) {
+        return this.doIt(apply, false, not);
+    }
+
+    Chain doIt(final Function<Chain, Chain> apply, final boolean and, final boolean not) {
+        if (Objects.nonNull(apply)) {
+            final Chain ctx = this.newInstance();
+            if (Objects.nonNull(ctx)) {
+                final Chain instance = apply.apply(ctx);
+                final List<Expression> conditions = instance.segmentManager.getConditions();
+                if (Objects.isNotEmpty(conditions)) {
+                    if (and) {
+                        this.and(not, conditions);
+                    } else {
+                        this.or(not, conditions);
+                    }
+                }
+            }
+        }
+        return this.context;
+    }
+
+    // endregion
+
     // region Other methods
+
+    /**
+     * 创建实例(需要自行实现，默认返回null)
+     * @return {@link Chain}
+     */
+    protected Chain newInstance() {
+        // empty
+        return null;
+    }
+
+    /**
+     * 拷贝属性
+     * @param source 源对象
+     * @return {@link Chain}
+     */
+    protected Chain clone(final Chain source) {
+        this.clone(source, this.context);
+        return this.context;
+    }
+
+    /**
+     * 拷贝属性
+     * @param source 源对象
+     * @param target 目标对象
+     */
+    protected void clone(final Chain source, final Chain target) {
+        if (target != null) {
+            target.segmentManager = new SegmentManager();
+            if (source != null) {
+                target.defTableAlias = source.defTableAlias;
+                target.tableAliasSequence = source.tableAliasSequence;
+                target.useAlias = source.useAlias;
+                target.tableAlias = source.tableAlias;
+                target.notMatchingWithThrows = source.notMatchingWithThrows;
+                target.parameterSequence = source.parameterSequence;
+                target.parameterValueMapping = source.parameterValueMapping;
+            }
+        }
+    }
 
     @Override
     public Class<T> getEntityClass() {
@@ -403,15 +583,16 @@ public abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriter
 
     @Override
     public String as() {
-        if (this.useAlias) {
-            return Objects.isBlank(this.tableAlias) ? this.defTableAlias : this.tableAlias;
+        if (this.useAlias.get()) {
+            final String alias = this.tableAlias.get();
+            return Objects.isBlank(alias) ? this.defTableAlias : alias;
         }
         return Constants.EMPTY;
     }
 
     @Override
     public Chain as(String alias) {
-        this.tableAlias = alias;
+        this.tableAlias.set(Objects.isBlank(alias) ? Constants.EMPTY : alias);
         return this.context;
     }
 
@@ -422,7 +603,7 @@ public abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriter
 
     @Override
     public Chain useAlias(boolean used) {
-        this.useAlias = used;
+        this.useAlias.compareAndSet(!used, used);
         return this.context;
     }
 

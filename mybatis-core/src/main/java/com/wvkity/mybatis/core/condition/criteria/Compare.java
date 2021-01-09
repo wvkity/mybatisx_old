@@ -22,7 +22,7 @@ import com.wvkity.mybatis.core.convert.converter.PropertyConverter;
 import java.util.Map;
 
 /**
- * 基本条件
+ * 基础条件
  * @author wvkity
  * @created 2021-01-05
  * @since 1.0.0

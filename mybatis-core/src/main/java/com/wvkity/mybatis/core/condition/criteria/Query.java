@@ -19,6 +19,7 @@ import com.wvkity.mybatis.core.utils.Objects;
 
 /**
  * 查询条件
+ * @param <T> 泛型类
  * @author wvkity
  * @created 2021-01-05
  * @since 1.0.0
@@ -28,15 +29,23 @@ public class Query<T> extends AbstractQueryCriteria<T> {
 
     public Query(final Class<T> entityClass) {
         this.entityClass = entityClass;
-        this.inits();
+        this.inits(null);
     }
 
     public Query(final Class<T> entityClass, final String alias) {
         this.entityClass = entityClass;
-        this.tableAlias = alias;
-        this.useAlias = Objects.isNotBlank(alias);
-        this.inits();
+        this.inits(alias);
+        this.useAlias(Objects.isNotBlank(alias));
     }
+
+    @Override
+    protected Query<T> newInstance() {
+        final Query<T> instance = new Query<>(this.entityClass);
+        instance.clone(this);
+        return instance;
+    }
+
+    // region Static methods
 
     /**
      * 创建{@link Query}对象
@@ -72,4 +81,6 @@ public class Query<T> extends AbstractQueryCriteria<T> {
         }
         return Query.from((Class<T>) instance.getClass());
     }
+
+    // endregion
 }

@@ -24,6 +24,7 @@ import java.util.Collection;
 
 /**
  * 范围条件
+ * @param <T> 泛型类
  * @author wvkity
  * @created 2021-01-07
  * @since 1.0.0

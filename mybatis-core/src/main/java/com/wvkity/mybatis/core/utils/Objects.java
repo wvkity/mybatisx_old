@@ -118,10 +118,8 @@ public final class Objects {
      */
     @SafeVarargs
     public static <T> List<T> asList(final T... args) {
-        return Optional.ofNullable(args).map(it -> {
-            final int size = args.length;
-            return size == 0 ? new ArrayList<T>() : new ArrayList<>(Arrays.asList(args).subList(0, size));
-        }).orElse(new ArrayList<>());
+        return Optional.ofNullable(args).map(it ->
+            it.length == 0 ? new ArrayList<T>(0) : new ArrayList<>(Arrays.asList(args))).orElse(new ArrayList<>());
     }
 
     /**
