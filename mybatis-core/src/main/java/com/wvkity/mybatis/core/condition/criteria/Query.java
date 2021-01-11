@@ -15,6 +15,7 @@
  */
 package com.wvkity.mybatis.core.condition.criteria;
 
+import com.wvkity.mybatis.core.condition.basic.SegmentManager;
 import com.wvkity.mybatis.core.utils.Objects;
 
 /**
@@ -41,6 +42,7 @@ public class Query<T> extends AbstractQueryCriteria<T> {
     @Override
     protected Query<T> newInstance() {
         final Query<T> instance = new Query<>(this.entityClass);
+        instance.segmentManager = new SegmentManager();
         instance.clone(this);
         return instance;
     }

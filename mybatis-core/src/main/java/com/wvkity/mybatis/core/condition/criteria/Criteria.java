@@ -43,26 +43,6 @@ public interface Criteria<T> extends Search<T>, PropertyConverter<T>, Placeholde
     String as();
 
     /**
-     * 设置表别名
-     * @param alias 表别名
-     * @return {@link Criteria}
-     */
-    Criteria<T> as(final String alias);
-
-    /**
-     * 使用表别名
-     * @return {@link Criteria}
-     */
-    Criteria<T> useAlias();
-
-    /**
-     * 设置是否使用表别名
-     * @param used 是否使用
-     * @return {@link Criteria}
-     */
-    Criteria<T> useAlias(final boolean used);
-
-    /**
      * 属性不匹配是否抛出异常
      * @param throwing 是否抛异常
      * @return {@link Criteria}
@@ -82,4 +62,17 @@ public interface Criteria<T> extends Search<T>, PropertyConverter<T>, Placeholde
      * @return {@link Criteria}
      */
     Criteria<T> where(final Collection<Expression> expressions);
+
+    // region Default methods
+
+    /**
+     * 是否使用属性名只作为别名
+     * @return boolean
+     */
+    default boolean isUsePropertyAsAlias() {
+        return false;
+    }
+
+    // endregion
+
 }

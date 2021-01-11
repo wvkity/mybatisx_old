@@ -19,6 +19,7 @@ import com.wvkity.mybatis.core.builder.support.TableBuilder;
 import com.wvkity.mybatis.core.config.MyBatisGlobalConfiguration;
 import com.wvkity.mybatis.core.config.MyBatisLocalConfigurationCache;
 import com.wvkity.mybatis.core.immutable.ImmutableLinkedMap;
+import com.wvkity.mybatis.core.immutable.ImmutableList;
 import com.wvkity.mybatis.core.metadata.Column;
 import com.wvkity.mybatis.core.metadata.Table;
 import com.wvkity.mybatis.core.parser.DefaultEntityParser;
@@ -30,9 +31,15 @@ import org.apache.ibatis.session.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * 数据库表映射处理器
@@ -168,5 +175,25 @@ public final class TableHandler {
             return null;
         }
         return Optional.ofNullable(clazz).map(it -> TableHandler.getColumnCache(it).get(property)).orElse(null);
+    }
+
+    /**
+     * 根据实体类、过滤器筛选字段信息
+     * @param clazz  实体类
+     * @param filter 过滤器
+     * @return {@link Column}集合
+     */
+    public static List<Column> getColumns(final Class<?> clazz, final Predicate<Column> filter) {
+        if (Objects.nonNull(clazz) && Objects.nonNull(filter)) {
+            final Table table = TableHandler.getTable(clazz);
+            final Set<Column> columns;
+            if (Objects.nonNull(table) && Objects.isNotEmpty((columns = table.columns()))) {
+                final List<Column> it = columns.stream().filter(filter).collect(Collectors.toList());
+                if (Objects.isNotEmpty(it)) {
+                    return ImmutableList.of(it);
+                }
+            }
+        }
+        return ImmutableList.of();
     }
 }

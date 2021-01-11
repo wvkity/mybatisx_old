@@ -348,15 +348,15 @@ public final class Scripts implements Constants {
      * 转换成查询字段参数
      * @param tableAlias 表别名
      * @param column     {@link Column}
-     * @param ref        实体中的引用属性
+     * @param refProp    实体中的引用属性
      * @param apply      是否带上属性名
      * @return 查询字段参数
      */
     public static String convertToSelectArg(final String tableAlias, final Column column,
-                                            final String ref, final boolean apply) {
+                                            final String refProp, final boolean apply) {
         final String columnAlias;
         if (apply) {
-            columnAlias = Objects.isNotBlank(ref) ? (ref + DOT + column.getProperty()) : column.getProperty();
+            columnAlias = Objects.isNotBlank(refProp) ? (refProp + DOT + column.getProperty()) : column.getProperty();
         } else {
             columnAlias = null;
         }

@@ -119,7 +119,7 @@ public final class Objects {
     @SafeVarargs
     public static <T> List<T> asList(final T... args) {
         return Optional.ofNullable(args).map(it ->
-            it.length == 0 ? new ArrayList<T>(0) : new ArrayList<>(Arrays.asList(args))).orElse(new ArrayList<>());
+            it.length == 0 ? new ArrayList<T>(0) : new ArrayList<>(Arrays.asList(args))).orElse(new ArrayList<>(0));
     }
 
     /**

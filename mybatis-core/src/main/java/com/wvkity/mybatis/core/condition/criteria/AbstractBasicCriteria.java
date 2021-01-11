@@ -563,7 +563,6 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
      */
     protected void clone(final Chain source, final Chain target) {
         if (target != null) {
-            target.segmentManager = new SegmentManager();
             if (source != null) {
                 target.defTableAlias = source.defTableAlias;
                 target.tableAliasSequence = source.tableAliasSequence;
@@ -588,23 +587,6 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
             return Objects.isBlank(alias) ? this.defTableAlias : alias;
         }
         return Constants.EMPTY;
-    }
-
-    @Override
-    public Chain as(String alias) {
-        this.tableAlias.set(Objects.isBlank(alias) ? Constants.EMPTY : alias);
-        return this.context;
-    }
-
-    @Override
-    public Chain useAlias() {
-        return this.useAlias(true);
-    }
-
-    @Override
-    public Chain useAlias(boolean used) {
-        this.useAlias.compareAndSet(!used, used);
-        return this.context;
     }
 
     @Override
