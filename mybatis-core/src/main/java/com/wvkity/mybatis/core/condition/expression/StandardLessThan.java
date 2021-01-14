@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,7 @@
 package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.condition.expression.builder.AbstractColumnExprBuilder;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.metadata.Column;
@@ -24,34 +24,36 @@ import com.wvkity.mybatis.core.metadata.Column;
 import java.util.Optional;
 
 /**
- * NOT NULL条件表达式
+ * 小于条件表达式
  * @author wvkity
- * @created 2021-01-09
+ * @created 2021-01-06
  * @since 1.0.0
  */
-public class NotNull extends AbstractNullableExpression {
+public class StandardLessThan extends AbstractExpression<Column> {
 
-    private static final long serialVersionUID = 8443593657388476364L;
+    private static final long serialVersionUID = -112105594246363693L;
 
-    public NotNull(Criteria<?> criteria, Column column, Slot slot) {
+    public StandardLessThan(Criteria<?> criteria, Column column, Slot slot, Object value) {
         this.criteria = criteria;
-        this.target = column;
+        this.fragment = column;
         this.slot = slot;
-        this.symbol = Symbol.NOT_NULL;
+        this.symbol = Symbol.LT;
+        this.value = value;
     }
 
-    public static NotNull.Builder create() {
-        return new NotNull.Builder();
+    public static StandardLessThan.Builder create() {
+        return new StandardLessThan.Builder();
     }
 
-    public static final class Builder extends AbstractColumnExprBuilder<NotNull> {
+    public static final class Builder extends AbstractExprBuilder<StandardLessThan, Column> {
 
         private Builder() {
         }
 
         @Override
-        public NotNull build() {
-            return Optional.ofNullable(this.getRealColumn()).map(it -> new NotNull(this.criteria, it, this.slot)).orElse(null);
+        public StandardLessThan build() {
+            return Optional.ofNullable(this.getRealColumn()).map(it ->
+                new StandardLessThan(this.criteria, it, this.slot, this.value)).orElse(null);
         }
     }
 }

@@ -16,7 +16,7 @@
 package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.condition.expression.builder.AbstractImmediateExprBuilder;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractRangeExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.utils.Objects;
@@ -27,19 +27,23 @@ import com.wvkity.mybatis.core.utils.Objects;
  * @created 2021-01-06
  * @since 1.0.0
  */
-public class ImmediateLessThanOrEqual extends BasicImmediateExpression {
+public class ImmediateLessThanOrEqual extends AbstractExpression<String> {
 
     private static final long serialVersionUID = -4660945123417961930L;
 
     public ImmediateLessThanOrEqual(Criteria<?> criteria, String column, Slot slot, Object value) {
-        super(criteria, column, Symbol.LE, slot, value);
+        this.criteria = criteria;
+        this.fragment = column;
+        this.slot = slot;
+        this.symbol = Symbol.LE;
+        this.value = value;
     }
 
     public static ImmediateLessThanOrEqual.Builder create() {
         return new ImmediateLessThanOrEqual.Builder();
     }
 
-    public static final class Builder extends AbstractImmediateExprBuilder<ImmediateLessThanOrEqual> {
+    public static final class Builder extends AbstractRangeExprBuilder<ImmediateLessThanOrEqual, String> {
 
         private Builder() {
         }

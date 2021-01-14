@@ -16,45 +16,45 @@
 package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.condition.expression.builder.AbstractBetweenExprBuilder;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractRangeExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.metadata.Column;
 
+import java.util.Collection;
 import java.util.Optional;
 
 /**
- * Not between范围条件表达式
+ * IN条件表达式
  * @author wvkity
  * @created 2021-01-07
  * @since 1.0.0
  */
-public class NotBetween extends AbstractBetweenExpression {
+public class StandardIn extends AbstractRangeExpression<Column> {
 
-    private static final long serialVersionUID = -5107081321447906415L;
+    private static final long serialVersionUID = 5462592687934802949L;
 
-    public NotBetween(Criteria<?> criteria, Column column, Slot slot, Object begin, Object end) {
+    public StandardIn(Criteria<?> criteria, Column column, Slot slot, Collection<Object> values) {
         this.criteria = criteria;
-        this.target = column;
+        this.fragment = column;
         this.slot = slot;
-        this.symbol = Symbol.NOT_BETWEEN;
-        this.begin = begin;
-        this.end = end;
+        this.values = values;
+        this.symbol = Symbol.IN;
     }
 
-    public static NotBetween.Builder create() {
-        return new NotBetween.Builder();
+    public static StandardIn.Builder create() {
+        return new StandardIn.Builder();
     }
 
-    public static final class Builder extends AbstractBetweenExprBuilder<NotBetween> {
+    public static final class Builder extends AbstractRangeExprBuilder<StandardIn, Column> {
 
         private Builder() {
         }
 
         @Override
-        public NotBetween build() {
+        public StandardIn build() {
             return Optional.ofNullable(this.getRealColumn()).map(it ->
-                new NotBetween(this.criteria, it, this.slot, this.begin, this.end)).orElse(null);
+                new StandardIn(this.criteria, it, this.slot, this.values)).orElse(null);
         }
     }
 }

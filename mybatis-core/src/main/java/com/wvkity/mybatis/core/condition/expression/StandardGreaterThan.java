@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,8 +16,7 @@
 package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.condition.expression.builder.AbstractFuzzyExprBuilder;
-import com.wvkity.mybatis.core.constant.LikeMode;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.metadata.Column;
@@ -25,38 +24,36 @@ import com.wvkity.mybatis.core.metadata.Column;
 import java.util.Optional;
 
 /**
- * Like模糊匹配条件表达式
+ * 大于条件表达式
  * @author wvkity
- * @created 2021-01-08
+ * @created 2021-01-06
  * @since 1.0.0
  */
-public class Like extends AbstractFuzzyExpression {
+public class StandardGreaterThan extends AbstractExpression<Column> {
 
-    private static final long serialVersionUID = -7938299272126062419L;
+    private static final long serialVersionUID = 4405661073856767054L;
 
-    public Like(Criteria<?> criteria, Column column, LikeMode mode, Character escape, Slot slot, Object value) {
+    public StandardGreaterThan(Criteria<?> criteria, Column column, Slot slot, Object value) {
         this.criteria = criteria;
-        this.target = column;
-        this.mode = mode;
-        this.escape = escape;
+        this.fragment = column;
         this.slot = slot;
+        this.symbol = Symbol.GT;
         this.value = value;
-        this.symbol = Symbol.LIKE;
     }
 
-    public static Like.Builder create() {
-        return new Like.Builder();
+    public static StandardGreaterThan.Builder create() {
+        return new StandardGreaterThan.Builder();
     }
 
-    public static final class Builder extends AbstractFuzzyExprBuilder<Like> {
+    public static final class Builder extends AbstractExprBuilder<StandardGreaterThan, Column> {
 
         private Builder() {
         }
 
         @Override
-        public Like build() {
+        public StandardGreaterThan build() {
             return Optional.ofNullable(this.getRealColumn()).map(it ->
-                new Like(this.criteria, it, this.mode, this.escape, this.slot, this.value)).orElse(null);
+                new StandardGreaterThan(this.criteria, it, this.slot, this.value)).orElse(null);
         }
     }
 }

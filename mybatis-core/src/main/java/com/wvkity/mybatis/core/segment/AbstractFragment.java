@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,25 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.expression.builder;
+package com.wvkity.mybatis.core.segment;
 
-import java.util.Collection;
+import java.util.Optional;
 
 /**
- * 抽象范围条件表达式构建器
+ * 抽象零散片段
+ * @param <E> 元素类型
  * @author wvkity
- * @created 2021-01-07
+ * @created 2021-01-12
  * @since 1.0.0
  */
-public abstract class AbstractImmediateRangeExprBuilder<T> extends AbstractImmediateExprBuilder<T> {
+@SuppressWarnings("serial")
+public abstract class AbstractFragment<E> implements Fragment {
 
     /**
-     * 多个值
+     * 碎片对象
      */
-    protected Collection<Object> values;
+    protected E fragment;
 
-    public AbstractImmediateRangeExprBuilder<T> values(Collection<Object> values) {
-        this.values = values;
+    protected AbstractFragment<E> fragment(final E fragment) {
+        Optional.ofNullable(fragment).ifPresent(it -> this.fragment = fragment);
         return this;
     }
+
 }

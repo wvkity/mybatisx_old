@@ -17,11 +17,13 @@ package com.wvkity.mybatis.core.condition.expression.builder;
 
 /**
  * 抽象Between范围条件表达式构建器
+ * @param <T> 条件表达式类型
+ * @param <E> 字段类型
  * @author wvkity
  * @created 2021-01-07
  * @since 1.0.0
  */
-public abstract class AbstractBetweenExprBuilder<T> extends AbstractColumnExprBuilder<T> {
+public abstract class AbstractBetweenExprBuilder<T, E> extends AbstractExprBuilder<T, E> {
 
     /**
      * 开始值
@@ -33,12 +35,12 @@ public abstract class AbstractBetweenExprBuilder<T> extends AbstractColumnExprBu
      */
     protected Object end;
 
-    public AbstractBetweenExprBuilder<T> begin(Object begin) {
+    public AbstractBetweenExprBuilder<T, E> begin(Object begin) {
         this.begin = begin;
         return this;
     }
 
-    public AbstractBetweenExprBuilder<T> end(Object end) {
+    public AbstractBetweenExprBuilder<T, E> end(Object end) {
         this.end = end;
         return this;
     }

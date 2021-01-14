@@ -17,16 +17,18 @@ package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.constant.LikeMode;
 import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
+import com.wvkity.mybatis.core.metadata.Column;
 import com.wvkity.mybatis.core.utils.Objects;
 
 /**
  * 抽象模糊条件表达式
+ * @param <E> 字段类型
  * @author wvkity
  * @created 2021-01-08
  * @since 1.0.0
  */
 @SuppressWarnings({"serial"})
-public abstract class AbstractFuzzyExpression extends AbstractColumnExpression {
+public abstract class AbstractFuzzyExpression<E> extends AbstractExpression<E> {
 
     /**
      * 匹配模式
@@ -39,10 +41,18 @@ public abstract class AbstractFuzzyExpression extends AbstractColumnExpression {
 
     @Override
     public String getSegment() {
+        if (Objects.isNull(this.fragment)) {
+            return null;
+        }
         final StringBuilder builder = new StringBuilder();
         final LikeMode matching = this.mode == null ? LikeMode.ANYWHERE : this.mode;
-        builder.append(Scripts.convertToConditionArg(this.symbol, this.slot, this.getAlias(), this.target,
-            this.defPlaceholder(matching.getSegment(String.valueOf(this.value)))));
+        if (this.fragment instanceof String) {
+            builder.append(Scripts.convertToConditionArg(this.symbol, this.slot, this.getAlias(),
+                (String) this.fragment, this.defPlaceholder(matching.getSegment(String.valueOf(this.value)))));
+        } else if (this.fragment instanceof Column) {
+            builder.append(Scripts.convertToConditionArg(this.symbol, this.slot, this.getAlias(),
+                (Column) this.fragment, this.defPlaceholder(matching.getSegment(String.valueOf(this.value)))));
+        }
         if (Objects.nonNull(this.escape)) {
             builder.append(" ESCAPE ").append("'").append(this.escape).append("'");
         }

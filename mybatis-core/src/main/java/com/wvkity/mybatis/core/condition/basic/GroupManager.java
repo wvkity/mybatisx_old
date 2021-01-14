@@ -13,33 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.expression.builder;
+package com.wvkity.mybatis.core.condition.basic;
 
-import com.wvkity.mybatis.core.constant.LikeMode;
+import com.wvkity.mybatis.core.condition.basic.group.Group;
+import com.wvkity.mybatis.core.segment.AbstractFragmentList;
 
 /**
- * 抽象模糊匹配条件表达式构建器
+ * 分组片段管理器
  * @author wvkity
- * @created 2021-01-08
+ * @created 2021-01-12
  * @since 1.0.0
  */
-public abstract class AbstractImmediateFuzzyExprBuilder<T> extends AbstractImmediateExprBuilder<T> {
-    /**
-     * 匹配模式
-     */
-    protected LikeMode mode;
-    /**
-     * 转义字符
-     */
-    protected Character escape;
+public class GroupManager extends AbstractFragmentList<Group> {
 
-    public AbstractImmediateFuzzyExprBuilder<T> mode(LikeMode mode) {
-        this.mode = mode;
-        return this;
-    }
+    private static final long serialVersionUID = -2313453087586057198L;
 
-    public AbstractImmediateFuzzyExprBuilder<T> escape(Character escape) {
-        this.escape = escape;
-        return this;
+    @Override
+    public String getSegment() {
+        return null;
     }
 }

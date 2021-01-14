@@ -28,19 +28,19 @@ import java.util.Optional;
  * @created 2021-01-06
  * @since 1.0.0
  */
-public class IdEqual extends AbstractColumnExpression {
+public class StandardIdEqual extends AbstractExpression<Column> {
 
     private static final long serialVersionUID = -1735853549185563L;
 
-    public IdEqual(final Criteria<?> criteria, final Column id, final Slot slot, final Object value) {
+    public StandardIdEqual(final Criteria<?> criteria, final Column id, final Slot slot, final Object value) {
         this.criteria = criteria;
-        this.target = id;
+        this.fragment = id;
         this.slot = slot;
         this.value = value;
     }
 
-    public static IdEqual.Builder create() {
-        return new IdEqual.Builder();
+    public static StandardIdEqual.Builder create() {
+        return new StandardIdEqual.Builder();
     }
 
     public static final class Builder {
@@ -60,9 +60,9 @@ public class IdEqual extends AbstractColumnExpression {
         private Builder() {
         }
 
-        public IdEqual build() {
+        public StandardIdEqual build() {
             return Optional.ofNullable(TableHandler.getId(this.criteria.getEntityClass()))
-                .map(it -> new IdEqual(this.criteria, it, this.slot, this.value)).orElse(null);
+                .map(it -> new StandardIdEqual(this.criteria, it, this.slot, this.value)).orElse(null);
         }
 
         public Builder criteria(Criteria<?> criteria) {

@@ -15,19 +15,23 @@
  */
 package com.wvkity.mybatis.core.condition.expression.builder;
 
+import com.wvkity.mybatis.core.builder.Builder;
+
 /**
  * 条件表达式构建器
  * @param <T> 条件表达式类
+ * @param <E> 字段类型
  * @author wvkity
  * @created 2021-01-07
  * @since 1.0.0
  */
-@FunctionalInterface
-public interface ExprBuilder<T> {
+public interface ExprBuilder<T, E> extends Builder<T> {
 
     /**
-     * 构建目标对象
-     * @return 目标对象
+     * 获取真实字段对象
+     * @return 字段信息
      */
-    T build();
+    default E getRealColumn() {
+        return null;
+    }
 }

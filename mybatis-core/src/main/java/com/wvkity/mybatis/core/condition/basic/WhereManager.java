@@ -25,12 +25,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * WHERE条件片段
+ * WHERE条件片段管理器
  * @author wvkity
  * @created 2021-01-05
  * @since 1.0.0
  */
-public class WhereSegment extends AbstractFragmentList<Expression> {
+public class WhereManager extends AbstractFragmentList<Expression> {
 
     private static final long serialVersionUID = 5417095393578894180L;
 

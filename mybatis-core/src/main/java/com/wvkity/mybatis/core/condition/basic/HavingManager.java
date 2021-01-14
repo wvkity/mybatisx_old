@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,22 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.expression;
-
-import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
+package com.wvkity.mybatis.core.condition.basic;
 
 /**
- * 直接字段条件表达式
+ * 分组筛选片段管理器
  * @author wvkity
- * @created 2021-01-06
+ * @created 2021-01-12
  * @since 1.0.0
  */
-@SuppressWarnings({"serial"})
-public abstract class AbstractImmediateExpression extends AbstractExpression<String> {
-
-    @Override
-    public String getSegment() {
-        return Scripts.convertToConditionArg(this.symbol, this.slot, this.getAlias(), this.target,
-            this.defPlaceholder(this.value));
-    }
+public class HavingManager {
 }

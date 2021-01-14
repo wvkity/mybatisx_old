@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.core.condition.criteria;
 
-import com.wvkity.mybatis.core.condition.basic.select.BasicSelect;
+import com.wvkity.mybatis.core.condition.basic.select.StandardSelect;
 import com.wvkity.mybatis.core.condition.basic.select.ImmediateSelect;
 import com.wvkity.mybatis.core.condition.basic.SelectManager;
 import com.wvkity.mybatis.core.constant.Constants;
@@ -70,7 +70,7 @@ public abstract class AbstractQueryCriteria<T> extends AbstractCriteria<T> imple
         if (Objects.isNotEmpty(columns)) {
             for (Column column : columns) {
                 if (Objects.nonNull(column)) {
-                    this.selectManager.select(BasicSelect.create().column(column).criteria(this).build());
+                    this.selectManager.select(StandardSelect.create().column(column).criteria(this).build());
                 }
             }
         }
@@ -79,7 +79,7 @@ public abstract class AbstractQueryCriteria<T> extends AbstractCriteria<T> imple
 
     @Override
     public AbstractQueryCriteria<T> select(Property<T, ?> property, String alias) {
-        this.selectManager.select(BasicSelect.create().property(property).criteria(this).alias(alias).build());
+        this.selectManager.select(StandardSelect.create().property(property).criteria(this).alias(alias).build());
         return this;
     }
 
@@ -97,7 +97,7 @@ public abstract class AbstractQueryCriteria<T> extends AbstractCriteria<T> imple
 
     @Override
     public AbstractQueryCriteria<T> select(String property, String alias) {
-        this.selectManager.select(BasicSelect.create().property(property).criteria(this).alias(alias).build());
+        this.selectManager.select(StandardSelect.create().property(property).criteria(this).alias(alias).build());
         return this;
     }
 

@@ -16,7 +16,7 @@
 package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.condition.expression.builder.AbstractImmediateRangeExprBuilder;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractRangeExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.utils.Objects;
@@ -29,13 +29,13 @@ import java.util.Collection;
  * @created 2021-01-07
  * @since 1.0.0
  */
-public class ImmediateIn extends AbstractImmediateRangeExpression {
+public class ImmediateIn extends AbstractRangeExpression<String> {
 
     private static final long serialVersionUID = 6345569461265134215L;
 
     public ImmediateIn(Criteria<?> criteria, String column, Slot slot, Collection<Object> values) {
         this.criteria = criteria;
-        this.target = column;
+        this.fragment = column;
         this.slot = slot;
         this.values = values;
         this.symbol = Symbol.IN;
@@ -45,7 +45,7 @@ public class ImmediateIn extends AbstractImmediateRangeExpression {
         return new ImmediateIn.Builder();
     }
 
-    public static final class Builder extends AbstractImmediateRangeExprBuilder<ImmediateIn> {
+    public static final class Builder extends AbstractRangeExprBuilder<ImmediateIn, String> {
 
         private Builder() {
         }

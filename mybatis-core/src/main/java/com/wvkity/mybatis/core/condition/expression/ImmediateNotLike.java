@@ -16,7 +16,7 @@
 package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.condition.expression.builder.AbstractImmediateFuzzyExprBuilder;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractFuzzyExprBuilder;
 import com.wvkity.mybatis.core.constant.LikeMode;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
@@ -28,14 +28,14 @@ import com.wvkity.mybatis.core.utils.Objects;
  * @created 2021-01-09
  * @since 1.0.0
  */
-public class ImmediateNotLike extends AbstractImmediateFuzzyExpression {
+public class ImmediateNotLike extends AbstractFuzzyExpression<String> {
 
     private static final long serialVersionUID = -2947044664048234865L;
 
     public ImmediateNotLike(Criteria<?> criteria, String column, LikeMode mode,
                             Character escape, Slot slot, Object value) {
         this.criteria = criteria;
-        this.target = column;
+        this.fragment = column;
         this.mode = mode;
         this.escape = escape;
         this.slot = slot;
@@ -47,7 +47,7 @@ public class ImmediateNotLike extends AbstractImmediateFuzzyExpression {
         return new ImmediateNotLike.Builder();
     }
 
-    public static final class Builder extends AbstractImmediateFuzzyExprBuilder<ImmediateNotLike> {
+    public static final class Builder extends AbstractFuzzyExprBuilder<ImmediateNotLike, String> {
 
         private Builder() {
         }

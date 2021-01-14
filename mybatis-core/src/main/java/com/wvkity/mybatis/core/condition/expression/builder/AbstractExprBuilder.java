@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,22 +22,23 @@ import com.wvkity.mybatis.core.metadata.Column;
 import com.wvkity.mybatis.core.utils.Objects;
 
 /**
- * 抽象字段条件表达式构建器
- * @param <T> 条件表达式类
+ * 抽象表达式构建器
+ * @param <T> 条件表达式类型
+ * @param <E> 字段类型
  * @author wvkity
- * @created 2021-01-07
+ * @created 2021-01-14
  * @since 1.0.0
  */
-public abstract class AbstractColumnExprBuilder<T> implements ExprBuilder<T> {
+public abstract class AbstractExprBuilder<T, E> implements ExprBuilder<T, E> {
 
     /**
      * {@link Criteria}
      */
     protected Criteria<?> criteria;
     /**
-     * {@link Column}
+     * 字段对象
      */
-    protected Column column;
+    protected E column;
     /**
      * 属性
      */
@@ -55,49 +56,52 @@ public abstract class AbstractColumnExprBuilder<T> implements ExprBuilder<T> {
      */
     protected Object value;
 
-    /**
-     * 获取真实{@link Column}对象
-     * @return {@link Column}对象
-     */
-    public Column getRealColumn() {
-        if (Objects.nonNull(this.column)) {
+    @Override
+    @SuppressWarnings("unchecked")
+    public E getRealColumn() {
+        if (this.column instanceof String) {
             return this.column;
-        } else if (Objects.nonNull(this.lambdaProperty)) {
-            return this.criteria.findColumn(this.lambdaProperty);
-        } else if (Objects.isNotBlank(this.property)) {
-            return this.criteria.findColumn(this.property);
+        } else {
+            if (this.column instanceof Column) {
+                return this.column;
+            } else {
+                if (Objects.nonNull(this.lambdaProperty)) {
+                    return (E) this.criteria.findColumn(this.lambdaProperty);
+                } else if (Objects.isNotBlank(this.property)) {
+                    return (E) this.criteria.findColumn(this.property);
+                }
+            }
         }
         return null;
     }
 
-    public AbstractColumnExprBuilder<T> criteria(Criteria<?> criteria) {
+    public AbstractExprBuilder<T, E> criteria(Criteria<?> criteria) {
         this.criteria = criteria;
         return this;
     }
 
-    public AbstractColumnExprBuilder<T> column(Column column) {
+    public AbstractExprBuilder<T, E> column(E column) {
         this.column = column;
         return this;
     }
 
-    public AbstractColumnExprBuilder<T> property(Property<?, ?> property) {
-        this.lambdaProperty = property;
+    public AbstractExprBuilder<T, E> property(Property<?, ?> lambdaProperty) {
+        this.lambdaProperty = lambdaProperty;
         return this;
     }
 
-    public AbstractColumnExprBuilder<T> property(String property) {
+    public AbstractExprBuilder<T, E> property(String property) {
         this.property = property;
         return this;
     }
 
-    public AbstractColumnExprBuilder<T> slot(Slot slot) {
+    public AbstractExprBuilder<T, E> slot(Slot slot) {
         this.slot = slot;
         return this;
     }
 
-    public AbstractColumnExprBuilder<T> value(Object value) {
+    public AbstractExprBuilder<T, E> value(Object value) {
         this.value = value;
         return this;
     }
-
 }

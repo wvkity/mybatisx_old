@@ -34,9 +34,17 @@ public class SegmentManager implements Fragment {
     private static final long serialVersionUID = -884244554745201766L;
 
     /**
-     * WHERE条件片段
+     * WHERE条件管理器
      */
-    private final WhereSegment whereSegment = new WhereSegment();
+    private final WhereManager whereManager = new WhereManager();
+    /**
+     * 分组管理器
+     */
+    private final GroupManager groupManager = new GroupManager();
+    /**
+     * ORDER排序管理器
+     */
+    private final OrderManager orderManager = new OrderManager();
 
     /**
      * 添加{@link Expression}对象
@@ -44,7 +52,7 @@ public class SegmentManager implements Fragment {
      * @return {@link SegmentManager}
      */
     public SegmentManager where(final Expression expression) {
-        Optional.ofNullable(expression).ifPresent(this.whereSegment::add);
+        Optional.ofNullable(expression).ifPresent(this.whereManager::add);
         return this;
     }
 
@@ -55,7 +63,7 @@ public class SegmentManager implements Fragment {
      */
     public SegmentManager where(final Collection<Expression> expressions) {
         if (Objects.isNotEmpty(expressions)) {
-            this.whereSegment.addAll(expressions);
+            this.whereManager.addAll(expressions);
         }
         return this;
     }
@@ -65,7 +73,7 @@ public class SegmentManager implements Fragment {
      * @return 条件字符串
      */
     public String getWhereString() {
-        return this.whereSegment.getSegment();
+        return this.whereManager.getSegment();
     }
 
     /**
@@ -73,7 +81,7 @@ public class SegmentManager implements Fragment {
      * @return {@link Expression}集合
      */
     public List<Expression> getConditions() {
-        return this.whereSegment.getConditions();
+        return this.whereManager.getConditions();
     }
 
     @Override

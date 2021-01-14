@@ -16,7 +16,7 @@
 package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.condition.expression.builder.AbstractImmediateExprBuilder;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.utils.Objects;
@@ -27,19 +27,23 @@ import com.wvkity.mybatis.core.utils.Objects;
  * @created 2021-01-06
  * @since 1.0.0
  */
-public class ImmediateNotEqual extends BasicImmediateExpression {
+public class ImmediateNotEqual extends AbstractExpression<String> {
 
     private static final long serialVersionUID = -7062776323830921155L;
 
     public ImmediateNotEqual(Criteria<?> criteria, String column, Slot slot, Object value) {
-        super(criteria, column, Symbol.NE, slot, value);
+        this.criteria = criteria;
+        this.fragment = column;
+        this.slot = slot;
+        this.symbol = Symbol.NE;
+        this.value = value;
     }
 
     public static ImmediateNotEqual.Builder create() {
         return new ImmediateNotEqual.Builder();
     }
 
-    public static final class Builder extends AbstractImmediateExprBuilder<ImmediateNotEqual> {
+    public static final class Builder extends AbstractExprBuilder<ImmediateNotEqual, String> {
 
         private Builder() {
         }

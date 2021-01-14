@@ -16,45 +16,45 @@
 package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.condition.expression.builder.AbstractRangeExprBuilder;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.metadata.Column;
 
-import java.util.Collection;
 import java.util.Optional;
 
 /**
- * IN条件表达式
+ * 等于条件表达式
  * @author wvkity
- * @created 2021-01-07
+ * @created 2021-01-06
  * @since 1.0.0
  */
-public class In extends AbstractRangeExpression {
+public class StandardEqual extends AbstractExpression<Column> {
 
-    private static final long serialVersionUID = 5462592687934802949L;
+    private static final long serialVersionUID = -2049663458291206062L;
 
-    public In(Criteria<?> criteria, Column column, Slot slot, Collection<Object> values) {
+    public StandardEqual(Criteria<?> criteria, Column column, Slot slot, Object value) {
         this.criteria = criteria;
-        this.target = column;
+        this.fragment = column;
         this.slot = slot;
-        this.values = values;
-        this.symbol = Symbol.IN;
+        this.symbol = Symbol.EQ;
+        this.value = value;
     }
 
-    public static In.Builder create() {
-        return new In.Builder();
+    public static StandardEqual.Builder create() {
+        return new StandardEqual.Builder();
     }
 
-    public static final class Builder extends AbstractRangeExprBuilder<In> {
+    public static final class Builder extends AbstractExprBuilder<StandardEqual, Column> {
 
         private Builder() {
         }
 
         @Override
-        public In build() {
+        public StandardEqual build() {
             return Optional.ofNullable(this.getRealColumn()).map(it ->
-                new In(this.criteria, it, this.slot, this.values)).orElse(null);
+                new StandardEqual(this.criteria, it, this.slot, this.value)).orElse(null);
         }
+
     }
 }

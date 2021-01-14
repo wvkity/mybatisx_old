@@ -17,14 +17,10 @@ package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
 import com.wvkity.mybatis.core.condition.expression.builder.AbstractFuzzyExprBuilder;
-import com.wvkity.mybatis.core.condition.expression.builder.AbstractImmediateFuzzyExprBuilder;
 import com.wvkity.mybatis.core.constant.LikeMode;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.utils.Objects;
-import org.springframework.util.StringUtils;
-
-import java.util.Optional;
 
 /**
  * Like模糊匹配条件表达式
@@ -32,14 +28,14 @@ import java.util.Optional;
  * @created 2021-01-09
  * @since 1.0.0
  */
-public class ImmediateLike extends AbstractImmediateFuzzyExpression {
+public class ImmediateLike extends AbstractFuzzyExpression<String> {
 
     private static final long serialVersionUID = 437732395610721845L;
 
     public ImmediateLike(Criteria<?> criteria, String column, LikeMode mode,
                          Character escape, Slot slot, Object value) {
         this.criteria = criteria;
-        this.target = column;
+        this.fragment = column;
         this.mode = mode;
         this.escape = escape;
         this.slot = slot;
@@ -51,7 +47,7 @@ public class ImmediateLike extends AbstractImmediateFuzzyExpression {
         return new ImmediateLike.Builder();
     }
 
-    public static final class Builder extends AbstractImmediateFuzzyExprBuilder<ImmediateLike> {
+    public static final class Builder extends AbstractFuzzyExprBuilder<ImmediateLike, String> {
 
         private Builder() {
         }

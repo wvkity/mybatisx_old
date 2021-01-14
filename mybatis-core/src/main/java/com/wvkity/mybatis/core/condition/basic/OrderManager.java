@@ -13,21 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.expression;
+package com.wvkity.mybatis.core.condition.basic;
 
-import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
+import com.wvkity.mybatis.core.condition.basic.order.Order;
+import com.wvkity.mybatis.core.segment.AbstractFragmentList;
 
 /**
- * 抽象空值条件表达式
+ * 排序管片段管理
  * @author wvkity
- * @created 2021-01-09
+ * @created 2021-01-11
  * @since 1.0.0
  */
-@SuppressWarnings({"serial"})
-public abstract class AbstractImmediateNullableExpression extends AbstractImmediateExpression {
+public class OrderManager extends AbstractFragmentList<Order> {
+
+    private static final long serialVersionUID = 1756865212529351571L;
 
     @Override
     public String getSegment() {
-        return Scripts.convertToConditionArg(this.symbol, this.slot, this.getAlias(), this.target);
+        return null;
     }
 }

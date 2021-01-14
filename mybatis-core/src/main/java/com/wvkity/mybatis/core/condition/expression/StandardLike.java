@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,8 @@
 package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.condition.expression.builder.AbstractColumnExprBuilder;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractFuzzyExprBuilder;
+import com.wvkity.mybatis.core.constant.LikeMode;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.metadata.Column;
@@ -24,32 +25,38 @@ import com.wvkity.mybatis.core.metadata.Column;
 import java.util.Optional;
 
 /**
- * 小于条件表达式
+ * Like模糊匹配条件表达式
  * @author wvkity
- * @created 2021-01-06
+ * @created 2021-01-08
  * @since 1.0.0
  */
-public class LessThan extends BasicExpression {
+public class StandardLike extends AbstractFuzzyExpression<Column> {
 
-    private static final long serialVersionUID = -112105594246363693L;
+    private static final long serialVersionUID = -7938299272126062419L;
 
-    public LessThan(Criteria<?> criteria, Column column, Slot slot, Object value) {
-        super(criteria, column, Symbol.LT, slot, value);
+    public StandardLike(Criteria<?> criteria, Column column, LikeMode mode, Character escape, Slot slot, Object value) {
+        this.criteria = criteria;
+        this.fragment = column;
+        this.mode = mode;
+        this.escape = escape;
+        this.slot = slot;
+        this.value = value;
+        this.symbol = Symbol.LIKE;
     }
 
-    public static LessThan.Builder create() {
-        return new LessThan.Builder();
+    public static StandardLike.Builder create() {
+        return new StandardLike.Builder();
     }
 
-    public static final class Builder extends AbstractColumnExprBuilder<LessThan> {
+    public static final class Builder extends AbstractFuzzyExprBuilder<StandardLike, Column> {
 
         private Builder() {
         }
 
         @Override
-        public LessThan build() {
+        public StandardLike build() {
             return Optional.ofNullable(this.getRealColumn()).map(it ->
-                new LessThan(this.criteria, it, this.slot, this.value)).orElse(null);
+                new StandardLike(this.criteria, it, this.mode, this.escape, this.slot, this.value)).orElse(null);
         }
     }
 }

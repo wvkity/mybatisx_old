@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  * @created 2021-01-07
  * @since 1.0.0
  */
-public class Nesting extends AbstractExpression<Expression> {
+public class StandardNesting extends AbstractExpression<Expression> {
 
     private static final long serialVersionUID = -8266095025799360421L;
     private static final String AND_OR_REGEX = "^(?i)(\\s*and\\s+|\\s*or\\s+)(.*)";
@@ -48,7 +48,7 @@ public class Nesting extends AbstractExpression<Expression> {
      */
     private List<Expression> conditions = new ArrayList<>();
 
-    public Nesting(Criteria<?> criteria, boolean not, Slot slot, List<Expression> conditions) {
+    public StandardNesting(Criteria<?> criteria, boolean not, Slot slot, List<Expression> conditions) {
         this.criteria = criteria;
         this.not = not;
         this.slot = slot;
@@ -58,18 +58,18 @@ public class Nesting extends AbstractExpression<Expression> {
     /**
      * 添加多个条件表达式
      * @param conditions 多个条件表达式
-     * @return {@link Nesting}
+     * @return {@link StandardNesting}
      */
-    public Nesting addAll(final Expression... conditions) {
+    public StandardNesting addAll(final Expression... conditions) {
         return this.addAll(Objects.asList(conditions));
     }
 
     /**
      * 添加多个条件表达式
      * @param conditions 多个条件表达式
-     * @return {@link Nesting}
+     * @return {@link StandardNesting}
      */
-    public Nesting addAll(final Collection<Expression> conditions) {
+    public StandardNesting addAll(final Collection<Expression> conditions) {
         return this.addAll(null, conditions);
     }
 
@@ -77,9 +77,9 @@ public class Nesting extends AbstractExpression<Expression> {
      * 添加多个条件表达式
      * @param criteria   {@link Criteria}
      * @param conditions 多个条件表达式
-     * @return {@link Nesting}
+     * @return {@link StandardNesting}
      */
-    public Nesting addAll(final Criteria<?> criteria, final Expression... conditions) {
+    public StandardNesting addAll(final Criteria<?> criteria, final Expression... conditions) {
         return this.addAll(criteria, Objects.asList(conditions));
     }
 
@@ -87,9 +87,9 @@ public class Nesting extends AbstractExpression<Expression> {
      * 添加多个条件表达式
      * @param criteria   {@link Criteria}
      * @param conditions 多个条件表达式
-     * @return {@link Nesting}
+     * @return {@link StandardNesting}
      */
-    public Nesting addAll(final Criteria<?> criteria, final Collection<Expression> conditions) {
+    public StandardNesting addAll(final Criteria<?> criteria, final Collection<Expression> conditions) {
         if (Objects.isNotEmpty(conditions)) {
             final Criteria<?> ci = criteria == null ? this.getCriteria() : criteria;
             this.conditions.addAll(conditions.stream().filter(Objects::nonNull).map(it ->
@@ -122,21 +122,21 @@ public class Nesting extends AbstractExpression<Expression> {
         return Constants.EMPTY;
     }
 
-    public Nesting not(boolean not) {
+    public StandardNesting not(boolean not) {
         this.not = not;
         return this;
     }
 
-    public Nesting conditions(List<Expression> conditions) {
+    public StandardNesting conditions(List<Expression> conditions) {
         this.conditions = conditions;
         return this;
     }
 
-    public static Nesting.Builder create() {
-        return new Nesting.Builder();
+    public static StandardNesting.Builder create() {
+        return new StandardNesting.Builder();
     }
 
-    public static final class Builder implements ExprBuilder<Nesting> {
+    public static final class Builder implements ExprBuilder<StandardNesting, Object> {
         /**
          * {@link Criteria}
          */
@@ -158,8 +158,8 @@ public class Nesting extends AbstractExpression<Expression> {
         }
 
         @Override
-        public Nesting build() {
-            return new Nesting(this.criteria, this.not, this.slot, this.conditions);
+        public StandardNesting build() {
+            return new StandardNesting(this.criteria, this.not, this.slot, this.conditions);
         }
 
         public Builder criteria(Criteria<?> criteria) {

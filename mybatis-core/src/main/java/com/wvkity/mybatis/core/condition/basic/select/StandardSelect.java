@@ -24,16 +24,16 @@ import com.wvkity.mybatis.core.utils.Objects;
 import java.util.Optional;
 
 /**
- * 基础查询字段
+ * 查询字段
  * @author wvkity
  * @created 2021-01-09
  * @since 1.0.0
  */
-public class BasicSelect extends AbstractSelect<Column> {
+public class StandardSelect extends AbstractSelect<Column> {
 
     private static final long serialVersionUID = -4005247598064881575L;
 
-    public BasicSelect(Criteria<?> criteria, Column column, String tableAlias, String alias) {
+    public StandardSelect(Criteria<?> criteria, Column column, String tableAlias, String alias) {
         this.criteria = criteria;
         this.column = column;
         this.tableAlias = tableAlias;
@@ -63,19 +63,19 @@ public class BasicSelect extends AbstractSelect<Column> {
         }
     }
 
-    public static BasicSelect.Builder create() {
-        return new BasicSelect.Builder();
+    public static StandardSelect.Builder create() {
+        return new StandardSelect.Builder();
     }
 
-    public static final class Builder extends AbstractColumnSelectBuilder<BasicSelect> {
+    public static final class Builder extends AbstractColumnSelectBuilder<StandardSelect> {
 
         private Builder() {
         }
 
         @Override
-        public BasicSelect build() {
+        public StandardSelect build() {
             return Optional.ofNullable(this.getColumn()).map(it ->
-                new BasicSelect(this.criteria, it, this.tableAlias, this.alias)).orElse(null);
+                new StandardSelect(this.criteria, it, this.tableAlias, this.alias)).orElse(null);
         }
     }
 }

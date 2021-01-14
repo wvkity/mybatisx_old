@@ -16,16 +16,19 @@
 package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
+import com.wvkity.mybatis.core.metadata.Column;
+import com.wvkity.mybatis.core.utils.Objects;
 
 import java.util.Collection;
 
 /**
  * 范围条件表达式
+ * @param <E> 字段类型
  * @author wvkity
  * @created 2021-01-07
  * @since 1.0.0
  */
-public abstract class AbstractRangeExpression extends AbstractColumnExpression {
+public abstract class AbstractRangeExpression<E> extends AbstractExpression<E> {
 
     private static final long serialVersionUID = 5735695407715135956L;
 
@@ -36,11 +39,18 @@ public abstract class AbstractRangeExpression extends AbstractColumnExpression {
 
     @Override
     public String getSegment() {
-        return Scripts.convertToConditionArg(this.symbol, this.slot, this.getAlias(), this.target,
+        if (Objects.isNull(this.fragment)) {
+            return null;
+        }
+        if (this.fragment instanceof String) {
+            return Scripts.convertToConditionArg(this.symbol, this.slot, this.getAlias(), (String) this.fragment,
+                this.defPlaceholders(this.values));
+        }
+        return Scripts.convertToConditionArg(this.symbol, this.slot, this.getAlias(), (Column) this.fragment,
             this.defPlaceholders(this.values));
     }
 
-    public AbstractRangeExpression values(Collection<Object> values) {
+    public AbstractRangeExpression<E> values(Collection<Object> values) {
         this.values = values;
         return this;
     }

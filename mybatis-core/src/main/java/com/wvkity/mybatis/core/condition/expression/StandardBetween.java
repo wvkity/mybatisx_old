@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,8 +16,7 @@
 package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.condition.expression.builder.AbstractFuzzyExprBuilder;
-import com.wvkity.mybatis.core.constant.LikeMode;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractBetweenExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.metadata.Column;
@@ -25,38 +24,37 @@ import com.wvkity.mybatis.core.metadata.Column;
 import java.util.Optional;
 
 /**
- * Not Like模糊匹配条件表达式
+ * Between范围条件表达式
  * @author wvkity
- * @created 2021-01-08
+ * @created 2021-01-07
  * @since 1.0.0
  */
-public class NotLike extends AbstractFuzzyExpression {
+public class StandardBetween extends AbstractBetweenExpression<Column> {
 
-    private static final long serialVersionUID = 5881853809637635749L;
+    private static final long serialVersionUID = -5335171321951491035L;
 
-    public NotLike(Criteria<?> criteria, Column column, LikeMode mode, Character escape, Slot slot, Object value) {
+    public StandardBetween(Criteria<?> criteria, Column column, Slot slot, Object begin, Object end) {
         this.criteria = criteria;
-        this.target = column;
-        this.mode = mode;
-        this.escape = escape;
+        this.fragment = column;
         this.slot = slot;
-        this.value = value;
-        this.symbol = Symbol.NOT_LIKE;
+        this.symbol = Symbol.BETWEEN;
+        this.begin = begin;
+        this.end = end;
     }
 
-    public static NotLike.Builder create() {
-        return new NotLike.Builder();
+    public static StandardBetween.Builder create() {
+        return new StandardBetween.Builder();
     }
 
-    public static final class Builder extends AbstractFuzzyExprBuilder<NotLike> {
+    public static final class Builder extends AbstractBetweenExprBuilder<StandardBetween, Column> {
 
         private Builder() {
         }
 
         @Override
-        public NotLike build() {
+        public StandardBetween build() {
             return Optional.ofNullable(this.getRealColumn()).map(it ->
-                new NotLike(this.criteria, it, this.mode, this.escape, this.slot, this.value)).orElse(null);
+                new StandardBetween(this.criteria, it, this.slot, this.begin, this.end)).orElse(null);
         }
     }
 }

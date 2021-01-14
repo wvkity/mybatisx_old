@@ -19,11 +19,13 @@ import com.wvkity.mybatis.core.constant.LikeMode;
 
 /**
  * 抽象模糊匹配条件表达式构建器
+ * @param <T> 条件表达式类型
+ * @param <E> 字段类型
  * @author wvkity
  * @created 2021-01-08
  * @since 1.0.0
  */
-public abstract class AbstractFuzzyExprBuilder<T> extends AbstractColumnExprBuilder<T> {
+public abstract class AbstractFuzzyExprBuilder<T, E> extends AbstractExprBuilder<T, E> {
     /**
      * 匹配模式
      */
@@ -33,12 +35,12 @@ public abstract class AbstractFuzzyExprBuilder<T> extends AbstractColumnExprBuil
      */
     protected Character escape;
 
-    public AbstractFuzzyExprBuilder<T> mode(LikeMode mode) {
+    public AbstractFuzzyExprBuilder<T, E> mode(LikeMode mode) {
         this.mode = mode;
         return this;
     }
 
-    public AbstractFuzzyExprBuilder<T> escape(Character escape) {
+    public AbstractFuzzyExprBuilder<T, E> escape(Character escape) {
         this.escape = escape;
         return this;
     }

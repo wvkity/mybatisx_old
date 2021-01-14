@@ -16,7 +16,7 @@
 package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.condition.expression.builder.AbstractColumnExprBuilder;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.metadata.Column;
@@ -29,29 +29,30 @@ import java.util.Optional;
  * @created 2021-01-09
  * @since 1.0.0
  */
-public class Null extends AbstractNullableExpression {
+public class StandardNull extends AbstractNullableExpression<Column> {
 
     private static final long serialVersionUID = 3125090725718103619L;
 
-    public Null(Criteria<?> criteria, Column column, Slot slot) {
+    public StandardNull(Criteria<?> criteria, Column column, Slot slot) {
         this.criteria = criteria;
-        this.target = column;
+        this.fragment = column;
         this.slot = slot;
         this.symbol = Symbol.NULL;
     }
 
-    public static Null.Builder create() {
-        return new Null.Builder();
+    public static StandardNull.Builder create() {
+        return new StandardNull.Builder();
     }
 
-    public static final class Builder extends AbstractColumnExprBuilder<Null> {
+    public static final class Builder extends AbstractExprBuilder<StandardNull, Column> {
 
         private Builder() {
         }
 
         @Override
-        public Null build() {
-            return Optional.ofNullable(this.getRealColumn()).map(it -> new Null(this.criteria, it, this.slot)).orElse(null);
+        public StandardNull build() {
+            return Optional.ofNullable(this.getRealColumn()).map(it ->
+                new StandardNull(this.criteria, it, this.slot)).orElse(null);
         }
     }
 }

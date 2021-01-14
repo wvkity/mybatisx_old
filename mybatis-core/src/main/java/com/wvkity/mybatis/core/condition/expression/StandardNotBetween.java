@@ -16,45 +16,45 @@
 package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.condition.expression.builder.AbstractRangeExprBuilder;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractBetweenExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.metadata.Column;
 
-import java.util.Collection;
 import java.util.Optional;
 
 /**
- * NOT IN条件表达式
+ * Not between范围条件表达式
  * @author wvkity
  * @created 2021-01-07
  * @since 1.0.0
  */
-public class NotIn extends AbstractRangeExpression {
+public class StandardNotBetween extends AbstractBetweenExpression<Column> {
 
-    private static final long serialVersionUID = 2448932045855706827L;
+    private static final long serialVersionUID = -5107081321447906415L;
 
-    public NotIn(Criteria<?> criteria, Column column, Slot slot, Collection<Object> values) {
+    public StandardNotBetween(Criteria<?> criteria, Column column, Slot slot, Object begin, Object end) {
         this.criteria = criteria;
-        this.target = column;
+        this.fragment = column;
         this.slot = slot;
-        this.values = values;
-        this.symbol = Symbol.NOT_IN;
+        this.symbol = Symbol.NOT_BETWEEN;
+        this.begin = begin;
+        this.end = end;
     }
 
-    public static NotIn.Builder create() {
-        return new NotIn.Builder();
+    public static StandardNotBetween.Builder create() {
+        return new StandardNotBetween.Builder();
     }
 
-    public static final class Builder extends AbstractRangeExprBuilder<NotIn> {
+    public static final class Builder extends AbstractBetweenExprBuilder<StandardNotBetween, Column> {
 
         private Builder() {
         }
 
         @Override
-        public NotIn build() {
+        public StandardNotBetween build() {
             return Optional.ofNullable(this.getRealColumn()).map(it ->
-                new NotIn(this.criteria, it, this.slot, this.values)).orElse(null);
+                new StandardNotBetween(this.criteria, it, this.slot, this.begin, this.end)).orElse(null);
         }
     }
 }

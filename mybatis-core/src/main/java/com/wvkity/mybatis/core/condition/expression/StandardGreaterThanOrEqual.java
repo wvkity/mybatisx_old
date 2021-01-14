@@ -16,7 +16,7 @@
 package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.condition.expression.builder.AbstractColumnExprBuilder;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.metadata.Column;
@@ -29,27 +29,31 @@ import java.util.Optional;
  * @created 2021-01-06
  * @since 1.0.0
  */
-public class GreaterThanOrEqual extends BasicExpression {
+public class StandardGreaterThanOrEqual extends AbstractExpression<Column> {
 
     private static final long serialVersionUID = 2495458818050534028L;
 
-    public GreaterThanOrEqual(Criteria<?> criteria, Column column, Slot slot, Object value) {
-        super(criteria, column, Symbol.GE, slot, value);
+    public StandardGreaterThanOrEqual(Criteria<?> criteria, Column column, Slot slot, Object value) {
+        this.criteria = criteria;
+        this.fragment = column;
+        this.slot = slot;
+        this.symbol = Symbol.GE;
+        this.value = value;
     }
 
-    public static GreaterThanOrEqual.Builder create() {
-        return new GreaterThanOrEqual.Builder();
+    public static StandardGreaterThanOrEqual.Builder create() {
+        return new StandardGreaterThanOrEqual.Builder();
     }
 
-    public static final class Builder extends AbstractColumnExprBuilder<GreaterThanOrEqual> {
+    public static final class Builder extends AbstractExprBuilder<StandardGreaterThanOrEqual, Column> {
 
         private Builder() {
         }
 
         @Override
-        public GreaterThanOrEqual build() {
+        public StandardGreaterThanOrEqual build() {
             return Optional.ofNullable(this.getRealColumn()).map(it ->
-                new GreaterThanOrEqual(this.criteria, it, this.slot, this.value)).orElse(null);
+                new StandardGreaterThanOrEqual(this.criteria, it, this.slot, this.value)).orElse(null);
         }
     }
 }

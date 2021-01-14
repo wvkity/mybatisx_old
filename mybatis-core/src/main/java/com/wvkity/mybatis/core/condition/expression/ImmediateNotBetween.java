@@ -16,7 +16,7 @@
 package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.condition.expression.builder.AbstractImmediateBetweenExprBuilder;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractBetweenExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.utils.Objects;
@@ -27,13 +27,13 @@ import com.wvkity.mybatis.core.utils.Objects;
  * @created 2021-01-07
  * @since 1.0.0
  */
-public class ImmediateNotBetween extends AbstractImmediateBetweenExpression {
+public class ImmediateNotBetween extends AbstractBetweenExpression<String> {
 
     private static final long serialVersionUID = -3337167513113927777L;
 
     public ImmediateNotBetween(Criteria<?> criteria, String column, Slot slot, Object begin, Object end) {
         this.criteria = criteria;
-        this.target = column;
+        this.fragment = column;
         this.slot = slot;
         this.symbol = Symbol.NOT_BETWEEN;
         this.begin = begin;
@@ -44,7 +44,7 @@ public class ImmediateNotBetween extends AbstractImmediateBetweenExpression {
         return new ImmediateNotBetween.Builder();
     }
 
-    public static final class Builder extends AbstractImmediateBetweenExprBuilder<ImmediateNotBetween> {
+    public static final class Builder extends AbstractBetweenExprBuilder<ImmediateNotBetween, String> {
 
         private Builder(){}
 

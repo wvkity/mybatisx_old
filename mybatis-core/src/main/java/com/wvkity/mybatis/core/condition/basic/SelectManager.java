@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.core.condition.basic;
 
-import com.wvkity.mybatis.core.condition.basic.select.BasicSelect;
+import com.wvkity.mybatis.core.condition.basic.select.StandardSelect;
 import com.wvkity.mybatis.core.condition.basic.select.ImmediateSelect;
 import com.wvkity.mybatis.core.condition.basic.select.Select;
 import com.wvkity.mybatis.core.condition.criteria.AbstractQueryCriteria;
@@ -23,10 +23,9 @@ import com.wvkity.mybatis.core.constant.Constants;
 import com.wvkity.mybatis.core.handler.TableHandler;
 import com.wvkity.mybatis.core.immutable.ImmutableList;
 import com.wvkity.mybatis.core.metadata.Column;
-import com.wvkity.mybatis.core.segment.Fragment;
+import com.wvkity.mybatis.core.segment.AbstractFragmentList;
 import com.wvkity.mybatis.core.utils.Objects;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -40,17 +39,13 @@ import java.util.stream.Collectors;
  * @created 2021-01-09
  * @since 1.0.0
  */
-public class SelectManager implements Fragment {
+public class SelectManager extends AbstractFragmentList<Select> {
 
     private static final long serialVersionUID = -4508461674924936576L;
     /**
      * 查询条件包装对象
      */
     private final AbstractQueryCriteria<?> criteria;
-    /**
-     * 查询列
-     */
-    private final List<Select> selects = new ArrayList<>();
     /**
      * 查询列缓存
      */
@@ -96,7 +91,7 @@ public class SelectManager implements Fragment {
             if (Objects.isNotEmpty(its)) {
                 this.cached.compareAndSet(true, false);
                 for (Select it : selects) {
-                    this.selects.add(it);
+                    this.fragments.add(it);
                 }
             }
         }
@@ -134,7 +129,7 @@ public class SelectManager implements Fragment {
      * @return boolean
      */
     public boolean hasSelects() {
-        return Objects.isNotEmpty(this.selects);
+        return !this.isEmpty();
     }
 
     /**
@@ -148,9 +143,9 @@ public class SelectManager implements Fragment {
         // 检查是否存在指定查询列
         final List<Select> tmp;
         if (this.hasSelects()) {
-            tmp = this.selects.stream().filter(it -> {
-                if (it instanceof BasicSelect) {
-                    return this.accept(this.excludeProperties, ((BasicSelect) it).getProperty(), false);
+            tmp = this.fragments.stream().filter(it -> {
+                if (it instanceof StandardSelect) {
+                    return this.accept(this.excludeProperties, ((StandardSelect) it).getProperty(), false);
                 } else if (it instanceof ImmediateSelect) {
                     return this.accept(this.excludeColumns, it.getColumn(), true);
                 }
@@ -162,7 +157,7 @@ public class SelectManager implements Fragment {
             if (Objects.isNotEmpty(list)) {
                 tmp = list.stream().filter(it -> this.accept(this.excludeProperties, it.getProperty(), false)
                     && this.accept(this.excludeColumns, it.getColumn(), true)).map(it ->
-                    BasicSelect.create().column(it).criteria(this.criteria).build()).collect(Collectors.toList());
+                    StandardSelect.create().column(it).criteria(this.criteria).build()).collect(Collectors.toList());
             } else {
                 return ImmutableList.of();
             }
@@ -191,6 +186,16 @@ public class SelectManager implements Fragment {
         } else {
             return sources.stream().noneMatch(target::equals);
         }
+    }
+
+    @Override
+    public void add(Select fragment) {
+        this.select(fragment);
+    }
+
+    @Override
+    public void addAll(Collection<Select> fragments) {
+        this.select(fragments);
     }
 
     @Override

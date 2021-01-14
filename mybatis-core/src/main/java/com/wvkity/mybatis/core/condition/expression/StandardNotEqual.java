@@ -16,24 +16,44 @@
 package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
+import com.wvkity.mybatis.core.metadata.Column;
+
+import java.util.Optional;
 
 /**
- * 基础条件表达式
+ * 不等于条件表达式
  * @author wvkity
  * @created 2021-01-06
  * @since 1.0.0
  */
-public class BasicImmediateExpression extends AbstractImmediateExpression {
+public class StandardNotEqual extends AbstractExpression<Column> {
 
-    private static final long serialVersionUID = 2800029176385396206L;
+    private static final long serialVersionUID = -8879802952196072736L;
 
-    public BasicImmediateExpression(Criteria<?> criteria, String column, Symbol symbol, Slot slot, Object value) {
+    public StandardNotEqual(Criteria<?> criteria, Column column, Slot slot, Object value) {
         this.criteria = criteria;
-        this.target = column;
-        this.symbol = symbol;
+        this.fragment = column;
         this.slot = slot;
+        this.symbol = Symbol.NE;
         this.value = value;
+    }
+
+    public static StandardNotEqual.Builder create() {
+        return new StandardNotEqual.Builder();
+    }
+
+    public static final class Builder extends AbstractExprBuilder<StandardNotEqual, Column> {
+
+        private Builder() {
+        }
+
+        @Override
+        public StandardNotEqual build() {
+            return Optional.ofNullable(this.getRealColumn()).map(it ->
+                new StandardNotEqual(this.criteria, it, this.slot, this.value)).orElse(null);
+        }
     }
 }

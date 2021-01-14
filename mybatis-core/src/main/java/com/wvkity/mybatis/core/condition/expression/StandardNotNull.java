@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,7 @@
 package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.condition.expression.builder.AbstractColumnExprBuilder;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.metadata.Column;
@@ -24,33 +24,35 @@ import com.wvkity.mybatis.core.metadata.Column;
 import java.util.Optional;
 
 /**
- * 等于条件表达式
+ * NOT NULL条件表达式
  * @author wvkity
- * @created 2021-01-06
+ * @created 2021-01-09
  * @since 1.0.0
  */
-public class Equal extends BasicExpression {
+public class StandardNotNull extends AbstractNullableExpression<Column> {
 
-    private static final long serialVersionUID = -2049663458291206062L;
+    private static final long serialVersionUID = 8443593657388476364L;
 
-    public Equal(Criteria<?> criteria, Column column, Slot slot, Object value) {
-        super(criteria, column, Symbol.EQ, slot, value);
+    public StandardNotNull(Criteria<?> criteria, Column column, Slot slot) {
+        this.criteria = criteria;
+        this.fragment = column;
+        this.slot = slot;
+        this.symbol = Symbol.NOT_NULL;
     }
 
-    public static Equal.Builder create() {
-        return new Equal.Builder();
+    public static StandardNotNull.Builder create() {
+        return new StandardNotNull.Builder();
     }
 
-    public static final class Builder extends AbstractColumnExprBuilder<Equal> {
+    public static final class Builder extends AbstractExprBuilder<StandardNotNull, Column> {
 
         private Builder() {
         }
 
         @Override
-        public Equal build() {
+        public StandardNotNull build() {
             return Optional.ofNullable(this.getRealColumn()).map(it ->
-                new Equal(this.criteria, it, this.slot, this.value)).orElse(null);
+                new StandardNotNull(this.criteria, it, this.slot)).orElse(null);
         }
-
     }
 }

@@ -16,26 +16,44 @@
 package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.metadata.Column;
 
+import java.util.Optional;
+
 /**
- * 基础条件表达式
+ * 小于或等于条件表达式
  * @author wvkity
  * @created 2021-01-06
  * @since 1.0.0
  */
-public class BasicExpression extends AbstractColumnExpression {
+public class StandardLessThanOrEqual extends AbstractExpression<Column> {
 
-    private static final long serialVersionUID = -2711714146874396946L;
+    private static final long serialVersionUID = 1562680877348547293L;
 
-    public BasicExpression(Criteria<?> criteria, Column column, Symbol symbol, Slot slot, Object value) {
+    public StandardLessThanOrEqual(Criteria<?> criteria, Column column, Slot slot, Object value) {
         this.criteria = criteria;
-        this.target = column;
-        this.symbol = symbol;
+        this.fragment = column;
         this.slot = slot;
+        this.symbol = Symbol.LE;
         this.value = value;
     }
 
+    public static StandardLessThanOrEqual.Builder create() {
+        return new StandardLessThanOrEqual.Builder();
+    }
+
+    public static final class Builder extends AbstractExprBuilder<StandardLessThanOrEqual, Column> {
+
+        private Builder() {
+        }
+
+        @Override
+        public StandardLessThanOrEqual build() {
+            return Optional.ofNullable(this.getRealColumn()).map(it ->
+                new StandardLessThanOrEqual(this.criteria, it, this.slot, this.value)).orElse(null);
+        }
+    }
 }

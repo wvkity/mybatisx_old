@@ -16,40 +16,45 @@
 package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.condition.expression.builder.AbstractColumnExprBuilder;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractRangeExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.metadata.Column;
 
+import java.util.Collection;
 import java.util.Optional;
 
 /**
- * 不等于条件表达式
+ * NOT IN条件表达式
  * @author wvkity
- * @created 2021-01-06
+ * @created 2021-01-07
  * @since 1.0.0
  */
-public class NotEqual extends BasicExpression {
+public class StandardNotIn extends AbstractRangeExpression<Column> {
 
-    private static final long serialVersionUID = -8879802952196072736L;
+    private static final long serialVersionUID = 2448932045855706827L;
 
-    public NotEqual(Criteria<?> criteria, Column column, Slot slot, Object value) {
-        super(criteria, column, Symbol.NE, slot, value);
+    public StandardNotIn(Criteria<?> criteria, Column column, Slot slot, Collection<Object> values) {
+        this.criteria = criteria;
+        this.fragment = column;
+        this.slot = slot;
+        this.values = values;
+        this.symbol = Symbol.NOT_IN;
     }
 
-    public static NotEqual.Builder create() {
-        return new NotEqual.Builder();
+    public static StandardNotIn.Builder create() {
+        return new StandardNotIn.Builder();
     }
 
-    public static final class Builder extends AbstractColumnExprBuilder<NotEqual> {
+    public static final class Builder extends AbstractRangeExprBuilder<StandardNotIn, Column> {
 
         private Builder() {
         }
 
         @Override
-        public NotEqual build() {
+        public StandardNotIn build() {
             return Optional.ofNullable(this.getRealColumn()).map(it ->
-                new NotEqual(this.criteria, it, this.slot, this.value)).orElse(null);
+                new StandardNotIn(this.criteria, it, this.slot, this.values)).orElse(null);
         }
     }
 }

@@ -16,7 +16,7 @@
 package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.condition.expression.builder.AbstractImmediateExprBuilder;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.utils.Objects;
@@ -27,13 +27,13 @@ import com.wvkity.mybatis.core.utils.Objects;
  * @created 2021-01-09
  * @since 1.0.0
  */
-public class ImmediateNotNull extends AbstractImmediateNullableExpression {
+public class ImmediateNotNull extends AbstractNullableExpression<String> {
 
     private static final long serialVersionUID = 3206146356985090856L;
 
     public ImmediateNotNull(Criteria<?> criteria, String column, Slot slot) {
         this.criteria = criteria;
-        this.target = column;
+        this.fragment = column;
         this.slot = slot;
         this.symbol = Symbol.NOT_NULL;
     }
@@ -42,7 +42,7 @@ public class ImmediateNotNull extends AbstractImmediateNullableExpression {
         return new ImmediateNotNull.Builder();
     }
 
-    public static final class Builder extends AbstractImmediateExprBuilder<ImmediateNotNull> {
+    public static final class Builder extends AbstractExprBuilder<ImmediateNotNull, String> {
 
         private Builder() {
         }

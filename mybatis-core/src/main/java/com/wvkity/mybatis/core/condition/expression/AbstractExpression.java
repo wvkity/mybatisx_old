@@ -19,6 +19,9 @@ import com.wvkity.mybatis.core.condition.criteria.Criteria;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.convert.converter.PlaceholderConverter;
+import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
+import com.wvkity.mybatis.core.metadata.Column;
+import com.wvkity.mybatis.core.segment.AbstractFragment;
 import com.wvkity.mybatis.core.utils.Objects;
 
 import java.util.Collection;
@@ -26,12 +29,13 @@ import java.util.List;
 
 /**
  * 抽象条件表达式
+ * @param <E> 字段类型
  * @author wvkity
  * @created 2021-01-06
  * @since 1.0.0
  */
 @SuppressWarnings({"serial"})
-public abstract class AbstractExpression<E> implements Expression, PlaceholderConverter {
+public abstract class AbstractExpression<E> extends AbstractFragment<E> implements Expression, PlaceholderConverter {
 
     /**
      * {@link Criteria}对象
@@ -41,10 +45,6 @@ public abstract class AbstractExpression<E> implements Expression, PlaceholderCo
      * 表别名
      */
     protected String tableAlias;
-    /**
-     * 目标对象
-     */
-    protected E target;
     /**
      * 条件符号
      */
@@ -57,6 +57,18 @@ public abstract class AbstractExpression<E> implements Expression, PlaceholderCo
      * 值
      */
     protected Object value;
+
+    @Override
+    public String getSegment() {
+        if (this.fragment instanceof String) {
+            return Scripts.convertToConditionArg(this.symbol, this.slot, this.getAlias(), (String) this.fragment,
+                this.defPlaceholder(this.value));
+        } else if (this.fragment instanceof Column) {
+            return Scripts.convertToConditionArg(this.symbol, this.slot, this.getAlias(), (Column) this.fragment,
+                this.defPlaceholder(this.value));
+        }
+        return null;
+    }
 
     @Override
     public String convert(String source, boolean format, Object... args) {
