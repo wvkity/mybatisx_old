@@ -31,6 +31,8 @@ import com.wvkity.mybatis.core.condition.expression.ImmediateNotIn;
 import com.wvkity.mybatis.core.condition.expression.ImmediateNotLike;
 import com.wvkity.mybatis.core.condition.expression.ImmediateNotNull;
 import com.wvkity.mybatis.core.condition.expression.ImmediateNull;
+import com.wvkity.mybatis.core.condition.expression.ImmediateTemplate;
+import com.wvkity.mybatis.core.condition.expression.Native;
 import com.wvkity.mybatis.core.condition.expression.StandardBetween;
 import com.wvkity.mybatis.core.condition.expression.StandardEqual;
 import com.wvkity.mybatis.core.condition.expression.StandardGreaterThan;
@@ -47,6 +49,8 @@ import com.wvkity.mybatis.core.condition.expression.StandardNotIn;
 import com.wvkity.mybatis.core.condition.expression.StandardNotLike;
 import com.wvkity.mybatis.core.condition.expression.StandardNotNull;
 import com.wvkity.mybatis.core.condition.expression.StandardNull;
+import com.wvkity.mybatis.core.condition.expression.StandardTemplate;
+import com.wvkity.mybatis.core.condition.expression.TemplateMatch;
 import com.wvkity.mybatis.core.constant.Constants;
 import com.wvkity.mybatis.core.constant.LikeMode;
 import com.wvkity.mybatis.core.constant.Slot;
@@ -207,6 +211,8 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     }
 
     // endregion
+
+    // region Conditions
 
     // region Compare conditions
 
@@ -483,6 +489,98 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
 
     // endregion
 
+    // region Template conditions
+
+    @Override
+    public Chain template(String template, Property<T, ?> property, Object value, Slot slot) {
+        return add(StandardTemplate.create().template(template).match(TemplateMatch.SINGLE).criteria(this)
+            .property(property).slot(slot).value(value).build());
+    }
+
+    @Override
+    public Chain template(String template, String property, Object value, Slot slot) {
+        return add(StandardTemplate.create().template(template).match(TemplateMatch.SINGLE).criteria(this)
+            .property(property).slot(slot).value(value).build());
+    }
+
+    @Override
+    public Chain template(String template, Object value) {
+        return add(ImmediateTemplate.create().template(template).match(TemplateMatch.SINGLE).criteria(this)
+            .value(value).build());
+    }
+
+    @Override
+    public Chain template(String template, Object value, Slot slot) {
+        return add(ImmediateTemplate.create().template(template).match(TemplateMatch.SINGLE).criteria(this)
+            .slot(slot).value(value).build());
+    }
+
+    @Override
+    public Chain colTemplate(String template, String column, Object value, Slot slot) {
+        return add(ImmediateTemplate.create().template(template).match(TemplateMatch.SINGLE).criteria(this)
+            .column(column).slot(slot).value(value).build());
+    }
+
+    @Override
+    public Chain template(String template, Property<T, ?> property, Collection<Object> values, Slot slot) {
+        return add(StandardTemplate.create().template(template).values(values).criteria(this)
+            .property(property).slot(slot).build());
+    }
+
+    @Override
+    public Chain template(String template, String property, Collection<Object> values, Slot slot) {
+        return add(StandardTemplate.create().template(template).values(values).criteria(this)
+            .property(property).slot(slot).build());
+    }
+
+    @Override
+    public Chain template(String template, Collection<Object> values) {
+        return add(ImmediateTemplate.create().template(template).values(values).criteria(this).build());
+    }
+
+    @Override
+    public Chain template(String template, Collection<Object> values, Slot slot) {
+        return add(ImmediateTemplate.create().template(template).values(values).criteria(this).slot(slot).build());
+    }
+
+    @Override
+    public Chain colTemplate(String template, String column, Collection<Object> values, Slot slot) {
+        return add(ImmediateTemplate.create().template(template).values(values).criteria(this)
+            .column(column).slot(slot).build());
+    }
+
+    @Override
+    public Chain template(String template, Property<T, ?> property, Map<String, Object> values, Slot slot) {
+        return add(StandardTemplate.create().template(template).match(TemplateMatch.MAP).values(values)
+            .criteria(this).property(property).slot(slot).build());
+    }
+
+    @Override
+    public Chain template(String template, String property, Map<String, Object> values, Slot slot) {
+        return add(StandardTemplate.create().template(template).match(TemplateMatch.MAP).values(values)
+            .criteria(this).property(property).slot(slot).build());
+    }
+
+    @Override
+    public Chain template(String template, Map<String, Object> values) {
+        return add(ImmediateTemplate.create().template(template).match(TemplateMatch.MAP).values(values)
+            .criteria(this).build());
+    }
+
+    @Override
+    public Chain template(String template, Map<String, Object> values, Slot slot) {
+        return add(ImmediateTemplate.create().template(template).match(TemplateMatch.MAP).values(values)
+            .criteria(this).slot(slot).build());
+    }
+
+    @Override
+    public Chain colTemplate(String template, String column, Map<String, Object> values, Slot slot) {
+        return add(ImmediateTemplate.create().template(template).match(TemplateMatch.MAP).values(values)
+            .criteria(this).column(column).slot(slot).build());
+    }
+
+    // endregion
+
     // region Nested conditions
 
     @Override
@@ -532,6 +630,17 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
         }
         return this.context;
     }
+
+    // endregion
+
+    @Override
+    public Chain nativeSql(String criterion) {
+        if (Objects.isNotBlank(criterion)) {
+            this.add(Native.of(criterion));
+        }
+        return this.context;
+    }
+
 
     // endregion
 
