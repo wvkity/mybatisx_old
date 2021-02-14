@@ -13,16 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.convert.converter;
+package com.wvkity.mybatis.core.inject.mapping.sql;
 
-import com.wvkity.mybatis.core.convert.Property;
+import com.wvkity.mybatis.core.config.MyBatisGlobalConfiguration;
+import com.wvkity.mybatis.core.metadata.Table;
 
 /**
- * 属性转换器
+ * 抽象逻辑删除SQL提供器
  * @author wvkity
- * @created 2020-10-19
+ * @created 2021-02-02
  * @since 1.0.0
  */
-public interface PropertyConverter<T> extends ObjectConverter<Property<T, ?>> {
+public abstract class AbstractLogicDeleteSupplier extends AbstractSupplier {
 
+    public AbstractLogicDeleteSupplier(Table table, MyBatisGlobalConfiguration configuration) {
+        super(table, configuration);
+    }
 }

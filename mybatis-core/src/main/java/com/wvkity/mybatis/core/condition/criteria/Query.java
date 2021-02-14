@@ -26,6 +26,7 @@ import com.wvkity.mybatis.core.utils.Objects;
  * @since 1.0.0
  */
 public class Query<T> extends AbstractQueryCriteria<T> {
+
     private static final long serialVersionUID = -3270889922571718841L;
 
     public Query(final Class<T> entityClass) {

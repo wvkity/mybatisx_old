@@ -15,14 +15,13 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
+import com.wvkity.mybatis.core.condition.basic.Matched;
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
 import com.wvkity.mybatis.core.condition.expression.builder.AbstractFuzzyExprBuilder;
 import com.wvkity.mybatis.core.constant.LikeMode;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
-import com.wvkity.mybatis.core.metadata.Column;
-
-import java.util.Optional;
+import com.wvkity.mybatis.core.utils.Objects;
 
 /**
  * Like模糊匹配条件表达式
@@ -30,33 +29,36 @@ import java.util.Optional;
  * @created 2021-01-08
  * @since 1.0.0
  */
-public class StandardLike extends AbstractFuzzyExpression<Column> {
+public class StandardLike extends AbstractFuzzyExpression<String> {
 
     private static final long serialVersionUID = -7938299272126062419L;
 
-    public StandardLike(Criteria<?> criteria, Column column, LikeMode mode, Character escape, Slot slot, Object value) {
+    public StandardLike(Criteria<?> criteria, String property, LikeMode mode, Character escape, Slot slot, Object value) {
         this.criteria = criteria;
-        this.fragment = column;
+        this.target = property;
         this.mode = mode;
         this.escape = escape;
         this.slot = slot;
         this.value = value;
         this.symbol = Symbol.LIKE;
+        this.matched = Matched.STANDARD;
     }
 
     public static StandardLike.Builder create() {
         return new StandardLike.Builder();
     }
 
-    public static final class Builder extends AbstractFuzzyExprBuilder<StandardLike, Column> {
+    public static final class Builder extends AbstractFuzzyExprBuilder<StandardLike, String> {
 
         private Builder() {
         }
 
         @Override
         public StandardLike build() {
-            return Optional.ofNullable(this.getRealColumn()).map(it ->
-                new StandardLike(this.criteria, it, this.mode, this.escape, this.slot, this.value)).orElse(null);
+            if (Objects.isNotBlank(this.target)) {
+                return new StandardLike(this.criteria, this.target, this.mode, this.escape, this.slot, this.value);
+            }
+            return null;
         }
     }
 }

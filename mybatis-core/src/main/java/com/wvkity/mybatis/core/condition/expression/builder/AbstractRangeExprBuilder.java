@@ -15,6 +15,8 @@
  */
 package com.wvkity.mybatis.core.condition.expression.builder;
 
+import com.wvkity.mybatis.core.utils.Objects;
+
 import java.util.Collection;
 
 /**
@@ -31,6 +33,10 @@ public abstract class AbstractRangeExprBuilder<T, E> extends AbstractExprBuilder
      * 多个值
      */
     protected Collection<Object> values;
+
+    public AbstractRangeExprBuilder<T, E> values(final Object... values) {
+        return values(Objects.asList(values));
+    }
 
     public AbstractRangeExprBuilder<T, E> values(Collection<Object> values) {
         this.values = values;

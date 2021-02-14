@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.core.condition.basic.builder;
 
-import com.wvkity.mybatis.core.condition.basic.select.Select;
+import com.wvkity.mybatis.core.condition.basic.select.Selection;
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
 
 /**
@@ -26,7 +26,7 @@ import com.wvkity.mybatis.core.condition.criteria.Criteria;
  * @created 2021-01-09
  * @since 1.0.0
  */
-public abstract class AbstractSelectBuilder<T extends Select, E> implements SelectBuilder<T> {
+public abstract class AbstractSelectBuilder<T extends Selection, E> implements SelectBuilder<T, E> {
 
     /**
      * 查询条件包装器

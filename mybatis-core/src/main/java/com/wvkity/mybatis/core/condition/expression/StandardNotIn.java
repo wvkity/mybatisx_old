@@ -19,10 +19,9 @@ import com.wvkity.mybatis.core.condition.criteria.Criteria;
 import com.wvkity.mybatis.core.condition.expression.builder.AbstractRangeExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
-import com.wvkity.mybatis.core.metadata.Column;
+import com.wvkity.mybatis.core.utils.Objects;
 
 import java.util.Collection;
-import java.util.Optional;
 
 /**
  * NOT IN条件表达式
@@ -30,13 +29,13 @@ import java.util.Optional;
  * @created 2021-01-07
  * @since 1.0.0
  */
-public class StandardNotIn extends AbstractRangeExpression<Column> {
+public class StandardNotIn extends AbstractRangeExpression<String> {
 
     private static final long serialVersionUID = 2448932045855706827L;
 
-    public StandardNotIn(Criteria<?> criteria, Column column, Slot slot, Collection<Object> values) {
+    public StandardNotIn(Criteria<?> criteria, String property, Slot slot, Collection<Object> values) {
         this.criteria = criteria;
-        this.fragment = column;
+        this.target = property;
         this.slot = slot;
         this.values = values;
         this.symbol = Symbol.NOT_IN;
@@ -46,15 +45,17 @@ public class StandardNotIn extends AbstractRangeExpression<Column> {
         return new StandardNotIn.Builder();
     }
 
-    public static final class Builder extends AbstractRangeExprBuilder<StandardNotIn, Column> {
+    public static final class Builder extends AbstractRangeExprBuilder<StandardNotIn, String> {
 
         private Builder() {
         }
 
         @Override
         public StandardNotIn build() {
-            return Optional.ofNullable(this.getRealColumn()).map(it ->
-                new StandardNotIn(this.criteria, it, this.slot, this.values)).orElse(null);
+            if (Objects.isNotBlank(this.target)) {
+                return new StandardNotIn(this.criteria, this.target, this.slot, this.values);
+            }
+            return null;
         }
     }
 }

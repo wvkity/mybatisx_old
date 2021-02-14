@@ -15,19 +15,19 @@
  */
 package com.wvkity.mybatis.core.condition.basic.builder;
 
-import com.wvkity.mybatis.core.condition.basic.select.Select;
-import com.wvkity.mybatis.core.convert.Property;
+import com.wvkity.mybatis.core.condition.basic.select.Selection;
+import com.wvkity.mybatis.core.property.Property;
 import com.wvkity.mybatis.core.metadata.Column;
 import com.wvkity.mybatis.core.utils.Objects;
 
 /**
  * 抽象查询列构建器
- * @param <T> {@link Select}子类
+ * @param <T> {@link Selection}子类
  * @author wvkity
  * @created 2021-01-09
  * @since 1.0.0
  */
-public abstract class AbstractColumnSelectBuilder<T extends Select> extends AbstractSelectBuilder<T, Column> {
+public abstract class AbstractColumnSelectBuilder<T extends Selection> extends AbstractSelectBuilder<T, Column> {
     /**
      * 属性
      */

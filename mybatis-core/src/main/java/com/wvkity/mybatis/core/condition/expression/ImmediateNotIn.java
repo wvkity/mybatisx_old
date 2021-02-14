@@ -15,6 +15,7 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
+import com.wvkity.mybatis.core.condition.basic.Matched;
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
 import com.wvkity.mybatis.core.condition.expression.builder.AbstractRangeExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
@@ -35,10 +36,11 @@ public class ImmediateNotIn extends AbstractRangeExpression<String> {
 
     public ImmediateNotIn(Criteria<?> criteria, String column, Slot slot, Collection<Object> values) {
         this.criteria = criteria;
-        this.fragment = column;
+        this.target = column;
         this.slot = slot;
         this.values = values;
         this.symbol = Symbol.NOT_IN;
+        this.matched = Matched.IMMEDIATE;
     }
 
     public static ImmediateNotIn.Builder create() {
@@ -52,8 +54,8 @@ public class ImmediateNotIn extends AbstractRangeExpression<String> {
 
         @Override
         public ImmediateNotIn build() {
-            if (Objects.isNotBlank(this.column)) {
-                return new ImmediateNotIn(this.criteria, this.column, this.slot, this.values);
+            if (Objects.isNotBlank(this.target)) {
+                return new ImmediateNotIn(this.criteria, this.target, this.slot, this.values);
             }
             return null;
         }

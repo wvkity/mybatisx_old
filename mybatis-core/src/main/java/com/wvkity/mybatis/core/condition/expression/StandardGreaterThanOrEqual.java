@@ -15,13 +15,12 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
+import com.wvkity.mybatis.core.condition.basic.Matched;
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.condition.expression.builder.AbstractExprBuilder;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractBasicExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
-import com.wvkity.mybatis.core.metadata.Column;
-
-import java.util.Optional;
+import com.wvkity.mybatis.core.utils.Objects;
 
 /**
  * 大于或等于条件表达式
@@ -29,15 +28,16 @@ import java.util.Optional;
  * @created 2021-01-06
  * @since 1.0.0
  */
-public class StandardGreaterThanOrEqual extends AbstractExpression<Column> {
+public class StandardGreaterThanOrEqual extends AbstractBasicExpression<String> {
 
     private static final long serialVersionUID = 2495458818050534028L;
 
-    public StandardGreaterThanOrEqual(Criteria<?> criteria, Column column, Slot slot, Object value) {
+    public StandardGreaterThanOrEqual(Criteria<?> criteria, String property, Slot slot, Object value) {
         this.criteria = criteria;
-        this.fragment = column;
+        this.target = property;
         this.slot = slot;
         this.symbol = Symbol.GE;
+        this.matched = Matched.STANDARD;
         this.value = value;
     }
 
@@ -45,15 +45,17 @@ public class StandardGreaterThanOrEqual extends AbstractExpression<Column> {
         return new StandardGreaterThanOrEqual.Builder();
     }
 
-    public static final class Builder extends AbstractExprBuilder<StandardGreaterThanOrEqual, Column> {
+    public static final class Builder extends AbstractBasicExprBuilder<StandardGreaterThanOrEqual, String> {
 
         private Builder() {
         }
 
         @Override
         public StandardGreaterThanOrEqual build() {
-            return Optional.ofNullable(this.getRealColumn()).map(it ->
-                new StandardGreaterThanOrEqual(this.criteria, it, this.slot, this.value)).orElse(null);
+            if (Objects.isNotBlank(this.target)) {
+                return new StandardGreaterThanOrEqual(this.criteria, this.target, this.slot, this.value);
+            }
+            return null;
         }
     }
 }

@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.core.invoke;
 
-import com.wvkity.mybatis.core.convert.Property;
+import com.wvkity.mybatis.core.property.Property;
 import com.wvkity.mybatis.core.exception.MyBatisParserException;
 import com.wvkity.mybatis.core.utils.SerializationUtils;
 

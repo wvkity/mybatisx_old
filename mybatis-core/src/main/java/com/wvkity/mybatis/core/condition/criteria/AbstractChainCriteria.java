@@ -15,8 +15,8 @@
  */
 package com.wvkity.mybatis.core.condition.criteria;
 
-import com.wvkity.mybatis.core.convert.PropertiesMappingCache;
-import com.wvkity.mybatis.core.convert.Property;
+import com.wvkity.mybatis.core.property.PropertiesMappingCache;
+import com.wvkity.mybatis.core.property.Property;
 import com.wvkity.mybatis.core.exception.MyBatisException;
 import com.wvkity.mybatis.core.invoke.SerializedLambda;
 import com.wvkity.mybatis.core.metadata.Column;
@@ -83,7 +83,7 @@ abstract class AbstractChainCriteria<T, Chain extends AbstractChainCriteria<T, C
     }
 
     @Override
-    public String convert(Property<T, ?> property) {
+    protected String convert(Property<T, ?> property) {
         return methodToProperty(PropertiesMappingCache.parse(property).getImplMethodName());
     }
 

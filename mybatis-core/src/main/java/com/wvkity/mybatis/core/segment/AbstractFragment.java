@@ -30,10 +30,10 @@ public abstract class AbstractFragment<E> implements Fragment {
     /**
      * 碎片对象
      */
-    protected E fragment;
+    protected E target;
 
-    protected AbstractFragment<E> fragment(final E fragment) {
-        Optional.ofNullable(fragment).ifPresent(it -> this.fragment = fragment);
+    protected AbstractFragment<E> target(final E target) {
+        Optional.ofNullable(target).ifPresent(it -> this.target = target);
         return this;
     }
 

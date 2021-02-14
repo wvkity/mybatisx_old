@@ -34,4 +34,10 @@ public interface EmbeddedResult {
      * @return 返回值类型
      */
     Class<?> getResultType();
+
+    /**
+     * 获取返回Map对象指定的key值
+     * @return key
+     */
+    String getMapKey();
 }

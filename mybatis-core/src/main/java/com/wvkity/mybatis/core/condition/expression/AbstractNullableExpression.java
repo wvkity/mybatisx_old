@@ -15,28 +15,13 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
-import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
-import com.wvkity.mybatis.core.metadata.Column;
-import com.wvkity.mybatis.core.utils.Objects;
-
 /**
  * 抽象空值条件表达式
- * @param <E> 字段类型
+ * @param <E> 字段/属性类型
  * @author wvkity
  * @created 2021-01-09
  * @since 1.0.0
  */
-@SuppressWarnings({"serial"})
 public abstract class AbstractNullableExpression<E> extends AbstractExpression<E> {
 
-    @Override
-    public String getSegment() {
-        if (Objects.isNull(this.fragment)) {
-            return null;
-        }
-        if (this.fragment instanceof String) {
-            return Scripts.convertToConditionArg(this.symbol, this.slot, this.getAlias(), (String) this.fragment);
-        }
-        return Scripts.convertToConditionArg(this.symbol, this.slot, this.getAlias(), (Column) this.fragment);
-    }
 }

@@ -16,8 +16,7 @@
 package com.wvkity.mybatis.core.condition.criteria;
 
 import com.wvkity.mybatis.core.constant.Slot;
-import com.wvkity.mybatis.core.convert.Property;
-import com.wvkity.mybatis.core.convert.converter.PropertyConverter;
+import com.wvkity.mybatis.core.property.Property;
 
 import java.util.Map;
 
@@ -27,7 +26,7 @@ import java.util.Map;
  * @created 2021-01-05
  * @since 1.0.0
  */
-public interface Compare<T, Chain extends Compare<T, Chain>> extends PropertyConverter<T> {
+public interface Compare<T, Chain extends Compare<T, Chain>> {
 
     // region Single property
 

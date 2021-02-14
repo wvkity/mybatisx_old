@@ -15,10 +15,6 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
-import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
-import com.wvkity.mybatis.core.metadata.Column;
-import com.wvkity.mybatis.core.utils.Objects;
-
 import java.util.Collection;
 
 /**
@@ -37,21 +33,7 @@ public abstract class AbstractRangeExpression<E> extends AbstractExpression<E> {
      */
     protected Collection<Object> values;
 
-    @Override
-    public String getSegment() {
-        if (Objects.isNull(this.fragment)) {
-            return null;
-        }
-        if (this.fragment instanceof String) {
-            return Scripts.convertToConditionArg(this.symbol, this.slot, this.getAlias(), (String) this.fragment,
-                this.defPlaceholders(this.values));
-        }
-        return Scripts.convertToConditionArg(this.symbol, this.slot, this.getAlias(), (Column) this.fragment,
-            this.defPlaceholders(this.values));
-    }
-
-    public AbstractRangeExpression<E> values(Collection<Object> values) {
-        this.values = values;
-        return this;
+    public Collection<Object> getValues() {
+        return values;
     }
 }

@@ -16,18 +16,14 @@
 package com.wvkity.mybatis.core.condition.expression;
 
 import com.wvkity.mybatis.core.constant.LikeMode;
-import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
-import com.wvkity.mybatis.core.metadata.Column;
-import com.wvkity.mybatis.core.utils.Objects;
 
 /**
  * 抽象模糊条件表达式
- * @param <E> 字段类型
+ * @param <E> 字段/属性类型
  * @author wvkity
  * @created 2021-01-08
  * @since 1.0.0
  */
-@SuppressWarnings({"serial"})
 public abstract class AbstractFuzzyExpression<E> extends AbstractExpression<E> {
 
     /**
@@ -38,34 +34,20 @@ public abstract class AbstractFuzzyExpression<E> extends AbstractExpression<E> {
      * 转义字符
      */
     protected Character escape;
+    /**
+     * 值
+     */
+    protected Object value;
 
-    @Override
-    public String getSegment() {
-        if (Objects.isNull(this.fragment)) {
-            return null;
-        }
-        final StringBuilder builder = new StringBuilder();
-        final LikeMode matching = this.mode == null ? LikeMode.ANYWHERE : this.mode;
-        if (this.fragment instanceof String) {
-            builder.append(Scripts.convertToConditionArg(this.symbol, this.slot, this.getAlias(),
-                (String) this.fragment, this.defPlaceholder(matching.getSegment(String.valueOf(this.value)))));
-        } else if (this.fragment instanceof Column) {
-            builder.append(Scripts.convertToConditionArg(this.symbol, this.slot, this.getAlias(),
-                (Column) this.fragment, this.defPlaceholder(matching.getSegment(String.valueOf(this.value)))));
-        }
-        if (Objects.nonNull(this.escape)) {
-            builder.append(" ESCAPE ").append("'").append(this.escape).append("'");
-        }
-        return builder.toString();
+    public LikeMode getMode() {
+        return mode;
     }
 
-    public AbstractFuzzyExpression mode(LikeMode mode) {
-        this.mode = mode;
-        return this;
+    public Character getEscape() {
+        return escape;
     }
 
-    public AbstractFuzzyExpression escape(Character escape) {
-        this.escape = escape;
-        return this;
+    public Object getValue() {
+        return value;
     }
 }

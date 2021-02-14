@@ -26,10 +26,18 @@ import com.wvkity.mybatis.core.inject.method.invoke.ExistsInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.InsertInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.InsertWithNonNullInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.SelectAllInvoker;
+import com.wvkity.mybatis.core.inject.method.invoke.SelectArrayListInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.SelectCountInvoker;
+import com.wvkity.mybatis.core.inject.method.invoke.SelectEmbedMapInvoker;
+import com.wvkity.mybatis.core.inject.method.invoke.SelectListByCriteriaInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.SelectListByEntityInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.SelectListByIdsInvoker;
+import com.wvkity.mybatis.core.inject.method.invoke.SelectMapInvoker;
+import com.wvkity.mybatis.core.inject.method.invoke.SelectMapObjectListInvoker;
+import com.wvkity.mybatis.core.inject.method.invoke.SelectObjectListInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.SelectOneInvoker;
+import com.wvkity.mybatis.core.inject.method.invoke.SelectPageableListByCriteriaInvoker;
+import com.wvkity.mybatis.core.inject.method.invoke.SelectPageableListInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.SelectTotalInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.UpdateInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.UpdateWithNonNullInvoker;
@@ -92,6 +100,14 @@ public abstract class AbstractInjector implements Injector {
             new SelectOneInvoker(),
             new SelectListByEntityInvoker(),
             new SelectListByIdsInvoker(),
+            new SelectListByCriteriaInvoker(),
+            new SelectObjectListInvoker(),
+            new SelectArrayListInvoker(),
+            new SelectMapInvoker(),
+            new SelectEmbedMapInvoker(),
+            new SelectMapObjectListInvoker(),
+            new SelectPageableListInvoker(),
+            new SelectPageableListByCriteriaInvoker(),
             new SelectAllInvoker()));
     }
 

@@ -20,24 +20,34 @@ import com.wvkity.mybatis.core.config.MyBatisGlobalConfiguration;
 import com.wvkity.mybatis.core.config.MyBatisLocalConfigurationCache;
 import com.wvkity.mybatis.core.inject.mapping.sql.Supplier;
 import com.wvkity.mybatis.core.inject.mapping.sql.SupplierRegistry;
+import com.wvkity.mybatis.reflection.factory.MyBatisDefaultObjectFactory;
+import com.wvkity.mybatis.scripting.defaults.MyBatisDefaultResultSetHandler;
 import com.wvkity.mybatis.scripting.xmltags.MyBatisXMLLanguageDriver;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
+import org.apache.ibatis.executor.parameter.ParameterHandler;
+import org.apache.ibatis.executor.resultset.ResultSetHandler;
+import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMap;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.parsing.XNode;
+import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.ResultHandler;
+import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.transaction.Transaction;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
 
 /**
@@ -49,13 +59,13 @@ import java.util.function.BiFunction;
  */
 public class MyBatisConfiguration extends Configuration {
 
+    protected ObjectFactory objectFactory;
     /**
      * 全局配置
      */
-    private MyBatisGlobalConfiguration globalConfiguration;
+    private final AtomicReference<MyBatisGlobalConfiguration> globalConfigurationRef = new AtomicReference<>();
     protected final MyBatisMapperRegistry myBatisMapperRegistry = new MyBatisMapperRegistry(this);
     protected final SupplierRegistry supplierRegistry = new SupplierRegistry(this);
-
     protected final Map<String, Cache> caches = new StrictMap<>("Caches collection");
     protected final Map<String, ResultMap> resultMaps = new StrictMap<>("Result Maps collection");
     protected final Map<String, ParameterMap> parameterMaps = new StrictMap<>("Parameter Maps collection");
@@ -67,16 +77,23 @@ public class MyBatisConfiguration extends Configuration {
                 ". please check " + savedValue.getResource() + " and " + targetValue.getResource());
 
     public MyBatisConfiguration() {
-        super();
-        this.globalConfiguration = MyBatisLocalConfigurationCache.newInstance();
-        // TODO registry JDK8+ TIME API(jsr-310)
-        // 默认开启驼峰转换
-        this.setMapUnderscoreToCamelCase(true);
+        this(MyBatisLocalConfigurationCache.newInstance());
     }
 
     public MyBatisConfiguration(Environment environment) {
         this();
         this.environment = environment;
+    }
+
+    public MyBatisConfiguration(MyBatisGlobalConfiguration globalConfiguration) {
+        super();
+        // 默认开启驼峰转换
+        this.setMapUnderscoreToCamelCase(true);
+        this.setGlobalConfiguration(Optional.ofNullable(globalConfiguration)
+            .orElse(MyBatisLocalConfigurationCache.newInstance()));
+        this.objectFactory = new MyBatisDefaultObjectFactory(this.globalConfigurationRef);
+        super.setObjectFactory(this.objectFactory);
+        // TODO registry JDK8+ TIME API(jsr-310)
     }
 
     @Override
@@ -86,6 +103,16 @@ public class MyBatisConfiguration extends Configuration {
         } else {
             super.setDefaultScriptingLanguage(driver);
         }
+    }
+
+    @Override
+    public ObjectFactory getObjectFactory() {
+        return objectFactory;
+    }
+
+    @Override
+    public void setObjectFactory(ObjectFactory objectFactory) {
+        this.objectFactory = objectFactory;
     }
 
     @Override
@@ -132,6 +159,15 @@ public class MyBatisConfiguration extends Configuration {
 
     public <T> Supplier getSupplier(final Class<T> type, final Object... args) {
         return this.supplierRegistry.getSupplier(type, this, args);
+    }
+
+    @Override
+    public ResultSetHandler newResultSetHandler(Executor executor, MappedStatement mappedStatement,
+                                                RowBounds rowBounds, ParameterHandler parameterHandler,
+                                                ResultHandler resultHandler, BoundSql boundSql) {
+        final ResultSetHandler resultSetHandler = new MyBatisDefaultResultSetHandler(executor, mappedStatement,
+            parameterHandler, resultHandler, boundSql, rowBounds);
+        return (ResultSetHandler) interceptorChain.pluginAll(resultSetHandler);
     }
 
     @Override
@@ -404,10 +440,11 @@ public class MyBatisConfiguration extends Configuration {
     }
 
     public MyBatisGlobalConfiguration getGlobalConfiguration() {
-        return globalConfiguration;
+        return this.globalConfigurationRef.get();
     }
 
     public void setGlobalConfiguration(MyBatisGlobalConfiguration globalConfiguration) {
-        this.globalConfiguration = globalConfiguration;
+        final MyBatisGlobalConfiguration local = this.globalConfigurationRef.get();
+        this.globalConfigurationRef.compareAndSet(local, globalConfiguration);
     }
 }

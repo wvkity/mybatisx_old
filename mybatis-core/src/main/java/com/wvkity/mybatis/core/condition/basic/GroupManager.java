@@ -16,7 +16,11 @@
 package com.wvkity.mybatis.core.condition.basic;
 
 import com.wvkity.mybatis.core.condition.basic.group.Group;
+import com.wvkity.mybatis.core.constant.Constants;
 import com.wvkity.mybatis.core.segment.AbstractFragmentList;
+import com.wvkity.mybatis.core.segment.Fragment;
+
+import java.util.stream.Collectors;
 
 /**
  * 分组片段管理器
@@ -30,6 +34,10 @@ public class GroupManager extends AbstractFragmentList<Group> {
 
     @Override
     public String getSegment() {
-        return null;
+        if (!isEmpty()) {
+            return " GROUP BY " + this.fragments.stream().map(Fragment::getSegment)
+                .collect(Collectors.joining(Constants.COMMA_SPACE));
+        }
+        return Constants.EMPTY;
     }
 }

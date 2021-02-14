@@ -15,13 +15,12 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
+import com.wvkity.mybatis.core.condition.basic.Matched;
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
 import com.wvkity.mybatis.core.condition.expression.builder.AbstractBetweenExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
-import com.wvkity.mybatis.core.metadata.Column;
-
-import java.util.Optional;
+import com.wvkity.mybatis.core.utils.Objects;
 
 /**
  * Between范围条件表达式
@@ -29,15 +28,16 @@ import java.util.Optional;
  * @created 2021-01-07
  * @since 1.0.0
  */
-public class StandardBetween extends AbstractBetweenExpression<Column> {
+public class StandardBetween extends AbstractBetweenExpression<String> {
 
     private static final long serialVersionUID = -5335171321951491035L;
 
-    public StandardBetween(Criteria<?> criteria, Column column, Slot slot, Object begin, Object end) {
+    public StandardBetween(Criteria<?> criteria, String property, Slot slot, Object begin, Object end) {
         this.criteria = criteria;
-        this.fragment = column;
+        this.target = property;
         this.slot = slot;
         this.symbol = Symbol.BETWEEN;
+        this.matched = Matched.STANDARD;
         this.begin = begin;
         this.end = end;
     }
@@ -46,15 +46,17 @@ public class StandardBetween extends AbstractBetweenExpression<Column> {
         return new StandardBetween.Builder();
     }
 
-    public static final class Builder extends AbstractBetweenExprBuilder<StandardBetween, Column> {
+    public static final class Builder extends AbstractBetweenExprBuilder<StandardBetween, String> {
 
         private Builder() {
         }
 
         @Override
         public StandardBetween build() {
-            return Optional.ofNullable(this.getRealColumn()).map(it ->
-                new StandardBetween(this.criteria, it, this.slot, this.begin, this.end)).orElse(null);
+            if (Objects.isNotBlank(this.target)) {
+                return new StandardBetween(this.criteria, this.target, this.slot, this.begin, this.end);
+            }
+            return null;
         }
     }
 }

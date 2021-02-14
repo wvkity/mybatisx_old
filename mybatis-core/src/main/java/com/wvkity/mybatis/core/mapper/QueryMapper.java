@@ -15,11 +15,14 @@
  */
 package com.wvkity.mybatis.core.mapper;
 
+import com.wvkity.mybatis.core.condition.criteria.Criteria;
 import com.wvkity.mybatis.core.constant.Constants;
+import com.wvkity.paging.Pageable;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -80,6 +83,65 @@ public interface QueryMapper<T, U, ID> {
      * @return 多条记录
      */
     List<U> selectListByEntity(@Param(Constants.PARAM_ENTITY) final T entity);
+
+    /**
+     * 根据{@link Criteria}对象查询记录
+     * @param criteria {@link Criteria}对象
+     * @return 多条记录
+     */
+    List<Object> selectObjectList(@Param(Constants.PARAM_CRITERIA) final Criteria<T> criteria);
+
+    /**
+     * 根据{@link Criteria}对象查询记录
+     * @param criteria {@link Criteria}对象
+     * @return 多条记录
+     */
+    List<Object[]> selectArrayList(@Param(Constants.PARAM_CRITERIA) final Criteria<T> criteria);
+
+    /**
+     * 根据{@link Criteria}对象查询记录
+     * @param criteria {@link Criteria}对象
+     * @return 多条记录
+     */
+    Map<Object, U> selectMap(@Param(Constants.PARAM_CRITERIA) final Criteria<T> criteria);
+
+    /**
+     * 根据{@link Criteria}对象查询记录
+     * @param criteria {@link Criteria}对象
+     * @param <E>      自定返回值泛型
+     * @return 多条记录
+     */
+    <E> Map<Object, E> selectEmbedMap(@Param(Constants.PARAM_CRITERIA) final Criteria<T> criteria);
+
+    /**
+     * 根据{@link Criteria}对象查询记录
+     * @param criteria {@link Criteria}对象
+     * @return 多条记录
+     */
+    List<Map<String, Object>> selectMapObjectList(@Param(Constants.PARAM_CRITERIA) final Criteria<T> criteria);
+
+    /**
+     * 根据{@link Criteria}对象查询记录
+     * @param criteria {@link Criteria}对象
+     * @return 多条记录
+     */
+    List<U> selectListByCriteria(@Param(Constants.PARAM_CRITERIA) final Criteria<T> criteria);
+
+    /**
+     * 分页查询记录
+     * @param pageable 分页对象
+     * @return 多条记录
+     */
+    List<U> selectPageableList(@Param(Constants.PARAM_PAGEABLE) final Pageable pageable);
+
+    /**
+     * 分页查询记录
+     * @param criteria {@link Criteria}
+     * @param pageable 分页对象
+     * @return 多条记录
+     */
+    List<U> selectPageableListByCriteria(@Param(Constants.PARAM_CRITERIA) final Criteria<T> criteria,
+                                         @Param(Constants.PARAM_PAGEABLE) final Pageable pageable);
 
     /**
      * 查询所有记录

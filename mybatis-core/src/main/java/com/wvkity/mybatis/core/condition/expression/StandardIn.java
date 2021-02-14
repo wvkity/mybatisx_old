@@ -15,14 +15,14 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
+import com.wvkity.mybatis.core.condition.basic.Matched;
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
 import com.wvkity.mybatis.core.condition.expression.builder.AbstractRangeExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
-import com.wvkity.mybatis.core.metadata.Column;
+import com.wvkity.mybatis.core.utils.Objects;
 
 import java.util.Collection;
-import java.util.Optional;
 
 /**
  * IN条件表达式
@@ -30,31 +30,34 @@ import java.util.Optional;
  * @created 2021-01-07
  * @since 1.0.0
  */
-public class StandardIn extends AbstractRangeExpression<Column> {
+public class StandardIn extends AbstractRangeExpression<String> {
 
     private static final long serialVersionUID = 5462592687934802949L;
 
-    public StandardIn(Criteria<?> criteria, Column column, Slot slot, Collection<Object> values) {
+    public StandardIn(Criteria<?> criteria, String property, Slot slot, Collection<Object> values) {
         this.criteria = criteria;
-        this.fragment = column;
+        this.target = property;
         this.slot = slot;
         this.values = values;
         this.symbol = Symbol.IN;
+        this.matched = Matched.STANDARD;
     }
 
     public static StandardIn.Builder create() {
         return new StandardIn.Builder();
     }
 
-    public static final class Builder extends AbstractRangeExprBuilder<StandardIn, Column> {
+    public static final class Builder extends AbstractRangeExprBuilder<StandardIn, String> {
 
         private Builder() {
         }
 
         @Override
         public StandardIn build() {
-            return Optional.ofNullable(this.getRealColumn()).map(it ->
-                new StandardIn(this.criteria, it, this.slot, this.values)).orElse(null);
+            if (Objects.isNotBlank(this.target)) {
+                return new StandardIn(this.criteria, this.target, this.slot, this.values);
+            }
+            return null;
         }
     }
 }

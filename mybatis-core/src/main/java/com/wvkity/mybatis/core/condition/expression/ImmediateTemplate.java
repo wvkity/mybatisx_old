@@ -15,6 +15,7 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
+import com.wvkity.mybatis.core.condition.basic.Matched;
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
 import com.wvkity.mybatis.core.condition.expression.builder.AbstractTemplateExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
@@ -36,13 +37,14 @@ public class ImmediateTemplate extends AbstractTemplateExpression<String> {
     public ImmediateTemplate(Criteria<?> criteria, String column, String template, TemplateMatch match, Slot slot,
                              Object value, Collection<Object> listValues, Map<String, Object> mapValues) {
         this.criteria = criteria;
-        this.fragment = column;
+        this.target = column;
         this.template = template;
         this.match = match;
         this.slot = slot;
         this.value = value;
         this.listValues = listValues;
         this.mapValues = mapValues;
+        this.matched = Matched.IMMEDIATE;
     }
 
     public static ImmediateTemplate.Builder create() {
@@ -57,7 +59,7 @@ public class ImmediateTemplate extends AbstractTemplateExpression<String> {
         @Override
         public ImmediateTemplate build() {
             if (Objects.isNotBlank(this.template)) {
-                return new ImmediateTemplate(this.criteria, this.column, this.template, this.match, this.slot,
+                return new ImmediateTemplate(this.criteria, this.target, this.template, this.match, this.slot,
                     this.value, this.listValues, this.mapValues);
             }
             return null;

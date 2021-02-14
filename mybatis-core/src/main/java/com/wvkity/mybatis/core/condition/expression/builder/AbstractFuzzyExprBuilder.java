@@ -34,6 +34,10 @@ public abstract class AbstractFuzzyExprBuilder<T, E> extends AbstractExprBuilder
      * 转义字符
      */
     protected Character escape;
+    /**
+     * 值
+     */
+    protected Object value;
 
     public AbstractFuzzyExprBuilder<T, E> mode(LikeMode mode) {
         this.mode = mode;
@@ -42,6 +46,11 @@ public abstract class AbstractFuzzyExprBuilder<T, E> extends AbstractExprBuilder
 
     public AbstractFuzzyExprBuilder<T, E> escape(Character escape) {
         this.escape = escape;
+        return this;
+    }
+
+    public AbstractFuzzyExprBuilder<T, E> value(Object value) {
+        this.value = value;
         return this;
     }
 }

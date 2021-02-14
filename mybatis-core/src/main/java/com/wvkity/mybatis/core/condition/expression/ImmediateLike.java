@@ -15,6 +15,7 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
+import com.wvkity.mybatis.core.condition.basic.Matched;
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
 import com.wvkity.mybatis.core.condition.expression.builder.AbstractFuzzyExprBuilder;
 import com.wvkity.mybatis.core.constant.LikeMode;
@@ -35,12 +36,13 @@ public class ImmediateLike extends AbstractFuzzyExpression<String> {
     public ImmediateLike(Criteria<?> criteria, String column, LikeMode mode,
                          Character escape, Slot slot, Object value) {
         this.criteria = criteria;
-        this.fragment = column;
+        this.target = column;
         this.mode = mode;
         this.escape = escape;
         this.slot = slot;
         this.value = value;
         this.symbol = Symbol.LIKE;
+        this.matched = Matched.IMMEDIATE;
     }
 
     public static ImmediateLike.Builder create() {
@@ -54,8 +56,8 @@ public class ImmediateLike extends AbstractFuzzyExpression<String> {
 
         @Override
         public ImmediateLike build() {
-            if (Objects.isNotBlank(this.column)) {
-                return new ImmediateLike(this.criteria, this.column, this.mode, this.escape, this.slot, this.value);
+            if (Objects.isNotBlank(this.target)) {
+                return new ImmediateLike(this.criteria, this.target, this.mode, this.escape, this.slot, this.value);
             }
             return null;
         }

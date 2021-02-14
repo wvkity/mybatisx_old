@@ -15,17 +15,10 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
+import com.wvkity.mybatis.core.condition.basic.Matched;
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
-import com.wvkity.mybatis.core.convert.converter.PlaceholderConverter;
-import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
-import com.wvkity.mybatis.core.metadata.Column;
-import com.wvkity.mybatis.core.segment.AbstractFragment;
-import com.wvkity.mybatis.core.utils.Objects;
-
-import java.util.Collection;
-import java.util.List;
 
 /**
  * 抽象条件表达式
@@ -34,13 +27,16 @@ import java.util.List;
  * @created 2021-01-06
  * @since 1.0.0
  */
-@SuppressWarnings({"serial"})
-public abstract class AbstractExpression<E> extends AbstractFragment<E> implements Expression, PlaceholderConverter {
+public abstract class AbstractExpression<E> implements Expression {
 
     /**
      * {@link Criteria}对象
      */
     protected Criteria<?> criteria;
+    /**
+     * 字段/属性
+     */
+    protected E target;
     /**
      * 表别名
      */
@@ -54,35 +50,34 @@ public abstract class AbstractExpression<E> extends AbstractFragment<E> implemen
      */
     protected Slot slot = Slot.AND;
     /**
-     * 值
+     * 表达式模式
      */
-    protected Object value;
-
-    @Override
-    public String getSegment() {
-        if (this.fragment instanceof String) {
-            return Scripts.convertToConditionArg(this.symbol, this.slot, this.getAlias(), (String) this.fragment,
-                this.defPlaceholder(this.value));
-        } else if (this.fragment instanceof Column) {
-            return Scripts.convertToConditionArg(this.symbol, this.slot, this.getAlias(), (Column) this.fragment,
-                this.defPlaceholder(this.value));
-        }
-        return null;
-    }
-
-    @Override
-    public String convert(String source, boolean format, Object... args) {
-        return this.getCriteria().convert(source, format, args);
-    }
-
-    @Override
-    public List<String> converts(String source, Collection<Object> args) {
-        return this.getCriteria().converts(source, args);
-    }
+    protected Matched matched;
 
     @Override
     public Criteria<?> getCriteria() {
         return this.criteria;
+    }
+
+    @Override
+    public String getTarget() {
+        return this.target == null ? null : this.target instanceof String ?
+            (String) this.target : String.valueOf(this.target);
+    }
+
+    @Override
+    public Slot getSlot() {
+        return this.slot;
+    }
+
+    @Override
+    public Symbol getSymbol() {
+        return this.symbol;
+    }
+
+    @Override
+    public String getAlias() {
+        return this.tableAlias;
     }
 
     @Override
@@ -92,29 +87,13 @@ public abstract class AbstractExpression<E> extends AbstractFragment<E> implemen
     }
 
     @Override
-    public Slot getSlot() {
-        return this.slot;
-    }
-
-    @Override
-    public String getAlias() {
-        return Objects.isNotBlank(this.tableAlias) ? this.tableAlias : this.criteria != null ? this.criteria.as() : "";
-    }
-
-    @Override
     public AbstractExpression<E> alias(String alias) {
         this.tableAlias = alias;
         return this;
     }
 
     @Override
-    public Object getValue() {
-        return this.value;
-    }
-
-    @Override
-    public AbstractExpression<E> value(Object value) {
-        this.value = value;
-        return this;
+    public Matched getExprMode() {
+        return this.matched;
     }
 }

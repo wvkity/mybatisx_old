@@ -15,8 +15,9 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
+import com.wvkity.mybatis.core.condition.basic.Matched;
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.condition.expression.builder.AbstractExprBuilder;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractBasicExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.utils.Objects;
@@ -27,15 +28,16 @@ import com.wvkity.mybatis.core.utils.Objects;
  * @created 2021-01-06
  * @since 1.0.0
  */
-public class ImmediateGreaterThan extends AbstractExpression<String> {
+public class ImmediateGreaterThan extends AbstractBasicExpression<String> {
 
     private static final long serialVersionUID = -6450458243911624554L;
 
     public ImmediateGreaterThan(Criteria<?> criteria, String column, Slot slot, Object value) {
         this.criteria = criteria;
-        this.fragment = column;
+        this.target = column;
         this.slot = slot;
         this.symbol = Symbol.GT;
+        this.matched = Matched.IMMEDIATE;
         this.value = value;
     }
 
@@ -43,15 +45,15 @@ public class ImmediateGreaterThan extends AbstractExpression<String> {
         return new ImmediateGreaterThan.Builder();
     }
 
-    public static final class Builder extends AbstractExprBuilder<ImmediateGreaterThan, String> {
+    public static final class Builder extends AbstractBasicExprBuilder<ImmediateGreaterThan, String> {
 
         private Builder() {
         }
 
         @Override
         public ImmediateGreaterThan build() {
-            if (Objects.isNotBlank(this.column)) {
-                return new ImmediateGreaterThan(this.criteria, this.column, this.slot, this.value);
+            if (Objects.isNotBlank(this.target)) {
+                return new ImmediateGreaterThan(this.criteria, this.target, this.slot, this.value);
             }
             return null;
         }

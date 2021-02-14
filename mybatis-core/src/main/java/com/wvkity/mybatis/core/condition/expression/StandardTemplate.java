@@ -15,15 +15,14 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
+import com.wvkity.mybatis.core.condition.basic.Matched;
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
 import com.wvkity.mybatis.core.condition.expression.builder.AbstractTemplateExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
-import com.wvkity.mybatis.core.metadata.Column;
 import com.wvkity.mybatis.core.utils.Objects;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * 模板条件表达式
@@ -31,27 +30,28 @@ import java.util.Optional;
  * @created 2021-01-15
  * @since 1.0.0
  */
-public class StandardTemplate extends AbstractTemplateExpression<Column> {
+public class StandardTemplate extends AbstractTemplateExpression<String> {
 
     private static final long serialVersionUID = -3342020710178444452L;
 
-    public StandardTemplate(Criteria<?> criteria, Column column, String template, TemplateMatch match, Slot slot,
+    public StandardTemplate(Criteria<?> criteria, String property, String template, TemplateMatch match, Slot slot,
                             Object value, Collection<Object> listValues, Map<String, Object> mapValues) {
         this.criteria = criteria;
-        this.fragment = column;
+        this.target = property;
         this.template = template;
         this.match = match;
         this.slot = slot;
         this.value = value;
         this.listValues = listValues;
         this.mapValues = mapValues;
+        this.matched = Matched.STANDARD;
     }
 
     public static StandardTemplate.Builder create() {
         return new StandardTemplate.Builder();
     }
 
-    public static final class Builder extends AbstractTemplateExprBuilder<StandardTemplate, Column> {
+    public static final class Builder extends AbstractTemplateExprBuilder<StandardTemplate, String> {
 
         public Builder() {
         }
@@ -59,9 +59,8 @@ public class StandardTemplate extends AbstractTemplateExpression<Column> {
         @Override
         public StandardTemplate build() {
             if (Objects.isNotBlank(this.template)) {
-                return Optional.ofNullable(this.getRealColumn()).map(it ->
-                    new StandardTemplate(this.criteria, it, this.template, this.match, this.slot,
-                        this.value, this.listValues, this.mapValues)).orElse(null);
+                return new StandardTemplate(this.criteria, this.target, this.template, this.match,
+                    this.slot, this.value, this.listValues, this.mapValues);
             }
             return null;
         }

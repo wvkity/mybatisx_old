@@ -32,6 +32,7 @@ import org.apache.ibatis.type.JdbcType;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -175,6 +176,10 @@ public class MyBatisGlobalConfiguration {
      * 数据库schema
      */
     private String schema;
+    /**
+     * 返回值为Map类型时，采用具体{@link Map}实现类
+     */
+    private Class<? extends Map> returnMapImplementClass;
     /**
      * 将内置的拦截器注册到Spring上下文中
      */
@@ -456,6 +461,15 @@ public class MyBatisGlobalConfiguration {
 
     public void setSchema(String schema) {
         this.schema = schema;
+    }
+
+    public Class<? extends Map> getReturnMapImplementClass() {
+        return returnMapImplementClass;
+    }
+
+    public MyBatisGlobalConfiguration setReturnMapImplementClass(Class<? extends Map> returnMapImplementClass) {
+        this.returnMapImplementClass = returnMapImplementClass;
+        return this;
     }
 
     public boolean isSystemInterceptorRegisteredIntoContext() {

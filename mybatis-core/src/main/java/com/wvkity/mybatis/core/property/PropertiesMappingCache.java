@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.convert;
+package com.wvkity.mybatis.core.property;
 
 import com.wvkity.mybatis.core.handler.TableHandler;
 import com.wvkity.mybatis.core.invoke.SerializedLambda;
@@ -53,8 +53,8 @@ public final class PropertiesMappingCache {
         return Optional.ofNullable(LAMBDA_CACHE.get(clazz)).map(WeakReference::get).orElseGet(() -> {
             final SerializedLambda lambda = SerializedLambda.resolve(property);
             final WeakReference<SerializedLambda> reference =
-                LAMBDA_CACHE.computeIfAbsent(clazz, k -> new WeakReference<>(lambda));
-            return reference.get();
+                LAMBDA_CACHE.put(clazz, new WeakReference<>(lambda));
+            return LAMBDA_CACHE.get(clazz).get();
         });
     }
 

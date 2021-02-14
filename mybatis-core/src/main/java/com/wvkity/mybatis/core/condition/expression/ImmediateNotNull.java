@@ -15,6 +15,7 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
+import com.wvkity.mybatis.core.condition.basic.Matched;
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
 import com.wvkity.mybatis.core.condition.expression.builder.AbstractExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
@@ -33,9 +34,10 @@ public class ImmediateNotNull extends AbstractNullableExpression<String> {
 
     public ImmediateNotNull(Criteria<?> criteria, String column, Slot slot) {
         this.criteria = criteria;
-        this.fragment = column;
+        this.target = column;
         this.slot = slot;
         this.symbol = Symbol.NOT_NULL;
+        this.matched = Matched.IMMEDIATE;
     }
 
     public static ImmediateNotNull.Builder create() {
@@ -49,8 +51,8 @@ public class ImmediateNotNull extends AbstractNullableExpression<String> {
 
         @Override
         public ImmediateNotNull build() {
-            if (Objects.isNotBlank(this.column)) {
-                return new ImmediateNotNull(this.criteria, this.column, this.slot);
+            if (Objects.isNotBlank(this.target)) {
+                return new ImmediateNotNull(this.criteria, this.target, this.slot);
             }
             return null;
         }

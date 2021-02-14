@@ -15,6 +15,7 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
+import com.wvkity.mybatis.core.condition.basic.Matched;
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
 import com.wvkity.mybatis.core.condition.expression.builder.AbstractBetweenExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
@@ -33,9 +34,10 @@ public class ImmediateNotBetween extends AbstractBetweenExpression<String> {
 
     public ImmediateNotBetween(Criteria<?> criteria, String column, Slot slot, Object begin, Object end) {
         this.criteria = criteria;
-        this.fragment = column;
+        this.target = column;
         this.slot = slot;
         this.symbol = Symbol.NOT_BETWEEN;
+        this.matched = Matched.IMMEDIATE;
         this.begin = begin;
         this.end = end;
     }
@@ -46,12 +48,13 @@ public class ImmediateNotBetween extends AbstractBetweenExpression<String> {
 
     public static final class Builder extends AbstractBetweenExprBuilder<ImmediateNotBetween, String> {
 
-        private Builder(){}
+        private Builder() {
+        }
 
         @Override
         public ImmediateNotBetween build() {
-            if (Objects.isNotBlank(this.column)) {
-                return new ImmediateNotBetween(this.criteria, this.column, this.slot, this.begin, this.end);
+            if (Objects.isNotBlank(this.target)) {
+                return new ImmediateNotBetween(this.criteria, this.target, this.slot, this.begin, this.end);
             }
             return null;
         }

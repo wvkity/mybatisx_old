@@ -17,9 +17,6 @@ package com.wvkity.mybatis.core.condition.expression.builder;
 
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
 import com.wvkity.mybatis.core.constant.Slot;
-import com.wvkity.mybatis.core.convert.Property;
-import com.wvkity.mybatis.core.metadata.Column;
-import com.wvkity.mybatis.core.utils.Objects;
 
 /**
  * 抽象表达式构建器
@@ -36,72 +33,26 @@ public abstract class AbstractExprBuilder<T, E> implements ExprBuilder<T, E> {
      */
     protected Criteria<?> criteria;
     /**
-     * 字段对象
+     * 字段类型
      */
-    protected E column;
-    /**
-     * 属性
-     */
-    protected Property<?, ?> lambdaProperty;
-    /**
-     * 属性
-     */
-    protected String property;
+    protected E target;
     /**
      * {@link Slot}
      */
     protected Slot slot;
-    /**
-     * 值
-     */
-    protected Object value;
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public E getRealColumn() {
-        if (this.column instanceof String) {
-            return this.column;
-        } else {
-            if (this.column instanceof Column) {
-                return this.column;
-            } else {
-                if (Objects.nonNull(this.lambdaProperty)) {
-                    return (E) this.criteria.findColumn(this.lambdaProperty);
-                } else if (Objects.isNotBlank(this.property)) {
-                    return (E) this.criteria.findColumn(this.property);
-                }
-            }
-        }
-        return null;
-    }
 
     public AbstractExprBuilder<T, E> criteria(Criteria<?> criteria) {
         this.criteria = criteria;
         return this;
     }
 
-    public AbstractExprBuilder<T, E> column(E column) {
-        this.column = column;
-        return this;
-    }
-
-    public AbstractExprBuilder<T, E> property(Property<?, ?> lambdaProperty) {
-        this.lambdaProperty = lambdaProperty;
-        return this;
-    }
-
-    public AbstractExprBuilder<T, E> property(String property) {
-        this.property = property;
+    public AbstractExprBuilder<T, E> target(E target) {
+        this.target = target;
         return this;
     }
 
     public AbstractExprBuilder<T, E> slot(Slot slot) {
         this.slot = slot;
-        return this;
-    }
-
-    public AbstractExprBuilder<T, E> value(Object value) {
-        this.value = value;
         return this;
     }
 }

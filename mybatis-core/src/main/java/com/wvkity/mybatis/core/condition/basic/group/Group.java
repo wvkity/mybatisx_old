@@ -13,28 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.basic.order;
+package com.wvkity.mybatis.core.condition.basic.group;
 
-import com.wvkity.mybatis.core.condition.criteria.Criteria;
+import com.wvkity.mybatis.core.segment.Fragment;
 
 /**
- * 排序
+ * 分组
  * @author wvkity
- * @created 2021-01-13
+ * @created 2021-01-12
  * @since 1.0.0
  */
-public class ImmediateOrder extends AbstractOrder<String> {
-
-    private static final long serialVersionUID = 8684211323294424272L;
-
-    public ImmediateOrder(Criteria<?> criteria, String column, boolean ascending) {
-        this.criteria = criteria;
-        this.fragment = column;
-        this.ascending = ascending;
-    }
-
-    @Override
-    public String getColumn() {
-        return this.fragment;
-    }
+public interface Group extends Fragment {
 }

@@ -15,10 +15,12 @@
  */
 package com.wvkity.mybatis.binding;
 
+import com.wvkity.mybatis.core.constant.Constants;
+import com.wvkity.mybatis.core.utils.Objects;
+import com.wvkity.mybatis.executor.resultset.EmbeddedResult;
 import org.apache.ibatis.annotations.Flush;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.binding.BindingException;
-import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
@@ -39,6 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 /**
  * 重写{@link org.apache.ibatis.binding.MapperMethod}
@@ -48,12 +51,14 @@ import java.util.Optional;
  */
 public class MyBatisMapperMethod {
 
-    private final MapperMethod.SqlCommand command;
-    private final MapperMethod.MethodSignature method;
+    private static final Pattern REGEX_EXEC_MAP_METHOD = Pattern.compile("^(.*)\\.(selectMap|selectEmbedMap)$");
+
+    private final SqlCommand command;
+    private final MethodSignature method;
 
     public MyBatisMapperMethod(Class<?> mapperInterface, Method method, Configuration config) {
-        this.command = new MapperMethod.SqlCommand(config, mapperInterface, method);
-        this.method = new MapperMethod.MethodSignature(config, mapperInterface, method);
+        this.command = new SqlCommand(config, mapperInterface, method);
+        this.method = new MethodSignature(config, mapperInterface, method);
     }
 
     public Object execute(SqlSession sqlSession, Object[] args) {
@@ -81,7 +86,7 @@ public class MyBatisMapperMethod {
                 } else if (method.returnsMany()) {
                     result = executeForMany(sqlSession, args);
                     // TODO 分页处理
-                } else if (method.returnsMap()) {
+                } else if (method.returnsMap() || isReturnsMap(args)) {
                     result = executeForMap(sqlSession, args);
                 } else if (method.returnsCursor()) {
                     result = executeForCursor(sqlSession, args);
@@ -105,6 +110,20 @@ public class MyBatisMapperMethod {
                 + " attempted to return null from a method with a primitive return type (" + method.getReturnType() + ").");
         }
         return result;
+    }
+
+    private boolean isReturnsMap(final Object[] args) {
+        final String commandName = this.command.getName();
+        if (REGEX_EXEC_MAP_METHOD.matcher(commandName).matches()) {
+            final String[] paramNames = this.method.getParamNames();
+            if (!Objects.isEmpty(paramNames) && paramNames.length == 1 && !Objects.isEmpty(args)) {
+                final String paramName = paramNames[0];
+                if (Constants.PARAM_CRITERIA.equals(paramName)) {
+                    return args[0] instanceof EmbeddedResult;
+                }
+            }
+        }
+        return false;
     }
 
     private Object rowCountResult(int rowCount) {
@@ -193,14 +212,33 @@ public class MyBatisMapperMethod {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private <K, V> Map<K, V> executeForMap(SqlSession sqlSession, Object[] args) {
         Map<K, V> result;
         Object param = method.convertArgsToSqlCommandParam(args);
+        String mapKey = null;
+        if (Objects.isNotBlank(this.method.getMapKey())) {
+            mapKey = method.getMapKey();
+        } else {
+            if (param instanceof Map) {
+                final Map<String, Object> paramMap = (Map<String, Object>) param;
+                if (paramMap.containsKey(Constants.PARAM_CRITERIA)) {
+                    final Object value = paramMap.get(Constants.PARAM_CRITERIA);
+                    if (value instanceof EmbeddedResult) {
+                        final EmbeddedResult embedded = (EmbeddedResult) value;
+                        mapKey = embedded.getMapKey();
+                    }
+                }
+            } else if (param instanceof EmbeddedResult) {
+                final EmbeddedResult embedded = (EmbeddedResult) param;
+                mapKey = embedded.getMapKey();
+            }
+        }
         if (method.hasRowBounds()) {
             RowBounds rowBounds = method.extractRowBounds(args);
-            result = sqlSession.selectMap(command.getName(), param, method.getMapKey(), rowBounds);
+            result = sqlSession.selectMap(command.getName(), param, mapKey, rowBounds);
         } else {
-            result = sqlSession.selectMap(command.getName(), param, method.getMapKey());
+            result = sqlSession.selectMap(command.getName(), param, mapKey);
         }
         return result;
     }
@@ -386,6 +424,10 @@ public class MyBatisMapperMethod {
                 }
             }
             return mapKey;
+        }
+
+        String[] getParamNames() {
+            return this.paramNameResolver.getNames();
         }
     }
 }

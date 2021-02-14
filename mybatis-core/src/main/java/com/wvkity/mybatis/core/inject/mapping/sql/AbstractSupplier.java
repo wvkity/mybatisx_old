@@ -87,11 +87,30 @@ public abstract class AbstractSupplier implements Supplier, Constants {
      * 拼接完整查询SQL语句
      * @param selectSegment 查询部分
      * @param whereSegment  条件部分
-     * @return 完整更新SQL语句
+     * @return 完整查询SQL语句
      */
     public String select(final String selectSegment, final String whereSegment) {
         return "SELECT " + selectSegment + " FROM " + this.table.getFullName() +
             (Objects.isBlank(whereSegment) ? EMPTY : " " + whereSegment);
+    }
+
+    /**
+     * {@link com.wvkity.mybatis.core.condition.criteria.Criteria Criteria}条件查询SQL语句
+     * @param whereSegment 条件部分
+     * @return 完整查询SQL语句
+     */
+    public String criteriaSelect(final String whereSegment) {
+        return this.criteriaSelect("${" + PARAM_CRITERIA + ".selectSegment}", whereSegment);
+    }
+
+    /**
+     * {@link com.wvkity.mybatis.core.condition.criteria.Criteria Criteria}条件查询SQL语句
+     * @param selectSegment 查询部分
+     * @param whereSegment  条件部分
+     * @return 完整查询SQL语句
+     */
+    public String criteriaSelect(final String selectSegment, final String whereSegment) {
+        return "SELECT <![CDATA[" + selectSegment + "]]> FROM ${" + PARAM_CRITERIA + ".tableName}" + whereSegment;
     }
 
     /**

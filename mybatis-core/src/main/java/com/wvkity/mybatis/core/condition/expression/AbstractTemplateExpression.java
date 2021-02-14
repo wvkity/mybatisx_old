@@ -15,18 +15,10 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
-import com.wvkity.mybatis.core.constant.Constants;
-import com.wvkity.mybatis.core.constant.Slot;
-import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
-import com.wvkity.mybatis.core.metadata.Column;
 import com.wvkity.mybatis.core.utils.Objects;
-import com.wvkity.mybatis.core.utils.Placeholders;
 
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * 抽象模板表达式
@@ -35,7 +27,6 @@ import java.util.stream.Collectors;
  * @created 2021-01-15
  * @since 1.0.0
  */
-@SuppressWarnings({"serial"})
 public abstract class AbstractTemplateExpression<E> extends AbstractExpression<E> {
 
     /**
@@ -51,6 +42,10 @@ public abstract class AbstractTemplateExpression<E> extends AbstractExpression<E
      */
     protected TemplateMatch match;
     /**
+     * 单个值
+     */
+    protected Object value;
+    /**
      * 列表值
      */
     protected Collection<Object> listValues;
@@ -62,7 +57,7 @@ public abstract class AbstractTemplateExpression<E> extends AbstractExpression<E
     /**
      * 检查匹配模式
      */
-    protected void checkMatch() {
+    public void checkMatch() {
         if (Objects.isNull(this.match)) {
             if (Objects.isNotEmpty(this.mapValues)) {
                 this.match = TemplateMatch.MAP;
@@ -74,69 +69,24 @@ public abstract class AbstractTemplateExpression<E> extends AbstractExpression<E
         }
     }
 
-    @Override
-    public String getSegment() {
-        if (Objects.isNotBlank(this.template)) {
-            this.checkMatch();
-            final StringBuilder builder = new StringBuilder(60);
-            if (Objects.nonNull(this.slot) && this.slot != Slot.NONE) {
-                builder.append(this.slot.getSegment()).append(Constants.SPACE);
-            }
-            final String alias;
-            if (Objects.isNotBlank((alias = this.getAlias()))) {
-                builder.append(alias).append(Constants.DOT);
-            }
-            final String realTemplate;
-            if (Objects.nonNull(this.fragment)) {
-                if (this.fragment instanceof String) {
-                    realTemplate = this.template.replaceAll(DEF_PLACEHOLDER_COLUMN, (String) this.fragment);
-                } else if (this.fragment instanceof Column) {
-                    realTemplate = this.template.replaceAll(DEF_PLACEHOLDER_COLUMN, ((Column) this.fragment).getColumn());
-                } else {
-                    realTemplate = this.template;
-                }
-            } else {
-                realTemplate = this.template;
-            }
-            switch (this.match) {
-                case MULTIPLE:
-                    builder.append(Placeholders.format(realTemplate, this.listValues.stream().map(it ->
-                        Scripts.safeJoining(this.defPlaceholder(it))).collect(Collectors.toList())));
-                    break;
-                case MAP:
-                    builder.append(Placeholders.format(realTemplate, this.mapValues.entrySet().stream()
-                        .collect(Collectors.toMap(Map.Entry::getKey,
-                            it -> Scripts.safeJoining(this.defPlaceholder(it)),
-                            (o, n) -> n, (Supplier<LinkedHashMap<String, Object>>) LinkedHashMap::new))));
-                    break;
-                default:
-                    if (Objects.isNotEmpty(this.listValues)) {
-                        builder.append(Placeholders.format(realTemplate, this.listValues.stream().map(it ->
-                            Scripts.safeJoining(this.defPlaceholder(it)))
-                            .collect(Collectors.joining(Constants.COMMA_SPACE))));
-                    } else {
-                        builder.append(Placeholders.format(realTemplate,
-                            Scripts.safeJoining(this.defPlaceholder(this.value))));
-                    }
-                    break;
-            }
-            return builder.toString();
-        }
-        return null;
+    public String getTemplate() {
+        return template;
     }
 
-    public AbstractTemplateExpression<E> match(TemplateMatch match) {
-        this.match = match;
-        return this;
+    public TemplateMatch getMatch() {
+        return match;
     }
 
-    public AbstractTemplateExpression<E> values(Collection<Object> listValues) {
-        this.listValues = listValues;
-        return this;
+    public Object getValue() {
+        return value;
     }
 
-    public AbstractTemplateExpression<E> values(Map<String, Object> mapValues) {
-        this.mapValues = mapValues;
-        return this;
+    public Collection<Object> getListValues() {
+        return listValues;
     }
+
+    public Map<String, Object> getMapValues() {
+        return mapValues;
+    }
+
 }

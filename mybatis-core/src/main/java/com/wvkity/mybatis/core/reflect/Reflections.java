@@ -25,6 +25,9 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
@@ -576,6 +579,105 @@ public final class Reflections {
             }
             return builder.toString();
         }).orElse(null);
+    }
+
+    /**
+     * 执行接口方法
+     * @param target     目标对象
+     * @param methodName 方法名
+     * @param args       参数列表
+     * @param <T>        泛型类型
+     * @throws Exception 执行失败异常信息
+     */
+    public static <T> void invokeVoidVirtual(final T target, final String methodName,
+                                             final Object... args) throws Exception {
+        invokeVirtual(target, methodName, Void.class, args);
+    }
+
+    /**
+     * 执行接口方法
+     * @param target         目标对象
+     * @param methodName     方法名
+     * @param parameterTypes 方法参数类型列表
+     * @param args           参数列表
+     * @param <T>            泛型类型
+     * @throws Exception 执行失败异常信息
+     */
+    public static <T> void invokeVoidVirtual(final T target, final String methodName,
+                                             final Class<?>[] parameterTypes,
+                                             final Object... args) throws Exception {
+        if (Objects.nonNull(target)) {
+            invokeVirtual(target, methodName, Void.class, parameterTypes, args);
+        }
+    }
+
+    /**
+     * 执行接口方法
+     * @param target     目标对象
+     * @param methodName 方法名
+     * @param args       参数列表
+     * @param <T>        泛型类型
+     * @throws Exception 执行失败异常信息
+     */
+    public static <T> void invokeConsistentVirtual(final T target, final String methodName,
+                                                   final Object... args) throws Exception {
+        if (Objects.nonNull(target)) {
+            invokeVirtual(target, methodName, target.getClass().getSuperclass(), args);
+        }
+    }
+
+    /**
+     * 执行接口方法
+     * @param target     目标对象
+     * @param methodName 方法名
+     * @param returnType 返回值类型
+     * @param args       参数列表
+     * @param <T>        泛型类型
+     * @throws Exception 执行失败异常信息
+     */
+    public static <T> void invokeVirtual(final T target, final String methodName,
+                                         final Class<?> returnType, final Object... args) throws Exception {
+        invokeVirtual(target, methodName, returnType, Reflections.getArgumentType(args), args);
+    }
+
+    /**
+     * 执行接口方法
+     * @param target         目标对象
+     * @param methodName     方法名
+     * @param returnType     返回值类型
+     * @param parameterTypes 方法参数类型列表
+     * @param args           参数列表
+     * @param <T>            泛型类型
+     * @throws Exception 执行失败异常信息
+     */
+    public static <T> void invokeVirtual(final T target, final String methodName,
+                                         final Class<?> returnType, final Class<?>[] parameterTypes,
+                                         final Object... args) throws Exception {
+        if (Objects.nonNull(target) && Objects.isNotBlank(methodName) && Objects.nonNull(returnType)) {
+            invokeVirtual(target, methodName, MethodType.methodType(returnType, parameterTypes), args);
+        }
+    }
+
+    /**
+     * 执行接口方法
+     * @param target     目标对象
+     * @param methodName 方法名
+     * @param methodType {@link MethodType}
+     * @param args       参数列表
+     * @param <T>        泛型类型
+     * @throws Exception 执行失败异常信息
+     */
+    public static <T> void invokeVirtual(final T target, final String methodName, final MethodType methodType,
+                                         final Object... args) throws Exception {
+        if (Objects.nonNull(target) && Objects.isNotBlank(methodName) && Objects.nonNull(methodType)) {
+            try {
+                final MethodHandle methodHandle =
+                    MethodHandles.lookup().findVirtual(target.getClass(), methodName, methodType);
+                methodHandle.bindTo(target).invokeWithArguments(args);
+            } catch (Throwable e) {
+                throw new Exception(e);
+            }
+        }
     }
 
     /**

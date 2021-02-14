@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.core.condition.basic;
 
-import com.wvkity.mybatis.core.condition.expression.Expression;
+import com.wvkity.mybatis.core.condition.criteria.Criterion;
 import com.wvkity.mybatis.core.constant.Constants;
 import com.wvkity.mybatis.core.immutable.ImmutableList;
 import com.wvkity.mybatis.core.segment.AbstractFragmentList;
@@ -25,38 +25,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * WHERE条件片段管理器
+ * 条件片段管理器
  * @author wvkity
  * @created 2021-01-05
  * @since 1.0.0
  */
-public class WhereManager extends AbstractFragmentList<Expression> {
+public class WhereManager extends AbstractFragmentList<Criterion> {
 
     private static final long serialVersionUID = 5417095393578894180L;
 
     /**
      * 获取所有条件表达式片段
-     * @return {@link Expression}集合
+     * @return {@link Criterion}集合
      */
-    final List<Expression> getConditions() {
+    final List<Criterion> getConditions() {
         return this.isEmpty() ? ImmutableList.of() : ImmutableList.of(new ArrayList<>(this.fragments));
     }
 
     @Override
     public String getSegment() {
         if (!this.isEmpty()) {
-           final List<String> conditions = new ArrayList<>(this.fragments.size());
-           for (Expression it: this.fragments) {
-               if (Objects.nonNull(it)) {
-                   final String condition = it.getSegment();
-                   if (Objects.isNotBlank(condition)) {
-                       conditions.add(condition);
-                   }
-               }
-           }
-           if (Objects.isNotEmpty(conditions)) {
-               return String.join(Constants.SPACE, conditions).trim();
-           }
+            final List<String> conditions = new ArrayList<>(this.fragments.size());
+            for (Criterion it : this.fragments) {
+                if (Objects.nonNull(it)) {
+                    final String condition = it.getSegment();
+                    if (Objects.isNotBlank(condition)) {
+                        conditions.add(condition);
+                    }
+                }
+            }
+            if (Objects.isNotEmpty(conditions)) {
+                return String.join(Constants.SPACE, conditions).trim();
+            }
         }
         return Constants.EMPTY;
     }

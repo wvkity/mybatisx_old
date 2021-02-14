@@ -15,8 +15,9 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
+import com.wvkity.mybatis.core.condition.basic.Matched;
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.condition.expression.builder.AbstractExprBuilder;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractBasicExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.utils.Objects;
@@ -27,15 +28,16 @@ import com.wvkity.mybatis.core.utils.Objects;
  * @created 2021-01-06
  * @since 1.0.0
  */
-public class ImmediateNotEqual extends AbstractExpression<String> {
+public class ImmediateNotEqual extends AbstractBasicExpression<String> {
 
     private static final long serialVersionUID = -7062776323830921155L;
 
     public ImmediateNotEqual(Criteria<?> criteria, String column, Slot slot, Object value) {
         this.criteria = criteria;
-        this.fragment = column;
+        this.target = column;
         this.slot = slot;
         this.symbol = Symbol.NE;
+        this.matched = Matched.IMMEDIATE;
         this.value = value;
     }
 
@@ -43,14 +45,14 @@ public class ImmediateNotEqual extends AbstractExpression<String> {
         return new ImmediateNotEqual.Builder();
     }
 
-    public static final class Builder extends AbstractExprBuilder<ImmediateNotEqual, String> {
+    public static final class Builder extends AbstractBasicExprBuilder<ImmediateNotEqual, String> {
 
         private Builder() {
         }
 
         public ImmediateNotEqual build() {
-            if (Objects.isNotBlank(this.column)) {
-                return new ImmediateNotEqual(this.criteria, this.column, this.slot, this.value);
+            if (Objects.isNotBlank(this.target)) {
+                return new ImmediateNotEqual(this.criteria, this.target, this.slot, this.value);
             }
             return null;
         }

@@ -253,6 +253,10 @@ public interface Constants {
      */
     String PARAM_CRITERIA = "criteria";
     /**
+     * 分页参数
+     */
+    String PARAM_PAGEABLE = "pageable";
+    /**
      * 乐观锁审计值key
      */
     String PARAM_OPTIMISTIC_LOCK_KEY = "optimistic_lock_auditing_value";

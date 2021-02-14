@@ -15,8 +15,12 @@
  */
 package com.wvkity.mybatis.ext.service;
 
+import com.wvkity.mybatis.core.condition.criteria.Criteria;
+import com.wvkity.paging.Pageable;
+
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -80,11 +84,95 @@ public interface QueryService<T, U, ID> {
     List<U> selectList(final Collection<ID> ids);
 
     /**
-     * 根据指定对象查询记录
+     * 根据指定实体对象查询记录
      * @param entity 实体对象
      * @return 多条记录
      */
     List<U> selectList(final T entity);
+
+    /**
+     * 根据{@link Criteria}对象查询记录
+     * @param criteria {@link Criteria}对象
+     * @return 多条记录
+     */
+    List<U> selectList(final Criteria<T> criteria);
+
+    /**
+     * 根据{@link Criteria}对象查询记录
+     * @param criteria   {@link Criteria}对象
+     * @param resultType 返回值类型
+     * @param <E>        自定返回值泛型
+     * @return 多条记录
+     */
+    <E> List<E> selectEmbedList(final Criteria<T> criteria, final Class<E> resultType);
+
+    /**
+     * 根据{@link Criteria}对象查询记录
+     * @param criteria {@link Criteria}对象
+     * @param <E>      自定返回值泛型
+     * @return 多条记录
+     */
+    <E> List<E> selectEmbedList(final Criteria<T> criteria);
+
+    /**
+     * 根据{@link Criteria}对象查询记录
+     * @param criteria {@link Criteria}对象
+     * @return 多条记录
+     */
+    List<Object> selectObjectList(final Criteria<T> criteria);
+
+    /**
+     * 根据{@link Criteria}对象查询记录
+     * @param criteria {@link Criteria}对象
+     * @return 多条记录
+     */
+    List<Object[]> selectArrayList(final Criteria<T> criteria);
+
+    /**
+     * 根据{@link Criteria}对象查询记录
+     * @param criteria {@link Criteria}对象
+     * @return 多条记录
+     */
+    Map<Object, U> selectMap(final Criteria<T> criteria);
+
+    /**
+     * 根据{@link Criteria}对象查询记录
+     * @param criteria   {@link Criteria}对象
+     * @param resultType 返回值类型
+     * @param <E>        自定返回值泛型
+     * @return 多条记录
+     */
+    <E> Map<Object, E> selectEmbedMap(final Criteria<T> criteria, final Class<E> resultType);
+
+    /**
+     * 根据{@link Criteria}对象查询记录
+     * @param criteria {@link Criteria}对象
+     * @param <E>      自定返回值泛型
+     * @return 多条记录
+     */
+    <E> Map<Object, E> selectEmbedMap(final Criteria<T> criteria);
+
+    /**
+     * 根据{@link Criteria}对象查询记录
+     * @param criteria {@link Criteria}对象
+     * @return 多条记录
+     */
+    List<Map<String, Object>> selectMapObjectList(final Criteria<T> criteria);
+
+    /**
+     * 分页查询记录
+     * @param pageable 分页对象
+     * @return 多条记录
+     */
+    List<U> selectList(final Pageable pageable);
+
+    /**
+     * 分页查询记录
+     * @param criteria {@link Criteria}
+     * @param pageable 分页对象
+     * @return 多条记录
+     */
+    List<U> selectList(final Criteria<T> criteria, final Pageable pageable);
 
     /**
      * 查询所有记录

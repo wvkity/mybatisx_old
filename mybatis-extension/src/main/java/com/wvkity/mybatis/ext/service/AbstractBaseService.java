@@ -15,8 +15,12 @@
  */
 package com.wvkity.mybatis.ext.service;
 
+import com.wvkity.mybatis.core.condition.criteria.Criteria;
 import com.wvkity.mybatis.core.mapper.BaseMapper;
+import com.wvkity.mybatis.core.reflect.Reflections;
 import com.wvkity.mybatis.core.utils.Objects;
+import com.wvkity.mybatis.executor.resultset.EmbeddedResult;
+import com.wvkity.paging.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -124,6 +129,83 @@ public abstract class AbstractBaseService<M extends BaseMapper<T, U, ID>, T, U, 
     @Override
     public List<U> selectList(T entity) {
         return this.mapper.selectListByEntity(entity);
+    }
+
+    @Override
+    public List<U> selectList(Criteria<T> criteria) {
+        return this.mapper.selectListByCriteria(criteria);
+    }
+
+    @Override
+    public <E> List<E> selectEmbedList(Criteria<T> criteria, Class<E> resultType) {
+        if (criteria instanceof EmbeddedResult) {
+            try {
+                Reflections.invokeConsistentVirtual(criteria, "resultType", resultType);
+            } catch (Exception ignore) {
+                // ignore
+            }
+        }
+        return this.selectEmbedList(criteria);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <E> List<E> selectEmbedList(Criteria<T> criteria) {
+        final List<Object> result = this.selectObjectList(criteria);
+        if (Objects.isNotEmpty(result)) {
+            return (List<E>) result;
+        }
+        return new ArrayList<>(0);
+    }
+
+    @Override
+    public List<Object> selectObjectList(Criteria<T> criteria) {
+        if (criteria == null) {
+            return new ArrayList<>(0);
+        }
+        return this.mapper.selectObjectList(criteria);
+    }
+
+    @Override
+    public List<Object[]> selectArrayList(Criteria<T> criteria) {
+        return this.mapper.selectArrayList(criteria);
+    }
+
+    @Override
+    public Map<Object, U> selectMap(Criteria<T> criteria) {
+        return this.mapper.selectMap(criteria);
+    }
+
+    @Override
+    public <E> Map<Object, E> selectEmbedMap(Criteria<T> criteria, Class<E> resultType) {
+        if (criteria instanceof EmbeddedResult) {
+            try {
+                Reflections.invokeConsistentVirtual(criteria, "resultType", resultType);
+            } catch (Exception ignore) {
+                // ignore
+            }
+        }
+        return this.selectEmbedMap(criteria);
+    }
+
+    @Override
+    public <E> Map<Object, E> selectEmbedMap(Criteria<T> criteria) {
+        return this.mapper.selectEmbedMap(criteria);
+    }
+
+    @Override
+    public List<Map<String, Object>> selectMapObjectList(Criteria<T> criteria) {
+        return this.mapper.selectMapObjectList(criteria);
+    }
+
+    @Override
+    public List<U> selectList(Pageable pageable) {
+        return this.mapper.selectPageableList(pageable);
+    }
+
+    @Override
+    public List<U> selectList(Criteria<T> criteria, Pageable pageable) {
+        return this.mapper.selectPageableListByCriteria(criteria, pageable);
     }
 
     @Override

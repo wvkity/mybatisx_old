@@ -15,8 +15,9 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
+import com.wvkity.mybatis.core.condition.basic.Matched;
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.condition.expression.builder.AbstractRangeExprBuilder;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractBasicExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
 import com.wvkity.mybatis.core.utils.Objects;
@@ -27,15 +28,16 @@ import com.wvkity.mybatis.core.utils.Objects;
  * @created 2021-01-06
  * @since 1.0.0
  */
-public class ImmediateLessThan extends AbstractExpression<String> {
+public class ImmediateLessThan extends AbstractBasicExpression<String> {
 
     private static final long serialVersionUID = -8535209976997414490L;
 
     public ImmediateLessThan(Criteria<?> criteria, String column, Slot slot, Object value) {
         this.criteria = criteria;
-        this.fragment = column;
+        this.target = column;
         this.slot = slot;
         this.symbol = Symbol.LT;
+        this.matched = Matched.IMMEDIATE;
         this.value = value;
     }
 
@@ -43,15 +45,15 @@ public class ImmediateLessThan extends AbstractExpression<String> {
         return new ImmediateLessThan.Builder();
     }
 
-    public static final class Builder extends AbstractRangeExprBuilder<ImmediateLessThan, String> {
+    public static final class Builder extends AbstractBasicExprBuilder<ImmediateLessThan, String> {
 
         private Builder() {
         }
 
         @Override
         public ImmediateLessThan build() {
-            if (Objects.isNotBlank(this.column)) {
-                return new ImmediateLessThan(this.criteria, this.column, this.slot, this.value);
+            if (Objects.isNotBlank(this.target)) {
+                return new ImmediateLessThan(this.criteria, this.target, this.slot, this.value);
             }
             return null;
         }

@@ -15,6 +15,7 @@
  */
 package com.wvkity.mybatis.builder.xml;
 
+import com.wvkity.mybatis.core.config.MyBatisGlobalConfiguration;
 import com.wvkity.mybatis.session.MyBatisConfiguration;
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
@@ -71,7 +72,7 @@ public class MyBatisXMLConfigBuilder extends BaseBuilder {
     }
 
     public MyBatisXMLConfigBuilder(Reader reader, String environment, Properties props) {
-        this(new XPathParser(reader, true, props, new XMLMapperEntityResolver()), environment, props);
+        this(new XPathParser(reader, true, props, new XMLMapperEntityResolver()), environment, null, props);
     }
 
     public MyBatisXMLConfigBuilder(InputStream inputStream) {
@@ -83,11 +84,17 @@ public class MyBatisXMLConfigBuilder extends BaseBuilder {
     }
 
     public MyBatisXMLConfigBuilder(InputStream inputStream, String environment, Properties props) {
-        this(new XPathParser(inputStream, true, props, new XMLMapperEntityResolver()), environment, props);
+        this(new XPathParser(inputStream, true, props, new XMLMapperEntityResolver()), environment, null, props);
     }
 
-    private MyBatisXMLConfigBuilder(XPathParser parser, String environment, Properties props) {
-        super(new MyBatisConfiguration());
+    public MyBatisXMLConfigBuilder(InputStream inputStream, String environment,
+                                   MyBatisGlobalConfiguration globalConfiguration, Properties props) {
+        this(new XPathParser(inputStream, true, props, new XMLMapperEntityResolver()), environment, globalConfiguration, props);
+    }
+
+    private MyBatisXMLConfigBuilder(XPathParser parser, String environment,
+                                    MyBatisGlobalConfiguration globalConfiguration, Properties props) {
+        super(new MyBatisConfiguration(globalConfiguration));
         ErrorContext.instance().resource("SQL Mapper Configuration");
         this.configuration.setVariables(props);
         this.parsed = false;

@@ -15,6 +15,7 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
+import com.wvkity.mybatis.core.condition.basic.Matched;
 import com.wvkity.mybatis.core.utils.Objects;
 
 /**
@@ -34,11 +35,11 @@ public class Native extends AbstractExpression<String> {
 
     public Native(String criterion) {
         this.criterion = criterion;
+        this.matched = Matched.IMMEDIATE;
     }
 
-    @Override
-    public String getSegment() {
-        return this.criterion;
+    public String getCriterion() {
+        return criterion;
     }
 
     public static Native of(final String criterion) {

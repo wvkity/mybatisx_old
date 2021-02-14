@@ -15,14 +15,13 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
+import com.wvkity.mybatis.core.condition.basic.Matched;
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
 import com.wvkity.mybatis.core.condition.expression.builder.AbstractFuzzyExprBuilder;
 import com.wvkity.mybatis.core.constant.LikeMode;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
-import com.wvkity.mybatis.core.metadata.Column;
-
-import java.util.Optional;
+import com.wvkity.mybatis.core.utils.Objects;
 
 /**
  * Not Like模糊匹配条件表达式
@@ -30,34 +29,37 @@ import java.util.Optional;
  * @created 2021-01-08
  * @since 1.0.0
  */
-public class StandardNotLike extends AbstractFuzzyExpression<Column> {
+public class StandardNotLike extends AbstractFuzzyExpression<String> {
 
     private static final long serialVersionUID = 5881853809637635749L;
 
-    public StandardNotLike(Criteria<?> criteria, Column column, LikeMode mode,
+    public StandardNotLike(Criteria<?> criteria, String property, LikeMode mode,
                            Character escape, Slot slot, Object value) {
         this.criteria = criteria;
-        this.fragment = column;
+        this.target = property;
         this.mode = mode;
         this.escape = escape;
         this.slot = slot;
         this.value = value;
         this.symbol = Symbol.NOT_LIKE;
+        this.matched = Matched.STANDARD;
     }
 
     public static StandardNotLike.Builder create() {
         return new StandardNotLike.Builder();
     }
 
-    public static final class Builder extends AbstractFuzzyExprBuilder<StandardNotLike, Column> {
+    public static final class Builder extends AbstractFuzzyExprBuilder<StandardNotLike, String> {
 
         private Builder() {
         }
 
         @Override
         public StandardNotLike build() {
-            return Optional.ofNullable(this.getRealColumn()).map(it ->
-                new StandardNotLike(this.criteria, it, this.mode, this.escape, this.slot, this.value)).orElse(null);
+            if (Objects.isNotBlank(this.target)) {
+                return new StandardNotLike(this.criteria, this.target, this.mode, this.escape, this.slot, this.value);
+            }
+            return null;
         }
     }
 }

@@ -16,8 +16,7 @@
 package com.wvkity.mybatis.core.condition.criteria;
 
 import com.wvkity.mybatis.core.constant.Slot;
-import com.wvkity.mybatis.core.convert.Property;
-import com.wvkity.mybatis.core.convert.converter.PropertyConverter;
+import com.wvkity.mybatis.core.property.Property;
 import com.wvkity.mybatis.core.immutable.ImmutableLinkedMap;
 import com.wvkity.mybatis.core.utils.Objects;
 
@@ -26,13 +25,50 @@ import java.util.Map;
 
 /**
  * 模板条件接口
+ * <pre>{@code
+ *     // For examples:
+ *
+ *     final Query<T> query = Query.from(T.class);
+ *
+ *     // No1:
+ *     final String template1 = "user_name = ?0 AND pwd = ?1";
+ *     query.template(template1, "admin", "123456");
+ *     // output
+ *     // OR user_name = ? AND pwd = ?
+ *
+ *     // No2:
+ *     final String template2 = "user_name = :0 AND pwd = :1;
+ *     query.template(template2, Slot.OR, "root", "654321");
+ *     // output
+ *     // OR user_name = ? AND pwd = ?
+ *
+ *     // No3:
+ *     final String template3 = "user_name = :0 AND pwd = :1";
+ *     final Map<String, Object> args1 = new LinkedHashMap();
+ *     args1.put("0", "root");
+ *     args1.put("1", "123456");
+ *     query.template(template3, args1);
+ *     // output
+ *     // AND user_name = ? AND pwd = ?
+ *
+ *     // No4:
+ *     final String template4 = "user_name = :userName AND pwd = :password";
+ *     final Map<String, Object> args2 = new HashMap();
+ *     args2.put("userName", "admin");
+ *     args2.put("password", "123456");
+ *     query.template(template4, args2);
+ *     // output
+ *     // AND user_name = ? AND pwd = ?
+ *
+ * }</pre>
  * @param <T>     实体类
  * @param <Chain> 子类
  * @author wvkity
  * @created 2021-01-15
  * @since 1.0.0
+ * @see com.wvkity.mybatis.core.utils.Placeholders
  */
-public interface Template<T, Chain extends Template<T, Chain>> extends PropertyConverter<T> {
+public interface Template<T, Chain extends Template<T, Chain>> {
 
     /**
      * 模板条件

@@ -13,39 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.basic.select;
+package com.wvkity.mybatis.core.inject.method.invoke;
 
-import com.wvkity.mybatis.core.segment.Fragment;
+import com.wvkity.mybatis.core.inject.mapping.sql.select.SelectPageableListByCriteriaSupplier;
+import com.wvkity.mybatis.core.inject.method.support.AbstractCriteriaMethod;
 
 /**
- * 查询列接口
+ * {@code selectPageListByCriteria}方法映射
  * @author wvkity
- * @created 2021-01-09
+ * @created 2021-02-11
  * @since 1.0.0
  */
-public interface Select extends Fragment {
-
-    /**
-     * 获取字段名
-     * @return 字段名
-     */
-    String getColumn();
-
-    /**
-     * 获取别名
-     * @return 别名
-     */
-    String getAlias();
-
-    @Override
-    default String getSegment() {
-        return getSegment(true);
-    }
-
-    /**
-     * 获取SQL片段
-     * @param isQuery 是否应用为查询
-     * @return SQL片段
-     */
-    String getSegment(final boolean isQuery);
+public class SelectPageableListByCriteriaInvoker extends AbstractCriteriaMethod<SelectPageableListByCriteriaSupplier> {
 }

@@ -15,13 +15,12 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
+import com.wvkity.mybatis.core.condition.basic.Matched;
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
 import com.wvkity.mybatis.core.condition.expression.builder.AbstractExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
-import com.wvkity.mybatis.core.metadata.Column;
-
-import java.util.Optional;
+import com.wvkity.mybatis.core.utils.Objects;
 
 /**
  * NOT NULL条件表达式
@@ -29,30 +28,33 @@ import java.util.Optional;
  * @created 2021-01-09
  * @since 1.0.0
  */
-public class StandardNotNull extends AbstractNullableExpression<Column> {
+public class StandardNotNull extends AbstractNullableExpression<String> {
 
     private static final long serialVersionUID = 8443593657388476364L;
 
-    public StandardNotNull(Criteria<?> criteria, Column column, Slot slot) {
+    public StandardNotNull(Criteria<?> criteria, String property, Slot slot) {
         this.criteria = criteria;
-        this.fragment = column;
+        this.target = property;
         this.slot = slot;
         this.symbol = Symbol.NOT_NULL;
+        this.matched = Matched.STANDARD;
     }
 
     public static StandardNotNull.Builder create() {
         return new StandardNotNull.Builder();
     }
 
-    public static final class Builder extends AbstractExprBuilder<StandardNotNull, Column> {
+    public static final class Builder extends AbstractExprBuilder<StandardNotNull, String> {
 
         private Builder() {
         }
 
         @Override
         public StandardNotNull build() {
-            return Optional.ofNullable(this.getRealColumn()).map(it ->
-                new StandardNotNull(this.criteria, it, this.slot)).orElse(null);
+            if (Objects.isNotBlank(this.target)) {
+                return new StandardNotNull(this.criteria, this.target, this.slot);
+            }
+            return null;
         }
     }
 }

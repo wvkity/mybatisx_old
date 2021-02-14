@@ -15,6 +15,8 @@
  */
 package com.wvkity.mybatis.core.condition.criteria;
 
+import com.wvkity.mybatis.core.property.Property;
+
 /**
  * 查询包装器
  * @param <T>     实体类
@@ -23,7 +25,8 @@ package com.wvkity.mybatis.core.condition.criteria;
  * @created 2021-01-09
  * @since 1.0.0
  */
-public interface QueryWrapper<T, Chain extends QueryWrapper<T, Chain>> extends Select<T, Chain> {
+public interface QueryWrapper<T, Chain extends QueryWrapper<T, Chain>> extends Select<T, Chain>,
+    GroupBy<T, Chain>, OrderBy<T, Chain> {
 
     /**
      * 设置表别名
@@ -73,6 +76,39 @@ public interface QueryWrapper<T, Chain extends QueryWrapper<T, Chain>> extends S
      * @return {@link Chain}
      */
     Chain resultType(final Class<?> resultType);
+
+    /**
+     * 设置map结果中的key值
+     * <p>{@code @MapKey("key")}</p>
+     * @param property 属性
+     * @return {@link Chain}
+     */
+    Chain mapKey(final Property<T, ?> property);
+
+    /**
+     * 设置map结果中的key值
+     * <p>{@code @MapKey("key")}</p>
+     * @param mapKey key
+     * @return {@link Chain}
+     */
+    Chain mapKey(final String mapKey);
+
+    /**
+     * 指定查询范围
+     * @param start 起始位置
+     * @param end   结束位置
+     * @return {@link Chain}
+     */
+    Chain range(final long start, final long end);
+
+    /**
+     * 指定查询范围
+     * @param start 起始页码
+     * @param end   结束页码
+     * @param size  每页数目
+     * @return {@link Chain}
+     */
+    Chain range(final long start, final long end, final long size);
 
     /**
      * 获取查询列SQL片段

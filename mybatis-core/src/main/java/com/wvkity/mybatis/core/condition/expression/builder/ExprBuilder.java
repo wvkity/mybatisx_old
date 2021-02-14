@@ -27,11 +27,4 @@ import com.wvkity.mybatis.core.builder.Builder;
  */
 public interface ExprBuilder<T, E> extends Builder<T> {
 
-    /**
-     * 获取真实字段对象
-     * @return 字段信息
-     */
-    default E getRealColumn() {
-        return null;
-    }
 }

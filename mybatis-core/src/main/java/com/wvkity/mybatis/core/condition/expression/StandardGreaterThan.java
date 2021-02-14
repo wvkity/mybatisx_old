@@ -15,13 +15,12 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
+import com.wvkity.mybatis.core.condition.basic.Matched;
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.condition.expression.builder.AbstractExprBuilder;
+import com.wvkity.mybatis.core.condition.expression.builder.AbstractBasicExprBuilder;
 import com.wvkity.mybatis.core.constant.Slot;
 import com.wvkity.mybatis.core.constant.Symbol;
-import com.wvkity.mybatis.core.metadata.Column;
-
-import java.util.Optional;
+import com.wvkity.mybatis.core.utils.Objects;
 
 /**
  * 大于条件表达式
@@ -29,15 +28,16 @@ import java.util.Optional;
  * @created 2021-01-06
  * @since 1.0.0
  */
-public class StandardGreaterThan extends AbstractExpression<Column> {
+public class StandardGreaterThan extends AbstractBasicExpression<String> {
 
     private static final long serialVersionUID = 4405661073856767054L;
 
-    public StandardGreaterThan(Criteria<?> criteria, Column column, Slot slot, Object value) {
+    public StandardGreaterThan(Criteria<?> criteria, String property, Slot slot, Object value) {
         this.criteria = criteria;
-        this.fragment = column;
+        this.target = property;
         this.slot = slot;
         this.symbol = Symbol.GT;
+        this.matched = Matched.STANDARD;
         this.value = value;
     }
 
@@ -45,15 +45,17 @@ public class StandardGreaterThan extends AbstractExpression<Column> {
         return new StandardGreaterThan.Builder();
     }
 
-    public static final class Builder extends AbstractExprBuilder<StandardGreaterThan, Column> {
+    public static final class Builder extends AbstractBasicExprBuilder<StandardGreaterThan, String> {
 
         private Builder() {
         }
 
         @Override
         public StandardGreaterThan build() {
-            return Optional.ofNullable(this.getRealColumn()).map(it ->
-                new StandardGreaterThan(this.criteria, it, this.slot, this.value)).orElse(null);
+            if (Objects.isNotBlank(this.target)) {
+                return new StandardGreaterThan(this.criteria, this.target, this.slot, this.value);
+            }
+            return null;
         }
     }
 }

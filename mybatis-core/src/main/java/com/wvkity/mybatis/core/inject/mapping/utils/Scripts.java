@@ -550,7 +550,120 @@ public final class Scripts implements Constants {
             builder.append(tableAlias).append(DOT);
         }
         final Symbol it = symbol == null ? Symbol.EQ : symbol;
-        builder.append(column).append(SPACE).append(it.getSegment());
+        builder.append(column).append(SPACE);
+        append(builder, symbol, typeHandler, useJavaType, javaType, jdbcType, placeholders);
+        return builder.toString();
+    }
+
+    /**
+     * 转换成条件参数
+     * @param symbol       {@link Symbol}
+     * @param slot         {@link Slot}
+     * @param column       {@link Column}
+     * @param placeholders 占位符参数列表
+     * @return 参数字符串
+     */
+    public static String convertConditionPartArg(final Symbol symbol, final Slot slot,
+                                                 final Column column, final String... placeholders) {
+        return convertConditionPartArg(symbol, slot, column, Objects.asList(placeholders));
+    }
+
+    /**
+     * 转换成条件参数
+     * @param symbol       {@link Symbol}
+     * @param slot         {@link Slot}
+     * @param column       {@link Column}
+     * @param placeholders 占位符参数集合
+     * @return 参数字符串
+     */
+    public static String convertConditionPartArg(final Symbol symbol, final Slot slot,
+                                                 final Column column, final List<String> placeholders) {
+        return convertConditionPartArg(symbol, slot, column.getTypeHandler(), column.isUseJavaType(),
+            column.getJavaType(), column.getJdbcType(), placeholders);
+    }
+
+    /**
+     * 转换成条件参数
+     * @param symbol       {@link Symbol}
+     * @param slot         {@link Slot}
+     * @param placeholders 占位符参数列表
+     * @return 参数字符串
+     */
+    public static String convertConditionPartArg(final Symbol symbol, final Slot slot,
+                                                 final String... placeholders) {
+        return convertConditionPartArg(symbol, slot, Objects.asList(placeholders));
+    }
+
+    /**
+     * 转换成条件参数
+     * @param symbol       {@link Symbol}
+     * @param slot         {@link Slot}
+     * @param placeholders 占位符参数集合
+     * @return 参数字符串
+     */
+    public static String convertConditionPartArg(final Symbol symbol, final Slot slot,
+                                                 final List<String> placeholders) {
+        return convertConditionPartArg(symbol, slot, null, false, null, null, placeholders);
+    }
+
+    /**
+     * 转换成条件参数
+     * @param symbol       {@link Symbol}
+     * @param slot         {@link Slot}
+     * @param typeHandler  类型处理器
+     * @param useJavaType  是否使用Java类型
+     * @param javaType     Java类型
+     * @param jdbcType     JDBC类型
+     * @param placeholders 占位符参数集合
+     * @return 参数字符串
+     */
+    public static String convertConditionPartArg(final Symbol symbol, final Slot slot,
+                                                 final Class<? extends TypeHandler<?>> typeHandler,
+                                                 final boolean useJavaType, final Class<?> javaType,
+                                                 final JdbcType jdbcType, final String... placeholders) {
+        return convertConditionPartArg(symbol, slot, typeHandler, useJavaType, javaType,
+            jdbcType, Objects.asList(placeholders));
+    }
+
+    /**
+     * 转换成条件参数
+     * @param symbol       {@link Symbol}
+     * @param slot         {@link Slot}
+     * @param typeHandler  类型处理器
+     * @param useJavaType  是否使用Java类型
+     * @param javaType     Java类型
+     * @param jdbcType     JDBC类型
+     * @param placeholders 占位符参数集合
+     * @return 参数字符串
+     */
+    public static String convertConditionPartArg(final Symbol symbol, final Slot slot,
+                                                 final Class<? extends TypeHandler<?>> typeHandler,
+                                                 final boolean useJavaType, final Class<?> javaType,
+                                                 final JdbcType jdbcType, final List<String> placeholders) {
+        final StringBuilder builder = new StringBuilder(100);
+        if (Objects.nonNull(slot) && slot != Slot.NONE) {
+            builder.append(slot.getSegment());
+        }
+        builder.append(" %s ");
+        append(builder, symbol, typeHandler, useJavaType, javaType, jdbcType, placeholders);
+        return builder.toString();
+    }
+
+    /**
+     * 转换成条件参数
+     * @param symbol       {@link Symbol}
+     * @param typeHandler  类型处理器
+     * @param useJavaType  是否使用Java类型
+     * @param javaType     Java类型
+     * @param jdbcType     JDBC类型
+     * @param placeholders 占位符参数集合
+     */
+    private static void append(final StringBuilder builder, final Symbol symbol,
+                               final Class<? extends TypeHandler<?>> typeHandler,
+                               final boolean useJavaType, final Class<?> javaType,
+                               final JdbcType jdbcType, final List<String> placeholders) {
+        final Symbol it = symbol == null ? Symbol.EQ : symbol;
+        builder.append(it.getSegment());
         if (Symbol.filter(it) && Objects.isNotEmpty(placeholders)) {
             builder.append(SPACE);
             switch (it) {
@@ -577,10 +690,7 @@ public final class Scripts implements Constants {
                         safeJoining(pd, concatIntactTypeArg(typeHandler, useJavaType, javaType, jdbcType)))
                         .collect(Collectors.joining(SPACE_AND_SPACE)));
                     break;
-                default:
-                    return EMPTY;
             }
         }
-        return builder.toString();
     }
 }

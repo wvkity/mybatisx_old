@@ -15,8 +15,6 @@
  */
 package com.wvkity.mybatis.core.condition.criteria;
 
-import com.wvkity.mybatis.core.convert.Property;
-
 /**
  * 条件接口包装器
  * @param <T>     泛型类
@@ -29,20 +27,11 @@ public interface CriteriaWrapper<T, Chain extends CriteriaWrapper<T, Chain>> ext
     Compare<T, Chain>, Range<T, Chain>, Fuzzy<T, Chain>, Nullable<T, Chain>, Template<T, Chain>, Nested<Chain> {
 
     /**
-     * 根据方法获取属性名
-     * @param property {@link Property}
-     * @param <E>      泛型类型
-     * @param <V>      属性类型
-     * @return 属性名
-     */
-    <E, V> String methodToProperty(final Property<E, V> property);
-
-    /**
      * 纯SQL条件
      * <p>本方法存在SQL注入风险，谨慎使用，可参考{@link com.wvkity.mybatis.core.condition.expression.StandardTemplate StandardTemplate}
      * 或{@link com.wvkity.mybatis.core.condition.expression.ImmediateTemplate ImmediateTemplate}模板条件表达式实现对应的功能.</p>
      * @param criterion 条件
      * @return {@link Chain}
      */
-    Chain nativeSql(final String criterion);
+    Chain nativeCondition(final String criterion);
 }

@@ -15,13 +15,9 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
-import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
-import com.wvkity.mybatis.core.metadata.Column;
-import com.wvkity.mybatis.core.utils.Objects;
-
 /**
  * 抽象Between范围条件表达式
- * @param <E> 字段类型
+ * @param <E> 字段/属性类型
  * @author wvkity
  * @created 2021-01-07
  * @since 1.0.0
@@ -40,26 +36,11 @@ public abstract class AbstractBetweenExpression<E> extends AbstractExpression<E>
      */
     protected Object end;
 
-    @Override
-    public String getSegment() {
-        if (Objects.isNull(this.fragment)) {
-            return null;
-        }
-        if (this.fragment instanceof String) {
-            return Scripts.convertToConditionArg(this.symbol, this.slot, this.getAlias(), (String) this.fragment,
-                this.defPlaceholder(this.begin), this.defPlaceholder(this.end));
-        }
-        return Scripts.convertToConditionArg(this.symbol, this.slot, this.getAlias(), (Column) this.fragment,
-            this.defPlaceholder(this.begin), this.defPlaceholder(this.end));
+    public Object getBegin() {
+        return begin;
     }
 
-    public AbstractBetweenExpression<E> begin(Object begin) {
-        this.begin = begin;
-        return this;
-    }
-
-    public AbstractBetweenExpression<E> end(Object end) {
-        this.end = end;
-        return this;
+    public Object getEnd() {
+        return end;
     }
 }

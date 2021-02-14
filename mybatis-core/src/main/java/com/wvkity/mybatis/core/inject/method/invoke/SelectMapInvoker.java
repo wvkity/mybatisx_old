@@ -13,14 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.convert.support;
+package com.wvkity.mybatis.core.inject.method.invoke;
 
-import com.wvkity.mybatis.core.convert.converter.PlaceholderConverter;
+import com.wvkity.mybatis.core.inject.mapping.sql.select.SelectMapSupplier;
+import com.wvkity.mybatis.core.inject.method.support.AbstractCriteriaMethod;
 
 /**
+ * {@code selectMap}方法映射
  * @author wvkity
- * @created 2020-10-19
+ * @created 2021-02-07
  * @since 1.0.0
  */
-public abstract class AbstractPlaceholderConverter implements PlaceholderConverter {
+public class SelectMapInvoker extends AbstractCriteriaMethod<SelectMapSupplier> {
+
+
 }

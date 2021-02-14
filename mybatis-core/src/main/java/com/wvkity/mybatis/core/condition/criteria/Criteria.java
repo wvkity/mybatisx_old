@@ -16,8 +16,6 @@
 package com.wvkity.mybatis.core.condition.criteria;
 
 import com.wvkity.mybatis.core.condition.expression.Expression;
-import com.wvkity.mybatis.core.convert.converter.PlaceholderConverter;
-import com.wvkity.mybatis.core.convert.converter.PropertyConverter;
 import com.wvkity.mybatis.core.segment.Fragment;
 
 import java.util.Collection;
@@ -28,7 +26,7 @@ import java.util.Collection;
  * @created 2021-01-04
  * @since 1.0.0
  */
-public interface Criteria<T> extends Search<T>, PropertyConverter<T>, PlaceholderConverter, Fragment {
+public interface Criteria<T> extends Search<T>, Fragment {
 
     /**
      * 获取实体类
@@ -43,11 +41,11 @@ public interface Criteria<T> extends Search<T>, PropertyConverter<T>, Placeholde
     String as();
 
     /**
-     * 属性不匹配是否抛出异常
+     * 是否使用严格模式(属性不匹配是否抛出异常，默认为严格模式)
      * @param throwing 是否抛异常
      * @return {@link Criteria}
      */
-    Criteria<T> notMatchingWithThrows(final boolean throwing);
+    Criteria<T> strict(final boolean throwing);
 
     /**
      * 添加多个{@link Expression}

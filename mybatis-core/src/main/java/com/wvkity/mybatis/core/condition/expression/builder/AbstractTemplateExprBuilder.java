@@ -39,6 +39,10 @@ public abstract class AbstractTemplateExprBuilder<T, E> extends AbstractExprBuil
      */
     protected TemplateMatch match;
     /**
+     * 值
+     */
+    protected Object value;
+    /**
      * 列表值
      */
     protected Collection<Object> listValues;
@@ -54,6 +58,11 @@ public abstract class AbstractTemplateExprBuilder<T, E> extends AbstractExprBuil
 
     public AbstractTemplateExprBuilder<T, E> match(TemplateMatch match) {
         this.match = match;
+        return this;
+    }
+
+    public AbstractTemplateExprBuilder<T, E> value(Object value) {
+        this.value = value;
         return this;
     }
 

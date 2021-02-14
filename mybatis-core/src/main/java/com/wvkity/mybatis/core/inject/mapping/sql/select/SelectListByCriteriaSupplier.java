@@ -13,43 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.basic.select;
+package com.wvkity.mybatis.core.inject.mapping.sql.select;
 
-import com.wvkity.mybatis.core.condition.criteria.Criteria;
+import com.wvkity.mybatis.core.config.MyBatisGlobalConfiguration;
+import com.wvkity.mybatis.core.metadata.Table;
 
 /**
- * 抽象查询列包装器
- * @param <E> 字段类型
+ * {@code selectListByCriteria}方法SQL提供器
  * @author wvkity
- * @created 2021-01-09
+ * @created 2021-02-03
  * @since 1.0.0
  */
-@SuppressWarnings({"serial"})
-public abstract class AbstractSelect<E> implements Select {
+public class SelectListByCriteriaSupplier extends GenericCriteriaSupplier {
 
-    /**
-     * 查询接口对象
-     */
-    protected Criteria<?> criteria;
-
-    /**
-     * 表别名
-     */
-    protected String tableAlias;
-
-    /**
-     * 字段
-     */
-    protected E column;
-
-    /**
-     * 字段别名
-     */
-    protected String alias;
-
-    @Override
-    public String getAlias() {
-        return this.alias;
+    public SelectListByCriteriaSupplier(Table table, MyBatisGlobalConfiguration configuration) {
+        super(table, configuration);
     }
 
 }

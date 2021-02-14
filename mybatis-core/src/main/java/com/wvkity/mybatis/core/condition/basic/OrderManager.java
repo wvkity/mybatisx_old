@@ -16,7 +16,11 @@
 package com.wvkity.mybatis.core.condition.basic;
 
 import com.wvkity.mybatis.core.condition.basic.order.Order;
+import com.wvkity.mybatis.core.constant.Constants;
 import com.wvkity.mybatis.core.segment.AbstractFragmentList;
+import com.wvkity.mybatis.core.segment.Fragment;
+
+import java.util.stream.Collectors;
 
 /**
  * 排序管片段管理
@@ -30,6 +34,10 @@ public class OrderManager extends AbstractFragmentList<Order> {
 
     @Override
     public String getSegment() {
-        return null;
+        if (!isEmpty()) {
+            return " ORDER BY " + this.fragments.stream().map(Fragment::getSegment)
+                .collect(Collectors.joining(Constants.COMMA_SPACE));
+        }
+        return Constants.EMPTY;
     }
 }

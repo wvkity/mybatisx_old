@@ -13,17 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.convert;
+package com.wvkity.mybatis.core.inject.mapping.sql.select;
 
-import java.io.Serializable;
-import java.util.function.Function;
+import com.wvkity.mybatis.core.config.MyBatisGlobalConfiguration;
+import com.wvkity.mybatis.core.metadata.Table;
 
 /**
- * 继承于{@link Function}
+ * {@code selectObjectList}方法SQL提供器
  * @author wvkity
- * @created 2020-10-19
+ * @created 2021-02-05
  * @since 1.0.0
  */
-@FunctionalInterface
-public interface Property<T, R> extends Function<T, R>, Serializable {
+public class SelectObjectListSupplier extends GenericCriteriaSupplier {
+
+    public SelectObjectListSupplier(Table table, MyBatisGlobalConfiguration configuration) {
+        super(table, configuration);
+    }
+
 }

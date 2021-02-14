@@ -16,8 +16,7 @@
 package com.wvkity.mybatis.core.condition.criteria;
 
 import com.wvkity.mybatis.core.constant.Slot;
-import com.wvkity.mybatis.core.convert.Property;
-import com.wvkity.mybatis.core.convert.converter.PropertyConverter;
+import com.wvkity.mybatis.core.property.Property;
 import com.wvkity.mybatis.core.utils.Objects;
 
 import java.util.Collection;
@@ -29,7 +28,7 @@ import java.util.Collection;
  * @created 2021-01-07
  * @since 1.0.0
  */
-public interface Range<T, Chain extends Range<T, Chain>> extends PropertyConverter<T> {
+public interface Range<T, Chain extends Range<T, Chain>> {
 
     // region In
 

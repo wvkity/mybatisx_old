@@ -15,12 +15,10 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
+import com.wvkity.mybatis.core.condition.basic.Matched;
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
 import com.wvkity.mybatis.core.constant.Slot;
-import com.wvkity.mybatis.core.handler.TableHandler;
-import com.wvkity.mybatis.core.metadata.Column;
-
-import java.util.Optional;
+import com.wvkity.mybatis.core.constant.Symbol;
 
 /**
  * 主键等于条件表达式
@@ -28,15 +26,16 @@ import java.util.Optional;
  * @created 2021-01-06
  * @since 1.0.0
  */
-public class StandardIdEqual extends AbstractExpression<Column> {
+public class StandardIdEqual extends AbstractBasicExpression<String> {
 
     private static final long serialVersionUID = -1735853549185563L;
 
-    public StandardIdEqual(final Criteria<?> criteria, final Column id, final Slot slot, final Object value) {
+    public StandardIdEqual(final Criteria<?> criteria, final Slot slot, final Object value) {
         this.criteria = criteria;
-        this.fragment = id;
         this.slot = slot;
         this.value = value;
+        this.matched = Matched.STANDARD;
+        this.symbol = Symbol.EQ;
     }
 
     public static StandardIdEqual.Builder create() {
@@ -61,8 +60,7 @@ public class StandardIdEqual extends AbstractExpression<Column> {
         }
 
         public StandardIdEqual build() {
-            return Optional.ofNullable(TableHandler.getId(this.criteria.getEntityClass()))
-                .map(it -> new StandardIdEqual(this.criteria, it, this.slot, this.value)).orElse(null);
+            return new StandardIdEqual(this.criteria, this.slot, this.value);
         }
 
         public Builder criteria(Criteria<?> criteria) {

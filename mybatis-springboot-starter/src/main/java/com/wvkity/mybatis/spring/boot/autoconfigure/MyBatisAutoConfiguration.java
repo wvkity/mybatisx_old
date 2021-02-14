@@ -153,7 +153,7 @@ public class MyBatisAutoConfiguration implements InitializingBean {
         if (StringUtils.hasText(this.properties.getConfigLocation())) {
             factory.setConfigLocation(this.resourceLoader.getResource(this.properties.getConfigLocation()));
         }
-        applyConfiguration(factory);
+        applyConfiguration(factory, globalConfiguration);
         if (this.properties.getConfigurationProperties() != null) {
             factory.setConfigurationProperties(this.properties.getConfigurationProperties());
         }
@@ -196,10 +196,11 @@ public class MyBatisAutoConfiguration implements InitializingBean {
         return factory.getObject();
     }
 
-    private void applyConfiguration(MyBatisSqlSessionFactoryBean factory) {
+    private void applyConfiguration(final MyBatisSqlSessionFactoryBean factory,
+                                    final MyBatisGlobalConfiguration globalConfiguration) {
         MyBatisConfiguration configuration = this.properties.getConfiguration();
         if (configuration == null && !StringUtils.hasText(this.properties.getConfigLocation())) {
-            configuration = new MyBatisConfiguration();
+            configuration = new MyBatisConfiguration(globalConfiguration);
             // 默认开启驼峰转下划线大写
             configuration.setMapUnderscoreToCamelCase(true);
         }

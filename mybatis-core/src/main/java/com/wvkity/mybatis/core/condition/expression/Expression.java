@@ -15,9 +15,10 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
+import com.wvkity.mybatis.core.condition.basic.Matched;
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
 import com.wvkity.mybatis.core.constant.Slot;
-import com.wvkity.mybatis.core.segment.Fragment;
+import com.wvkity.mybatis.core.constant.Symbol;
 
 /**
  * 条件表达式
@@ -25,7 +26,7 @@ import com.wvkity.mybatis.core.segment.Fragment;
  * @created 2021-01-03
  * @since 1.0.0
  */
-public interface Expression extends Fragment {
+public interface Expression {
 
     /**
      * 获取{@link Criteria}对象
@@ -34,11 +35,10 @@ public interface Expression extends Fragment {
     Criteria<?> getCriteria();
 
     /**
-     * 设置{@link Criteria}对象
-     * @param criteria {@link Criteria}
-     * @return {@link Expression}
+     * 获取字段/属性
+     * @return 字段/属性
      */
-    Expression criteria(final Criteria<?> criteria);
+    String getTarget();
 
     /**
      * 获取{@link Slot}对象
@@ -47,17 +47,10 @@ public interface Expression extends Fragment {
     Slot getSlot();
 
     /**
-     * 获取参数值
-     * @return 参数值
+     * 获取条件符号
+     * @return {@link Symbol}
      */
-    Object getValue();
-
-    /**
-     * 设置值
-     * @param value 值
-     * @return {@link Expression}
-     */
-    Expression value(final Object value);
+    Symbol getSymbol();
 
     /**
      * 获取表别名
@@ -71,6 +64,19 @@ public interface Expression extends Fragment {
      * @return {@link Expression}
      */
     Expression alias(final String alias);
+
+    /**
+     * 获取模式
+     * @return {@link Matched}
+     */
+    Matched getExprMode();
+
+    /**
+     * 设置{@link Criteria}对象
+     * @param criteria {@link Criteria}
+     * @return {@link Expression}
+     */
+    Expression criteria(final Criteria<?> criteria);
 
     /**
      * 设置{@link Criteria}对象

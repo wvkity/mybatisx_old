@@ -15,9 +15,8 @@
  */
 package com.wvkity.mybatis.core.condition.basic;
 
-import com.wvkity.mybatis.core.condition.basic.select.StandardSelect;
-import com.wvkity.mybatis.core.condition.basic.select.ImmediateSelect;
-import com.wvkity.mybatis.core.condition.basic.select.Select;
+import com.wvkity.mybatis.core.condition.basic.select.Selection;
+import com.wvkity.mybatis.core.condition.basic.select.StandardSelection;
 import com.wvkity.mybatis.core.condition.criteria.AbstractQueryCriteria;
 import com.wvkity.mybatis.core.constant.Constants;
 import com.wvkity.mybatis.core.handler.TableHandler;
@@ -39,7 +38,7 @@ import java.util.stream.Collectors;
  * @created 2021-01-09
  * @since 1.0.0
  */
-public class SelectManager extends AbstractFragmentList<Select> {
+public class SelectManager extends AbstractFragmentList<Selection> {
 
     private static final long serialVersionUID = -4508461674924936576L;
     /**
@@ -49,7 +48,7 @@ public class SelectManager extends AbstractFragmentList<Select> {
     /**
      * 查询列缓存
      */
-    private List<Select> selectCache;
+    private List<Selection> selectionCache;
     /**
      * 过滤查询属性
      */
@@ -73,26 +72,24 @@ public class SelectManager extends AbstractFragmentList<Select> {
 
     /**
      * 添加多个查询列
-     * @param selects {@link Select}列表
+     * @param selections {@link Selection}列表
      * @return {@link SelectManager}
      */
-    public SelectManager select(final Select... selects) {
-        return this.select(Objects.asList(selects));
+    public SelectManager select(final Selection... selections) {
+        return this.select(Objects.asList(selections));
     }
 
     /**
      * 添加多个查询列
-     * @param selects {@link Select}集合
+     * @param selections {@link Selection}集合
      * @return {@link SelectManager}
      */
-    public SelectManager select(final Collection<Select> selects) {
-        if (Objects.isNotEmpty(selects)) {
-            final List<Select> its = selects.stream().filter(Objects::nonNull).collect(Collectors.toList());
+    public SelectManager select(final Collection<Selection> selections) {
+        if (Objects.isNotEmpty(selections)) {
+            final List<Selection> its = selections.stream().filter(Objects::nonNull).collect(Collectors.toList());
             if (Objects.isNotEmpty(its)) {
                 this.cached.compareAndSet(true, false);
-                for (Select it : selects) {
-                    this.fragments.add(it);
-                }
+                this.fragments.addAll(selections);
             }
         }
         return this;
@@ -133,20 +130,22 @@ public class SelectManager extends AbstractFragmentList<Select> {
     }
 
     /**
-     * 获取所有{@link Select}
-     * @return {@link Select}集合
+     * 获取所有{@link Selection}
+     * @return {@link Selection}集合
      */
-    public List<Select> getSelects() {
+    public List<Selection> getSelects() {
         if (this.cached.get()) {
-            return ImmutableList.of(this.selectCache);
+            return ImmutableList.of(this.selectionCache);
         }
         // 检查是否存在指定查询列
-        final List<Select> tmp;
+        final List<Selection> tmp;
         if (this.hasSelects()) {
             tmp = this.fragments.stream().filter(it -> {
-                if (it instanceof StandardSelect) {
-                    return this.accept(this.excludeProperties, ((StandardSelect) it).getProperty(), false);
-                } else if (it instanceof ImmediateSelect) {
+                if (it instanceof StandardSelection) {
+                    final Matched matched = it.getMatched();
+                    if (matched == Matched.STANDARD) {
+                        return this.accept(this.excludeProperties, it.getProperty(), false);
+                    }
                     return this.accept(this.excludeColumns, it.getColumn(), true);
                 }
                 return Objects.nonNull(it);
@@ -157,13 +156,14 @@ public class SelectManager extends AbstractFragmentList<Select> {
             if (Objects.isNotEmpty(list)) {
                 tmp = list.stream().filter(it -> this.accept(this.excludeProperties, it.getProperty(), false)
                     && this.accept(this.excludeColumns, it.getColumn(), true)).map(it ->
-                    StandardSelect.create().column(it).criteria(this.criteria).build()).collect(Collectors.toList());
+                    new StandardSelection(this.criteria, null, it.getColumn(), null,
+                        it.getProperty(), Matched.STANDARD)).collect(Collectors.toList());
             } else {
                 return ImmutableList.of();
             }
         }
         if (Objects.isNotEmpty(tmp)) {
-            this.selectCache = ImmutableList.of(tmp);
+            this.selectionCache = ImmutableList.of(tmp);
             this.cached.compareAndSet(false, true);
             return ImmutableList.of(tmp);
         }
@@ -189,12 +189,12 @@ public class SelectManager extends AbstractFragmentList<Select> {
     }
 
     @Override
-    public void add(Select fragment) {
+    public void add(Selection fragment) {
         this.select(fragment);
     }
 
     @Override
-    public void addAll(Collection<Select> fragments) {
+    public void addAll(Collection<Selection> fragments) {
         this.select(fragments);
     }
 
@@ -213,9 +213,9 @@ public class SelectManager extends AbstractFragmentList<Select> {
      * @return SQL片段
      */
     public String getSegment(final boolean isQuery) {
-        final List<Select> selects = this.getSelects();
-        if (Objects.isNotEmpty(selects)) {
-            return selects.stream().map(it -> it.getSegment(isQuery)).filter(Objects::isNotBlank)
+        final List<Selection> selections = this.getSelects();
+        if (Objects.isNotEmpty(selections)) {
+            return selections.stream().map(it -> it.getSegment(isQuery)).filter(Objects::isNotBlank)
                 .collect(Collectors.joining(Constants.COMMA_SPACE));
         }
         return Constants.EMPTY;

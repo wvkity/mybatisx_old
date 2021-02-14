@@ -58,7 +58,8 @@ public class SupplierRegistry {
         return this.supplierCache.containsKey(type);
     }
 
-    public <T> Supplier getSupplier(final Class<T> type, final MyBatisConfiguration configuration, final Object... args) {
+    public <T> Supplier getSupplier(final Class<T> type, final MyBatisConfiguration configuration,
+                                    final Object... args) {
         final SupplierProxyFactory<? extends Supplier> factory = this.supplierCache.get(type);
         if (factory == null) {
             throw new MyBatisException("Type" + type + " is not known to the SupplierRegistry.");
