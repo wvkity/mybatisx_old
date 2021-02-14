@@ -37,6 +37,7 @@ import com.wvkity.mybatis.core.inject.method.invoke.SelectMapObjectListInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.SelectObjectListInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.SelectOneInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.SelectPageableListByCriteriaInvoker;
+import com.wvkity.mybatis.core.inject.method.invoke.SelectPageableListByEntityInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.SelectPageableListInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.SelectTotalInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.UpdateInvoker;
@@ -107,6 +108,7 @@ public abstract class AbstractInjector implements Injector {
             new SelectEmbedMapInvoker(),
             new SelectMapObjectListInvoker(),
             new SelectPageableListInvoker(),
+            new SelectPageableListByEntityInvoker(),
             new SelectPageableListByCriteriaInvoker(),
             new SelectAllInvoker()));
     }
@@ -146,10 +148,7 @@ public abstract class AbstractInjector implements Injector {
      */
     private int index(Class<?> mapperInterface) {
         return (SimpleMapper.class.isAssignableFrom(mapperInterface) ||
-            SameMapper.class.isAssignableFrom(mapperInterface) ||
-            InsertMapper.class.isAssignableFrom(mapperInterface) ||
-            UpdateMapper.class.isAssignableFrom(mapperInterface) ||
-            DeleteMapper.class.isAssignableFrom(mapperInterface)) ? 0 : 1;
+            SameMapper.class.isAssignableFrom(mapperInterface)) ? 0 : 1;
     }
 
     /**

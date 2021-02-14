@@ -168,6 +168,14 @@ public interface QueryService<T, U, ID> {
 
     /**
      * 分页查询记录
+     * @param entity   实体对象
+     * @param pageable 分页对象
+     * @return 多条记录
+     */
+    List<U> selectList(final T entity, final Pageable pageable);
+
+    /**
+     * 分页查询记录
      * @param criteria {@link Criteria}
      * @param pageable 分页对象
      * @return 多条记录

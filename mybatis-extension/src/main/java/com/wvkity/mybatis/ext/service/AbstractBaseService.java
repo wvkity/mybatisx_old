@@ -204,6 +204,11 @@ public abstract class AbstractBaseService<M extends BaseMapper<T, U, ID>, T, U, 
     }
 
     @Override
+    public List<U> selectList(T entity, Pageable pageable) {
+        return this.mapper.selectPageableListByEntity(entity, pageable);
+    }
+
+    @Override
     public List<U> selectList(Criteria<T> criteria, Pageable pageable) {
         return this.mapper.selectPageableListByCriteria(criteria, pageable);
     }
