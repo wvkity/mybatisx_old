@@ -24,7 +24,7 @@ import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 
 /**
- *
+ * 源对象信息(对象描述)
  * @author wvkity
  * @created 2021-02-10
  * @since 1.0.0
