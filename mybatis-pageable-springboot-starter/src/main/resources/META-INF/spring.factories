@@ -1,0 +1,4 @@
+# Auto Configure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.wvkity.mybatis.spring.boot.pageable.config.MyBatisPageableConfigurer,\
+  com.wvkity.mybatis.spring.boot.pageable.MyBatisPageableAutoConfiguration

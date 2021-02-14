@@ -29,7 +29,7 @@ import org.apache.ibatis.session.RowBounds;
  * @created 2020-10-25
  * @since 1.0.0
  */
-public abstract class AbstractQueryHandler extends AbstractHandler {
+public abstract class AbstractSelectHandler extends AbstractHandler {
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
@@ -61,18 +61,18 @@ public abstract class AbstractQueryHandler extends AbstractHandler {
 
     /**
      * 拦截处理
-     * @param invocation    代理对象
-     * @param executor      执行器
-     * @param ms            {@link MappedStatement}对象
-     * @param parameter     方法参数
-     * @param rowBounds     内存分页参数
-     * @param resultHandler 结果集处理器
-     * @param cacheKey      缓存key
-     * @param boundSql      SQL绑定对象
+     * @param invocation 代理对象
+     * @param executor   执行器
+     * @param ms         {@link MappedStatement}对象
+     * @param parameter  方法参数
+     * @param rb         内存分页参数
+     * @param rh         结果集处理器
+     * @param cacheKey   缓存key
+     * @param bs         SQL绑定对象
      * @return 结果
      * @throws Throwable 异常信息
      */
     public abstract Object handle(Invocation invocation, Executor executor, MappedStatement ms,
-                                     Object parameter, RowBounds rowBounds, ResultHandler<?> resultHandler,
-                                     CacheKey cacheKey, BoundSql boundSql) throws Throwable;
+                                  Object parameter, RowBounds rb, ResultHandler<?> rh,
+                                  CacheKey cacheKey, BoundSql bs) throws Throwable;
 }

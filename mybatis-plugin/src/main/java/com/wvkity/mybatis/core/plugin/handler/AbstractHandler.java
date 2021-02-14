@@ -17,7 +17,6 @@ package com.wvkity.mybatis.core.plugin.handler;
 
 import com.wvkity.mybatis.core.plugin.filter.Filter;
 import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.plugin.Invocation;
 
 import java.util.Properties;
 
@@ -27,10 +26,10 @@ import java.util.Properties;
  * @created 2020-10-25
  * @since 1.0.0
  */
-public abstract class AbstractHandler implements Filter {
+public abstract class AbstractHandler implements Handler, Filter {
 
     /**
-     * 属性
+     * 相关配置
      */
     protected Properties properties;
 
@@ -45,11 +44,13 @@ public abstract class AbstractHandler implements Filter {
         return index < 0 ? msId : msId.substring(index + 1);
     }
 
-    /**
-     * 拦截
-     * @param invocation 代理对象
-     * @return 结果
-     * @throws Throwable 异常信息
-     */
-    public abstract Object intercept(Invocation invocation) throws Throwable;
+    public Properties getProperties() {
+        return properties;
+    }
+
+    @Override
+    public void setProperties(Properties properties) {
+        this.properties = properties;
+    }
+
 }

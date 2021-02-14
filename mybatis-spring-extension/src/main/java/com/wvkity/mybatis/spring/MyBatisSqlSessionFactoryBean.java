@@ -25,6 +25,7 @@ import com.wvkity.mybatis.core.sequence.Sequence;
 import com.wvkity.mybatis.core.type.JdbcTypeMappingRegistry;
 import com.wvkity.mybatis.session.MyBatisConfiguration;
 import com.wvkity.mybatis.session.MyBatisSqlSessionFactoryBuilder;
+import com.wvkity.mybatis.spring.comparator.AnnotationAwareInterceptorOrderComparator;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.executor.ErrorContext;
@@ -42,10 +43,10 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
-import org.mybatis.logging.Logger;
-import org.mybatis.logging.LoggerFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.transaction.SpringManagedTransactionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -459,6 +460,15 @@ public class MyBatisSqlSessionFactoryBean implements
      */
     protected SqlSessionFactory buildSqlSessionFactory() throws Exception {
 
+        // 自定义全局配置
+        if (this.globalConfiguration == null) {
+            // 从容器中获取
+            ifPresent(this::setGlobalConfiguration, MyBatisGlobalConfiguration.class);
+            if (this.globalConfiguration == null) {
+                this.globalConfiguration = MyBatisLocalConfigurationCache.newInstance();
+            }
+        }
+
         final MyBatisConfiguration targetConfiguration;
 
         MyBatisXMLConfigBuilder xmlConfigBuilder = null;
@@ -470,11 +480,11 @@ public class MyBatisSqlSessionFactoryBean implements
                 targetConfiguration.getVariables().putAll(this.configurationProperties);
             }
         } else if (this.configLocation != null) {
-            xmlConfigBuilder = new MyBatisXMLConfigBuilder(this.configLocation.getInputStream(), null, this.configurationProperties);
+            xmlConfigBuilder = new MyBatisXMLConfigBuilder(this.configLocation.getInputStream(), null,
+                this.globalConfiguration, this.configurationProperties);
             targetConfiguration = xmlConfigBuilder.getConfiguration();
         } else {
-            LOGGER.debug(
-                () -> "Property 'configuration' or 'configLocation' not specified, using default MyBatis Configuration");
+            LOGGER.debug("Property 'configuration' or 'configLocation' not specified, using default MyBatis Configuration");
             targetConfiguration = new MyBatisConfiguration();
             Optional.ofNullable(this.configurationProperties).ifPresent(targetConfiguration::setVariables);
         }
@@ -492,16 +502,8 @@ public class MyBatisSqlSessionFactoryBean implements
         if (!isEmpty(this.typeAliases)) {
             Stream.of(this.typeAliases).forEach(typeAlias -> {
                 targetConfiguration.getTypeAliasRegistry().registerAlias(typeAlias);
-                LOGGER.debug(() -> "Registered type alias: '" + typeAlias + "'");
+                LOGGER.debug("Registered type alias: '{}'", typeAlias);
             });
-        }
-        // 自定义全局配置
-        if (this.globalConfiguration == null) {
-            // 从容器中获取
-            ifPresent(this::setGlobalConfiguration, MyBatisGlobalConfiguration.class);
-            if (this.globalConfiguration == null) {
-                this.globalConfiguration = MyBatisLocalConfigurationCache.newInstance();
-            }
         }
         final JdbcType jdbcType;
         if (this.globalConfiguration.isJdbcTypeAutoMapped() &&
@@ -521,9 +523,10 @@ public class MyBatisSqlSessionFactoryBean implements
         this.globalConfiguration.cacheSelf(targetConfiguration);
         targetConfiguration.setGlobalConfiguration(this.globalConfiguration);
         if (!isEmpty(this.plugins)) {
+            AnnotationAwareInterceptorOrderComparator.sort(this.plugins);
             Stream.of(this.plugins).forEach(plugin -> {
                 targetConfiguration.addInterceptor(plugin);
-                LOGGER.debug(() -> "Registered plugin: '" + plugin + "'");
+                LOGGER.debug("Registered plugin: '{}'", plugin);
             });
         }
 
@@ -537,14 +540,14 @@ public class MyBatisSqlSessionFactoryBean implements
         if (!isEmpty(this.typeHandlers)) {
             Stream.of(this.typeHandlers).forEach(typeHandler -> {
                 targetConfiguration.getTypeHandlerRegistry().register(typeHandler);
-                LOGGER.debug(() -> "Registered type handler: '" + typeHandler + "'");
+                LOGGER.debug("Registered type handler: '{}'", typeHandler);
             });
         }
 
         if (!isEmpty(this.scriptingLanguageDrivers)) {
             Stream.of(this.scriptingLanguageDrivers).forEach(languageDriver -> {
                 targetConfiguration.getLanguageRegistry().register(languageDriver);
-                LOGGER.debug(() -> "Registered scripting language driver: '" + languageDriver + "'");
+                LOGGER.debug("Registered scripting language driver: '{}'", languageDriver);
             });
         }
         Optional.ofNullable(this.defaultScriptingLanguageDriver)
@@ -563,7 +566,7 @@ public class MyBatisSqlSessionFactoryBean implements
         if (xmlConfigBuilder != null) {
             try {
                 xmlConfigBuilder.parse();
-                LOGGER.debug(() -> "Parsed configuration file: '" + this.configLocation + "'");
+                LOGGER.debug("Parsed configuration file: '{}'", this.configLocation);
             } catch (Exception ex) {
                 throw new NestedIOException("Failed to parse config resource: " + this.configLocation, ex);
             } finally {
@@ -577,7 +580,7 @@ public class MyBatisSqlSessionFactoryBean implements
 
         if (this.mapperLocations != null) {
             if (this.mapperLocations.length == 0) {
-                LOGGER.warn(() -> "Property 'mapperLocations' was specified but matching resources are not found.");
+                LOGGER.warn("Property 'mapperLocations' was specified but matching resources are not found.");
             } else {
                 for (Resource mapperLocation : this.mapperLocations) {
                     if (mapperLocation == null) {
@@ -592,11 +595,11 @@ public class MyBatisSqlSessionFactoryBean implements
                     } finally {
                         ErrorContext.instance().reset();
                     }
-                    LOGGER.debug(() -> "Parsed mapper file: '" + mapperLocation + "'");
+                    LOGGER.debug("Parsed mapper file: '{}'", mapperLocation);
                 }
             }
         } else {
-            LOGGER.debug(() -> "Property 'mapperLocations' was not specified.");
+            LOGGER.debug("Property 'mapperLocations' was not specified.");
         }
 
         final SqlSessionFactory factory = this.sqlSessionFactoryBuilder.build(targetConfiguration);
@@ -679,7 +682,7 @@ public class MyBatisSqlSessionFactoryBean implements
                         classes.add(clazz);
                     }
                 } catch (Throwable e) {
-                    LOGGER.warn(() -> "Cannot load the '" + resource + "'. Cause by " + e.toString());
+                    LOGGER.warn("Cannot load the '{}'. Cause by {}", resource, e.toString());
                 }
             }
         }
@@ -693,4 +696,6 @@ public class MyBatisSqlSessionFactoryBean implements
     public void setGlobalConfiguration(MyBatisGlobalConfiguration globalConfiguration) {
         this.globalConfiguration = globalConfiguration;
     }
+
+
 }

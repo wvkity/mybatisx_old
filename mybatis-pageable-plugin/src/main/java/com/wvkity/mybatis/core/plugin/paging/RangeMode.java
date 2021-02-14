@@ -13,16 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.basic.order;
-
-import com.wvkity.mybatis.core.segment.Fragment;
+package com.wvkity.mybatis.core.plugin.paging;
 
 /**
- * 排序
+ * 范围模式
  * @author wvkity
- * @created 2021-01-11
+ * @created 2021-02-09
  * @since 1.0.0
  */
-public interface Order extends Fragment {
+public enum RangeMode {
 
+    /**
+     * 不指定
+     */
+    NONE,
+    /**
+     * 指定范围
+     */
+    SCOPE,
+    /**
+     * 指定页数
+     */
+    PAGEABLE
 }

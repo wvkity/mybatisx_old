@@ -13,16 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.basic.order;
+package com.wvkity.mybatis.core.plugin.paging.proxy;
 
-import com.wvkity.mybatis.core.segment.Fragment;
+import com.wvkity.mybatis.core.plugin.paging.dialect.AbstractDialect;
+import com.wvkity.mybatis.core.plugin.paging.dialect.AbstractPageableDialect;
+
+import java.util.Optional;
 
 /**
- * 排序
+ * 分页方言代理
  * @author wvkity
- * @created 2021-01-11
+ * @created 2021-02-08
  * @since 1.0.0
  */
-public interface Order extends Fragment {
+public class StandardPageableDialectProxy extends RangePageableDialectProxy {
 
+    @Override
+    public AbstractPageableDialect getDelegate() {
+        final AbstractDialect it = Optional.ofNullable(this.delegate).orElse(this.threadLocalDelegateDialect.get());
+        return it == null ? null : (AbstractPageableDialect) it;
+    }
 }

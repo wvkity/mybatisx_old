@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,26 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.convert.converter;
+package com.wvkity.mybatis.core.plugin.paging.proxy;
 
-import java.io.Serializable;
+import com.wvkity.mybatis.core.plugin.paging.dialect.AbstractDialect;
+
+import java.util.Optional;
 
 /**
- * 转换器
- * @param <T> 泛型类型
- * @param <R> 返回值类型
+ * 范围分页方言代理
  * @author wvkity
- * @created 2021-01-04
+ * @created 2021-02-08
  * @since 1.0.0
  */
-@FunctionalInterface
-public interface Converter<T, R> extends Serializable {
+public class RangePageableDialectProxy extends AbstractDialectProxy {
 
-    /**
-     * 将对象转换成其他对象
-     * @param source 源对象
-     * @return 其他对象
-     */
-    R convert(final T source);
-
+    @Override
+    public AbstractDialect getDelegate() {
+        return Optional.ofNullable(this.delegate).orElse(this.threadLocalDelegateDialect.get());
+    }
 }

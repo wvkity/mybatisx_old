@@ -1,14 +1,8 @@
 dependencies {
-    api project(":mybatis-spring-extension")
-    api project(":mybatis-extension")
-    api project(":mybatis-datasource-springboot-starter")
-    api project(":mybatis-pageable-springboot-starter")
-    implementation "${libs["spring-aspects"]}"
-    implementation "${libs["springboot-jdbc"]}"
+    api project(":mybatis-pageable-plugin")
+    implementation "${libs["mybatis-spring"]}"
+    implementation "${libs["spring-context"]}"
     implementation "${libs["springboot-autoconfigure"]}"
-    implementation "${libs["mybatis-thymeleaf"]}"
-    implementation "${libs["mybatis-velocity"]}"
-    implementation "${libs["mybatis-freemarker"]}"
     implementation(enforcedPlatform("${libs["springboot-dependencies"]}" as String))
     implementation "${libs["springboot-autoconfigure-processor"]}"
     implementation "${libs["springboot-configuration-processor"]}"

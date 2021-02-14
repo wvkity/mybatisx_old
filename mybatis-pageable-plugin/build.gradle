@@ -1,3 +1,5 @@
 dependencies {
     api project(":mybatis-plugin")
+    api project(":pageable")
+    api "${libs.jsqlparser}"
 }

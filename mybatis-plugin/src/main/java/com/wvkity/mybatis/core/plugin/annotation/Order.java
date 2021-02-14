@@ -13,16 +13,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.basic.order;
+package com.wvkity.mybatis.core.plugin.annotation;
 
-import com.wvkity.mybatis.core.segment.Fragment;
+import com.wvkity.mybatis.core.plugin.Ordered;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * 排序
+ * 拦截器顺序注解
  * @author wvkity
- * @created 2021-01-11
+ * @created 2021-02-10
  * @since 1.0.0
  */
-public interface Order extends Fragment {
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD})
+@Documented
+public @interface Order {
 
+    /**
+     * 排序值
+     * @return 排序值
+     */
+    int value() default Ordered.LOWEST_PRECEDENCE;
 }

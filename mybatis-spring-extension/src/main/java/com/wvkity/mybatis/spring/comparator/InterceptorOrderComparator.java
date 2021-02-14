@@ -13,16 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.basic.order;
+package com.wvkity.mybatis.spring.comparator;
 
-import com.wvkity.mybatis.core.segment.Fragment;
+import com.wvkity.mybatis.core.plugin.Ordered;
+import org.springframework.core.OrderComparator;
 
 /**
- * 排序
+ * 拦截器排序器
  * @author wvkity
- * @created 2021-01-11
+ * @created 2021-02-10
  * @since 1.0.0
  */
-public interface Order extends Fragment {
+public class InterceptorOrderComparator extends OrderComparator {
 
+    @Override
+    protected Integer findOrder(Object obj) {
+        final Integer order = super.findOrder(obj);
+        if (order != null) {
+            return order;
+        }
+        return obj instanceof Ordered ? ((Ordered) obj).getOrder() : null;
+    }
 }

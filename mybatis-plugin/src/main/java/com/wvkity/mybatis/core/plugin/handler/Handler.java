@@ -13,16 +13,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.basic.order;
+package com.wvkity.mybatis.core.plugin.handler;
 
-import com.wvkity.mybatis.core.segment.Fragment;
+import org.apache.ibatis.plugin.Invocation;
+
+import java.util.Properties;
 
 /**
- * 排序
+ * 拦截处理器
  * @author wvkity
- * @created 2021-01-11
+ * @created 2021-02-08
  * @since 1.0.0
  */
-public interface Order extends Fragment {
+public interface Handler {
 
+    /**
+     * 拦截
+     * @param invocation 代理对象
+     * @return 结果
+     * @throws Throwable 异常信息
+     */
+    Object intercept(Invocation invocation) throws Throwable;
+
+    /**
+     * 设置相关属性值
+     * @param properties 属性配置
+     */
+    void setProperties(final Properties properties);
 }

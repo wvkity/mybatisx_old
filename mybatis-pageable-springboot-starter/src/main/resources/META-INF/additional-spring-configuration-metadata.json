@@ -1,0 +1,15 @@
+{
+    "groups": [
+        {
+            "sourceType": "com.wvkity.mybatis.spring.boot.pageable.config.MyBatisPageableProperties",
+            "name": "wvkity.mybatis.plugin.pageable",
+            "type": "com.wvkity.mybatis.spring.boot.pageable.config.MyBatisPageableProperties"
+        },
+        {
+            "sourceType": "com.wvkity.mybatis.spring.boot.pageable.config.MyBatisPageableProperties",
+            "name": "wvkity.mybatis.plugin.pageable.properties",
+            "sourceMethod": "getProperties()",
+            "type": "java.util.Properties"
+        }
+    ]
+}

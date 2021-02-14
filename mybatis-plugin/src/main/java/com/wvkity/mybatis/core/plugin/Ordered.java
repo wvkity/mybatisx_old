@@ -13,16 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.basic.order;
-
-import com.wvkity.mybatis.core.segment.Fragment;
+package com.wvkity.mybatis.core.plugin;
 
 /**
- * 排序
+ * 拦截器执行顺序(值越大，越优先)
  * @author wvkity
- * @created 2021-01-11
+ * @created 2021-02-10
  * @since 1.0.0
  */
-public interface Order extends Fragment {
+@FunctionalInterface
+public interface Ordered {
 
+    int HIGHEST_PRECEDENCE = Integer.MAX_VALUE;
+    int LOWEST_PRECEDENCE = Integer.MIN_VALUE;
+
+    /**
+     * 获取排序值
+     * @return 排序值
+     */
+    int getOrder();
 }
