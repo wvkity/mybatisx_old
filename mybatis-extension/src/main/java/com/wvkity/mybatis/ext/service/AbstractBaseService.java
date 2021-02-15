@@ -138,24 +138,12 @@ public abstract class AbstractBaseService<M extends BaseMapper<T, U, ID>, T, U, 
 
     @Override
     public <E> List<E> selectEmbedList(Criteria<T> criteria, Class<E> resultType) {
-        if (criteria instanceof EmbeddedResult) {
-            try {
-                Reflections.invokeConsistentVirtual(criteria, "resultType", resultType);
-            } catch (Exception ignore) {
-                // ignore
-            }
-        }
-        return this.selectEmbedList(criteria);
+        return this.handleEmbeddedResult(criteria, resultType).selectEmbedList(criteria);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public <E> List<E> selectEmbedList(Criteria<T> criteria) {
-        final List<Object> result = this.selectObjectList(criteria);
-        if (Objects.isNotEmpty(result)) {
-            return (List<E>) result;
-        }
-        return new ArrayList<>(0);
+        return this.handleResult(this.selectObjectList(criteria));
     }
 
     @Override
@@ -173,24 +161,17 @@ public abstract class AbstractBaseService<M extends BaseMapper<T, U, ID>, T, U, 
 
     @Override
     public Map<Object, U> selectMap(Criteria<T> criteria) {
-        return this.mapper.selectMap(criteria);
+        return this.requireMapKey(criteria).mapper.selectMap(criteria);
     }
 
     @Override
     public <E> Map<Object, E> selectEmbedMap(Criteria<T> criteria, Class<E> resultType) {
-        if (criteria instanceof EmbeddedResult) {
-            try {
-                Reflections.invokeConsistentVirtual(criteria, "resultType", resultType);
-            } catch (Exception ignore) {
-                // ignore
-            }
-        }
-        return this.selectEmbedMap(criteria);
+        return this.handleEmbeddedResult(criteria, resultType).selectEmbedMap(criteria);
     }
 
     @Override
     public <E> Map<Object, E> selectEmbedMap(Criteria<T> criteria) {
-        return this.mapper.selectEmbedMap(criteria);
+        return this.requireMapKey(criteria).mapper.selectEmbedMap(criteria);
     }
 
     @Override
@@ -214,6 +195,46 @@ public abstract class AbstractBaseService<M extends BaseMapper<T, U, ID>, T, U, 
     }
 
     @Override
+    public List<Object> selectObjectList(Criteria<T> criteria, Pageable pageable) {
+        return this.mapper.selectPageableObjectList(criteria, pageable);
+    }
+
+    @Override
+    public List<Object[]> selectArrayList(Criteria<T> criteria, Pageable pageable) {
+        return this.mapper.selectPageableArrayList(criteria, pageable);
+    }
+
+    @Override
+    public <E> List<E> selectEmbedList(Criteria<T> criteria, Class<E> resultType, Pageable pageable) {
+        return this.handleEmbeddedResult(criteria, resultType).selectEmbedList(criteria, pageable);
+    }
+
+    @Override
+    public <E> List<E> selectEmbedList(Criteria<T> criteria, Pageable pageable) {
+        return this.handleResult(this.mapper.selectPageableObjectList(criteria, pageable));
+    }
+
+    @Override
+    public Map<Object, U> selectMap(Criteria<T> criteria, Pageable pageable) {
+        return this.requireMapKey(criteria).mapper.selectPageableMap(criteria, pageable);
+    }
+
+    @Override
+    public <E> Map<Object, E> selectEmbedMap(Criteria<T> criteria, Class<E> resultType, Pageable pageable) {
+        return this.handleEmbeddedResult(criteria, resultType).selectEmbedMap(criteria, pageable);
+    }
+
+    @Override
+    public <E> Map<Object, E> selectEmbedMap(Criteria<T> criteria, Pageable pageable) {
+        return this.requireMapKey(criteria).mapper.selectPageableEmbedMap(criteria, pageable);
+    }
+
+    @Override
+    public List<Map<String, Object>> selectMapObjectList(Criteria<T> criteria, Pageable pageable) {
+        return this.mapper.selectPageableMapObjectList(criteria, pageable);
+    }
+
+    @Override
     public List<U> selectAll() {
         return this.mapper.selectAll();
     }
@@ -227,5 +248,52 @@ public abstract class AbstractBaseService<M extends BaseMapper<T, U, ID>, T, U, 
     @Override
     public void setMapper(M mapper) {
         this.mapper = mapper;
+    }
+
+    /**
+     * 处理指定返回值
+     * @param criteria   {@link Criteria}
+     * @param resultType 返回值类型
+     * @return {@link AbstractBaseService}
+     */
+    protected AbstractBaseService<M, T, U, ID> handleEmbeddedResult(final Criteria<T> criteria,
+                                                                    final Class<?> resultType) {
+        if (criteria instanceof EmbeddedResult) {
+            try {
+                Reflections.invokeConsistentVirtual(criteria, "resultType", resultType);
+            } catch (Exception ignore) {
+                // ignore
+            }
+        }
+        return this;
+    }
+
+    /**
+     * 处理结果
+     * @param result 查询结果
+     * @param <E>    返回值类型
+     * @return 多条记录
+     */
+    @SuppressWarnings("unchecked")
+    protected <E> List<E> handleResult(final List<Object> result) {
+        if (Objects.isNotEmpty(result)) {
+            return (List<E>) result;
+        }
+        return new ArrayList<>(0);
+    }
+
+    /**
+     * 校验mapKey是否为空
+     * @param criteria {@link Criteria}
+     * @return {@link AbstractBaseService}
+     */
+    protected AbstractBaseService<M, T, U, ID> requireMapKey(final Criteria<T> criteria) {
+        if (criteria instanceof EmbeddedResult) {
+            final String mapKey = ((EmbeddedResult) criteria).getMapKey();
+            if (Objects.isBlank(mapKey)) {
+                throw new IllegalArgumentException("The mapKey attribute value cannot be null.");
+            }
+        }
+        return this;
     }
 }

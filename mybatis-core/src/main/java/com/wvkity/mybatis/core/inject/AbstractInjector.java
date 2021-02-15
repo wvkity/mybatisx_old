@@ -36,9 +36,14 @@ import com.wvkity.mybatis.core.inject.method.invoke.SelectMapInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.SelectMapObjectListInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.SelectObjectListInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.SelectOneInvoker;
+import com.wvkity.mybatis.core.inject.method.invoke.SelectPageableArrayListInvoker;
+import com.wvkity.mybatis.core.inject.method.invoke.SelectPageableEmbedMapInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.SelectPageableListByCriteriaInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.SelectPageableListByEntityInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.SelectPageableListInvoker;
+import com.wvkity.mybatis.core.inject.method.invoke.SelectPageableMapInvoker;
+import com.wvkity.mybatis.core.inject.method.invoke.SelectPageableMapObjectListInvoker;
+import com.wvkity.mybatis.core.inject.method.invoke.SelectPageableObjectListInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.SelectTotalInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.UpdateInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.UpdateWithNonNullInvoker;
@@ -110,6 +115,11 @@ public abstract class AbstractInjector implements Injector {
             new SelectPageableListInvoker(),
             new SelectPageableListByEntityInvoker(),
             new SelectPageableListByCriteriaInvoker(),
+            new SelectPageableObjectListInvoker(),
+            new SelectPageableArrayListInvoker(),
+            new SelectPageableMapObjectListInvoker(),
+            new SelectPageableMapInvoker(),
+            new SelectPageableEmbedMapInvoker(),
             new SelectAllInvoker()));
     }
 

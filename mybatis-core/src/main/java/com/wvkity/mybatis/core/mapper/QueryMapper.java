@@ -135,7 +135,7 @@ public interface QueryMapper<T, U, ID> {
     List<U> selectPageableList(@Param(Constants.PARAM_PAGEABLE) final Pageable pageable);
 
     /**
-     * 分页查询记录
+     * 根据实体对象分页查询记录
      * @param entity   实体对象
      * @param pageable 分页对象
      * @return 多条记录
@@ -144,13 +144,58 @@ public interface QueryMapper<T, U, ID> {
                                        @Param(Constants.PARAM_PAGEABLE) final Pageable pageable);
 
     /**
-     * 分页查询记录
+     * 根据{@link Criteria}对象分页查询记录
      * @param criteria {@link Criteria}
      * @param pageable 分页对象
      * @return 多条记录
      */
     List<U> selectPageableListByCriteria(@Param(Constants.PARAM_CRITERIA) final Criteria<T> criteria,
                                          @Param(Constants.PARAM_PAGEABLE) final Pageable pageable);
+
+    /**
+     * 根据{@link Criteria}对象分页查询记录
+     * @param criteria {@link Criteria}对象
+     * @param pageable 分页对象
+     * @return 多条记录
+     */
+    List<Object> selectPageableObjectList(@Param(Constants.PARAM_CRITERIA) final Criteria<T> criteria,
+                                          @Param(Constants.PARAM_PAGEABLE) final Pageable pageable);
+
+    /**
+     * 根据{@link Criteria}对象分页查询记录
+     * @param criteria {@link Criteria}对象
+     * @return 多条记录
+     */
+    List<Object[]> selectPageableArrayList(@Param(Constants.PARAM_CRITERIA) final Criteria<T> criteria,
+                                           @Param(Constants.PARAM_PAGEABLE) final Pageable pageable);
+
+    /**
+     * 根据{@link Criteria}对象分页查询记录
+     * @param criteria {@link Criteria}对象
+     * @param pageable 分页对象
+     * @return 多条记录
+     */
+    Map<Object, U> selectPageableMap(@Param(Constants.PARAM_CRITERIA) final Criteria<T> criteria,
+                                     @Param(Constants.PARAM_PAGEABLE) final Pageable pageable);
+
+    /**
+     * 根据{@link Criteria}对象分页查询记录
+     * @param criteria {@link Criteria}对象
+     * @param pageable 分页对象
+     * @param <E>      自定返回值泛型
+     * @return 多条记录
+     */
+    <E> Map<Object, E> selectPageableEmbedMap(@Param(Constants.PARAM_CRITERIA) final Criteria<T> criteria,
+                                              @Param(Constants.PARAM_PAGEABLE) final Pageable pageable);
+
+    /**
+     * 根据{@link Criteria}对象分页查询记录
+     * @param criteria {@link Criteria}对象
+     * @param pageable 分页对象
+     * @return 多条记录
+     */
+    List<Map<String, Object>> selectPageableMapObjectList(@Param(Constants.PARAM_CRITERIA) final Criteria<T> criteria,
+                                                          @Param(Constants.PARAM_PAGEABLE) final Pageable pageable);
 
     /**
      * 查询所有记录

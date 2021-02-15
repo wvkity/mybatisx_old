@@ -51,7 +51,8 @@ import java.util.regex.Pattern;
  */
 public class MyBatisMapperMethod {
 
-    private static final Pattern REGEX_EXEC_MAP_METHOD = Pattern.compile("^(.*)\\.(selectMap|selectEmbedMap)$");
+    private static final Pattern REGEX_EXEC_MAP_METHOD =
+        Pattern.compile("^(.*)\\.(selectMap|selectPageableMap|selectEmbedMap|selectPageableEmbedMap)$");
 
     private final SqlCommand command;
     private final MethodSignature method;
@@ -116,7 +117,7 @@ public class MyBatisMapperMethod {
         final String commandName = this.command.getName();
         if (REGEX_EXEC_MAP_METHOD.matcher(commandName).matches()) {
             final String[] paramNames = this.method.getParamNames();
-            if (!Objects.isEmpty(paramNames) && paramNames.length == 1 && !Objects.isEmpty(args)) {
+            if (!Objects.isEmpty(paramNames) && !Objects.isEmpty(args)) {
                 final String paramName = paramNames[0];
                 if (Constants.PARAM_CRITERIA.equals(paramName)) {
                     return args[0] instanceof EmbeddedResult;
