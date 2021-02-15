@@ -13,11 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.scripting.defaults;
+package com.wvkity.mybatis.executor.resultset;
 
 import com.wvkity.mybatis.core.constant.Constants;
 import com.wvkity.mybatis.core.utils.Objects;
-import com.wvkity.mybatis.executor.resultset.EmbeddedResult;
 import org.apache.ibatis.annotations.AutomapConstructor;
 import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.cache.CacheKey;
@@ -78,7 +77,7 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
 
     private static final Object DEFERRED = new Object();
     private static final Pattern EXEC_METHOD_PATTERN =
-        Pattern.compile("^(.*)\\.(selectObjectList|selectObjecPageabletList|selectEmbedMap)$");
+        Pattern.compile("^(.*)\\.(selectObjectList|selectPageableObjectList|selectEmbedMap|selectPageableEmbedMap)$");
 
     private final Executor executor;
     private final Configuration configuration;
@@ -458,7 +457,8 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
     // GET VALUE FROM ROW FOR SIMPLE RESULT MAP
     //
 
-    private Object getRowValue(MyBatisResultSetWrapper rsw, ResultMap resultMap, String columnPrefix) throws SQLException {
+    private Object getRowValue(MyBatisResultSetWrapper rsw, ResultMap resultMap,
+                               String columnPrefix) throws SQLException {
         final ResultLoaderMap lazyLoader = new ResultLoaderMap();
         Object rowValue = createResultObject(rsw, resultMap, lazyLoader, columnPrefix);
         if (rowValue != null && !hasTypeHandlerForResultObject(rsw, resultMap.getType())) {
@@ -490,7 +490,8 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
     // PROPERTY MAPPINGS
     //
 
-    private boolean applyPropertyMappings(MyBatisResultSetWrapper rsw, ResultMap resultMap, MetaObject metaObject, ResultLoaderMap lazyLoader, String columnPrefix)
+    private boolean applyPropertyMappings(MyBatisResultSetWrapper rsw, ResultMap resultMap,
+                                          MetaObject metaObject, ResultLoaderMap lazyLoader, String columnPrefix)
         throws SQLException {
         final List<String> mappedColumnNames = rsw.getMappedColumnNames(resultMap, columnPrefix);
         boolean foundValues = false;
@@ -881,8 +882,7 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
     }
 
     private Object getNestedQueryMappingValue(ResultSet rs, MetaObject metaResultObject, ResultMapping propertyMapping,
-                                              ResultLoaderMap lazyLoader, String columnPrefix)
-        throws SQLException {
+                                              ResultLoaderMap lazyLoader, String columnPrefix) throws SQLException {
         final String nestedQueryId = propertyMapping.getNestedQueryId();
         final String property = propertyMapping.getProperty();
         final MappedStatement nestedQuery = configuration.getMappedStatement(nestedQueryId);
@@ -1165,7 +1165,8 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
     // UNIQUE RESULT KEY
     //
 
-    private CacheKey createRowKey(ResultMap resultMap, MyBatisResultSetWrapper rsw, String columnPrefix) throws SQLException {
+    private CacheKey createRowKey(ResultMap resultMap, MyBatisResultSetWrapper rsw,
+                                  String columnPrefix) throws SQLException {
         final CacheKey cacheKey = new CacheKey();
         cacheKey.update(resultMap.getId());
         List<ResultMapping> resultMappings = getResultMappingsForRowKey(resultMap);
@@ -1213,7 +1214,8 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
             if (resultMapping.getNestedResultMapId() != null && resultMapping.getResultSet() == null) {
                 // Issue #392
                 final ResultMap nestedResultMap = configuration.getResultMap(resultMapping.getNestedResultMapId());
-                createRowKeyForMappedProperties(nestedResultMap, rsw, cacheKey, nestedResultMap.getConstructorResultMappings(),
+                createRowKeyForMappedProperties(nestedResultMap, rsw, cacheKey,
+                    nestedResultMap.getConstructorResultMappings(),
                     prependPrefix(resultMapping.getColumnPrefix(), columnPrefix));
             } else if (resultMapping.getNestedQueryId() == null) {
                 final String column = prependPrefix(resultMapping.getColumn(), columnPrefix);
@@ -1301,7 +1303,7 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
     }
 
     private boolean hasTypeHandlerForResultObject(MyBatisResultSetWrapper rsw, Class<?> resultType) {
-        if (rsw.getColumnNames().size() == 1) {
+        if (rsw.getColumnNames().size() == 1 && !resultType.isArray()) {
             return typeHandlerRegistry.hasTypeHandler(resultType, rsw.getJdbcType(rsw.getColumnNames().get(0)));
         }
         if (resultType.isArray()) {

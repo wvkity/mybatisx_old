@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.scripting.defaults;
+package com.wvkity.mybatis.executor.resultset;
 
 import com.wvkity.mybatis.annotation.NamingStrategy;
 import com.wvkity.mybatis.core.constant.Constants;
