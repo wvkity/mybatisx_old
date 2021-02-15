@@ -43,8 +43,8 @@ import java.util.Properties;
  */
 public abstract class AbstractPageableDialect extends AbstractDialect implements PageableDialect {
 
-    protected static final String DEF_RECORD_MS_CACHE_IMPL = "recordMsCache";
-    protected static final String DEF_RECORD_MS_CFG_PREFIX = "recordMs";
+    protected static final String DEF_RECORD_MS_CACHE_CLASS = "recordMsCacheClass";
+    protected static final String DEF_RECORD_MS_CFG_PREFIX = "recordMsCachePrefix";
 
     /**
      * 查询总记录SQL缓存
@@ -159,13 +159,13 @@ public abstract class AbstractPageableDialect extends AbstractDialect implements
     public boolean executingQueryRecordAfter(long records, Object parameter, RowBounds rb) {
         final Pageable pageable = this.getPageable();
         pageable.setRecords(records);
-        return pageable.getSize() > 0L && (records - (pageable.getPage() - 1) * pageable.getSize()) > 0;
+        return pageable.getSize() > 0L && (records - (pageable.getPage() - 1) * pageable.getSize()) > 0L;
     }
 
     @Override
     public void setProperties(Properties properties) {
         super.setProperties(properties);
-        this.recordMsCache = CacheFactory.create(properties.getProperty(DEF_RECORD_MS_CACHE_IMPL), properties,
+        this.recordMsCache = CacheFactory.create(properties.getProperty(DEF_RECORD_MS_CACHE_CLASS), properties,
             properties.getProperty(DEF_RECORD_MS_CFG_PREFIX));
     }
 }
