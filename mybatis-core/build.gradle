@@ -2,6 +2,7 @@ dependencies {
     api project(':mybatis-annotation')
     api project(":mybatis-pageable-plugin")
     api project(':sequence')
+    api project(':result')
     api "${libs.inject}"
     api "${libs.mybatis}"
     api "${libs.jsqlparser}"
