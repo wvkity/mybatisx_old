@@ -21,6 +21,7 @@ gradleEnterprise {
 }
 rootProject.name = 'mybatis'
 include 'pageable'
+include 'result'
 include 'sequence'
 include 'mybatis-annotation'
 include 'mybatis-plugin'
