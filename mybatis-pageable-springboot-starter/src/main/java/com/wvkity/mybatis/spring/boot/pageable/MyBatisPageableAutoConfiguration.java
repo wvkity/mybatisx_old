@@ -51,7 +51,6 @@ public class MyBatisPageableAutoConfiguration {
         this.pageableConfigurer = pageableConfigurer;
     }
 
-    @Order
     @Bean
     @ConditionalOnMissingBean
     public RangePageableInterceptor rangePageableInterceptor() {
