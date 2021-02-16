@@ -32,7 +32,7 @@ import org.springframework.core.annotation.Order;
 import javax.sql.DataSource;
 
 /**
- * Mybatis分页插件自动注册
+ * Mybatis分页插件自动注册配置
  * @author wvkity
  * @created 2021-02-08
  * @since 1.0.0
