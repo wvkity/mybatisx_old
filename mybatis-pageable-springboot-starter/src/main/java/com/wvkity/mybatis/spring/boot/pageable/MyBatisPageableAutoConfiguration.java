@@ -26,8 +26,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnSingleCandidate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.core.annotation.Order;
 
 import javax.sql.DataSource;
 
@@ -37,8 +35,6 @@ import javax.sql.DataSource;
  * @created 2021-02-08
  * @since 1.0.0
  */
-@Lazy
-@Order
 @Configuration
 @ConditionalOnSingleCandidate(DataSource.class)
 @ConditionalOnClass({SqlSessionFactory.class, SqlSessionFactoryBean.class})
