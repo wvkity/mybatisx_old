@@ -13,28 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.sequence;
+package com.wvkity.mybatis.core.sequence.snowflake;
 
 /**
- * ID生成器
+ * 级别
  * @author wvkity
- * @created 2020-10-04
+ * @created 2021-02-17
  * @since 1.0.0
  */
-public interface Sequence {
+public enum Category {
 
     /**
-     * 生成ID
-     * @return ID
+     * 秒
      */
-    long nextValue();
-
+    SECONDS,
     /**
-     * 生成ID
-     * @return ID
+     * 毫秒
      */
-    default String nextString() {
-        return String.valueOf(this.nextValue());
-    }
-
+    MILLISECONDS
 }

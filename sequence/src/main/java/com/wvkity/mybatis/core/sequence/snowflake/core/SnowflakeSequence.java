@@ -13,28 +13,32 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.sequence;
+package com.wvkity.mybatis.core.sequence.snowflake.core;
+
+import com.wvkity.mybatis.core.sequence.Sequence;
+import com.wvkity.mybatis.core.sequence.snowflake.SnowflakeSequenceInfo;
 
 /**
- * ID生成器
  * @author wvkity
- * @created 2020-10-04
+ * @created 2021-02-18
  * @since 1.0.0
  */
-public interface Sequence {
+public interface SnowflakeSequence extends Sequence {
 
     /**
-     * 生成ID
-     * @return ID
+     * 解析ID
+     * @param id ID
+     * @return ID信息
      */
-    long nextValue();
+    SnowflakeSequenceInfo parse(final long id);
 
     /**
-     * 生成ID
-     * @return ID
+     * 解析ID
+     * @param id ID
+     * @return ID信息
      */
-    default String nextString() {
-        return String.valueOf(this.nextValue());
+    default SnowflakeSequenceInfo parse(final String id) {
+        return id == null || id.trim().isEmpty() ? null : this.parse(Long.parseLong(id));
     }
 
 }

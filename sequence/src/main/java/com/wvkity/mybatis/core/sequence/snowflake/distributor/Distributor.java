@@ -13,28 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.sequence;
+package com.wvkity.mybatis.core.sequence.snowflake.distributor;
 
 /**
- * ID生成器
+ * 机器ID-数据中心ID分配器
  * @author wvkity
- * @created 2020-10-04
+ * @created 2021-02-17
  * @since 1.0.0
  */
-public interface Sequence {
+public interface Distributor {
 
     /**
-     * 生成ID
-     * @return ID
+     * 获取机器ID
+     * @return 机器ID
      */
-    long nextValue();
+    long getWorkerId();
 
     /**
-     * 生成ID
-     * @return ID
+     * 获取数据中心ID
+     * @return 数据中心ID
      */
-    default String nextString() {
-        return String.valueOf(this.nextValue());
-    }
+    long getDataCenterId();
 
 }
