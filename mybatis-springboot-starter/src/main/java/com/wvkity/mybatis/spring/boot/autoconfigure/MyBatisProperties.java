@@ -36,7 +36,7 @@ import java.util.stream.Stream;
  * @created 2020-10-01
  * @since 1.0.0
  */
-@ConfigurationProperties(prefix = "wvkity.mybatis", ignoreInvalidFields = true)
+@ConfigurationProperties(prefix = "wvkity.mybatis")
 public class MyBatisProperties {
 
     private static final ResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver();
