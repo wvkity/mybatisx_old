@@ -169,6 +169,8 @@ subprojects {
         runtimeOnly "${libs.slf4j}"
         compileOnly "${libs.slf4j}"
         implementation fileTree(dir: "libs", include: ["*.jar"])
+        testImplementation "${libs.slf4j}"
+        testImplementation "${libs["slf4j-simple"]}"
         testImplementation "${libs["jmockit"]}"
         testAnnotationProcessor "${libs["jmockit"]}"
         testImplementation "${libs["junit-jupiter"]}"
