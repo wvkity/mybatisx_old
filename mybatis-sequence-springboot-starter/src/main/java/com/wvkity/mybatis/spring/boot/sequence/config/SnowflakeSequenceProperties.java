@@ -76,7 +76,7 @@ public class SnowflakeSequenceProperties {
     /**
      * 缓存大小(针对: CacheableSnowflakeSequence)
      */
-    private int cacheSize;
+    private int cacheSize = 50;
     /**
      * 使用默认配置
      */
