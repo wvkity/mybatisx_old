@@ -23,8 +23,8 @@ import com.wvkity.mybatis.core.sequence.snowflake.core.AtomicStampedSnowflakeSeq
 import com.wvkity.mybatis.core.sequence.snowflake.core.CacheableSnowflakeSequence;
 import com.wvkity.mybatis.core.sequence.snowflake.core.DefaultSnowflakeSequence;
 import com.wvkity.mybatis.core.sequence.snowflake.core.SnowflakeSequence;
-import com.wvkity.mybatis.core.sequence.snowflake.distributor.DefaultMacMilliDistributor;
-import com.wvkity.mybatis.core.sequence.snowflake.distributor.DefaultMacSecondDistributor;
+import com.wvkity.mybatis.core.sequence.snowflake.distributor.DefaultMilliMacDistributor;
+import com.wvkity.mybatis.core.sequence.snowflake.distributor.DefaultSecondMacDistributor;
 import com.wvkity.mybatis.core.sequence.snowflake.distributor.DefaultMilliDistributor;
 import com.wvkity.mybatis.core.sequence.snowflake.distributor.DefaultSecondDistributor;
 import com.wvkity.mybatis.core.sequence.snowflake.distributor.Distributor;
@@ -65,7 +65,7 @@ public class SnowflakeSequenceAutoConfiguration {
             // 使用系统默认配置
             if (worker == Worker.MAC) {
                 return category == Category.SECONDS ?
-                    new DefaultMacSecondDistributor() : new DefaultMacMilliDistributor();
+                    new DefaultSecondMacDistributor() : new DefaultMilliMacDistributor();
             } else {
                 return category == Category.SECONDS ?
                     new DefaultSecondDistributor(this.properties.getWorkerId(), this.properties.getDataCenterId()) :

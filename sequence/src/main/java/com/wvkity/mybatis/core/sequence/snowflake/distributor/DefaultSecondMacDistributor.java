@@ -23,7 +23,7 @@ import com.wvkity.mybatis.core.sequence.snowflake.Sequences;
  * @created 2021-02-21
  * @since 1.0.0
  */
-public class DefaultMacSecondDistributor implements Distributor {
+public class DefaultSecondMacDistributor implements Distributor {
 
     private final int timestampBits = 41;
     private final int dataCenterBits = 10;
@@ -32,7 +32,7 @@ public class DefaultMacSecondDistributor implements Distributor {
     private final long workerId;
     private final long dataCenterId;
 
-    public DefaultMacSecondDistributor() {
+    public DefaultSecondMacDistributor() {
         this.workerId = Sequences.getDefWorkerId(this.workerBits, this.dataCenterBits);
         this.dataCenterId = Sequences.getDefDataCenterId(this.dataCenterBits);
     }
@@ -69,7 +69,7 @@ public class DefaultMacSecondDistributor implements Distributor {
 
     @Override
     public String toString() {
-        return "DefaultMacSecondDistributor{" +
+        return "DefaultSecondMacDistributor{" +
             "timestampBits=" + timestampBits +
             ", dataCenterBits=" + dataCenterBits +
             ", workerBits=" + workerBits +

@@ -16,8 +16,8 @@
 package com.wvkity.mybatis.core.sequence.snowflake;
 
 import com.wvkity.mybatis.core.sequence.clock.MillisecondsClock;
-import com.wvkity.mybatis.core.sequence.snowflake.distributor.DefaultMacMilliDistributor;
-import com.wvkity.mybatis.core.sequence.snowflake.distributor.DefaultMacSecondDistributor;
+import com.wvkity.mybatis.core.sequence.snowflake.distributor.DefaultMilliMacDistributor;
+import com.wvkity.mybatis.core.sequence.snowflake.distributor.DefaultSecondMacDistributor;
 import com.wvkity.mybatis.core.sequence.snowflake.distributor.Distributor;
 
 import java.util.concurrent.TimeUnit;
@@ -204,7 +204,7 @@ public class SnowflakeConfig {
     }
 
     public static SnowflakeConfig secondSnowflakeConfig(long epochTimestamp, Strategy strategy) {
-        return secondSnowflakeConfig(epochTimestamp, strategy, new DefaultMacSecondDistributor());
+        return secondSnowflakeConfig(epochTimestamp, strategy, new DefaultSecondMacDistributor());
     }
 
     public static SnowflakeConfig secondSnowflakeConfig(Strategy strategy, Distributor distributor) {
@@ -226,7 +226,7 @@ public class SnowflakeConfig {
     }
 
     public static SnowflakeConfig millisSnowflakeConfig(long epochTimestamp, Strategy strategy) {
-        return millisSnowflakeConfig(epochTimestamp, strategy, new DefaultMacMilliDistributor());
+        return millisSnowflakeConfig(epochTimestamp, strategy, new DefaultMilliMacDistributor());
     }
 
     public static SnowflakeConfig millisSnowflakeConfig(Strategy strategy, Distributor distributor) {
@@ -250,7 +250,7 @@ public class SnowflakeConfig {
     }
 
     public static SnowflakeConfig secondSnowflakeConfig(long epochTimestamp, int cacheSize) {
-        return secondSnowflakeConfig(epochTimestamp, cacheSize, new DefaultMacSecondDistributor());
+        return secondSnowflakeConfig(epochTimestamp, cacheSize, new DefaultSecondMacDistributor());
     }
 
     public static SnowflakeConfig secondSnowflakeConfig(int cacheSize, Distributor distributor) {
@@ -267,7 +267,7 @@ public class SnowflakeConfig {
     }
 
     public static SnowflakeConfig millisSnowflakeConfig(long epochTimestamp, int cacheSize) {
-        return millisSnowflakeConfig(epochTimestamp, cacheSize, new DefaultMacMilliDistributor());
+        return millisSnowflakeConfig(epochTimestamp, cacheSize, new DefaultMilliMacDistributor());
     }
 
     public static SnowflakeConfig millisSnowflakeConfig(int cacheSize, Distributor distributor) {
