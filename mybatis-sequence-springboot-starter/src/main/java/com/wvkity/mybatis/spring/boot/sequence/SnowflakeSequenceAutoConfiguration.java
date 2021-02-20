@@ -60,9 +60,9 @@ public class SnowflakeSequenceAutoConfiguration {
     @ConditionalOnMissingBean
     public Distributor distributor() {
         final Worker worker = this.properties.getWorker();
-        final Category category = this.properties.getCategory();
         if (this.properties.isUseDefaultConfig()) {
             // 使用系统默认配置
+            final Category category = this.properties.getCategory();
             if (worker == Worker.MAC) {
                 return category == Category.SECONDS ?
                     new DefaultSecondMacDistributor() : new DefaultMilliMacDistributor();
