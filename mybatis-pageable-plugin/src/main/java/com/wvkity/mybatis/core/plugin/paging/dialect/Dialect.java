@@ -42,11 +42,11 @@ public interface Dialect {
     String PROP_KEY_RANGE_DIALECT_PROXY = "rangePageableDialect";
     String PROP_KEY_STANDARD_DIALECT_PROXY = "standardPageableDialect";
     String PROP_KEY_RECORD_MS_CACHE_CLASS = "recordMsCacheClass";
-    String PROP_KEY_RECORD_MS_CFG_PREFIX = "recordMsCachePrefix";
+    String PROP_KEY_RECORD_MS_CFG_PREFIX = "recordMsCacheCfgPrefix";
     String PROP_KEY_WITH_NO_LOCK_REPLACER_CLASS = "withNoLockReplacerClass";
     String PROP_KEY_WITH_NO_LOCK_CACHE_CLASS = "withNoLockCacheClass";
-    String PROP_KEY_WITH_NO_LOCK_RECORD_CFG_PREFIX = "withNoLockRecordCachePrefix";
-    String PROP_KEY_WITH_NO_LOCK_PAGEABLE_CFG_PREFIX = "withNoLockPageableCachePrefix";
+    String PROP_KEY_WITH_NO_LOCK_RECORD_CFG_PREFIX = "withNoLockRecordCacheCfgPrefix";
+    String PROP_KEY_WITH_NO_LOCK_PAGEABLE_CFG_PREFIX = "withNoLockPageableCacheCfgPrefix";
 
     /**
      * 过滤分页查询
