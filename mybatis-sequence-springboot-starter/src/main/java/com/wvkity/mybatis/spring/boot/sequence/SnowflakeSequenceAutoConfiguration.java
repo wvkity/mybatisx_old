@@ -23,6 +23,10 @@ import com.wvkity.mybatis.core.sequence.snowflake.core.AtomicStampedSnowflakeSeq
 import com.wvkity.mybatis.core.sequence.snowflake.core.CacheableSnowflakeSequence;
 import com.wvkity.mybatis.core.sequence.snowflake.core.DefaultSnowflakeSequence;
 import com.wvkity.mybatis.core.sequence.snowflake.core.SnowflakeSequence;
+import com.wvkity.mybatis.core.sequence.snowflake.distributor.DefaultMacMilliDistributor;
+import com.wvkity.mybatis.core.sequence.snowflake.distributor.DefaultMacSecondDistributor;
+import com.wvkity.mybatis.core.sequence.snowflake.distributor.DefaultMilliDistributor;
+import com.wvkity.mybatis.core.sequence.snowflake.distributor.DefaultSecondDistributor;
 import com.wvkity.mybatis.core.sequence.snowflake.distributor.Distributor;
 import com.wvkity.mybatis.core.sequence.snowflake.distributor.MacDistributor;
 import com.wvkity.mybatis.core.sequence.snowflake.distributor.SpecifiedDistributor;
@@ -54,26 +58,37 @@ public class SnowflakeSequenceAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public SnowflakeConfig snowflakeConfig() {
+    public Distributor distributor() {
         final Worker worker = this.properties.getWorker();
-        final Distributor distributor = worker == Worker.MAC ?
-            new MacDistributor(this.properties.getWorkerBits(), this.properties.getDataCenterBits()) :
-            new SpecifiedDistributor(this.properties.getWorkerId(), this.properties.getDataCenterId());
+        final Category category = this.properties.getCategory();
         if (this.properties.isUseDefaultConfig()) {
-            // 使用默认提供的配置
-            if (this.properties.getCategory() == Category.SECONDS) {
-                return SnowflakeConfig.secondSnowflakeConfig(this.properties.getEpochTimestamp(),
-                    this.properties.getCacheSize(), this.properties.getStrategy(), distributor);
+            // 使用系统默认配置
+            if (worker == Worker.MAC) {
+                return category == Category.SECONDS ?
+                    new DefaultMacSecondDistributor() : new DefaultMacMilliDistributor();
             } else {
-                return SnowflakeConfig.millisSnowflakeConfig(this.properties.getEpochTimestamp(),
-                    this.properties.getCacheSize(), this.properties.getStrategy(), distributor);
+                return category == Category.SECONDS ?
+                    new DefaultSecondDistributor(this.properties.getWorkerId(), this.properties.getDataCenterId()) :
+                    new DefaultMilliDistributor(this.properties.getWorkerId(), this.properties.getDataCenterId());
+            }
+        } else {
+            if (worker == Worker.MAC) {
+                return new MacDistributor(this.properties.getTimestampBits(), this.properties.getWorkerBits(),
+                    this.properties.getDataCenterBits(), this.properties.getSequenceBits());
+            } else {
+                return new SpecifiedDistributor(this.properties.getTimestampBits(), this.properties.getWorkerBits(),
+                    this.properties.getDataCenterBits(), this.properties.getSequenceBits(),
+                    this.properties.getWorkerId(), this.properties.getDataCenterId());
             }
         }
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public SnowflakeConfig snowflakeConfig(final Distributor distributor) {
         // 自定义配置
-        return new SnowflakeConfig(this.properties.getTimestampBits(), this.properties.getWorkerBits(),
-            this.properties.getDataCenterBits(), this.properties.getSequenceBits(),
-            this.properties.getEpochTimestamp(), this.properties.getCacheSize(), this.properties.getCategory(),
-            this.properties.getStrategy(), distributor);
+        return new SnowflakeConfig(this.properties.getEpochTimestamp(), this.properties.getCacheSize(),
+            this.properties.getCategory(), this.properties.getStrategy(), distributor);
     }
 
     @Bean

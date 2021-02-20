@@ -25,24 +25,40 @@ import com.wvkity.mybatis.core.sequence.snowflake.Sequences;
  */
 public class MacDistributor implements Distributor {
 
-    private final int workerBits;
+    private final int timestampBits;
     private final int dataCenterBits;
+    private final int workerBits;
+    private final int sequenceBits;
     private final long workerId;
     private final long dataCenterId;
 
-    public MacDistributor(int workerBits, int dataCenterBits) {
+    public MacDistributor(int timestampBits, int workerBits, int dataCenterBits, int sequenceBits) {
+        this.timestampBits = timestampBits;
         this.workerBits = workerBits;
         this.dataCenterBits = dataCenterBits;
+        this.sequenceBits = sequenceBits;
         this.workerId = Sequences.getDefWorkerId(this.workerBits, this.dataCenterBits);
         this.dataCenterId = Sequences.getDefDataCenterId(this.dataCenterBits);
     }
 
+    @Override
+    public int getTimestampBits() {
+        return this.timestampBits;
+    }
+
+    @Override
     public int getWorkerBits() {
         return workerBits;
     }
 
+    @Override
     public int getDataCenterBits() {
         return dataCenterBits;
+    }
+
+    @Override
+    public int getSequenceBits() {
+        return this.sequenceBits;
     }
 
     @Override
@@ -58,8 +74,10 @@ public class MacDistributor implements Distributor {
     @Override
     public String toString() {
         return "MacDistributor{" +
-            "workerBits=" + workerBits +
+            "timestampBits=" + timestampBits +
             ", dataCenterBits=" + dataCenterBits +
+            ", workerBits=" + workerBits +
+            ", sequenceBits=" + sequenceBits +
             ", workerId=" + workerId +
             ", dataCenterId=" + dataCenterId +
             '}';

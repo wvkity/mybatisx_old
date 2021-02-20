@@ -16,26 +16,21 @@
 package com.wvkity.mybatis.core.sequence.snowflake.distributor;
 
 /**
- * 指定机器ID-数据中心ID分配器
+ * 默认秒级分配器
  * @author wvkity
- * @created 2021-02-17
+ * @created 2021-02-21
  * @since 1.0.0
  */
-public class SpecifiedDistributor implements Distributor {
+public class DefaultSecondDistributor implements Distributor {
 
-    private final int timestampBits;
-    private final int dataCenterBits;
-    private final int workerBits;
-    private final int sequenceBits;
+    private final int timestampBits = 41;
+    private final int dataCenterBits = 10;
+    private final int workerBits = 10;
+    private final int sequenceBits = 13;
     private final long workerId;
     private final long dataCenterId;
 
-    public SpecifiedDistributor(int timestampBits, int workerBits, int dataCenterBits,
-                                int sequenceBits, long workerId, long dataCenterId) {
-        this.timestampBits = timestampBits;
-        this.dataCenterBits = dataCenterBits;
-        this.workerBits = workerBits;
-        this.sequenceBits = sequenceBits;
+    public DefaultSecondDistributor(long workerId, long dataCenterId) {
         this.workerId = workerId;
         this.dataCenterId = dataCenterId;
     }
@@ -72,7 +67,7 @@ public class SpecifiedDistributor implements Distributor {
 
     @Override
     public String toString() {
-        return "SpecifiedDistributor{" +
+        return "DefaultSecondDistributor{" +
             "timestampBits=" + timestampBits +
             ", dataCenterBits=" + dataCenterBits +
             ", workerBits=" + workerBits +

@@ -16,8 +16,9 @@
 package com.wvkity.mybatis.core.sequence.snowflake;
 
 import com.wvkity.mybatis.core.sequence.clock.MillisecondsClock;
+import com.wvkity.mybatis.core.sequence.snowflake.distributor.DefaultMacMilliDistributor;
+import com.wvkity.mybatis.core.sequence.snowflake.distributor.DefaultMacSecondDistributor;
 import com.wvkity.mybatis.core.sequence.snowflake.distributor.Distributor;
-import com.wvkity.mybatis.core.sequence.snowflake.distributor.MacDistributor;
 
 import java.util.concurrent.TimeUnit;
 
@@ -42,8 +43,8 @@ public class SnowflakeConfig {
     // [sign - timestamp - dataCenterId - workerId - sequence]
     private final int signBits = 1;
     private final int timestampBits;
-    private final int dataCenterIdBits;
-    private final int workerIdBits;
+    private final int dataCenterBits;
+    private final int workerBits;
     private final int sequenceBits;
 
     // max value for workerId & sequence
@@ -67,31 +68,27 @@ public class SnowflakeConfig {
     private final int cacheSize;
     private final Distributor distributor;
 
-    public SnowflakeConfig(int timestampBits, int workerBits, int dataCenterBits,
-                           int sequenceBits, long epochTimestamp, Category category,
-                           Distributor distributor) {
-        this(timestampBits, workerBits, dataCenterBits, sequenceBits, epochTimestamp,
-            DEF_CACHE_SIZE, category, Strategy.CACHEABLE, distributor);
+    public SnowflakeConfig(long epochTimestamp, Category category, Distributor distributor) {
+        this(epochTimestamp, DEF_CACHE_SIZE, category, Strategy.CACHEABLE, distributor);
     }
 
-    public SnowflakeConfig(int timestampBits, int workerBits, int dataCenterBits,
-                           int sequenceBits, long epochTimestamp, Category category,
+    public SnowflakeConfig(long epochTimestamp, Category category,
                            Strategy strategy, Distributor distributor) {
-        this(timestampBits, workerBits, dataCenterBits, sequenceBits, epochTimestamp,
-            DEF_CACHE_SIZE, category, strategy, distributor);
+        this(epochTimestamp, DEF_CACHE_SIZE, category, strategy, distributor);
     }
 
-    public SnowflakeConfig(int timestampBits, int workerBits, int dataCenterBits,
-                           int sequenceBits, long epochTimestamp, int cacheSize, Category category,
+    public SnowflakeConfig(long epochTimestamp, int cacheSize, Category category,
                            Strategy strategy, Distributor distributor) {
-        final int total = signBits + timestampBits + workerBits + dataCenterBits + sequenceBits;
+
+        this.distributor = distributor;
+        this.timestampBits = distributor.getTimestampBits();
+        this.workerBits = distributor.getWorkerBits();
+        this.dataCenterBits = distributor.getDataCenterBits();
+        this.sequenceBits = distributor.getSequenceBits();
+        final int total = this.signBits + this.timestampBits + this.workerBits + this.dataCenterBits + sequenceBits;
         if (total != TOTAL_BITS) {
             throw new SnowflakeException("allocate not enough 64 bits.");
         }
-        this.timestampBits = timestampBits;
-        this.workerIdBits = workerBits;
-        this.dataCenterIdBits = dataCenterBits;
-        this.sequenceBits = sequenceBits;
         this.epochTimestamp = epochTimestamp > 0 ?
             epochTimestamp : (category == Category.SECONDS ? SECOND_EPOCH_TIMESTAMP : MILLIS_EPOCH_TIMESTAMP);
         this.cacheSize = cacheSize < 1 ? DEF_CACHE_SIZE : cacheSize;
@@ -100,13 +97,12 @@ public class SnowflakeConfig {
         this.timeUnit = this.category == Category.SECONDS ? TimeUnit.SECONDS : TimeUnit.MILLISECONDS;
         this.workerId = distributor.getWorkerId();
         this.dataCenterId = distributor.getDataCenterId();
-        this.distributor = distributor;
-        this.maxDeltaTime = ~(-1L << timestampBits);
-        this.maxWorkerId = ~(-1L << workerBits);
-        this.maxDataCenterId = ~(-1L << dataCenterBits);
-        this.maxSequence = ~(-1L << sequenceBits);
-        this.timestampShift = workerBits + dataCenterBits + sequenceBits;
-        this.dataCenterIdShift = workerBits + dataCenterBits;
+        this.maxDeltaTime = ~(-1L << this.timestampBits);
+        this.maxWorkerId = ~(-1L << this.workerBits);
+        this.maxDataCenterId = ~(-1L << this.dataCenterBits);
+        this.maxSequence = ~(-1L << this.sequenceBits);
+        this.timestampShift = this.workerBits + this.dataCenterBits + sequenceBits;
+        this.dataCenterIdShift = this.workerBits + this.dataCenterBits;
         this.workerIdShift = sequenceBits;
         this.validate();
     }
@@ -149,12 +145,12 @@ public class SnowflakeConfig {
         return timestampBits;
     }
 
-    public int getWorkerIdBits() {
-        return workerIdBits;
+    public int getWorkerBits() {
+        return workerBits;
     }
 
-    public int getDataCenterIdBits() {
-        return dataCenterIdBits;
+    public int getDataCenterBits() {
+        return dataCenterBits;
     }
 
     public int getSequenceBits() {
@@ -208,7 +204,7 @@ public class SnowflakeConfig {
     }
 
     public static SnowflakeConfig secondSnowflakeConfig(long epochTimestamp, Strategy strategy) {
-        return secondSnowflakeConfig(epochTimestamp, strategy, new MacDistributor(8, 8));
+        return secondSnowflakeConfig(epochTimestamp, strategy, new DefaultMacSecondDistributor());
     }
 
     public static SnowflakeConfig secondSnowflakeConfig(Strategy strategy, Distributor distributor) {
@@ -217,12 +213,12 @@ public class SnowflakeConfig {
 
     public static SnowflakeConfig secondSnowflakeConfig(long epochTimestamp, Strategy strategy,
                                                         Distributor distributor) {
-        return new SnowflakeConfig(30, 10, 10, 13, epochTimestamp, Category.SECONDS, strategy, distributor);
+        return new SnowflakeConfig(epochTimestamp, Category.SECONDS, strategy, distributor);
     }
 
     public static SnowflakeConfig secondSnowflakeConfig(long epochTimestamp, int cacheSize, Strategy strategy,
                                                         Distributor distributor) {
-        return new SnowflakeConfig(30, 10, 10, 13, epochTimestamp, cacheSize, Category.SECONDS, strategy, distributor);
+        return new SnowflakeConfig(epochTimestamp, cacheSize, Category.SECONDS, strategy, distributor);
     }
 
     public static SnowflakeConfig millisSnowflakeConfig(Strategy strategy) {
@@ -230,7 +226,7 @@ public class SnowflakeConfig {
     }
 
     public static SnowflakeConfig millisSnowflakeConfig(long epochTimestamp, Strategy strategy) {
-        return millisSnowflakeConfig(epochTimestamp, strategy, new MacDistributor(5, 5));
+        return millisSnowflakeConfig(epochTimestamp, strategy, new DefaultMacMilliDistributor());
     }
 
     public static SnowflakeConfig millisSnowflakeConfig(Strategy strategy, Distributor distributor) {
@@ -239,12 +235,12 @@ public class SnowflakeConfig {
 
     public static SnowflakeConfig millisSnowflakeConfig(long epochTimestamp, Strategy strategy,
                                                         Distributor distributor) {
-        return new SnowflakeConfig(41, 5, 5, 12, epochTimestamp, Category.MILLISECONDS, strategy, distributor);
+        return new SnowflakeConfig(epochTimestamp, Category.MILLISECONDS, strategy, distributor);
     }
 
     public static SnowflakeConfig millisSnowflakeConfig(long epochTimestamp, int cacheSize, Strategy strategy,
                                                         Distributor distributor) {
-        return new SnowflakeConfig(41, 5, 5, 12, epochTimestamp, cacheSize,
+        return new SnowflakeConfig(epochTimestamp, cacheSize,
             Category.MILLISECONDS, strategy, distributor);
     }
 
@@ -254,7 +250,7 @@ public class SnowflakeConfig {
     }
 
     public static SnowflakeConfig secondSnowflakeConfig(long epochTimestamp, int cacheSize) {
-        return secondSnowflakeConfig(epochTimestamp, cacheSize, new MacDistributor(8, 8));
+        return secondSnowflakeConfig(epochTimestamp, cacheSize, new DefaultMacSecondDistributor());
     }
 
     public static SnowflakeConfig secondSnowflakeConfig(int cacheSize, Distributor distributor) {
@@ -263,8 +259,7 @@ public class SnowflakeConfig {
 
     public static SnowflakeConfig secondSnowflakeConfig(long epochTimestamp, int cacheSize,
                                                         Distributor distributor) {
-        return new SnowflakeConfig(30, 10, 10, 13, epochTimestamp, cacheSize,
-            Category.SECONDS, Strategy.CACHEABLE, distributor);
+        return new SnowflakeConfig(epochTimestamp, cacheSize, Category.SECONDS, Strategy.CACHEABLE, distributor);
     }
 
     public static SnowflakeConfig millisSnowflakeConfig() {
@@ -272,7 +267,7 @@ public class SnowflakeConfig {
     }
 
     public static SnowflakeConfig millisSnowflakeConfig(long epochTimestamp, int cacheSize) {
-        return millisSnowflakeConfig(epochTimestamp, cacheSize, new MacDistributor(5, 5));
+        return millisSnowflakeConfig(epochTimestamp, cacheSize, new DefaultMacMilliDistributor());
     }
 
     public static SnowflakeConfig millisSnowflakeConfig(int cacheSize, Distributor distributor) {
@@ -281,8 +276,7 @@ public class SnowflakeConfig {
 
     public static SnowflakeConfig millisSnowflakeConfig(long epochTimestamp, int cacheSize,
                                                         Distributor distributor) {
-        return new SnowflakeConfig(41, 5, 5, 12, epochTimestamp, cacheSize,
-            Category.MILLISECONDS, Strategy.CACHEABLE, distributor);
+        return new SnowflakeConfig(epochTimestamp, cacheSize, Category.MILLISECONDS, Strategy.CACHEABLE, distributor);
     }
 
 }

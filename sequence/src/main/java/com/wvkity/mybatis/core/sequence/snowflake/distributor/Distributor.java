@@ -16,12 +16,36 @@
 package com.wvkity.mybatis.core.sequence.snowflake.distributor;
 
 /**
- * 机器ID-数据中心ID分配器
+ * 分配器
  * @author wvkity
  * @created 2021-02-17
  * @since 1.0.0
  */
 public interface Distributor {
+
+    /**
+     * 获取时间戳位数
+     * @return 时间戳位数
+     */
+    int getTimestampBits();
+
+    /**
+     * 获取数据中心位数
+     * @return 数据中心位数
+     */
+    int getDataCenterBits();
+
+    /**
+     * 获取机器标识位数
+     * @return 机器标识位数
+     */
+    int getWorkerBits();
+
+    /**
+     * 获取序号位数
+     * @return 序号位数
+     */
+    int getSequenceBits();
 
     /**
      * 获取机器ID

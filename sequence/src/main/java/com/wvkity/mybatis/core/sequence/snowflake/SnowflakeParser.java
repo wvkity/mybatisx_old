@@ -37,8 +37,8 @@ public class SnowflakeParser {
         long totalBits = SnowflakeConfig.TOTAL_BITS;
         long signBits = this.config.getSignBits();
         long timestampBits = this.config.getTimestampBits();
-        long workerIdBits = this.config.getWorkerIdBits();
-        long dataCenterIdBits = this.config.getDataCenterIdBits();
+        long workerIdBits = this.config.getWorkerBits();
+        long dataCenterIdBits = this.config.getDataCenterBits();
         long sequenceBits = this.config.getSequenceBits();
 
         long sequence = (id << (totalBits - sequenceBits)) >>> (totalBits - sequenceBits);

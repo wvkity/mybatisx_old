@@ -15,29 +15,26 @@
  */
 package com.wvkity.mybatis.core.sequence.snowflake.distributor;
 
+import com.wvkity.mybatis.core.sequence.snowflake.Sequences;
+
 /**
- * 指定机器ID-数据中心ID分配器
+ * 默认mac分配器(秒级)
  * @author wvkity
- * @created 2021-02-17
+ * @created 2021-02-21
  * @since 1.0.0
  */
-public class SpecifiedDistributor implements Distributor {
+public class DefaultMacMilliDistributor implements Distributor {
 
-    private final int timestampBits;
-    private final int dataCenterBits;
-    private final int workerBits;
-    private final int sequenceBits;
+    private final int timestampBits = 41;
+    private final int dataCenterBits = 5;
+    private final int workerBits = 5;
+    private final int sequenceBits = 12;
     private final long workerId;
     private final long dataCenterId;
 
-    public SpecifiedDistributor(int timestampBits, int workerBits, int dataCenterBits,
-                                int sequenceBits, long workerId, long dataCenterId) {
-        this.timestampBits = timestampBits;
-        this.dataCenterBits = dataCenterBits;
-        this.workerBits = workerBits;
-        this.sequenceBits = sequenceBits;
-        this.workerId = workerId;
-        this.dataCenterId = dataCenterId;
+    public DefaultMacMilliDistributor() {
+        this.workerId = Sequences.getDefWorkerId(this.workerBits, this.dataCenterBits);
+        this.dataCenterId = Sequences.getDefDataCenterId(this.dataCenterBits);
     }
 
     @Override
@@ -72,7 +69,7 @@ public class SpecifiedDistributor implements Distributor {
 
     @Override
     public String toString() {
-        return "SpecifiedDistributor{" +
+        return "DefaultMacMilliDistributor{" +
             "timestampBits=" + timestampBits +
             ", dataCenterBits=" + dataCenterBits +
             ", workerBits=" + workerBits +
