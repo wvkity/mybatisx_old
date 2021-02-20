@@ -42,9 +42,6 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public abstract class AbstractPageableHandler extends AbstractSelectHandler {
 
-    public static final String PROXY_KEY_RANGE = "rangePageableDialect";
-    public static final String PROXY_KEY_PAGEABLE = "standardPageableDialect";
-
     /**
      * 锁
      */
@@ -158,10 +155,10 @@ public abstract class AbstractPageableHandler extends AbstractSelectHandler {
         this.properties = properties;
         switch (this.getMode()) {
             case RANGE:
-                this.dialectClass = properties.getProperty(PROXY_KEY_RANGE);
+                this.dialectClass = properties.getProperty(Dialect.PROP_KEY_RANGE_DIALECT_PROXY);
                 break;
             case STANDARD:
-                this.dialectClass = properties.getProperty(PROXY_KEY_PAGEABLE);
+                this.dialectClass = properties.getProperty(Dialect.PROP_KEY_STANDARD_DIALECT_PROXY);
                 break;
             default:
                 break;

@@ -21,6 +21,7 @@ import com.wvkity.mybatis.core.plugin.utils.Objects;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
+import java.util.Optional;
 import java.util.Properties;
 
 /**
@@ -46,12 +47,16 @@ public final class CacheFactory {
     @SuppressWarnings("unchecked")
     public static <K, V> LocalCache<K, V> create(final String cacheImplClass, final Properties properties,
                                                  final String prefix) {
-        if (Objects.isBlank(cacheImplClass) || "false".equalsIgnoreCase(cacheImplClass)) {
+        if (Objects.isBlank(cacheImplClass) || "false".equalsIgnoreCase(cacheImplClass)
+            || "caffeine".equalsIgnoreCase(cacheImplClass)) {
             try {
                 Class.forName("com.github.benmanes.caffeine.cache.Cache");
                 return new CaffeineCache<>(properties, prefix);
             } catch (Exception ignore) {
-                return new MyBatisCache<>(properties, prefix, "Ms_Record_Sql_Cache");
+                final String cacheId =
+                    Optional.ofNullable(properties.getProperty(prefix + LocalCache.PROP_KEY_CACHE_ID))
+                        .filter(Objects::isNotBlank).orElse("Ms_Record_Sql_Cache");
+                return new MyBatisCache<>(properties, prefix, cacheId);
             }
         } else {
             try {
@@ -64,9 +69,12 @@ public final class CacheFactory {
                             MethodType.methodType(void.class, Properties.class, String.class));
                         return (LocalCache<K, V>) mh.invokeWithArguments(properties, prefix);
                     } catch (Exception ignore) {
+                        final String cacheId =
+                            Optional.ofNullable(properties.getProperty(prefix + LocalCache.PROP_KEY_CACHE_ID))
+                                .filter(Objects::isNotBlank).orElse("Ms_Record_Sql_Cache");
                         final MethodHandle mh = lookup.findConstructor(cacheClass,
                             MethodType.methodType(void.class, Properties.class, String.class, String.class));
-                        return (LocalCache<K, V>) mh.invokeWithArguments(properties, prefix, "Ms_Record_Sql_Cache");
+                        return (LocalCache<K, V>) mh.invokeWithArguments(properties, prefix, cacheId);
                     }
                 } catch (Throwable ignore) {
                     final MethodHandle mh = lookup.findConstructor(cacheClass, MethodType.methodType(void.class));

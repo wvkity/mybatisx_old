@@ -13,33 +13,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.plugin.paging;
+package com.wvkity.mybatis.core.plugin.paging.parser.replace;
 
 /**
- * 数据库方言枚举
+ * 替换/还原SQL
  * @author wvkity
- * @created 2021-02-09
+ * @created 2021-02-19
  * @since 1.0.0
  */
-public enum DatabaseDialect {
-    MYSQL,
-    MARIADB,
-    SQLITE,
-    OSCAR,
-    CLICKHOUSE,
-    ORACLE,
-    ORACLE9I,
-    DM,
-    EDB,
-    HSQLDB,
-    POSTGRESQL,
-    H2,
-    PHONEIX,
-    DB2,
-    SQLSERVER,
-    SQLSERVER2012LATER,
-    DERBY,
-    INFORMIX,
-    INFORMIXSQLI,
-    UNDEFINED
+public interface Replacer {
+
+    String WITH_NOT_LOCK = ", PAGEABLE_WITH_NOT_LOCK";
+
+    /**
+     * 替换原SQL
+     * @param originalSql 原SQL
+     * @return 替换后的SQL
+     */
+    String replace(String originalSql);
+
+    /**
+     * 还原替换的SQL
+     * @param replacementSql 替换的SQL
+     * @return 原SQL
+     */
+    String restore(String replacementSql);
+
 }

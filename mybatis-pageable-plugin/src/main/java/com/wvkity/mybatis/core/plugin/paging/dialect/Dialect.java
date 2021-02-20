@@ -35,6 +35,18 @@ public interface Dialect {
     String DEF_PAGEABLE_SUFFIX = "pageable";
     String DEF_PAGEABLE_START = DEF_PAGEABLE_SUFFIX + "_start";
     String DEF_PAGEABLE_OFFSET = DEF_PAGEABLE_SUFFIX + "_offset";
+    // properties keys
+    String PROP_KEY_DIALECT = "dialect";
+    String PROP_KEY_AUTO_RUNTIME_PARSING_JDBC = "autoRuntimeParsingJdbc";
+    String PROP_KEY_AUTO_RELEASE_CONNECT = "autoReleaseConnect";
+    String PROP_KEY_RANGE_DIALECT_PROXY = "rangePageableDialect";
+    String PROP_KEY_STANDARD_DIALECT_PROXY = "standardPageableDialect";
+    String PROP_KEY_RECORD_MS_CACHE_CLASS = "recordMsCacheClass";
+    String PROP_KEY_RECORD_MS_CFG_PREFIX = "recordMsCachePrefix";
+    String PROP_KEY_WITH_NO_LOCK_REPLACER_CLASS = "withNoLockReplacerClass";
+    String PROP_KEY_WITH_NO_LOCK_CACHE_CLASS = "withNoLockCacheClass";
+    String PROP_KEY_WITH_NO_LOCK_RECORD_CFG_PREFIX = "withNoLockRecordCachePrefix";
+    String PROP_KEY_WITH_NO_LOCK_PAGEABLE_CFG_PREFIX = "withNoLockPageableCachePrefix";
 
     /**
      * 过滤分页查询

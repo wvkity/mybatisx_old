@@ -23,27 +23,28 @@ import org.apache.ibatis.mapping.MappedStatement;
 import java.util.Map;
 
 /**
- * MYSQL分页方言
+ * ORACLE9I分页方言
  * @author wvkity
- * @created 2021-02-07
+ * @created 2021-02-19
  * @since 1.0.0
  */
-public class MySqlDialect extends AbstractPageableDialect {
-
+public class Oracle9iDialect extends AbstractPageableDialect {
     @Override
     public Object handlePageableParameter(MappedStatement ms, Map<String, Object> paramMap, BoundSql bs,
                                           CacheKey cacheKey, Long rowStart, Long rowEnd, Long offset) {
+        paramMap.put(DEF_PAGEABLE_OFFSET, rowEnd);
         paramMap.put(DEF_PAGEABLE_START, rowStart);
-        paramMap.put(DEF_PAGEABLE_OFFSET, offset);
+        cacheKey.update(rowEnd);
         cacheKey.update(rowStart);
-        cacheKey.update(offset);
-        this.handleParameter(ms, bs, rowStart, offset);
+        this.handleParameter(ms, bs, rowStart, rowEnd);
         return paramMap;
     }
 
     @Override
     public String makeCorrQueryListSQL(MappedStatement ms, CacheKey cacheKey, String originalSql,
                                        Long rowStart, Long rowEnd, Long offset) {
-        return originalSql + " LIMIT ?, ?";
+        return "SELECT TMP_O_TAB_PAGE.* FROM (" +
+            "SELECT TMP_I_TAB_PAGE.*, ROWNUM PAGE_R_ID FROM (" + originalSql + ") TMP_I_TAB_PAGE WHERE ROWNUM <= ?" +
+            ") TMP_O_TAB_PAGE WHERE TMP_O_TAB_PAGE.PAGE_R_ID > ?";
     }
 }

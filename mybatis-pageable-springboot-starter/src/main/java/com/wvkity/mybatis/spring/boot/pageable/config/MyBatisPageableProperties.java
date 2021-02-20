@@ -38,9 +38,18 @@ public class MyBatisPageableProperties {
      */
     private DatabaseDialect dialect = DatabaseDialect.UNDEFINED;
     /**
+     * 查询总记录数缓存类([空值,false,caffeine,实现LocalCache接口类])
+     * @see com.wvkity.mybatis.core.cache.LocalCache
+     */
+    private String recordMsCacheClass;
+    /**
+     * 查询总记录数缓存配置项前缀
+     */
+    private String recordMsCacheCfgPrefix;
+    /**
      * 动态从JDBC获取分页方言
      */
-    private boolean autoRuntimeParsingJdbc;
+    private boolean autoRuntimeParsingJdbc = true;
     /**
      * 多数据源动态解析JDBC后是否释放连接
      */
@@ -48,11 +57,28 @@ public class MyBatisPageableProperties {
     /**
      * 范围分页方言
      */
-    private String rangePageableProxyClass;
+    private String rangePageableDialectClass;
     /**
      * 分页方言
      */
-    private String standardPageableProxyClass;
+    private String standardPageableDialectClass;
+    /**
+     * SQLSERVER-WITCH(NOLOCK)替换/还原类
+     */
+    private String withNoLockReplacerClass;
+    /**
+     * SQLSERVER防止锁住查询缓存类([空值,false,caffeine,实现LocalCache接口类])
+     * @see com.wvkity.mybatis.core.cache.LocalCache
+     */
+    private String withNoLockCacheClass;
+    /**
+     * SQLSERVER查询总记录数SQL缓存配置项前缀
+     */
+    private String withNoLockRecordCacheCfgPrefix;
+    /**
+     * SQLSERVER分页查询缓存配置项前缀
+     */
+    private String withNoLockPageableCacheCfgPrefix;
     /**
      * 其他配置属性
      */
@@ -74,6 +100,22 @@ public class MyBatisPageableProperties {
         this.dialect = dialect;
     }
 
+    public String getRecordMsCacheClass() {
+        return recordMsCacheClass;
+    }
+
+    public void setRecordMsCacheClass(String recordMsCacheClass) {
+        this.recordMsCacheClass = recordMsCacheClass;
+    }
+
+    public String getRecordMsCacheCfgPrefix() {
+        return recordMsCacheCfgPrefix;
+    }
+
+    public void setRecordMsCacheCfgPrefix(String recordMsCacheCfgPrefix) {
+        this.recordMsCacheCfgPrefix = recordMsCacheCfgPrefix;
+    }
+
     public boolean isAutoRuntimeParsingJdbc() {
         return autoRuntimeParsingJdbc;
     }
@@ -90,20 +132,52 @@ public class MyBatisPageableProperties {
         this.autoReleaseConnect = autoReleaseConnect;
     }
 
-    public String getRangePageableProxyClass() {
-        return rangePageableProxyClass;
+    public String getRangePageableDialectClass() {
+        return rangePageableDialectClass;
     }
 
-    public void setRangePageableProxyClass(String rangePageableProxyClass) {
-        this.rangePageableProxyClass = rangePageableProxyClass;
+    public void setRangePageableDialectClass(String rangePageableDialectClass) {
+        this.rangePageableDialectClass = rangePageableDialectClass;
     }
 
-    public String getStandardPageableProxyClass() {
-        return standardPageableProxyClass;
+    public String getStandardPageableDialectClass() {
+        return standardPageableDialectClass;
     }
 
-    public void setStandardPageableProxyClass(String standardPageableProxyClass) {
-        this.standardPageableProxyClass = standardPageableProxyClass;
+    public void setStandardPageableDialectClass(String standardPageableDialectClass) {
+        this.standardPageableDialectClass = standardPageableDialectClass;
+    }
+
+    public String getWithNoLockReplacerClass() {
+        return withNoLockReplacerClass;
+    }
+
+    public void setWithNoLockReplacerClass(String withNoLockReplacerClass) {
+        this.withNoLockReplacerClass = withNoLockReplacerClass;
+    }
+
+    public String getWithNoLockCacheClass() {
+        return withNoLockCacheClass;
+    }
+
+    public void setWithNoLockCacheClass(String withNoLockCacheClass) {
+        this.withNoLockCacheClass = withNoLockCacheClass;
+    }
+
+    public String getWithNoLockRecordCacheCfgPrefix() {
+        return withNoLockRecordCacheCfgPrefix;
+    }
+
+    public void setWithNoLockRecordCacheCfgPrefix(String withNoLockRecordCacheCfgPrefix) {
+        this.withNoLockRecordCacheCfgPrefix = withNoLockRecordCacheCfgPrefix;
+    }
+
+    public String getWithNoLockPageableCacheCfgPrefix() {
+        return withNoLockPageableCacheCfgPrefix;
+    }
+
+    public void setWithNoLockPageableCacheCfgPrefix(String withNoLockPageableCacheCfgPrefix) {
+        this.withNoLockPageableCacheCfgPrefix = withNoLockPageableCacheCfgPrefix;
     }
 
     public Properties getProperties() {

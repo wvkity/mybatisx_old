@@ -18,7 +18,14 @@ package com.wvkity.mybatis.core.plugin.paging.proxy;
 import com.wvkity.mybatis.core.plugin.exception.MyBatisPluginException;
 import com.wvkity.mybatis.core.plugin.paging.dialect.AbstractDialect;
 import com.wvkity.mybatis.core.plugin.paging.dialect.Dialect;
+import com.wvkity.mybatis.core.plugin.paging.dialect.support.Db2Dialect;
+import com.wvkity.mybatis.core.plugin.paging.dialect.support.HsqldbDialect;
+import com.wvkity.mybatis.core.plugin.paging.dialect.support.InformixDialect;
 import com.wvkity.mybatis.core.plugin.paging.dialect.support.MySqlDialect;
+import com.wvkity.mybatis.core.plugin.paging.dialect.support.Oracle9iDialect;
+import com.wvkity.mybatis.core.plugin.paging.dialect.support.OracleDialect;
+import com.wvkity.mybatis.core.plugin.paging.dialect.support.SqlServer2012LaterDialect;
+import com.wvkity.mybatis.core.plugin.paging.dialect.support.SqlServerDialect;
 import com.wvkity.mybatis.core.plugin.utils.Objects;
 import org.apache.ibatis.mapping.MappedStatement;
 
@@ -88,6 +95,23 @@ public abstract class AbstractDialectProxy {
     static {
         DATABASE_DIALECT_REGISTRY.put("MYSQL", MySqlDialect.class);
         DATABASE_DIALECT_REGISTRY.put("MARIADB", MySqlDialect.class);
+        DATABASE_DIALECT_REGISTRY.put("SQLITE", MySqlDialect.class);
+        DATABASE_DIALECT_REGISTRY.put("OSCAR", MySqlDialect.class);
+        DATABASE_DIALECT_REGISTRY.put("CLICKHOUSE", MySqlDialect.class);
+        DATABASE_DIALECT_REGISTRY.put("ORACLE9I", Oracle9iDialect.class);
+        DATABASE_DIALECT_REGISTRY.put("ORACLE", OracleDialect.class);
+        DATABASE_DIALECT_REGISTRY.put("DM", OracleDialect.class);
+        DATABASE_DIALECT_REGISTRY.put("EDB", OracleDialect.class);
+        DATABASE_DIALECT_REGISTRY.put("DB2", Db2Dialect.class);
+        DATABASE_DIALECT_REGISTRY.put("POSTGRESQL", HsqldbDialect.class);
+        DATABASE_DIALECT_REGISTRY.put("H2", HsqldbDialect.class);
+        DATABASE_DIALECT_REGISTRY.put("HSQLDB", HsqldbDialect.class);
+        DATABASE_DIALECT_REGISTRY.put("PHONEIX", HsqldbDialect.class);
+        DATABASE_DIALECT_REGISTRY.put("INFORMIX", InformixDialect.class);
+        DATABASE_DIALECT_REGISTRY.put("INFORMIXSQLI", InformixDialect.class);
+        DATABASE_DIALECT_REGISTRY.put("SQLSERVER2012LATER", SqlServer2012LaterDialect.class);
+        DATABASE_DIALECT_REGISTRY.put("DERBY", SqlServer2012LaterDialect.class);
+        DATABASE_DIALECT_REGISTRY.put("SQLSERVER", SqlServerDialect.class);
     }
 
     /**
@@ -246,11 +270,12 @@ public abstract class AbstractDialectProxy {
      */
     public void setProperties(Properties properties) {
         this.properties = properties;
-        this.databaseDialect = Optional.ofNullable(properties.getProperty("databaseDialect"))
+        this.databaseDialect = Optional.ofNullable(properties.getProperty(Dialect.PROP_KEY_DIALECT))
             .filter(Objects::isNotBlank).orElse(null);
-        this.autoRuntimeParsingJdbc = Optional.ofNullable(properties.getProperty("autoRuntimeParsingJdbc"))
-            .map(Objects::toBool).orElse(false);
-        Optional.ofNullable(properties.getProperty("autoReleaseConnect"))
+        this.autoRuntimeParsingJdbc =
+            Optional.ofNullable(properties.getProperty(Dialect.PROP_KEY_AUTO_RUNTIME_PARSING_JDBC))
+                .map(Objects::toBool).orElse(false);
+        Optional.ofNullable(properties.getProperty(Dialect.PROP_KEY_AUTO_RELEASE_CONNECT))
             .ifPresent(release -> this.autoReleaseConnect = Objects.toBool(release));
         if (Objects.isNotBlank(this.databaseDialect) && !"UNDEFINED".equalsIgnoreCase(this.databaseDialect)) {
             this.autoRuntimeParsingJdbc = false;

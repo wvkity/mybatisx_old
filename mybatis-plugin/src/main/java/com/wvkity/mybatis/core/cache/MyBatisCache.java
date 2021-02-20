@@ -42,7 +42,7 @@ public class MyBatisCache<K, V> implements LocalCache<K, V> {
         this.properties = properties;
         this.prefix = prefix;
         final CacheBuilder it = new CacheBuilder(cacheId);
-        final String targetClass = this.properties.getProperty(this.prefix + DEF_KEY_MYBATIS_TYPE_CLASS);
+        final String targetClass = this.properties.getProperty(this.prefix + PROP_KEY_MYBATIS_TYPE_CLASS);
         if (Objects.isNotBlank(targetClass)) {
             try {
                 it.implementation((Class<? extends Cache>) Class.forName(targetClass));
@@ -52,7 +52,7 @@ public class MyBatisCache<K, V> implements LocalCache<K, V> {
         } else {
             it.implementation(PerpetualCache.class);
         }
-        final String evictionClass = this.properties.getProperty(this.prefix + DEF_KEY_MYBATIS_EVICTION_CLASS);
+        final String evictionClass = this.properties.getProperty(this.prefix + PROP_KEY_MYBATIS_EVICTION_CLASS);
         if (Objects.isNotBlank(evictionClass)) {
             try {
                 it.addDecorator((Class<? extends Cache>) Class.forName(evictionClass));
@@ -62,8 +62,8 @@ public class MyBatisCache<K, V> implements LocalCache<K, V> {
         } else {
             it.addDecorator(FifoCache.class);
         }
-        ifPresent(DEF_KEY_MYBATIS_FLUSH_INTERVAL, it::clearInterval);
-        ifPresent(DEF_KEY_MYBATIS_SIZE, v -> it.size(v.intValue()));
+        ifPresent(PROP_KEY_MYBATIS_FLUSH_INTERVAL, it::clearInterval);
+        ifPresent(PROP_KEY_MYBATIS_SIZE, v -> it.size(v.intValue()));
         it.properties(this.properties);
         this.cache = it.build();
     }

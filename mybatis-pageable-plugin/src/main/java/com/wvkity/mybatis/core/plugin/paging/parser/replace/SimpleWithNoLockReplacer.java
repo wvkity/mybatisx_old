@@ -13,33 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.plugin.paging;
+package com.wvkity.mybatis.core.plugin.paging.parser.replace;
 
 /**
- * 数据库方言枚举
+ * 简单替换/还原
  * @author wvkity
- * @created 2021-02-09
+ * @created 2021-02-19
  * @since 1.0.0
  */
-public enum DatabaseDialect {
-    MYSQL,
-    MARIADB,
-    SQLITE,
-    OSCAR,
-    CLICKHOUSE,
-    ORACLE,
-    ORACLE9I,
-    DM,
-    EDB,
-    HSQLDB,
-    POSTGRESQL,
-    H2,
-    PHONEIX,
-    DB2,
-    SQLSERVER,
-    SQLSERVER2012LATER,
-    DERBY,
-    INFORMIX,
-    INFORMIXSQLI,
-    UNDEFINED
+public class SimpleWithNoLockReplacer implements Replacer {
+
+    @Override
+    public String replace(String originalSql) {
+        return originalSql.replaceAll("((?i)with\\s*\\(nolock\\))", WITH_NOT_LOCK);
+    }
+
+    @Override
+    public String restore(String replacementSql) {
+        return replacementSql.replaceAll(WITH_NOT_LOCK, " WITH(NOLOCK)");
+    }
 }

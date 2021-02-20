@@ -41,11 +41,11 @@ public class CaffeineCache<K, V> implements LocalCache<K, V> {
         this.prefix = prefix;
         this.properties = properties;
         final Caffeine<Object, Object> it = Caffeine.newBuilder();
-        it.maximumSize(Long.parseLong(Optional.ofNullable(properties.getProperty(prefix + DEF_KEY_CAFFEINE_MAXIMUM_SIZE))
+        it.maximumSize(Long.parseLong(Optional.ofNullable(properties.getProperty(prefix + PROP_KEY_CAFFEINE_MAXIMUM_SIZE))
             .orElse("1000")));
-        ifPresent(DEF_KEY_CAFFEINE_EXPIRE_AFTER_ACCESS, v -> it.expireAfterAccess(v, TimeUnit.MILLISECONDS));
-        ifPresent(DEF_KEY_CAFFEINE_EXPIRE_AFTER_WRITE, v -> it.expireAfterWrite(v, TimeUnit.MILLISECONDS));
-        ifPresent(DEF_KEY_CAFFEINE_INITIAL_CAPACITY, v -> it.initialCapacity(v.intValue()));
+        ifPresent(PROP_KEY_CAFFEINE_EXPIRE_AFTER_ACCESS, v -> it.expireAfterAccess(v, TimeUnit.MILLISECONDS));
+        ifPresent(PROP_KEY_CAFFEINE_EXPIRE_AFTER_WRITE, v -> it.expireAfterWrite(v, TimeUnit.MILLISECONDS));
+        ifPresent(PROP_KEY_CAFFEINE_INITIAL_CAPACITY, v -> it.initialCapacity(v.intValue()));
         this.cache = it.build();
     }
 

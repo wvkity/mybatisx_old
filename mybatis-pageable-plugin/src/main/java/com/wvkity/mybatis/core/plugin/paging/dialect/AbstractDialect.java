@@ -51,7 +51,7 @@ public abstract class AbstractDialect implements Dialect {
     /**
      * SQL转换器
      */
-    protected RecordsSqlParser parser = new RecordsSqlParser();
+    protected RecordsSqlParser recordsSqlParser = new RecordsSqlParser();
 
     protected boolean isRange() {
         final RangePageable rp = RangePageableThreadLocalCache.getPageable();
@@ -67,7 +67,7 @@ public abstract class AbstractDialect implements Dialect {
     @Override
     public String makeQueryRecordSQL(MappedStatement ms, BoundSql bs, Object parameter,
                                      RowBounds rb, CacheKey cacheKey) {
-        return this.parser.smartParse(bs.getSql());
+        return this.recordsSqlParser.smartParse(bs.getSql());
     }
 
     @Override
@@ -126,9 +126,7 @@ public abstract class AbstractDialect implements Dialect {
         if (parameterMappings != null) {
             final List<ParameterMapping> mappings = new ArrayList<>(parameterMappings);
             final Configuration cf = ms.getConfiguration();
-            if (rowStart > 0) {
-                mappings.add(new ParameterMapping.Builder(cf, DEF_PAGEABLE_START, Long.class).build());
-            }
+            mappings.add(new ParameterMapping.Builder(cf, DEF_PAGEABLE_START, Long.class).build());
             mappings.add(new ParameterMapping.Builder(cf, DEF_PAGEABLE_OFFSET, Long.class).build());
             final MetaObject metaObject = MetaObjects.forObject(bs);
             metaObject.setValue("parameterMappings", mappings);

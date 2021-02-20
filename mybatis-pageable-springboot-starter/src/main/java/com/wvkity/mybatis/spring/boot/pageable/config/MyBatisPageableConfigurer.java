@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.spring.boot.pageable.config;
 
-import com.wvkity.mybatis.core.plugin.paging.AbstractPageableHandler;
+import com.wvkity.mybatis.core.plugin.paging.dialect.Dialect;
 import com.wvkity.mybatis.spring.boot.pageable.MyBatisPageableAutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -24,6 +24,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Function;
 
 /**
  * 分页相关配置
@@ -42,30 +43,49 @@ public class MyBatisPageableConfigurer {
     public MyBatisPageableConfigurer(MyBatisPageableProperties pageableProperties) {
         this.pageableProperties = pageableProperties;
         this.properties = Optional.ofNullable(pageableProperties.getProperties()).orElse(new Properties());
-        if (!StringUtils.hasText(this.properties.getProperty(AbstractPageableHandler.PROXY_KEY_RANGE))
-            && StringUtils.hasText(pageableProperties.getRangePageableProxyClass())) {
-            this.properties.setProperty(AbstractPageableHandler.PROXY_KEY_RANGE,
-                pageableProperties.getRangePageableProxyClass());
-        }
-        if (!StringUtils.hasText(this.properties.getProperty(AbstractPageableHandler.PROXY_KEY_PAGEABLE))
-            && StringUtils.hasText(pageableProperties.getStandardPageableProxyClass())) {
-            this.properties.setProperty(AbstractPageableHandler.PROXY_KEY_PAGEABLE,
-                pageableProperties.getStandardPageableProxyClass());
-        }
-        if (!StringUtils.hasText(this.properties.getProperty("databaseDialect"))
+        if (!StringUtils.hasText(this.properties.getProperty(Dialect.PROP_KEY_DIALECT))
             && this.pageableProperties.getDialect() != null) {
-            this.properties.setProperty("databaseDialect", this.pageableProperties.getDialect().name());
+            this.properties.setProperty(Dialect.PROP_KEY_DIALECT, this.pageableProperties.getDialect().name());
         }
-        if (!StringUtils.hasText(this.properties.getProperty("autoRuntimeParsingJdbc"))) {
-            this.properties.setProperty("autoRuntimeParsingJdbc",
-                String.valueOf(this.pageableProperties.isAutoRuntimeParsingJdbc()));
-        }
-        if (!StringUtils.hasText(this.properties.getProperty("autoReleaseConnect"))) {
-            this.properties.setProperty("autoReleaseConnect",
-                String.valueOf(this.pageableProperties.isAutoReleaseConnect()));
-        }
+        this.ifPresentOfString(Dialect.PROP_KEY_RANGE_DIALECT_PROXY,
+            MyBatisPageableProperties::getRangePageableDialectClass);
+        this.ifPresentOfString(Dialect.PROP_KEY_STANDARD_DIALECT_PROXY,
+            MyBatisPageableProperties::getStandardPageableDialectClass);
+        this.ifPresentOfBoolean(Dialect.PROP_KEY_AUTO_RUNTIME_PARSING_JDBC,
+            MyBatisPageableProperties::isAutoRuntimeParsingJdbc);
+        this.ifPresentOfBoolean(Dialect.PROP_KEY_AUTO_RELEASE_CONNECT,
+            MyBatisPageableProperties::isAutoReleaseConnect);
+        this.ifPresentOfString(Dialect.PROP_KEY_RECORD_MS_CACHE_CLASS,
+            MyBatisPageableProperties::getRecordMsCacheClass);
+        this.ifPresentOfString(Dialect.PROP_KEY_RECORD_MS_CFG_PREFIX,
+            MyBatisPageableProperties::getRecordMsCacheCfgPrefix);
+        this.ifPresentOfString(Dialect.PROP_KEY_WITH_NO_LOCK_CACHE_CLASS,
+            MyBatisPageableProperties::getWithNoLockCacheClass);
+        this.ifPresentOfString(Dialect.PROP_KEY_WITH_NO_LOCK_REPLACER_CLASS,
+            MyBatisPageableProperties::getWithNoLockReplacerClass);
+        this.ifPresentOfString(Dialect.PROP_KEY_WITH_NO_LOCK_RECORD_CFG_PREFIX,
+            MyBatisPageableProperties::getWithNoLockRecordCacheCfgPrefix);
+        this.ifPresentOfString(Dialect.PROP_KEY_WITH_NO_LOCK_PAGEABLE_CFG_PREFIX,
+            MyBatisPageableProperties::getWithNoLockPageableCacheCfgPrefix);
         if (this.pageableProperties.getProperties() == null) {
             this.pageableProperties.setProperties(this.properties);
+        }
+    }
+
+    private void ifPresentOfString(final String property, final Function<MyBatisPageableProperties, String> action) {
+        final String value = this.properties.getProperty(property);
+        if (!StringUtils.hasText(value)) {
+            final String newValue = action.apply(this.pageableProperties);
+            if (StringUtils.hasText(newValue)) {
+                this.properties.setProperty(property, newValue);
+            }
+        }
+    }
+
+    private void ifPresentOfBoolean(final String property, final Function<MyBatisPageableProperties, Boolean> action) {
+        final String value = this.properties.getProperty(property);
+        if (!StringUtils.hasText(value)) {
+            this.properties.setProperty(property, action.apply(pageableProperties).toString());
         }
     }
 

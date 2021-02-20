@@ -25,14 +25,15 @@ package com.wvkity.mybatis.core.cache;
  */
 public interface LocalCache<K, V> {
 
-    String DEF_KEY_MYBATIS_TYPE_CLASS = ".typeClass";
-    String DEF_KEY_MYBATIS_EVICTION_CLASS = ".evictionClass";
-    String DEF_KEY_MYBATIS_FLUSH_INTERVAL = ".flushInterval";
-    String DEF_KEY_MYBATIS_SIZE = ".size";
-    String DEF_KEY_CAFFEINE_MAXIMUM_SIZE= ".maximumSize";
-    String DEF_KEY_CAFFEINE_EXPIRE_AFTER_ACCESS= ".expireAfterAccess";
-    String DEF_KEY_CAFFEINE_EXPIRE_AFTER_WRITE= ".expireAfterWrite";
-    String DEF_KEY_CAFFEINE_INITIAL_CAPACITY= ".initialCapacity";
+    String PROP_KEY_CACHE_ID = ".cacheId";
+    String PROP_KEY_MYBATIS_TYPE_CLASS = ".typeClass";
+    String PROP_KEY_MYBATIS_EVICTION_CLASS = ".evictionClass";
+    String PROP_KEY_MYBATIS_FLUSH_INTERVAL = ".flushInterval";
+    String PROP_KEY_MYBATIS_SIZE = ".size";
+    String PROP_KEY_CAFFEINE_MAXIMUM_SIZE = ".maximumSize";
+    String PROP_KEY_CAFFEINE_EXPIRE_AFTER_ACCESS = ".expireAfterAccess";
+    String PROP_KEY_CAFFEINE_EXPIRE_AFTER_WRITE = ".expireAfterWrite";
+    String PROP_KEY_CAFFEINE_INITIAL_CAPACITY = ".initialCapacity";
 
     /**
      * 获取值

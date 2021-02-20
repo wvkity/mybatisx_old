@@ -23,12 +23,12 @@ import org.apache.ibatis.mapping.MappedStatement;
 import java.util.Map;
 
 /**
- * MYSQL分页方言
+ * SQLSERVER({@code version >= 2012})分页方言
  * @author wvkity
- * @created 2021-02-07
+ * @created 2021-02-20
  * @since 1.0.0
  */
-public class MySqlDialect extends AbstractPageableDialect {
+public class SqlServer2012LaterDialect extends AbstractPageableDialect {
 
     @Override
     public Object handlePageableParameter(MappedStatement ms, Map<String, Object> paramMap, BoundSql bs,
@@ -44,6 +44,8 @@ public class MySqlDialect extends AbstractPageableDialect {
     @Override
     public String makeCorrQueryListSQL(MappedStatement ms, CacheKey cacheKey, String originalSql,
                                        Long rowStart, Long rowEnd, Long offset) {
-        return originalSql + " LIMIT ?, ?";
+        cacheKey.update(offset);
+        return originalSql + " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
     }
+
 }
