@@ -13,26 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.sequence;
-
-import com.wvkity.sequence.snowflake.distributor.DefaultSecondDistributor;
-import com.wvkity.sequence.snowflake.distributor.Distributor;
-import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package com.wvkity.sequence.snowflake;
 
 /**
+ * 工作模式
  * @author wvkity
- * @created 2021-02-18
+ * @created 2021-02-17
  * @since 1.0.0
  */
-public class DistributorApp {
-
-    private static final Logger log = LoggerFactory.getLogger(DistributorApp.class);
-
-    @Test
-    public void test1() {
-        final Distributor distributor = new DefaultSecondDistributor(5, 5);
-        log.info("{}", distributor);
-    }
+public enum Worker {
+    /**
+     * 根据MAC地址生成
+     */
+    MAC,
+    /**
+     * 直接指定
+     */
+    SPECIFIED
 }

@@ -25,7 +25,7 @@ import com.wvkity.mybatis.core.naming.DefaultPhysicalNamingConverter;
 import com.wvkity.mybatis.core.naming.PhysicalNamingConverter;
 import com.wvkity.mybatis.core.parser.EntityParser;
 import com.wvkity.mybatis.core.parser.FieldParser;
-import com.wvkity.mybatis.core.sequence.Sequence;
+import com.wvkity.sequence.Sequence;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.type.JdbcType;

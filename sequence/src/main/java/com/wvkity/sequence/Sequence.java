@@ -13,26 +13,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.sequence;
+package com.wvkity.sequence;
 
-import com.wvkity.sequence.snowflake.distributor.DefaultSecondDistributor;
-import com.wvkity.sequence.snowflake.distributor.Distributor;
-import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.Serializable;
 
 /**
+ * ID生成器
  * @author wvkity
- * @created 2021-02-18
+ * @created 2020-10-04
  * @since 1.0.0
  */
-public class DistributorApp {
+public interface Sequence extends Serializable {
 
-    private static final Logger log = LoggerFactory.getLogger(DistributorApp.class);
+    /**
+     * 生成ID
+     * @return ID
+     */
+    long nextValue();
 
-    @Test
-    public void test1() {
-        final Distributor distributor = new DefaultSecondDistributor(5, 5);
-        log.info("{}", distributor);
+    /**
+     * 生成ID
+     * @return ID
+     */
+    default String nextString() {
+        return String.valueOf(this.nextValue());
     }
+
 }

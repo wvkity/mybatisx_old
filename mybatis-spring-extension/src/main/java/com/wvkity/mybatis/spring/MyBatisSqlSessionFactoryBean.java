@@ -21,7 +21,7 @@ import com.wvkity.mybatis.core.config.MyBatisLocalConfigurationCache;
 import com.wvkity.mybatis.core.inject.Injector;
 import com.wvkity.mybatis.core.parser.EntityParser;
 import com.wvkity.mybatis.core.parser.FieldParser;
-import com.wvkity.mybatis.core.sequence.Sequence;
+import com.wvkity.sequence.Sequence;
 import com.wvkity.mybatis.core.type.JdbcTypeMappingRegistry;
 import com.wvkity.mybatis.session.MyBatisConfiguration;
 import com.wvkity.mybatis.session.MyBatisSqlSessionFactoryBuilder;

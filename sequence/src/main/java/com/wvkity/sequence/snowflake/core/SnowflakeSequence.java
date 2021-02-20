@@ -13,26 +13,32 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.sequence;
+package com.wvkity.sequence.snowflake.core;
 
-import com.wvkity.sequence.snowflake.distributor.DefaultSecondDistributor;
-import com.wvkity.sequence.snowflake.distributor.Distributor;
-import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.wvkity.sequence.Sequence;
+import com.wvkity.sequence.snowflake.SnowflakeSequenceInfo;
 
 /**
  * @author wvkity
  * @created 2021-02-18
  * @since 1.0.0
  */
-public class DistributorApp {
+public interface SnowflakeSequence extends Sequence {
 
-    private static final Logger log = LoggerFactory.getLogger(DistributorApp.class);
+    /**
+     * 解析ID
+     * @param id ID
+     * @return ID信息
+     */
+    SnowflakeSequenceInfo parse(final long id);
 
-    @Test
-    public void test1() {
-        final Distributor distributor = new DefaultSecondDistributor(5, 5);
-        log.info("{}", distributor);
+    /**
+     * 解析ID
+     * @param id ID
+     * @return ID信息
+     */
+    default SnowflakeSequenceInfo parse(final String id) {
+        return id == null || id.trim().isEmpty() ? null : this.parse(Long.parseLong(id));
     }
+
 }

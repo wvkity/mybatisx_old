@@ -15,21 +15,21 @@
  */
 package com.wvkity.mybatis.spring.boot.sequence;
 
-import com.wvkity.mybatis.core.sequence.snowflake.Category;
-import com.wvkity.mybatis.core.sequence.snowflake.SnowflakeConfig;
-import com.wvkity.mybatis.core.sequence.snowflake.Strategy;
-import com.wvkity.mybatis.core.sequence.snowflake.Worker;
-import com.wvkity.mybatis.core.sequence.snowflake.core.AtomicStampedSnowflakeSequence;
-import com.wvkity.mybatis.core.sequence.snowflake.core.CacheableSnowflakeSequence;
-import com.wvkity.mybatis.core.sequence.snowflake.core.DefaultSnowflakeSequence;
-import com.wvkity.mybatis.core.sequence.snowflake.core.SnowflakeSequence;
-import com.wvkity.mybatis.core.sequence.snowflake.distributor.DefaultMilliMacDistributor;
-import com.wvkity.mybatis.core.sequence.snowflake.distributor.DefaultSecondMacDistributor;
-import com.wvkity.mybatis.core.sequence.snowflake.distributor.DefaultMilliDistributor;
-import com.wvkity.mybatis.core.sequence.snowflake.distributor.DefaultSecondDistributor;
-import com.wvkity.mybatis.core.sequence.snowflake.distributor.Distributor;
-import com.wvkity.mybatis.core.sequence.snowflake.distributor.MacDistributor;
-import com.wvkity.mybatis.core.sequence.snowflake.distributor.SpecifiedDistributor;
+import com.wvkity.sequence.snowflake.Category;
+import com.wvkity.sequence.snowflake.SnowflakeConfig;
+import com.wvkity.sequence.snowflake.Strategy;
+import com.wvkity.sequence.snowflake.Worker;
+import com.wvkity.sequence.snowflake.core.AtomicStampedSnowflakeSequence;
+import com.wvkity.sequence.snowflake.core.CacheableSnowflakeSequence;
+import com.wvkity.sequence.snowflake.core.DefaultSnowflakeSequence;
+import com.wvkity.sequence.snowflake.core.SnowflakeSequence;
+import com.wvkity.sequence.snowflake.distributor.DefaultMilliMacDistributor;
+import com.wvkity.sequence.snowflake.distributor.DefaultSecondMacDistributor;
+import com.wvkity.sequence.snowflake.distributor.DefaultMilliDistributor;
+import com.wvkity.sequence.snowflake.distributor.DefaultSecondDistributor;
+import com.wvkity.sequence.snowflake.distributor.Distributor;
+import com.wvkity.sequence.snowflake.distributor.MacDistributor;
+import com.wvkity.sequence.snowflake.distributor.SpecifiedDistributor;
 import com.wvkity.mybatis.spring.boot.sequence.config.SnowflakeSequenceProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

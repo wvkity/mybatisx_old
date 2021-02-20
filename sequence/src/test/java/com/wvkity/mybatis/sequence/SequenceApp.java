@@ -15,12 +15,12 @@
  */
 package com.wvkity.mybatis.sequence;
 
-import com.wvkity.mybatis.core.sequence.snowflake.SnowflakeConfig;
-import com.wvkity.mybatis.core.sequence.snowflake.Strategy;
-import com.wvkity.mybatis.core.sequence.snowflake.core.AtomicStampedSnowflakeSequence;
-import com.wvkity.mybatis.core.sequence.snowflake.core.CacheableSnowflakeSequence;
-import com.wvkity.mybatis.core.sequence.snowflake.core.DefaultSnowflakeSequence;
-import com.wvkity.mybatis.core.sequence.snowflake.core.SnowflakeSequence;
+import com.wvkity.sequence.snowflake.SnowflakeConfig;
+import com.wvkity.sequence.snowflake.Strategy;
+import com.wvkity.sequence.snowflake.core.AtomicStampedSnowflakeSequence;
+import com.wvkity.sequence.snowflake.core.CacheableSnowflakeSequence;
+import com.wvkity.sequence.snowflake.core.DefaultSnowflakeSequence;
+import com.wvkity.sequence.snowflake.core.SnowflakeSequence;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -15,9 +15,9 @@
  */
 package com.wvkity.mybatis.spring.boot.sequence.config;
 
-import com.wvkity.mybatis.core.sequence.snowflake.Category;
-import com.wvkity.mybatis.core.sequence.snowflake.Strategy;
-import com.wvkity.mybatis.core.sequence.snowflake.Worker;
+import com.wvkity.sequence.snowflake.Category;
+import com.wvkity.sequence.snowflake.Strategy;
+import com.wvkity.sequence.snowflake.Worker;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
