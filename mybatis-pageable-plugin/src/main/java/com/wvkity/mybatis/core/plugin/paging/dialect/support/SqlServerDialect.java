@@ -45,21 +45,21 @@ public class SqlServerDialect extends AbstractPageableDialect {
     private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
     protected SqlServerPageableSqlParser pageableSqlParser = new SqlServerPageableSqlParser();
     protected Replacer replacer;
-    protected LocalCache<String, String> withNoLockCacheOfCs;
+    protected LocalCache<String, String> withNoLockCacheOfRs;
     protected LocalCache<String, String> withNoLockCacheOfPs;
 
     @Override
     public String makeQueryRecordSQL(MappedStatement ms, BoundSql bs, Object parameter,
                                      RowBounds rb, CacheKey cacheKey) {
         final String originalSql = bs.getSql();
-        final String cache = this.withNoLockCacheOfCs.get(originalSql);
+        final String cache = this.withNoLockCacheOfRs.get(originalSql);
         if (Objects.isNotBlank(cache)) {
             return cache;
         }
         String newSql = this.replacer.replace(originalSql);
         newSql = this.recordsSqlParser.smartParse(newSql);
         newSql = this.replacer.restore(newSql);
-        this.withNoLockCacheOfCs.put(originalSql, newSql);
+        this.withNoLockCacheOfRs.put(originalSql, newSql);
         return newSql;
     }
 
@@ -99,9 +99,9 @@ public class SqlServerDialect extends AbstractPageableDialect {
             this.replacer = newInstance(replacerClass);
         }
         final String cacheClass = properties.getProperty(PROP_KEY_WITH_NO_LOCK_CACHE_CLASS);
-        final String countCfgPrefix = properties.getProperty(PROP_KEY_WITH_NO_LOCK_RECORD_CFG_PREFIX);
+        final String recordCfgPrefix = properties.getProperty(PROP_KEY_WITH_NO_LOCK_RECORD_CFG_PREFIX);
         final String pageableCfgPrefix = properties.getProperty(PROP_KEY_WITH_NO_LOCK_PAGEABLE_CFG_PREFIX);
-        this.withNoLockCacheOfCs = CacheFactory.create(cacheClass, properties, countCfgPrefix);
+        this.withNoLockCacheOfRs = CacheFactory.create(cacheClass, properties, recordCfgPrefix);
         this.withNoLockCacheOfPs = CacheFactory.create(cacheClass, properties, pageableCfgPrefix);
     }
 
