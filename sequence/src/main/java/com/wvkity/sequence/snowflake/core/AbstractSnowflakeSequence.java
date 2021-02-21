@@ -20,6 +20,7 @@ import com.wvkity.sequence.snowflake.SnowflakeException;
 import com.wvkity.sequence.snowflake.SnowflakeParser;
 import com.wvkity.sequence.snowflake.SnowflakeSequenceInfo;
 
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -68,6 +69,14 @@ public abstract class AbstractSnowflakeSequence {
 
     public SnowflakeSequenceInfo parse(final long id) {
         return this.parser.parse(id);
+    }
+
+    public List<SnowflakeSequenceInfo> parse(final Long... ids) {
+        return this.parser.parse(ids);
+    }
+
+    public List<SnowflakeSequenceInfo> parse(final List<Long> ids) {
+        return this.parser.parse(ids);
     }
 
     protected Long getTimestamp() {

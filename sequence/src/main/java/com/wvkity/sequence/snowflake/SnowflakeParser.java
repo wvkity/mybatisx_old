@@ -15,6 +15,12 @@
  */
 package com.wvkity.sequence.snowflake;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 /**
  * ID解析器
  * @author wvkity
@@ -47,6 +53,17 @@ public class SnowflakeParser {
         long deltaTime = id >>> (workerIdBits + dataCenterIdBits + sequenceBits);
         return new SnowflakeSequenceInfo(String.valueOf(id), this.config.getEpochTimestamp(), dataCenterId, workerId,
             sequence, deltaTime, this.config.getTimeUnit());
+    }
+
+    public List<SnowflakeSequenceInfo> parse(final Long... ids) {
+        if (ids == null || ids.length == 0) {
+            return new ArrayList<>(0);
+        }
+        return Stream.of(ids).filter(Objects::nonNull).map(this::parse).collect(Collectors.toList());
+    }
+
+    public List<SnowflakeSequenceInfo> parse(final List<Long> ids) {
+        return ids == null || ids.isEmpty() ? new ArrayList<>(0) : this.parse(ids.toArray(new Long[0]));
     }
 
 }

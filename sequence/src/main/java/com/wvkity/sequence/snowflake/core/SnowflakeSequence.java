@@ -18,6 +18,8 @@ package com.wvkity.sequence.snowflake.core;
 import com.wvkity.sequence.Sequence;
 import com.wvkity.sequence.snowflake.SnowflakeSequenceInfo;
 
+import java.util.List;
+
 /**
  * @author wvkity
  * @created 2021-02-18
@@ -40,5 +42,19 @@ public interface SnowflakeSequence extends Sequence {
     default SnowflakeSequenceInfo parse(final String id) {
         return id == null || id.trim().isEmpty() ? null : this.parse(Long.parseLong(id));
     }
+
+    /**
+     * 解析ID
+     * @param ids ID列表
+     * @return ID信息列表
+     */
+    List<SnowflakeSequenceInfo> parse(final Long... ids);
+
+    /**
+     * 解析ID
+     * @param ids ID列表
+     * @return ID信息列表
+     */
+    List<SnowflakeSequenceInfo> parse(final List<Long> ids);
 
 }
