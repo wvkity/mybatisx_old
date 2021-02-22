@@ -46,7 +46,15 @@ import java.util.Properties;
 @Order(888)
 public class StandardPageableInterceptor implements Interceptor {
 
-    final Handler handler = new StandardPageableHandler();
+    final Handler handler;
+
+    public StandardPageableInterceptor() {
+        this.handler = new StandardPageableHandler();
+    }
+
+    public StandardPageableInterceptor(Handler handler) {
+        this.handler = handler;
+    }
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {

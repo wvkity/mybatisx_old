@@ -46,7 +46,15 @@ import java.util.Properties;
 @Order(999)
 public class RangePageableInterceptor implements Interceptor {
 
-    final Handler handler = new RangePageableHandler();
+    final Handler handler;
+
+    public RangePageableInterceptor() {
+        this.handler = new RangePageableHandler();
+    }
+
+    public RangePageableInterceptor(Handler handler) {
+        this.handler = handler;
+    }
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
