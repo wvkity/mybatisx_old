@@ -37,13 +37,13 @@ import java.util.Properties;
  * @created 2021-02-08
  * @since 1.0.0
  */
+@Order(138)
 @Intercepts({
     @Signature(type = Executor.class, method = "query",
         args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}),
     @Signature(type = Executor.class, method = "query",
         args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class, CacheKey.class, BoundSql.class})
 })
-@Order(999)
 public class RangePageableInterceptor implements Interceptor {
 
     final Handler handler;
