@@ -1,6 +1,7 @@
 dependencies {
     api project(':mybatis-annotation')
     api project(":mybatis-pageable-plugin")
+    api project(':mybatis-batch-plugin')
     api project(':sequence')
     api project(':result')
     api "${libs.inject}"

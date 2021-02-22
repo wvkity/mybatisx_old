@@ -4,6 +4,7 @@ dependencies {
     api project(":mybatis-datasource-springboot-starter")
     api project(":mybatis-pageable-springboot-starter")
     api project(":mybatis-sequence-springboot-starter")
+    api project(':mybatis-batch-springboot-starter')
     implementation "${libs["spring-aspects"]}"
     implementation "${libs["springboot-jdbc"]}"
     implementation "${libs["springboot-autoconfigure"]}"
