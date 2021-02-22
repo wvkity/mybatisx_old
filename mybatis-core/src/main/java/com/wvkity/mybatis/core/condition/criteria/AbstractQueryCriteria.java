@@ -24,7 +24,7 @@ import com.wvkity.mybatis.core.condition.basic.order.StandardOrder;
 import com.wvkity.mybatis.core.condition.basic.select.Selection;
 import com.wvkity.mybatis.core.condition.basic.select.StandardSelection;
 import com.wvkity.mybatis.core.constant.Constants;
-import com.wvkity.mybatis.core.handler.TableHandler;
+import com.wvkity.mybatis.core.helper.TableHelper;
 import com.wvkity.mybatis.core.metadata.Column;
 import com.wvkity.mybatis.core.plugin.paging.RangeFetch;
 import com.wvkity.mybatis.core.plugin.paging.RangeMode;
@@ -116,7 +116,7 @@ public abstract class AbstractQueryCriteria<T> extends AbstractCriteria<T> imple
 
     @Override
     public AbstractQueryCriteria<T> filtrate(Predicate<Column> accept) {
-        final List<Column> columns = TableHandler.getColumns(this.entityClass, accept);
+        final List<Column> columns = TableHelper.getColumns(this.entityClass, accept);
         if (Objects.isNotEmpty(columns)) {
             for (Column column : columns) {
                 if (Objects.nonNull(column)) {

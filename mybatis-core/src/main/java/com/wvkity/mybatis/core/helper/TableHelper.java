@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.handler;
+package com.wvkity.mybatis.core.helper;
 
 import com.wvkity.mybatis.core.builder.support.TableBuilder;
 import com.wvkity.mybatis.core.config.MyBatisGlobalConfiguration;
@@ -45,11 +45,11 @@ import java.util.stream.Collectors;
  * @created 2020-10-04
  * @since 1.0.0
  */
-public final class TableHandler {
+public final class TableHelper {
 
-    private static final Logger log = LoggerFactory.getLogger(TableHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(TableHelper.class);
 
-    private TableHandler() {
+    private TableHelper() {
     }
 
     /**
@@ -159,7 +159,7 @@ public final class TableHandler {
      */
     public static Column getId(final Class<?> clazz) {
         return Optional.ofNullable(clazz).flatMap(it ->
-            Optional.ofNullable(TableHandler.getTable(it)).map(Table::getIdColumn)).orElse(null);
+            Optional.ofNullable(TableHelper.getTable(it)).map(Table::getIdColumn)).orElse(null);
     }
 
     /**
@@ -172,7 +172,7 @@ public final class TableHandler {
         if (Objects.isBlank(property)) {
             return null;
         }
-        return Optional.ofNullable(clazz).map(it -> TableHandler.getColumnCache(it).get(property)).orElse(null);
+        return Optional.ofNullable(clazz).map(it -> TableHelper.getColumnCache(it).get(property)).orElse(null);
     }
 
     /**
@@ -183,7 +183,7 @@ public final class TableHandler {
      */
     public static List<Column> getColumns(final Class<?> clazz, final Predicate<Column> filter) {
         if (Objects.nonNull(clazz) && Objects.nonNull(filter)) {
-            final Table table = TableHandler.getTable(clazz);
+            final Table table = TableHelper.getTable(clazz);
             final Set<Column> columns;
             if (Objects.nonNull(table) && Objects.isNotEmpty((columns = table.columns()))) {
                 final List<Column> it = columns.stream().filter(filter).collect(Collectors.toList());

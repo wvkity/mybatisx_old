@@ -61,7 +61,7 @@ import com.wvkity.mybatis.core.condition.expression.TemplateMatch;
 import com.wvkity.mybatis.core.constant.Constants;
 import com.wvkity.mybatis.core.constant.LikeMode;
 import com.wvkity.mybatis.core.constant.Slot;
-import com.wvkity.mybatis.core.handler.TableHandler;
+import com.wvkity.mybatis.core.helper.TableHelper;
 import com.wvkity.mybatis.core.immutable.ImmutableLinkedMap;
 import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
 import com.wvkity.mybatis.core.metadata.Column;
@@ -962,7 +962,7 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
      * @return {@link Column}
      */
     protected Column getId() {
-        return Objects.nonNull(this.entityClass) ? TableHandler.getId(this.entityClass) : null;
+        return Objects.nonNull(this.entityClass) ? TableHelper.getId(this.entityClass) : null;
     }
 
     /**
@@ -970,7 +970,7 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
      * @return 表名
      */
     public String getTableName() {
-        final Table table = TableHandler.getTable(this.entityClass);
+        final Table table = TableHelper.getTable(this.entityClass);
         final String tabName = table.getFullName();
         final String as = this.as();
         return Objects.isBlank(as) ? tabName : (tabName + " AS " + as);

@@ -19,7 +19,7 @@ import com.wvkity.mybatis.core.condition.basic.select.Selection;
 import com.wvkity.mybatis.core.condition.basic.select.StandardSelection;
 import com.wvkity.mybatis.core.condition.criteria.AbstractQueryCriteria;
 import com.wvkity.mybatis.core.constant.Constants;
-import com.wvkity.mybatis.core.handler.TableHandler;
+import com.wvkity.mybatis.core.helper.TableHelper;
 import com.wvkity.mybatis.core.immutable.ImmutableList;
 import com.wvkity.mybatis.core.metadata.Column;
 import com.wvkity.mybatis.core.segment.AbstractFragmentList;
@@ -152,7 +152,7 @@ public class SelectManager extends AbstractFragmentList<Selection> {
             }).collect(Collectors.toList());
         } else {
             // 查询所有字段
-            final List<Column> list = TableHandler.getColumns(this.criteria.getEntityClass(), __ -> true);
+            final List<Column> list = TableHelper.getColumns(this.criteria.getEntityClass(), __ -> true);
             if (Objects.isNotEmpty(list)) {
                 tmp = list.stream().filter(it -> this.accept(this.excludeProperties, it.getProperty(), false)
                     && this.accept(this.excludeColumns, it.getColumn(), true)).map(it ->

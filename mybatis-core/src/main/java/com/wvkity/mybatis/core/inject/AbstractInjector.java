@@ -16,7 +16,7 @@
 package com.wvkity.mybatis.core.inject;
 
 import com.wvkity.mybatis.core.config.MyBatisLocalConfigurationCache;
-import com.wvkity.mybatis.core.handler.TableHandler;
+import com.wvkity.mybatis.core.helper.TableHelper;
 import com.wvkity.mybatis.core.immutable.ImmutableSet;
 import com.wvkity.mybatis.core.inject.method.MappedMethod;
 import com.wvkity.mybatis.core.inject.method.invoke.DeleteByIdInvoker;
@@ -135,7 +135,7 @@ public abstract class AbstractInjector implements Injector {
                     final int index = index(mapperInterface);
                     final Class<?> resultClass = index == 0 ? entityClass : getGenericType(types, index);
                     // 解析Table对象
-                    final Table table = TableHandler.parse(assistant, entityClass);
+                    final Table table = TableHelper.parse(assistant, entityClass);
                     methods.forEach(m -> m.invoke(assistant, mapperInterface, resultClass, table));
                 }
             }

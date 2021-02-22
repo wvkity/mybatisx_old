@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.core.property;
 
-import com.wvkity.mybatis.core.handler.TableHandler;
+import com.wvkity.mybatis.core.helper.TableHelper;
 import com.wvkity.mybatis.core.invoke.SerializedLambda;
 import com.wvkity.mybatis.core.metadata.Column;
 import com.wvkity.mybatis.core.reflect.Reflections;
@@ -86,6 +86,6 @@ public final class PropertiesMappingCache {
      * @return {@link Column}
      */
     public static Column getColumn(final Class<?> clazz, final String property) {
-        return TableHandler.getColumn(clazz, property);
+        return TableHelper.getColumn(clazz, property);
     }
 }
