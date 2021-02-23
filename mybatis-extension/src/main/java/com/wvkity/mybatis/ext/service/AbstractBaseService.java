@@ -15,6 +15,7 @@
  */
 package com.wvkity.mybatis.ext.service;
 
+import com.wvkity.mybatis.core.batch.BatchDataWrapper;
 import com.wvkity.mybatis.core.condition.criteria.Criteria;
 import com.wvkity.mybatis.core.mapper.BaseMapper;
 import com.wvkity.mybatis.core.reflect.Reflections;
@@ -64,6 +65,24 @@ public abstract class AbstractBaseService<M extends BaseMapper<T, U, ID>, T, U, 
     @Override
     public int saveWithNonNull(T entity) {
         return this.mapper.insertWithNonNull(entity);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public int saveBatch(List<T> entities) {
+        return this.saveBatch(BatchDataWrapper.wrap(entities));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public int saveBatch(int batchSize, List<T> entities) {
+        return this.saveBatch(BatchDataWrapper.wrap(batchSize, entities));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public int saveBatch(BatchDataWrapper<T> wrapper) {
+        return this.mapper.insertBatch(wrapper);
     }
 
     @Transactional(rollbackFor = Exception.class)

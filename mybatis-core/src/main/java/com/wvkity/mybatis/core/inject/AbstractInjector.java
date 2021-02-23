@@ -23,6 +23,7 @@ import com.wvkity.mybatis.core.inject.method.invoke.DeleteByIdInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.DeleteInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.ExistsByIdInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.ExistsInvoker;
+import com.wvkity.mybatis.core.inject.method.invoke.InsertBatchInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.InsertInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.InsertWithNonNullInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.SelectAllInvoker;
@@ -87,7 +88,9 @@ public abstract class AbstractInjector implements Injector {
         // insert
         MAPPED_METHOD_CACHE.put(InsertMapper.class, ImmutableSet.construct(
             new InsertInvoker(),
-            new InsertWithNonNullInvoker()));
+            new InsertWithNonNullInvoker(),
+            new InsertBatchInvoker()
+        ));
         // update
         MAPPED_METHOD_CACHE.put(UpdateMapper.class, ImmutableSet.construct(
             new UpdateInvoker(),

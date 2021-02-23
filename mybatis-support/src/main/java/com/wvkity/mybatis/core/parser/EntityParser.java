@@ -13,32 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.ext.service;
+package com.wvkity.mybatis.core.parser;
 
-import com.wvkity.mybatis.core.mapper.BaseMapper;
+import com.wvkity.mybatis.core.builder.support.TableBuilder;
+import com.wvkity.mybatis.core.config.MyBatisGlobalConfiguration;
+import com.wvkity.mybatis.core.metadata.Table;
 
 /**
- * 基础Service接口
- * @param <M>  Mapper接口
- * @param <T>  实体类型
- * @param <U>  返回值类型
- * @param <ID> 主键类型
+ * 实体解析器
  * @author wvkity
  * @created 2020-10-03
  * @since 1.0.0
  */
-public interface BaseService<M extends BaseMapper<T, U, ID>, T, U, ID> extends SaveService<T>, UpdateService<T>,
-    DeleteService<T, ID>, BatchService<T>, QueryService<T, U, ID> {
+public interface EntityParser {
 
     /**
-     * 获取泛型Mapper接口
-     * @return {@link BaseMapper}
+     * 解析实体-数据库表映射信息
+     * @param configuration {@link MyBatisGlobalConfiguration}
+     * @param entity        实体类
+     * @param builder       数据库表映射构建器
+     * @return {@link Table}
      */
-    M getMapper();
-
-    /**
-     * 设置泛型Mapper接口
-     * @param mapper {@link BaseMapper}
-     */
-    void setMapper(M mapper);
+    Table parse(final MyBatisGlobalConfiguration configuration, final Class<?> entity, final TableBuilder builder);
 }

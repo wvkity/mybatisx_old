@@ -1,11 +1,8 @@
 dependencies {
-    api project(':mybatis-annotation')
+    api project(':mybatis-support')
     api project(":mybatis-pageable-plugin")
     api project(':mybatis-batch-plugin')
-    api project(':sequence')
-    api project(':result')
     api "${libs.inject}"
-    api "${libs.mybatis}"
     api "${libs.jsqlparser}"
     api "${libs.cglib}"
     api "${libs.slf4j}"

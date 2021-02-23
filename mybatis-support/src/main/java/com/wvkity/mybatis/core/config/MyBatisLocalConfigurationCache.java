@@ -18,7 +18,6 @@ package com.wvkity.mybatis.core.config;
 import com.wvkity.mybatis.annotation.NamingStrategy;
 import com.wvkity.mybatis.core.exception.MapperException;
 import com.wvkity.mybatis.core.exception.MyBatisException;
-import com.wvkity.mybatis.core.inject.DefaultInjector;
 import com.wvkity.mybatis.core.inject.Injector;
 import com.wvkity.mybatis.core.mapper.BaseMapper;
 import com.wvkity.mybatis.session.MyBatisConfiguration;
@@ -27,6 +26,8 @@ import org.apache.ibatis.session.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -42,6 +43,11 @@ import java.util.concurrent.ConcurrentSkipListSet;
 public class MyBatisLocalConfigurationCache {
 
     private static final Logger log = LoggerFactory.getLogger(MyBatisLocalConfigurationCache.class);
+    /**
+     * 默认SQL注入器
+     */
+    private static final String DEF_INJECTOR = "com.wvkity.mybatis.core.inject.DefaultInjector";
+    private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
     /**
      * Mapper接口
      */
@@ -122,10 +128,19 @@ public class MyBatisLocalConfigurationCache {
     public static Injector getInjector(final Configuration configuration) {
         final MyBatisGlobalConfiguration it = getGlobalConfiguration(configuration);
         return Optional.ofNullable(it.getInjector()).orElseGet(() -> {
-            final Injector injector = new DefaultInjector();
+            final Injector injector = newInjector();
             it.setInjector(injector);
             return injector;
         });
+    }
+
+    private static Injector newInjector() {
+        try {
+            final Class<?> clazz = Class.forName(DEF_INJECTOR);
+            return (Injector) LOOKUP.findConstructor(clazz, MethodType.methodType(void.class)).invokeWithArguments();
+        } catch (Throwable e) {
+            throw new MyBatisException(e.getMessage(), e);
+        }
     }
 
     /**

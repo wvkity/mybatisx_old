@@ -402,7 +402,7 @@ public class MyBatisConfiguration extends Configuration {
                 if (super.get(shortKey) == null) {
                     super.put(shortKey, value);
                 } else {
-                    super.put(shortKey, (V) new StrictMap.Ambiguity(shortKey));
+                    super.put(shortKey, (V) new Ambiguity(shortKey));
                 }
             }
             return super.put(key, value);
@@ -415,7 +415,7 @@ public class MyBatisConfiguration extends Configuration {
                 throw new IllegalArgumentException(name + " does not contain value for " + key);
             }
             if (value instanceof StrictMap.Ambiguity) {
-                throw new IllegalArgumentException(((StrictMap.Ambiguity) value).getSubject() + " is ambiguous in " + name
+                throw new IllegalArgumentException(((Ambiguity) value).getSubject() + " is ambiguous in " + name
                     + " (try using the full name including the namespace, or rename one of the entries)");
             }
             return value;

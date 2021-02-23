@@ -24,7 +24,8 @@ package com.wvkity.mybatis.core.condition.criteria;
  * @since 1.0.0
  */
 public interface CriteriaWrapper<T, Chain extends CriteriaWrapper<T, Chain>> extends Criteria<T>,
-    Compare<T, Chain>, Range<T, Chain>, Fuzzy<T, Chain>, Nullable<T, Chain>, Template<T, Chain>, Nested<Chain> {
+    Compare<T, Chain>, Range<T, Chain>, Fuzzy<T, Chain>, Nullable<T, Chain>, Template<T, Chain>, Nested<Chain>,
+    SearchColumn<T> {
 
     /**
      * 纯SQL条件

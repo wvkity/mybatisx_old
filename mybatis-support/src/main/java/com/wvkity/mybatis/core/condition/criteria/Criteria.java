@@ -26,7 +26,7 @@ import java.util.Collection;
  * @created 2021-01-04
  * @since 1.0.0
  */
-public interface Criteria<T> extends Search<T>, Fragment {
+public interface Criteria<T> extends Fragment {
 
     /**
      * 获取实体类

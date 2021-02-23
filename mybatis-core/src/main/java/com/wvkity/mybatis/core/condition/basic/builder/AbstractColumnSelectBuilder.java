@@ -16,6 +16,7 @@
 package com.wvkity.mybatis.core.condition.basic.builder;
 
 import com.wvkity.mybatis.core.condition.basic.select.Selection;
+import com.wvkity.mybatis.core.condition.criteria.CriteriaWrapper;
 import com.wvkity.mybatis.core.property.Property;
 import com.wvkity.mybatis.core.metadata.Column;
 import com.wvkity.mybatis.core.utils.Objects;
@@ -42,9 +43,9 @@ public abstract class AbstractColumnSelectBuilder<T extends Selection> extends A
         if (Objects.nonNull(this.column)) {
             return this.column;
         } else if (Objects.nonNull(this.lambdaProperty)) {
-            return this.criteria.findColumn(this.lambdaProperty);
+            return ((CriteriaWrapper<?, ?>) this.criteria).findColumn(this.lambdaProperty);
         } else if (Objects.isNotBlank(this.property)) {
-            return this.criteria.findColumn(this.property);
+            return ((CriteriaWrapper<?, ?>) this.criteria).findColumn(this.property);
         }
         return null;
     }

@@ -25,5 +25,5 @@ package com.wvkity.mybatis.core.mapper;
  * @since 1.0.0
  */
 public interface BaseMapper<T, U, ID> extends InsertMapper<T>, UpdateMapper<T>,
-    DeleteMapper<T, ID>, QueryMapper<T, U, ID> {
+    DeleteMapper<T, ID>, BatchMapper<T>, QueryMapper<T, U, ID> {
 }

@@ -13,26 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.parser;
+package com.wvkity.mybatis.core.inject.method.invoke;
 
-import com.wvkity.mybatis.core.config.MyBatisGlobalConfiguration;
-import com.wvkity.mybatis.core.metadata.Table;
-import com.wvkity.mybatis.core.builder.support.TableBuilder;
+import com.wvkity.mybatis.core.inject.mapping.sql.insert.InsertSupplier;
+import com.wvkity.mybatis.core.inject.method.support.AbstractInsertMethod;
 
 /**
- * 实体解析器
+ * {@code insertBatch}方法映射
  * @author wvkity
- * @created 2020-10-03
+ * @created 2021-02-23
  * @since 1.0.0
  */
-public interface EntityParser {
-
-    /**
-     * 解析实体-数据库表映射信息
-     * @param configuration {@link MyBatisGlobalConfiguration}
-     * @param entity        实体类
-     * @param builder       数据库表映射构建器
-     * @return {@link Table}
-     */
-    Table parse(final MyBatisGlobalConfiguration configuration, final Class<?> entity, final TableBuilder builder);
+public class InsertBatchInvoker extends AbstractInsertMethod<InsertSupplier> {
 }
