@@ -86,7 +86,6 @@ public class SnowflakeSequenceAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public SnowflakeConfig snowflakeConfig(final Distributor distributor) {
-        // 自定义配置
         return new SnowflakeConfig(this.properties.getEpochTimestamp(), this.properties.getCacheSize(),
             this.properties.getCategory(), this.properties.getStrategy(), distributor);
     }
