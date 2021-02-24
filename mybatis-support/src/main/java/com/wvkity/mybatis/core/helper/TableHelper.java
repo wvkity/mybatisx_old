@@ -74,7 +74,7 @@ public final class TableHelper {
     public synchronized static Table parse(final MapperBuilderAssistant assistant, final Class<?> entity) {
         if (Objects.nonNull(entity)) {
             final String entityName = Reflections.getRealClass(entity).getName();
-            final Table oldTable = DATABASE_TABLE_CACHE.getOrDefault(entityName, null);
+            final Table oldTable = DATABASE_TABLE_CACHE.get(entityName);
             if (oldTable == null) {
                 log.debug("Parsing the entity class corresponding table mapping information: {}", entityName);
                 final Configuration configuration = assistant.getConfiguration();

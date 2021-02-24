@@ -52,7 +52,6 @@ import com.wvkity.mybatis.core.filter.FieldFilter;
 import com.wvkity.mybatis.core.filter.Filter;
 import com.wvkity.mybatis.core.filter.GetMethodFilter;
 import com.wvkity.mybatis.core.filter.SetMethodFilter;
-import com.wvkity.mybatis.core.function.When;
 import com.wvkity.mybatis.core.immutable.ImmutableSet;
 import com.wvkity.mybatis.core.metadata.Field;
 import com.wvkity.mybatis.core.metadata.Table;
@@ -261,14 +260,17 @@ public class DefaultEntityParser implements EntityParser, Constants {
         final ColumnExt ext;
         if (Objects.nonNull((ext = field.getAnnotation(ColumnExt.class)))) {
             cb.setBlob(ext.blob());
-            When.ifNullable(cb, ext.name(), ColumnBuilder::getColumn).apply(cb::setColumn);
-            When.ifNotEqual(ext.javaType(), Option.CONFIG).apply(Option.ENABLE, cb::setUseJavaType);
-            When.ifNotEqual(ext.notNull(), Option.CONFIG).apply(Option.ENABLE, cb::setCheckNotNull);
-            When.ifNotEqual(ext.notEmpty(), Option.CONFIG).apply(Option.ENABLE, cb::setCheckNotEmpty);
-            When.ifNotEqual(ext, JdbcType.UNDEFINED, ColumnExt::jdbcType).apply(cb::setJdbcType);
-            When.ifNotEqual(ext, UnknownTypeHandler.class, ColumnExt::typeHandler).apply(cb::setTypeHandler);
+            if (Objects.isBlank(cb.getColumn())) {
+                cb.setColumn(ext.name());
+            }
+            cb.setUseJavaType(ext.javaType() == Option.ENABLE);
+            cb.setCheckNotNull(ext.notNull() == Option.ENABLE);
+            cb.setCheckNotEmpty(ext.notEmpty() == Option.ENABLE);
+            Optional.of(ext.jdbcType()).filter(it -> it != JdbcType.UNDEFINED).ifPresent(cb::setJdbcType);
+            Optional.of(ext.typeHandler()).filter(it -> !it.equals(UnknownTypeHandler.class))
+                .ifPresent(cb::setTypeHandler);
             if (ext.javaType() == Option.CONFIG) {
-                cb.setUseJavaType(configuration.isAutoSplicingOfJavaType());
+                cb.setUseJavaType(configuration.isAutoSplicingJavaType());
             }
             if (ext.notNull() == Option.CONFIG) {
                 cb.setCheckNotNull(configuration.isDynamicSqlNotNullChecking());
@@ -277,7 +279,7 @@ public class DefaultEntityParser implements EntityParser, Constants {
                 cb.setCheckNotEmpty(configuration.isDynamicSqlNotEmptyChecking());
             }
         } else {
-            cb.setUseJavaType(configuration.isAutoSplicingOfJavaType());
+            cb.setUseJavaType(configuration.isAutoSplicingJavaType());
             cb.setCheckNotNull(configuration.isDynamicSqlNotNullChecking());
             cb.setCheckNotEmpty(configuration.isDynamicSqlNotEmptyChecking());
         }
@@ -460,7 +462,7 @@ public class DefaultEntityParser implements EntityParser, Constants {
         final boolean isAfter = executing == Executing.AFTER ||
             (executing == Executing.CONFIG && configuration.isGeneratedAfter());
         if (identity.useJdbc()) {
-            cb.setIdentity(true).setGenerator("JDBC");
+            cb.setIdentity(true).setExecuting(Executing.AFTER).setGenerator("JDBC");
         } else if (isAfter) {
             cb.setIdentity(true).setExecuting(Executing.AFTER).setGenerator("");
         } else {
@@ -468,8 +470,7 @@ public class DefaultEntityParser implements EntityParser, Constants {
                 throw new MyBatisParserException("Invalid \"@Identity\" annotation exists on the \"" + cb.getProperty()
                     + "\" attribute of the entity class \"" + tb.getEntity().getName() + "\".");
             }
-            cb.setIdentity(true).setExecuting(isAfter ? Executing.AFTER : Executing.BEFORE)
-                .setGenerator(identity.sequence());
+            cb.setIdentity(true).setExecuting(Executing.BEFORE).setGenerator(identity.sequence());
         }
     }
 
