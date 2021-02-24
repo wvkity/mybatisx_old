@@ -15,12 +15,23 @@
  */
 package com.wvkity.mybatis.annotation;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * 自增主键注解
  * @author wvkity
  * @created 2020-10-04
  * @since 1.0.0
  */
+@Inherited
+@Documented
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Identity {
 
     /**
