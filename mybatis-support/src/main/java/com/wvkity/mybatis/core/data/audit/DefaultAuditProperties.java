@@ -84,13 +84,13 @@ public final class DefaultAuditProperties {
     static {
         CREATED_USER_ID_PROPERTIES = ImmutableLinkedSet.construct("createUserId", "createdUserId", "createById", "createdById");
         CREATED_USER_NAME_PROPERTIES = ImmutableLinkedSet.construct("createUserName", "createdUserName", "createBy", "createdBy");
-        CREATED_TIME_PROPERTIES = ImmutableLinkedSet.construct("gmtCreate", "gmtCreated", "createTime", "createdTime", "createDate", "createdDate");
-        MODIFIED_USER_ID_PROPERTIES = ImmutableLinkedSet.construct("modifiedUserId", "lastModifiedUserId", "updateUserId", "updatedUserId", "updateById", "updatedById");
-        MODIFIED_USER_NAME_PROPERTIES = ImmutableLinkedSet.construct("modifiedUserName", "lastModifiedUserName", "updateUserName", "updatedUserName", "updateBy", "updatedBy");
-        MODIFIED_TIME_PROPERTIES = ImmutableLinkedSet.construct("gmtModified", "gmtLastModified", "modifiedTime", "lastModifiedTime", "updateTime", "updatedTime", "updateDate", "updatedDate");
-        DELETED_USER_ID_PROPERTIES = ImmutableLinkedSet.construct("deleteUserId", "deletedUserId", "delUserId", "delById", "deleteById", "deletedById");
-        DELETED_USER_NAME_PROPERTIES = ImmutableLinkedSet.construct("deleteUserName", "deletedUserName", "delUserName", "delBy", "deleteBy", "deletedBy");
-        DELETED_TIME_PROPERTIES = ImmutableLinkedSet.construct("gmtDeleted", "gmtDelete", "deletedTime", "deleteTime", "deletedDate", "deleteDate", "delTime", "delDate");
+        CREATED_TIME_PROPERTIES = ImmutableLinkedSet.construct("gmtCreate", "gmtCreated", "createTime", "createdTime");
+        MODIFIED_USER_ID_PROPERTIES = ImmutableLinkedSet.construct("modifiedUserId", "lastModifiedUserId", "updateById", "updatedById");
+        MODIFIED_USER_NAME_PROPERTIES = ImmutableLinkedSet.construct("modifiedUserName", "lastModifiedUserName", "updateBy", "updatedBy");
+        MODIFIED_TIME_PROPERTIES = ImmutableLinkedSet.construct("gmtModified", "gmtLastModified", "modifiedTime", "lastModifiedTime", "updateTime", "updatedTime");
+        DELETED_USER_ID_PROPERTIES = ImmutableLinkedSet.construct("deleteUserId", "deletedUserId", "delUserId", "delById", "deletedById");
+        DELETED_USER_NAME_PROPERTIES = ImmutableLinkedSet.construct("deleteUserName", "deletedUserName", "delUserName", "delBy", "deletedBy");
+        DELETED_TIME_PROPERTIES = ImmutableLinkedSet.construct("gmtDeleted", "gmtDelete", "deletedTime", "deleteTime", "delTime");
         final Map<AuditMatching, Set<String>> createdMap = new ConcurrentHashMap<>();
         createdMap.put(AuditMatching.ID, CREATED_USER_ID_PROPERTIES);
         createdMap.put(AuditMatching.NAME, CREATED_USER_NAME_PROPERTIES);
