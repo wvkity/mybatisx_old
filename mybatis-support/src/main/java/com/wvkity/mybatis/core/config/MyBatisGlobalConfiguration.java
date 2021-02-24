@@ -130,7 +130,7 @@ public class MyBatisGlobalConfiguration {
     /**
      * 是否自动拼接JAVA类名
      */
-    private boolean autoSplicingOfJavaType;
+    private boolean autoSplicingJavaType;
     /**
      * 动态SQL中非空检查
      */
@@ -375,12 +375,12 @@ public class MyBatisGlobalConfiguration {
         this.jdbcTypeAutoMapped = jdbcTypeAutoMapped;
     }
 
-    public boolean isAutoSplicingOfJavaType() {
-        return autoSplicingOfJavaType;
+    public boolean isAutoSplicingJavaType() {
+        return autoSplicingJavaType;
     }
 
-    public void setAutoSplicingOfJavaType(boolean autoSplicingOfJavaType) {
-        this.autoSplicingOfJavaType = autoSplicingOfJavaType;
+    public void setAutoSplicingJavaType(boolean autoSplicingJavaType) {
+        this.autoSplicingJavaType = autoSplicingJavaType;
     }
 
     public boolean isDynamicSqlNotNullChecking() {
