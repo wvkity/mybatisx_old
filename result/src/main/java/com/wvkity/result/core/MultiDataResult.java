@@ -140,4 +140,16 @@ public class MultiDataResult extends AbstractMultiResult implements MultiResult 
         return new MultiDataResult(code, message);
     }
 
+    public static MultiDataResult ok() {
+        return of();
+    }
+
+    public static MultiDataResult failure() {
+        return new MultiDataResult(Status.ERR_FAILURE);
+    }
+
+    public static  MultiDataResult serverError() {
+        return new MultiDataResult(Status.ERR_SERVER);
+    }
+
 }
