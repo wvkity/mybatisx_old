@@ -1,0 +1,15 @@
+{
+    "groups": [
+        {
+            "sourceType": "com.wvkity.mybatis.spring.boot.batch.config.MyBatisBatchProperties",
+            "name": "wvkity.mybatis.plugin.batch",
+            "type": "com.wvkity.mybatis.spring.boot.batch.config.MyBatisBatchProperties"
+        },
+        {
+            "sourceType": "com.wvkity.mybatis.spring.boot.batch.config.MyBatisBatchProperties",
+            "name": "wvkity.mybatis.plugin.batch.properties",
+            "sourceMethod": "getProperties()",
+            "type": "java.util.Properties"
+        }
+    ]
+}
