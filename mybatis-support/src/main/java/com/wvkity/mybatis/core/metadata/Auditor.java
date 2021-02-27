@@ -36,7 +36,7 @@ public class Auditor {
     /**
      * 是否为保存操作时间自动填充标识
      */
-    private final boolean createdTime;
+    private final boolean createdDate;
     /**
      * 是否为保存操作用户ID自动填充标识
      */
@@ -48,31 +48,31 @@ public class Auditor {
     /**
      * 是否为更新操作时间自动填充标识
      */
-    private final boolean modifiedTime;
+    private final boolean lastModifiedDate;
     /**
      * 是否为更新操作用户ID自动填充标识
      */
-    private final boolean modifiedUserId;
+    private final boolean lastModifiedUserId;
     /**
      * 是否为更新操作用户名自动填充标识
      */
-    private final boolean modifiedUserName;
+    private final boolean lastModifiedUserName;
     /**
      * 是否为删除操作时间自动填充标识
      */
-    private final boolean deletedTime;
+    private final boolean logicDeletedDate;
     /**
      * 是否为删除操作用户ID自动填充标识
      */
-    private final boolean deletedUserId;
+    private final boolean logicDeletedUserId;
     /**
      * 是否为删除操作用户名自动填充标识
      */
-    private final boolean deletedUserName;
+    private final boolean logicDeletedUserName;
     /**
      * 是否为逻辑删除标识
      */
-    private final boolean logicalDeletion;
+    private final boolean logicalDelete;
     /**
      * 已删除标识值
      */
@@ -82,23 +82,23 @@ public class Auditor {
      */
     private final Object undeletedValue;
 
-    public Auditor(boolean version, boolean tenement, boolean createdTime,
+    public Auditor(boolean version, boolean tenement, boolean createdDate,
                    boolean createdUserId, boolean createdUserName,
-                   boolean modifiedTime, boolean modifiedUserId, boolean modifiedUserName,
-                   boolean deletedTime, boolean deletedUserId, boolean deletedUserName,
-                   boolean logicalDeletion, Object deletedValue, Object undeletedValue) {
+                   boolean lastModifiedDate, boolean lastModifiedUserId, boolean lastModifiedUserName,
+                   boolean logicDeletedDate, boolean logicDeletedUserId, boolean logicDeletedUserName,
+                   boolean logicalDelete, Object deletedValue, Object undeletedValue) {
         this.version = version;
         this.tenement = tenement;
-        this.createdTime = createdTime;
+        this.createdDate = createdDate;
         this.createdUserId = createdUserId;
         this.createdUserName = createdUserName;
-        this.modifiedTime = modifiedTime;
-        this.modifiedUserId = modifiedUserId;
-        this.modifiedUserName = modifiedUserName;
-        this.deletedTime = deletedTime;
-        this.deletedUserId = deletedUserId;
-        this.deletedUserName = deletedUserName;
-        this.logicalDeletion = logicalDeletion;
+        this.lastModifiedDate = lastModifiedDate;
+        this.lastModifiedUserId = lastModifiedUserId;
+        this.lastModifiedUserName = lastModifiedUserName;
+        this.logicDeletedDate = logicDeletedDate;
+        this.logicDeletedUserId = logicDeletedUserId;
+        this.logicDeletedUserName = logicDeletedUserName;
+        this.logicalDelete = logicalDelete;
         this.deletedValue = deletedValue;
         this.undeletedValue = undeletedValue;
     }
@@ -108,7 +108,7 @@ public class Auditor {
      * @return boolean
      */
     public boolean insertedAuditable() {
-        return this.createdTime || this.createdUserId || this.createdUserName;
+        return this.createdDate || this.createdUserId || this.createdUserName;
     }
 
     /**
@@ -116,7 +116,7 @@ public class Auditor {
      * @return boolean
      */
     public boolean modifiedAuditable() {
-        return this.modifiedTime || this.modifiedUserId || this.modifiedUserName;
+        return this.lastModifiedDate || this.lastModifiedUserId || this.lastModifiedUserName;
     }
 
     /**
@@ -124,7 +124,7 @@ public class Auditor {
      * @return boolean
      */
     public boolean deletedAuditable() {
-        return this.deletedTime || this.deletedUserId || this.deletedUserName;
+        return this.logicDeletedDate || this.logicDeletedUserId || this.logicDeletedUserName;
     }
 
     public boolean isVersion() {
@@ -135,8 +135,8 @@ public class Auditor {
         return tenement;
     }
 
-    public boolean isCreatedTime() {
-        return createdTime;
+    public boolean isCreatedDate() {
+        return createdDate;
     }
 
     public boolean isCreatedUserId() {
@@ -147,32 +147,32 @@ public class Auditor {
         return createdUserName;
     }
 
-    public boolean isModifiedTime() {
-        return modifiedTime;
+    public boolean isLastModifiedDate() {
+        return lastModifiedDate;
     }
 
-    public boolean isModifiedUserId() {
-        return modifiedUserId;
+    public boolean isLastModifiedUserId() {
+        return lastModifiedUserId;
     }
 
-    public boolean isModifiedUserName() {
-        return modifiedUserName;
+    public boolean isLastModifiedUserName() {
+        return lastModifiedUserName;
     }
 
-    public boolean isDeletedTime() {
-        return deletedTime;
+    public boolean isLogicDeletedDate() {
+        return logicDeletedDate;
     }
 
-    public boolean isDeletedUserId() {
-        return deletedUserId;
+    public boolean isLogicDeletedUserId() {
+        return logicDeletedUserId;
     }
 
-    public boolean isDeletedUserName() {
-        return deletedUserName;
+    public boolean isLogicDeletedUserName() {
+        return logicDeletedUserName;
     }
 
-    public boolean isLogicalDeletion() {
-        return logicalDeletion;
+    public boolean isLogicalDelete() {
+        return logicalDelete;
     }
 
     public Object getDeletedValue() {
@@ -188,16 +188,16 @@ public class Auditor {
         return "Auditor{" +
             "version=" + version +
             ", tenement=" + tenement +
-            ", createdTime=" + createdTime +
+            ", createdTime=" + createdDate +
             ", createdUserId=" + createdUserId +
             ", createdUserName=" + createdUserName +
-            ", modifiedTime=" + modifiedTime +
-            ", modifiedUserId=" + modifiedUserId +
-            ", modifiedUserName=" + modifiedUserName +
-            ", deletedTime=" + deletedTime +
-            ", deletedUserId=" + deletedUserId +
-            ", deletedUserName=" + deletedUserName +
-            ", logicalDeletion=" + logicalDeletion +
+            ", modifiedTime=" + lastModifiedDate +
+            ", modifiedUserId=" + lastModifiedUserId +
+            ", modifiedUserName=" + lastModifiedUserName +
+            ", deletedTime=" + logicDeletedDate +
+            ", deletedUserId=" + logicDeletedUserId +
+            ", deletedUserName=" + logicDeletedUserName +
+            ", logicalDeletion=" + logicalDelete +
             ", deletedValue=" + deletedValue +
             ", undeletedValue=" + undeletedValue +
             '}';
@@ -210,25 +210,25 @@ public class Auditor {
         Auditor auditor = (Auditor) o;
         return version == auditor.version &&
             tenement == auditor.tenement &&
-            createdTime == auditor.createdTime &&
+            createdDate == auditor.createdDate &&
             createdUserId == auditor.createdUserId &&
             createdUserName == auditor.createdUserName &&
-            modifiedTime == auditor.modifiedTime &&
-            modifiedUserId == auditor.modifiedUserId &&
-            modifiedUserName == auditor.modifiedUserName &&
-            deletedTime == auditor.deletedTime &&
-            deletedUserId == auditor.deletedUserId &&
-            deletedUserName == auditor.deletedUserName &&
-            logicalDeletion == auditor.logicalDeletion &&
+            lastModifiedDate == auditor.lastModifiedDate &&
+            lastModifiedUserId == auditor.lastModifiedUserId &&
+            lastModifiedUserName == auditor.lastModifiedUserName &&
+            logicDeletedDate == auditor.logicDeletedDate &&
+            logicDeletedUserId == auditor.logicDeletedUserId &&
+            logicDeletedUserName == auditor.logicDeletedUserName &&
+            logicalDelete == auditor.logicalDelete &&
             Objects.equals(deletedValue, auditor.deletedValue) &&
             Objects.equals(undeletedValue, auditor.undeletedValue);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(version, tenement, createdTime,
-            createdUserId, createdUserName, modifiedTime, modifiedUserId,
-            modifiedUserName, deletedTime, deletedUserId, deletedUserName,
-            logicalDeletion, deletedValue, undeletedValue);
+        return Objects.hash(version, tenement, createdDate,
+            createdUserId, createdUserName, lastModifiedDate, lastModifiedUserId,
+            lastModifiedUserName, logicDeletedDate, logicDeletedUserId, logicDeletedUserName,
+            logicalDelete, deletedValue, undeletedValue);
     }
 }

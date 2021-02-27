@@ -75,7 +75,7 @@ public class TableBuilder extends AbstractBuilder implements Builder<Table> {
     /**
      * 是否存在逻辑删除
      */
-    private boolean logicalDeletion;
+    private boolean logicDelete;
     /**
      * 是否存在多租户字段
      */
@@ -95,7 +95,7 @@ public class TableBuilder extends AbstractBuilder implements Builder<Table> {
     /**
      * 逻辑删除字段
      */
-    private ColumnBuilder logicalDeletionColumn;
+    private ColumnBuilder logicDeleteColumn;
     /**
      * 多租户字段
      */
@@ -188,7 +188,7 @@ public class TableBuilder extends AbstractBuilder implements Builder<Table> {
             }
         }
         return new Table(this.entity, realTableName, this.namespace, realCatalog, realSchema,
-            realPrefix, null, this.onlyOneId, this.logicalDeletion, this.tenant,
+            realPrefix, null, this.onlyOneId, this.logicDelete, this.tenant,
             Strings.nvl(this.onlyOneId, this.idProperty, null), idColumn, versionColumn, deletionColumn,
             tenementColumn, idColumnSet, columnSet);
     }
@@ -274,12 +274,12 @@ public class TableBuilder extends AbstractBuilder implements Builder<Table> {
         return this;
     }
 
-    public boolean isLogicalDeletion() {
-        return logicalDeletion;
+    public boolean isLogicDelete() {
+        return logicDelete;
     }
 
-    public TableBuilder setLogicalDeletion(boolean logicalDeletion) {
-        this.logicalDeletion = logicalDeletion;
+    public TableBuilder setLogicDelete(boolean logicDelete) {
+        this.logicDelete = logicDelete;
         return this;
     }
 
@@ -319,12 +319,12 @@ public class TableBuilder extends AbstractBuilder implements Builder<Table> {
         return this;
     }
 
-    public ColumnBuilder getLogicalDeletionColumn() {
-        return logicalDeletionColumn;
+    public ColumnBuilder getLogicDeleteColumn() {
+        return logicDeleteColumn;
     }
 
-    public TableBuilder setLogicalDeletionColumn(ColumnBuilder logicalDeletionColumn) {
-        this.logicalDeletionColumn = logicalDeletionColumn;
+    public TableBuilder setLogicDeleteColumn(ColumnBuilder logicDeleteColumn) {
+        this.logicDeleteColumn = logicDeleteColumn;
         return this;
     }
 

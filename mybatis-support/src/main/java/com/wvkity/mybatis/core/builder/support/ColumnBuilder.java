@@ -152,39 +152,39 @@ public class ColumnBuilder extends AbstractBuilder implements Builder<Column> {
     /**
      * 是否为保存操作时间自动填充标识
      */
-    private boolean createdTimeAudit;
+    private boolean createdDate;
     /**
      * 是否为保存操作用户ID自动填充标识
      */
-    private boolean createdUserIdAudit;
+    private boolean createdUserId;
     /**
      * 是否为保存操作用户名自动填充标识
      */
-    private boolean createdUserNameAudit;
+    private boolean createdUserName;
     /**
      * 是否为更新操作时间自动填充标识
      */
-    private boolean modifiedTimeAudit;
+    private boolean lastModifiedDate;
     /**
      * 是否为更新操作用户ID自动填充标识
      */
-    private boolean modifiedUserIdAudit;
+    private boolean lastModifiedUserId;
     /**
      * 是否为更新操作用户名自动填充标识
      */
-    private boolean modifiedUserNameAudit;
+    private boolean lastModifiedUserName;
     /**
      * 是否为删除操作时间自动填充标识
      */
-    private boolean deletedTimeAudit;
+    private boolean logicDeletedDate;
     /**
      * 是否为删除操作用户ID自动填充标识
      */
-    private boolean deletedUserIdAudit;
+    private boolean logicDeletedUserId;
     /**
      * 是否为删除操作用户名自动填充标识
      */
-    private boolean deletedUserNameAudit;
+    private boolean logicDeletedUserName;
     /**
      * boolean类型属性对应表字段自动添加IS前缀
      */
@@ -192,7 +192,7 @@ public class ColumnBuilder extends AbstractBuilder implements Builder<Column> {
     /**
      * 是否为逻辑删除标识
      */
-    private boolean logicalDeletion;
+    private boolean logicalDelete;
     /**
      * 已删除标识值
      */
@@ -207,7 +207,7 @@ public class ColumnBuilder extends AbstractBuilder implements Builder<Column> {
      * @return boolean
      */
     public boolean canAuditing() {
-        return !this.version && !this.logicalDeletion && !this.tenant;
+        return !this.version && !this.logicalDelete && !this.tenant;
     }
 
     @Override
@@ -216,15 +216,15 @@ public class ColumnBuilder extends AbstractBuilder implements Builder<Column> {
             this.property, this.field.getGetter(), this.field.getSetter());
         final PrimaryKey primaryKey = new PrimaryKey(this.priority, this.uuid, this.identity, this.snowflake,
             this.generator, this.executing);
-        final Auditor auditor = new Auditor(this.version, this.tenant, this.createdTimeAudit,
-            this.createdUserIdAudit, this.createdUserNameAudit, this.modifiedTimeAudit,
-            this.modifiedUserIdAudit, this.modifiedUserNameAudit, this.deletedTimeAudit,
-            this.deletedUserIdAudit, this.deletedUserNameAudit, this.logicalDeletion,
+        final Auditor auditor = new Auditor(this.version, this.tenant, this.createdDate,
+            this.createdUserId, this.createdUserName, this.lastModifiedDate,
+            this.lastModifiedUserId, this.lastModifiedUserName, this.logicDeletedDate,
+            this.logicDeletedUserId, this.logicDeletedUserName, this.logicalDelete,
             this.deletedValue, this.undeletedValue);
         return new Column(this.entity, this.property, handleColumnName(), this.jdbcType, this.typeHandler,
             this.javaType, this.sequence, this.primaryKey, this.blob, this.insertable, this.updatable,
             this.useJavaType, this.checkNotNull, this.checkNotEmpty, this.version, this.tenant,
-            this.logicalDeletion, descriptor, primaryKey, auditor);
+            this.logicalDelete, descriptor, primaryKey, auditor);
     }
 
     /**
@@ -513,84 +513,84 @@ public class ColumnBuilder extends AbstractBuilder implements Builder<Column> {
         return this;
     }
 
-    public boolean isCreatedTimeAudit() {
-        return createdTimeAudit;
+    public boolean isCreatedDate() {
+        return createdDate;
     }
 
-    public ColumnBuilder setCreatedTimeAudit(boolean createdTimeAudit) {
-        this.createdTimeAudit = createdTimeAudit;
+    public ColumnBuilder setCreatedDate(boolean createdDate) {
+        this.createdDate = createdDate;
         return this;
     }
 
-    public boolean isCreatedUserIdAudit() {
-        return createdUserIdAudit;
+    public boolean isCreatedUserId() {
+        return createdUserId;
     }
 
-    public ColumnBuilder setCreatedUserIdAudit(boolean createdUserIdAudit) {
-        this.createdUserIdAudit = createdUserIdAudit;
+    public ColumnBuilder setCreatedUserId(boolean createdUserId) {
+        this.createdUserId = createdUserId;
         return this;
     }
 
-    public boolean isCreatedUserNameAudit() {
-        return createdUserNameAudit;
+    public boolean isCreatedUserName() {
+        return createdUserName;
     }
 
-    public ColumnBuilder setCreatedUserNameAudit(boolean createdUserNameAudit) {
-        this.createdUserNameAudit = createdUserNameAudit;
+    public ColumnBuilder setCreatedUserName(boolean createdUserName) {
+        this.createdUserName = createdUserName;
         return this;
     }
 
-    public boolean isModifiedTimeAudit() {
-        return modifiedTimeAudit;
+    public boolean isLastModifiedDate() {
+        return lastModifiedDate;
     }
 
-    public ColumnBuilder setModifiedTimeAudit(boolean modifiedTimeAudit) {
-        this.modifiedTimeAudit = modifiedTimeAudit;
+    public ColumnBuilder setLastModifiedDate(boolean lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
         return this;
     }
 
-    public boolean isModifiedUserIdAudit() {
-        return modifiedUserIdAudit;
+    public boolean isLastModifiedUserId() {
+        return lastModifiedUserId;
     }
 
-    public ColumnBuilder setModifiedUserIdAudit(boolean modifiedUserIdAudit) {
-        this.modifiedUserIdAudit = modifiedUserIdAudit;
+    public ColumnBuilder setLastModifiedUserId(boolean lastModifiedUserId) {
+        this.lastModifiedUserId = lastModifiedUserId;
         return this;
     }
 
-    public boolean isModifiedUserNameAudit() {
-        return modifiedUserNameAudit;
+    public boolean isLastModifiedUserName() {
+        return lastModifiedUserName;
     }
 
-    public ColumnBuilder setModifiedUserNameAudit(boolean modifiedUserNameAudit) {
-        this.modifiedUserNameAudit = modifiedUserNameAudit;
+    public ColumnBuilder setLastModifiedUserName(boolean lastModifiedUserName) {
+        this.lastModifiedUserName = lastModifiedUserName;
         return this;
     }
 
-    public boolean isDeletedTimeAudit() {
-        return deletedTimeAudit;
+    public boolean isLogicDeletedDate() {
+        return logicDeletedDate;
     }
 
-    public ColumnBuilder setDeletedTimeAudit(boolean deletedTimeAudit) {
-        this.deletedTimeAudit = deletedTimeAudit;
+    public ColumnBuilder setLogicDeletedDate(boolean logicDeletedDate) {
+        this.logicDeletedDate = logicDeletedDate;
         return this;
     }
 
-    public boolean isDeletedUserIdAudit() {
-        return deletedUserIdAudit;
+    public boolean isLogicDeletedUserId() {
+        return logicDeletedUserId;
     }
 
-    public ColumnBuilder setDeletedUserIdAudit(boolean deletedUserIdAudit) {
-        this.deletedUserIdAudit = deletedUserIdAudit;
+    public ColumnBuilder setLogicDeletedUserId(boolean logicDeletedUserId) {
+        this.logicDeletedUserId = logicDeletedUserId;
         return this;
     }
 
-    public boolean isDeletedUserNameAudit() {
-        return deletedUserNameAudit;
+    public boolean isLogicDeletedUserName() {
+        return logicDeletedUserName;
     }
 
-    public ColumnBuilder setDeletedUserNameAudit(boolean deletedUserNameAudit) {
-        this.deletedUserNameAudit = deletedUserNameAudit;
+    public ColumnBuilder setLogicDeletedUserName(boolean logicDeletedUserName) {
+        this.logicDeletedUserName = logicDeletedUserName;
         return this;
     }
 
@@ -603,12 +603,12 @@ public class ColumnBuilder extends AbstractBuilder implements Builder<Column> {
         return this;
     }
 
-    public boolean isLogicalDeletion() {
-        return logicalDeletion;
+    public boolean isLogicalDelete() {
+        return logicalDelete;
     }
 
-    public ColumnBuilder setLogicalDeletion(boolean logicalDeletion) {
-        this.logicalDeletion = logicalDeletion;
+    public ColumnBuilder setLogicalDelete(boolean logicalDelete) {
+        this.logicalDelete = logicalDelete;
         return this;
     }
 

@@ -390,14 +390,14 @@ public class DefaultEntityParser implements EntityParser, Constants {
         if (field.isAnnotationPresent(LogicalDeletion.class)
             || Objects.equals(logicalDeletedProperty, cb.getProperty())) {
             // 检查是否已存在逻辑删除属性
-            if (tb.isLogicalDeletion()) {
-                throw new MyBatisParserException("There are already \"" + tb.getLogicalDeletionColumn()
+            if (tb.isLogicDelete()) {
+                throw new MyBatisParserException("There are already \"" + tb.getLogicDeleteColumn()
                     .getProperty() + "\" attributes in \"" + tb.getEntity().getName()
                     + "\" entity class identified as logical deleted. Only one deleted attribute " +
                     "can exist in an entity class. Please check the entity class attributes.");
             }
-            cb.setLogicalDeletion(true);
-            tb.setLogicalDeletion(true).setLogicalDeletionColumn(cb);
+            cb.setLogicalDelete(true);
+            tb.setLogicDelete(true).setLogicDeleteColumn(cb);
             final LogicalDeletion deletion = field.getAnnotation(LogicalDeletion.class);
             final String deletedValue;
             final String undeletedValue;
@@ -550,27 +550,27 @@ public class DefaultEntityParser implements EntityParser, Constants {
         final boolean isAutoScan = configuration.isAuditPropertyAutoScan();
         if (insertable) {
             // 保存审计
-            cb.setCreatedUserIdAudit(AuditParser.matchingWithId(field, isAutoScan,
+            cb.setCreatedUserId(AuditParser.matchingWithId(field, isAutoScan,
                 AuditStrategy.INSERTED, CreatedUserId.class));
-            cb.setCreatedUserNameAudit(AuditParser.matchingWithName(field, isAutoScan,
+            cb.setCreatedUserName(AuditParser.matchingWithName(field, isAutoScan,
                 AuditStrategy.INSERTED, CreatedUserName.class));
-            cb.setCreatedTimeAudit(AuditParser.matchingWithTime(field, isAutoScan,
+            cb.setCreatedDate(AuditParser.matchingWithTime(field, isAutoScan,
                 AuditStrategy.INSERTED, CreatedTime.class));
         }
         if (updatable) {
             // 更新审计
-            cb.setModifiedUserIdAudit(AuditParser.matchingWithId(field, isAutoScan,
+            cb.setLastModifiedUserId(AuditParser.matchingWithId(field, isAutoScan,
                 AuditStrategy.MODIFIED, ModifiedUserId.class));
-            cb.setModifiedUserNameAudit(AuditParser.matchingWithName(field, isAutoScan,
+            cb.setLastModifiedUserName(AuditParser.matchingWithName(field, isAutoScan,
                 AuditStrategy.MODIFIED, ModifiedUserName.class));
-            cb.setModifiedUserIdAudit(AuditParser.matchingWithTime(field, isAutoScan,
+            cb.setLastModifiedUserId(AuditParser.matchingWithTime(field, isAutoScan,
                 AuditStrategy.MODIFIED, ModifiedTime.class));
             // 逻辑删除审计
-            cb.setDeletedUserIdAudit(AuditParser.matchingWithId(field, isAutoScan,
+            cb.setLogicDeletedUserId(AuditParser.matchingWithId(field, isAutoScan,
                 AuditStrategy.DELETED, DeletedUserId.class));
-            cb.setDeletedUserNameAudit(AuditParser.matchingWithName(field, isAutoScan,
+            cb.setLogicDeletedUserName(AuditParser.matchingWithName(field, isAutoScan,
                 AuditStrategy.DELETED, DeletedUserName.class));
-            cb.setDeletedTimeAudit(AuditParser.matchingWithTime(field, isAutoScan,
+            cb.setLogicDeletedDate(AuditParser.matchingWithTime(field, isAutoScan,
                 AuditStrategy.DELETED, DeletedTime.class));
         }
     }
