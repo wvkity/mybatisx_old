@@ -1,0 +1,12 @@
+dependencies {
+    api project(':mybatis-auditable-plugin')
+    implementation "${libs["spring-context"]}"
+    implementation "${libs["springboot-autoconfigure"]}"
+    implementation(enforcedPlatform("${libs["springboot-dependencies"]}" as String))
+    implementation "${libs["springboot-autoconfigure-processor"]}"
+    implementation "${libs["springboot-configuration-processor"]}"
+    annotationProcessor "${libs["springboot-autoconfigure-processor"]}:${springBoot}"
+    annotationProcessor "${libs["springboot-configuration-processor"]}:${springBoot}"
+}
+
+compileJava.dependsOn(processResources)
