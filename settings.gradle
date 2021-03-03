@@ -22,6 +22,7 @@ gradleEnterprise {
 rootProject.name = 'mybatis'
 include 'result'
 include 'mybatis-annotation'
+include 'mybatis-basic'
 include 'mybatis-support'
 include 'mybatis-core'
 include 'mybatis-extension'
