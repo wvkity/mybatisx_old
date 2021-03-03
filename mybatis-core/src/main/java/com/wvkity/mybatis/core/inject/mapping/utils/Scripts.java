@@ -15,12 +15,12 @@
  */
 package com.wvkity.mybatis.core.inject.mapping.utils;
 
-import com.wvkity.mybatis.core.constant.Constants;
-import com.wvkity.mybatis.core.constant.Operation;
-import com.wvkity.mybatis.core.constant.Slot;
-import com.wvkity.mybatis.core.constant.Symbol;
-import com.wvkity.mybatis.core.metadata.Column;
-import com.wvkity.mybatis.core.utils.Objects;
+import com.wvkity.mybatis.basic.constant.Constants;
+import com.wvkity.mybatis.basic.metadata.Column;
+import com.wvkity.mybatis.basic.utils.Objects;
+import com.wvkity.mybatis.support.constant.Operation;
+import com.wvkity.mybatis.support.constant.Slot;
+import com.wvkity.mybatis.support.constant.Symbol;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.UnknownTypeHandler;

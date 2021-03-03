@@ -15,12 +15,12 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
-import com.wvkity.mybatis.core.condition.basic.Matched;
-import com.wvkity.mybatis.core.condition.criteria.Criteria;
+import com.wvkity.mybatis.basic.utils.Objects;
+import com.wvkity.mybatis.support.condition.basic.Matched;
+import com.wvkity.mybatis.support.condition.criteria.Criteria;
 import com.wvkity.mybatis.core.condition.expression.builder.AbstractBasicExprBuilder;
-import com.wvkity.mybatis.core.constant.Slot;
-import com.wvkity.mybatis.core.constant.Symbol;
-import com.wvkity.mybatis.core.utils.Objects;
+import com.wvkity.mybatis.support.constant.Slot;
+import com.wvkity.mybatis.support.constant.Symbol;
 
 /**
  * 小于条件表达式

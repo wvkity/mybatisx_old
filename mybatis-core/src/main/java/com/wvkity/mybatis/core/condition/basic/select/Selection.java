@@ -15,8 +15,8 @@
  */
 package com.wvkity.mybatis.core.condition.basic.select;
 
-import com.wvkity.mybatis.core.condition.basic.Matched;
-import com.wvkity.mybatis.core.segment.Fragment;
+import com.wvkity.mybatis.support.condition.basic.Matched;
+import com.wvkity.mybatis.support.segment.Fragment;
 
 /**
  * 查询列接口

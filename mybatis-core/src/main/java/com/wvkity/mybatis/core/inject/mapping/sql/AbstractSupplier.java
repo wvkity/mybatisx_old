@@ -15,12 +15,14 @@
  */
 package com.wvkity.mybatis.core.inject.mapping.sql;
 
-import com.wvkity.mybatis.core.config.MyBatisGlobalConfiguration;
-import com.wvkity.mybatis.core.constant.Constants;
+import com.wvkity.mybatis.basic.config.MyBatisGlobalConfiguration;
+import com.wvkity.mybatis.basic.constant.Constants;
+import com.wvkity.mybatis.basic.metadata.Column;
+import com.wvkity.mybatis.basic.metadata.Table;
+import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
-import com.wvkity.mybatis.core.metadata.Column;
-import com.wvkity.mybatis.core.metadata.Table;
-import com.wvkity.mybatis.core.utils.Objects;
+import com.wvkity.mybatis.support.condition.criteria.Criteria;
+import com.wvkity.mybatis.support.inject.mapping.sql.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,7 +97,7 @@ public abstract class AbstractSupplier implements Supplier, Constants {
     }
 
     /**
-     * {@link com.wvkity.mybatis.core.condition.criteria.Criteria Criteria}条件查询SQL语句
+     * {@link Criteria Criteria}条件查询SQL语句
      * @param whereSegment 条件部分
      * @return 完整查询SQL语句
      */
@@ -104,7 +106,7 @@ public abstract class AbstractSupplier implements Supplier, Constants {
     }
 
     /**
-     * {@link com.wvkity.mybatis.core.condition.criteria.Criteria Criteria}条件查询SQL语句
+     * {@link Criteria Criteria}条件查询SQL语句
      * @param selectSegment 查询部分
      * @param whereSegment  条件部分
      * @return 完整查询SQL语句

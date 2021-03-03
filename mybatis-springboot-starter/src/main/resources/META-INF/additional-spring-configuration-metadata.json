@@ -15,7 +15,7 @@
       "sourceType": "com.wvkity.mybatis.spring.boot.autoconfigure.MyBatisProperties",
       "name": "wvkity.mybatis.globalConfiguration",
       "sourceMethod": "getGlobalConfiguration()",
-      "type": "com.wvkity.mybatis.core.config.MyBatisGlobalConfiguration"
+      "type": "com.wvkity.mybatis.basic.config.MyBatisGlobalConfiguration"
     }
   ]
 }

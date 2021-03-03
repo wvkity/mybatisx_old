@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.core.condition.basic.builder;
 
-import com.wvkity.mybatis.core.builder.Builder;
+import com.wvkity.mybatis.basic.builder.Builder;
 import com.wvkity.mybatis.core.condition.basic.select.Selection;
 
 /**

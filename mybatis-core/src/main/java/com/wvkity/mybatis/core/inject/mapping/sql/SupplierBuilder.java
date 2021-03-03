@@ -15,6 +15,8 @@
  */
 package com.wvkity.mybatis.core.inject.mapping.sql;
 
+import com.wvkity.mybatis.support.inject.mapping.sql.Supplier;
+
 /**
  * SQL供应器对象构建器
  * @author wvkity

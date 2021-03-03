@@ -15,9 +15,12 @@
  */
 package com.wvkity.mybatis.core.inject;
 
-import com.wvkity.mybatis.core.config.MyBatisLocalConfigurationCache;
-import com.wvkity.mybatis.core.helper.TableHelper;
-import com.wvkity.mybatis.core.immutable.ImmutableSet;
+import com.wvkity.mybatis.basic.config.MyBatisLocalConfigurationCache;
+import com.wvkity.mybatis.basic.immutable.ImmutableSet;
+import com.wvkity.mybatis.basic.inject.Injector;
+import com.wvkity.mybatis.basic.metadata.Table;
+import com.wvkity.mybatis.basic.utils.Objects;
+import com.wvkity.mybatis.support.helper.TableHelper;
 import com.wvkity.mybatis.core.inject.method.MappedMethod;
 import com.wvkity.mybatis.core.inject.method.invoke.DeleteByIdInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.DeleteInvoker;
@@ -48,14 +51,12 @@ import com.wvkity.mybatis.core.inject.method.invoke.SelectPageableObjectListInvo
 import com.wvkity.mybatis.core.inject.method.invoke.SelectTotalInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.UpdateInvoker;
 import com.wvkity.mybatis.core.inject.method.invoke.UpdateWithNonNullInvoker;
-import com.wvkity.mybatis.core.mapper.DeleteMapper;
-import com.wvkity.mybatis.core.mapper.InsertMapper;
-import com.wvkity.mybatis.core.mapper.QueryMapper;
-import com.wvkity.mybatis.core.mapper.SameMapper;
-import com.wvkity.mybatis.core.mapper.SimpleMapper;
-import com.wvkity.mybatis.core.mapper.UpdateMapper;
-import com.wvkity.mybatis.core.metadata.Table;
-import com.wvkity.mybatis.core.utils.Objects;
+import com.wvkity.mybatis.support.mapper.DeleteMapper;
+import com.wvkity.mybatis.support.mapper.InsertMapper;
+import com.wvkity.mybatis.support.mapper.QueryMapper;
+import com.wvkity.mybatis.support.mapper.SameMapper;
+import com.wvkity.mybatis.support.mapper.SimpleMapper;
+import com.wvkity.mybatis.support.mapper.UpdateMapper;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

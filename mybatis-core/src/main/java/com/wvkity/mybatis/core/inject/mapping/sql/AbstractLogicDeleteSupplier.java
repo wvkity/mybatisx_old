@@ -15,8 +15,9 @@
  */
 package com.wvkity.mybatis.core.inject.mapping.sql;
 
-import com.wvkity.mybatis.core.config.MyBatisGlobalConfiguration;
-import com.wvkity.mybatis.core.metadata.Table;
+
+import com.wvkity.mybatis.basic.config.MyBatisGlobalConfiguration;
+import com.wvkity.mybatis.basic.metadata.Table;
 
 /**
  * 抽象逻辑删除SQL提供器

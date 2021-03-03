@@ -15,10 +15,10 @@
  */
 package com.wvkity.mybatis.core.condition.criteria;
 
-import com.wvkity.mybatis.core.constant.Constants;
-import com.wvkity.mybatis.core.constant.Slot;
-import com.wvkity.mybatis.core.segment.Fragment;
-import com.wvkity.mybatis.core.utils.Objects;
+import com.wvkity.mybatis.basic.constant.Constants;
+import com.wvkity.mybatis.basic.utils.Objects;
+import com.wvkity.mybatis.support.constant.Slot;
+import com.wvkity.mybatis.support.segment.Fragment;
 
 import java.util.List;
 import java.util.regex.Pattern;

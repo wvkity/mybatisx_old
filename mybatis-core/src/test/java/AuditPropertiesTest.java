@@ -14,9 +14,9 @@
  * the License.
  */
 
-import com.wvkity.mybatis.core.data.audit.AuditMatching;
-import com.wvkity.mybatis.core.data.audit.AuditStrategy;
-import com.wvkity.mybatis.core.data.audit.DefaultAuditProperties;
+import com.wvkity.mybatis.support.data.audit.AuditMatching;
+import com.wvkity.mybatis.support.data.audit.AuditStrategy;
+import com.wvkity.mybatis.support.data.audit.DefaultAuditProperties;
 import org.junit.jupiter.api.Test;
 
 /**

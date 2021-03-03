@@ -15,11 +15,11 @@
  */
 package com.wvkity.mybatis.core.condition.basic.builder;
 
+import com.wvkity.mybatis.basic.metadata.Column;
+import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.core.condition.basic.select.Selection;
 import com.wvkity.mybatis.core.condition.criteria.CriteriaWrapper;
 import com.wvkity.mybatis.core.property.Property;
-import com.wvkity.mybatis.core.metadata.Column;
-import com.wvkity.mybatis.core.utils.Objects;
 
 /**
  * 抽象查询列构建器

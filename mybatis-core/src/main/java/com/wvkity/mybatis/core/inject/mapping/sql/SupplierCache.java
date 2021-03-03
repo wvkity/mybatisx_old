@@ -15,8 +15,9 @@
  */
 package com.wvkity.mybatis.core.inject.mapping.sql;
 
-import com.wvkity.mybatis.core.reflect.Reflections;
-import com.wvkity.mybatis.core.utils.Objects;
+import com.wvkity.mybatis.basic.reflect.Reflections;
+import com.wvkity.mybatis.basic.utils.Objects;
+import com.wvkity.mybatis.support.inject.mapping.sql.Supplier;
 
 import java.util.Collections;
 import java.util.Map;

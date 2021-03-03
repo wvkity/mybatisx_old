@@ -15,8 +15,8 @@
  */
 package com.wvkity.mybatis.core.condition.criteria;
 
+import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.core.property.Property;
-import com.wvkity.mybatis.core.metadata.Column;
 
 /**
  * 字段查找接口

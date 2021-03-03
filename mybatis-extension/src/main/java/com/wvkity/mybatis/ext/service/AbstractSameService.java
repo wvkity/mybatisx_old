@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.ext.service;
 
-import com.wvkity.mybatis.core.mapper.SameMapper;
+import com.wvkity.mybatis.support.mapper.SameMapper;
 
 /**
  * 实体/返回值一样抽象Service类

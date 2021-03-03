@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.ext.service;
 
-import com.wvkity.mybatis.core.mapper.SimpleMapper;
+import com.wvkity.mybatis.support.mapper.SimpleMapper;
 
 /**
  * 实体/返回值一样，Serializable主键Service接口

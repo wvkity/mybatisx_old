@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.core.condition.expression.builder;
 
-import com.wvkity.mybatis.core.utils.Objects;
+import com.wvkity.mybatis.basic.utils.Objects;
 
 import java.util.Collection;
 

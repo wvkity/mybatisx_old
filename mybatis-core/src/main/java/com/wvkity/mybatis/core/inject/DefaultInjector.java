@@ -15,13 +15,14 @@
  */
 package com.wvkity.mybatis.core.inject;
 
-import com.wvkity.mybatis.core.immutable.ImmutableList;
+import com.wvkity.mybatis.basic.immutable.ImmutableList;
+import com.wvkity.mybatis.basic.inject.Injector;
 import com.wvkity.mybatis.core.inject.method.MappedMethod;
-import com.wvkity.mybatis.core.mapper.BaseMapper;
-import com.wvkity.mybatis.core.mapper.DeleteMapper;
-import com.wvkity.mybatis.core.mapper.InsertMapper;
-import com.wvkity.mybatis.core.mapper.QueryMapper;
-import com.wvkity.mybatis.core.mapper.UpdateMapper;
+import com.wvkity.mybatis.support.mapper.BaseMapper;
+import com.wvkity.mybatis.support.mapper.DeleteMapper;
+import com.wvkity.mybatis.support.mapper.InsertMapper;
+import com.wvkity.mybatis.support.mapper.QueryMapper;
+import com.wvkity.mybatis.support.mapper.UpdateMapper;
 
 import java.util.ArrayList;
 import java.util.Collection;

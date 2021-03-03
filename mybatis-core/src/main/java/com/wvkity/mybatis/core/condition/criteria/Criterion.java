@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.core.condition.criteria;
 
-import com.wvkity.mybatis.core.segment.Fragment;
+import com.wvkity.mybatis.support.segment.Fragment;
 
 /**
  * 条件

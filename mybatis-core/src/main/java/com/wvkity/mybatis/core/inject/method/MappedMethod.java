@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.core.inject.method;
 
-import com.wvkity.mybatis.core.metadata.Table;
+import com.wvkity.mybatis.basic.metadata.Table;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 
 /**

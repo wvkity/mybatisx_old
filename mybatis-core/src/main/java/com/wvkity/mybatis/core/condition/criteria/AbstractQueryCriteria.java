@@ -15,7 +15,10 @@
  */
 package com.wvkity.mybatis.core.condition.criteria;
 
-import com.wvkity.mybatis.core.condition.basic.Matched;
+import com.wvkity.mybatis.basic.constant.Constants;
+import com.wvkity.mybatis.basic.metadata.Column;
+import com.wvkity.mybatis.basic.utils.Objects;
+import com.wvkity.mybatis.support.condition.basic.Matched;
 import com.wvkity.mybatis.core.condition.basic.SelectManager;
 import com.wvkity.mybatis.core.condition.basic.group.Group;
 import com.wvkity.mybatis.core.condition.basic.group.StandardGroup;
@@ -23,13 +26,10 @@ import com.wvkity.mybatis.core.condition.basic.order.Order;
 import com.wvkity.mybatis.core.condition.basic.order.StandardOrder;
 import com.wvkity.mybatis.core.condition.basic.select.Selection;
 import com.wvkity.mybatis.core.condition.basic.select.StandardSelection;
-import com.wvkity.mybatis.core.constant.Constants;
-import com.wvkity.mybatis.core.helper.TableHelper;
-import com.wvkity.mybatis.core.metadata.Column;
+import com.wvkity.mybatis.support.helper.TableHelper;
 import com.wvkity.mybatis.core.plugin.paging.RangeFetch;
 import com.wvkity.mybatis.core.plugin.paging.RangeMode;
 import com.wvkity.mybatis.core.property.Property;
-import com.wvkity.mybatis.core.utils.Objects;
 import com.wvkity.mybatis.executor.resultset.EmbeddedResult;
 
 import java.util.Collection;

@@ -16,16 +16,16 @@
 package com.wvkity.mybatis.core.inject.method.support;
 
 import com.wvkity.mybatis.annotation.Executing;
-import com.wvkity.mybatis.core.config.MyBatisGlobalConfiguration;
-import com.wvkity.mybatis.core.config.MyBatisLocalConfigurationCache;
-import com.wvkity.mybatis.core.inject.mapping.sql.Supplier;
+import com.wvkity.mybatis.basic.config.MyBatisGlobalConfiguration;
+import com.wvkity.mybatis.basic.config.MyBatisLocalConfigurationCache;
+import com.wvkity.mybatis.basic.keygen.SequenceGenerator;
+import com.wvkity.mybatis.basic.metadata.Column;
+import com.wvkity.mybatis.basic.metadata.PrimaryKey;
+import com.wvkity.mybatis.basic.metadata.Table;
+import com.wvkity.mybatis.basic.utils.Objects;
+import com.wvkity.mybatis.support.inject.mapping.sql.Supplier;
 import com.wvkity.mybatis.core.inject.mapping.sql.SupplierBuilder;
 import com.wvkity.mybatis.core.inject.mapping.sql.SupplierCache;
-import com.wvkity.mybatis.core.keygen.SequenceGenerator;
-import com.wvkity.mybatis.core.metadata.Column;
-import com.wvkity.mybatis.core.metadata.PrimaryKey;
-import com.wvkity.mybatis.core.metadata.Table;
-import com.wvkity.mybatis.core.utils.Objects;
 import com.wvkity.mybatis.session.MyBatisConfiguration;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;

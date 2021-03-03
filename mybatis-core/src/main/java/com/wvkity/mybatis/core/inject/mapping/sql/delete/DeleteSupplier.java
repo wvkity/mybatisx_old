@@ -15,13 +15,13 @@
  */
 package com.wvkity.mybatis.core.inject.mapping.sql.delete;
 
-import com.wvkity.mybatis.core.config.MyBatisGlobalConfiguration;
-import com.wvkity.mybatis.core.constant.Slot;
-import com.wvkity.mybatis.core.constant.Operation;
-import com.wvkity.mybatis.core.constant.Symbol;
+import com.wvkity.mybatis.basic.config.MyBatisGlobalConfiguration;
+import com.wvkity.mybatis.basic.metadata.Table;
+import com.wvkity.mybatis.support.constant.Slot;
+import com.wvkity.mybatis.support.constant.Operation;
+import com.wvkity.mybatis.support.constant.Symbol;
 import com.wvkity.mybatis.core.inject.mapping.sql.AbstractSupplier;
 import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
-import com.wvkity.mybatis.core.metadata.Table;
 
 import java.util.stream.Collectors;
 

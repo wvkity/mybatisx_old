@@ -15,8 +15,8 @@
  */
 package com.wvkity.mybatis.core.inject.method.support;
 
-import com.wvkity.mybatis.core.inject.mapping.sql.Supplier;
-import com.wvkity.mybatis.core.metadata.Table;
+import com.wvkity.mybatis.basic.metadata.Table;
+import com.wvkity.mybatis.support.inject.mapping.sql.Supplier;
 import org.apache.ibatis.mapping.MappedStatement;
 
 /**

@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.spring.boot.autoconfigure;
 
-import com.wvkity.mybatis.core.config.MyBatisGlobalConfiguration;
+import com.wvkity.mybatis.basic.config.MyBatisGlobalConfiguration;
 import com.wvkity.mybatis.session.MyBatisConfiguration;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.ExecutorType;

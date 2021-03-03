@@ -15,7 +15,8 @@
  */
 package com.wvkity.mybatis.core.condition.expression.builder;
 
-import com.wvkity.mybatis.core.builder.Builder;
+
+import com.wvkity.mybatis.basic.builder.Builder;
 
 /**
  * 条件表达式构建器

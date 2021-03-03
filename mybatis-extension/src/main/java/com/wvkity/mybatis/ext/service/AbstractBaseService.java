@@ -15,11 +15,11 @@
  */
 package com.wvkity.mybatis.ext.service;
 
+import com.wvkity.mybatis.basic.reflect.Reflections;
+import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.core.batch.BatchDataWrapper;
-import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.mapper.BaseMapper;
-import com.wvkity.mybatis.core.reflect.Reflections;
-import com.wvkity.mybatis.core.utils.Objects;
+import com.wvkity.mybatis.support.condition.criteria.Criteria;
+import com.wvkity.mybatis.support.mapper.BaseMapper;
 import com.wvkity.mybatis.executor.resultset.EmbeddedResult;
 import com.wvkity.paging.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;

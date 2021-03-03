@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.core.inject.mapping.script;
 
-import com.wvkity.mybatis.core.utils.Objects;
+import com.wvkity.mybatis.basic.utils.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

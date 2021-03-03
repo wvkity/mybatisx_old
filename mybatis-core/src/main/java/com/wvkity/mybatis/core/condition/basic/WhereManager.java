@@ -15,11 +15,11 @@
  */
 package com.wvkity.mybatis.core.condition.basic;
 
+import com.wvkity.mybatis.basic.constant.Constants;
+import com.wvkity.mybatis.basic.immutable.ImmutableList;
+import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.core.condition.criteria.Criterion;
-import com.wvkity.mybatis.core.constant.Constants;
-import com.wvkity.mybatis.core.immutable.ImmutableList;
-import com.wvkity.mybatis.core.segment.AbstractFragmentList;
-import com.wvkity.mybatis.core.utils.Objects;
+import com.wvkity.mybatis.support.segment.AbstractFragmentList;
 
 import java.util.ArrayList;
 import java.util.List;

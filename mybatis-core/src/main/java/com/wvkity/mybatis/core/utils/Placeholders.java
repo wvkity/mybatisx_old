@@ -15,8 +15,9 @@
  */
 package com.wvkity.mybatis.core.utils;
 
+import com.wvkity.mybatis.basic.immutable.ImmutableMap;
+import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.core.condition.expression.TemplateMatch;
-import com.wvkity.mybatis.core.immutable.ImmutableMap;
 
 import java.util.ArrayList;
 import java.util.Collection;

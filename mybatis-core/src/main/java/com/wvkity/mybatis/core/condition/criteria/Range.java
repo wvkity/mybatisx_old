@@ -15,9 +15,9 @@
  */
 package com.wvkity.mybatis.core.condition.criteria;
 
-import com.wvkity.mybatis.core.constant.Slot;
+import com.wvkity.mybatis.basic.utils.Objects;
+import com.wvkity.mybatis.support.constant.Slot;
 import com.wvkity.mybatis.core.property.Property;
-import com.wvkity.mybatis.core.utils.Objects;
 
 import java.util.Collection;
 

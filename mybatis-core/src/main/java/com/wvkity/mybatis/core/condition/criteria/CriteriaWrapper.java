@@ -15,6 +15,8 @@
  */
 package com.wvkity.mybatis.core.condition.criteria;
 
+import com.wvkity.mybatis.support.condition.criteria.Criteria;
+
 /**
  * 条件接口包装器
  * @param <T>     泛型类

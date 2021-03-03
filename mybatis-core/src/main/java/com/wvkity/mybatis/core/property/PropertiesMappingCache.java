@@ -15,11 +15,11 @@
  */
 package com.wvkity.mybatis.core.property;
 
-import com.wvkity.mybatis.core.helper.TableHelper;
+import com.wvkity.mybatis.basic.metadata.Column;
+import com.wvkity.mybatis.basic.reflect.Reflections;
+import com.wvkity.mybatis.basic.utils.Objects;
+import com.wvkity.mybatis.support.helper.TableHelper;
 import com.wvkity.mybatis.core.invoke.SerializedLambda;
-import com.wvkity.mybatis.core.metadata.Column;
-import com.wvkity.mybatis.core.reflect.Reflections;
-import com.wvkity.mybatis.core.utils.Objects;
 
 import java.lang.ref.WeakReference;
 import java.util.Map;

@@ -15,9 +15,9 @@
  */
 package com.wvkity.mybatis.core.inject.method.invoke;
 
+import com.wvkity.mybatis.basic.metadata.Table;
 import com.wvkity.mybatis.core.inject.mapping.sql.select.ExistsByIdSupplier;
 import com.wvkity.mybatis.core.inject.method.support.AbstractSelectMethod;
-import com.wvkity.mybatis.core.metadata.Table;
 import org.apache.ibatis.mapping.MappedStatement;
 
 /**

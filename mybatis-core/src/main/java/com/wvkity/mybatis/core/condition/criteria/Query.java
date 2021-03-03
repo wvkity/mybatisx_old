@@ -15,8 +15,8 @@
  */
 package com.wvkity.mybatis.core.condition.criteria;
 
+import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.core.condition.basic.SegmentManager;
-import com.wvkity.mybatis.core.utils.Objects;
 
 /**
  * 查询条件

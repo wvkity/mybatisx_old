@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.ext.service;
 
-import com.wvkity.mybatis.core.mapper.SimpleMapper;
+import com.wvkity.mybatis.support.mapper.SimpleMapper;
 
 import java.io.Serializable;
 

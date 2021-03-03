@@ -15,8 +15,8 @@
  */
 package com.wvkity.mybatis.core.condition.expression;
 
-import com.wvkity.mybatis.core.condition.basic.Matched;
-import com.wvkity.mybatis.core.utils.Objects;
+import com.wvkity.mybatis.basic.utils.Objects;
+import com.wvkity.mybatis.support.condition.basic.Matched;
 
 /**
  * 纯SQL

@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.core.condition.basic.order;
 
-import com.wvkity.mybatis.core.segment.Fragment;
+import com.wvkity.mybatis.support.segment.Fragment;
 
 /**
  * 排序

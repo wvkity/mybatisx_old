@@ -15,8 +15,9 @@
  */
 package com.wvkity.mybatis.core.condition.criteria;
 
-import com.wvkity.mybatis.core.constant.Constants;
-import com.wvkity.mybatis.core.utils.Objects;
+import com.wvkity.mybatis.basic.constant.Constants;
+import com.wvkity.mybatis.basic.utils.Objects;
+import com.wvkity.mybatis.support.condition.criteria.Criteria;
 
 /**
  * 条件

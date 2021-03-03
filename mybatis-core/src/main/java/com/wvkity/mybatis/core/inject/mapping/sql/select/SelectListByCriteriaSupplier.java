@@ -15,8 +15,8 @@
  */
 package com.wvkity.mybatis.core.inject.mapping.sql.select;
 
-import com.wvkity.mybatis.core.config.MyBatisGlobalConfiguration;
-import com.wvkity.mybatis.core.metadata.Table;
+import com.wvkity.mybatis.basic.config.MyBatisGlobalConfiguration;
+import com.wvkity.mybatis.basic.metadata.Table;
 
 /**
  * {@code selectListByCriteria}方法SQL提供器

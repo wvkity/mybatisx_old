@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.core.condition.expression.builder;
 
-import com.wvkity.mybatis.core.constant.LikeMode;
+import com.wvkity.mybatis.support.constant.LikeMode;
 
 /**
  * 抽象模糊匹配条件表达式构建器

@@ -15,11 +15,11 @@
  */
 package com.wvkity.mybatis.core.condition.basic;
 
+import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.core.condition.basic.group.Group;
 import com.wvkity.mybatis.core.condition.basic.order.Order;
 import com.wvkity.mybatis.core.condition.criteria.Criterion;
-import com.wvkity.mybatis.core.segment.Fragment;
-import com.wvkity.mybatis.core.utils.Objects;
+import com.wvkity.mybatis.support.segment.Fragment;
 
 import java.util.Collection;
 import java.util.List;

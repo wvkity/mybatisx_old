@@ -15,14 +15,14 @@
  */
 package com.wvkity.mybatis.core.inject.method.support;
 
-import com.wvkity.mybatis.core.config.MyBatisGlobalConfiguration;
-import com.wvkity.mybatis.core.config.MyBatisLocalConfigurationCache;
+import com.wvkity.mybatis.basic.config.MyBatisGlobalConfiguration;
+import com.wvkity.mybatis.basic.config.MyBatisLocalConfigurationCache;
+import com.wvkity.mybatis.basic.metadata.Table;
+import com.wvkity.mybatis.basic.utils.Objects;
+import com.wvkity.mybatis.basic.utils.Strings;
 import com.wvkity.mybatis.core.inject.mapping.script.ScriptBuilder;
-import com.wvkity.mybatis.core.inject.mapping.sql.Supplier;
+import com.wvkity.mybatis.support.inject.mapping.sql.Supplier;
 import com.wvkity.mybatis.core.inject.method.MappedMethod;
-import com.wvkity.mybatis.core.metadata.Table;
-import com.wvkity.mybatis.core.utils.Objects;
-import com.wvkity.mybatis.core.utils.Strings;
 import com.wvkity.mybatis.session.MyBatisConfiguration;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.executor.keygen.KeyGenerator;

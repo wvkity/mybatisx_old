@@ -15,13 +15,14 @@
  */
 package com.wvkity.mybatis.core.inject.mapping.sql;
 
-import com.wvkity.mybatis.core.config.MyBatisGlobalConfiguration;
-import com.wvkity.mybatis.core.constant.Constants;
+import com.wvkity.mybatis.basic.config.MyBatisGlobalConfiguration;
+import com.wvkity.mybatis.basic.constant.Constants;
+import com.wvkity.mybatis.basic.metadata.Table;
 import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
-import com.wvkity.mybatis.core.metadata.Table;
+import com.wvkity.mybatis.support.condition.criteria.Criteria;
 
 /**
- * 抽象{@link com.wvkity.mybatis.core.condition.criteria.Criteria Criteria}相关SQL供应器
+ * 抽象{@link Criteria Criteria}相关SQL供应器
  * @author wvkity
  * @created 2021-02-02
  * @since 1.0.0

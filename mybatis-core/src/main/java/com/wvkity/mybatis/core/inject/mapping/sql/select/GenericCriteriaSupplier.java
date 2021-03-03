@@ -15,12 +15,13 @@
  */
 package com.wvkity.mybatis.core.inject.mapping.sql.select;
 
-import com.wvkity.mybatis.core.config.MyBatisGlobalConfiguration;
+import com.wvkity.mybatis.basic.config.MyBatisGlobalConfiguration;
+import com.wvkity.mybatis.basic.metadata.Table;
 import com.wvkity.mybatis.core.inject.mapping.sql.AbstractCriteriaSupplier;
-import com.wvkity.mybatis.core.metadata.Table;
+import com.wvkity.mybatis.support.condition.criteria.Criteria;
 
 /**
- * 通用{@link com.wvkity.mybatis.core.condition.criteria.Criteria Criteria}相关SQL供应器
+ * 通用{@link Criteria Criteria}相关SQL供应器
  * @author wvkity
  * @created 2021-02-03
  * @since 1.0.0

@@ -15,8 +15,8 @@
  */
 package com.wvkity.mybatis.core.condition.basic.order;
 
-import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.utils.Objects;
+import com.wvkity.mybatis.basic.utils.Objects;
+import com.wvkity.mybatis.support.condition.criteria.Criteria;
 
 import java.util.List;
 

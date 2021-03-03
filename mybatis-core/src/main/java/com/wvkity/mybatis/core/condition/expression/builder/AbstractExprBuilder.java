@@ -15,8 +15,8 @@
  */
 package com.wvkity.mybatis.core.condition.expression.builder;
 
-import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.constant.Slot;
+import com.wvkity.mybatis.support.condition.criteria.Criteria;
+import com.wvkity.mybatis.support.constant.Slot;
 
 /**
  * 抽象表达式构建器

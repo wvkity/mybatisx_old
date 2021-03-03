@@ -15,11 +15,11 @@
  */
 package com.wvkity.mybatis.core.condition.basic.select;
 
-import com.wvkity.mybatis.core.condition.basic.Matched;
-import com.wvkity.mybatis.core.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.constant.Constants;
+import com.wvkity.mybatis.basic.constant.Constants;
+import com.wvkity.mybatis.basic.utils.Objects;
+import com.wvkity.mybatis.support.condition.basic.Matched;
+import com.wvkity.mybatis.support.condition.criteria.Criteria;
 import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
-import com.wvkity.mybatis.core.utils.Objects;
 
 import java.util.Optional;
 

@@ -16,7 +16,7 @@
 package com.wvkity.mybatis.core.condition.basic.builder;
 
 import com.wvkity.mybatis.core.condition.basic.select.Selection;
-import com.wvkity.mybatis.core.condition.criteria.Criteria;
+import com.wvkity.mybatis.support.condition.criteria.Criteria;
 
 /**
  * 抽象查询列构建器

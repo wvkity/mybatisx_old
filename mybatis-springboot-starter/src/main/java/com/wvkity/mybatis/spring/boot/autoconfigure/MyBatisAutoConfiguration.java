@@ -15,9 +15,9 @@
  */
 package com.wvkity.mybatis.spring.boot.autoconfigure;
 
-import com.wvkity.mybatis.core.config.MyBatisGlobalConfiguration;
-import com.wvkity.mybatis.core.config.MyBatisLocalConfigurationCache;
-import com.wvkity.mybatis.core.utils.Objects;
+import com.wvkity.mybatis.basic.config.MyBatisGlobalConfiguration;
+import com.wvkity.mybatis.basic.config.MyBatisLocalConfigurationCache;
+import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.session.MyBatisConfiguration;
 import com.wvkity.mybatis.spring.MyBatisSqlSessionFactoryBean;
 import org.apache.ibatis.annotations.Mapper;

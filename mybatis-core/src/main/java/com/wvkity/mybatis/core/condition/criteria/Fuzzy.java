@@ -15,8 +15,8 @@
  */
 package com.wvkity.mybatis.core.condition.criteria;
 
-import com.wvkity.mybatis.core.constant.LikeMode;
-import com.wvkity.mybatis.core.constant.Slot;
+import com.wvkity.mybatis.support.constant.LikeMode;
+import com.wvkity.mybatis.support.constant.Slot;
 import com.wvkity.mybatis.core.property.Property;
 
 /**

@@ -15,10 +15,10 @@
  */
 package com.wvkity.mybatis.core.condition.basic;
 
+import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.core.condition.basic.group.Group;
-import com.wvkity.mybatis.core.constant.Constants;
-import com.wvkity.mybatis.core.segment.AbstractFragmentList;
-import com.wvkity.mybatis.core.segment.Fragment;
+import com.wvkity.mybatis.support.segment.AbstractFragmentList;
+import com.wvkity.mybatis.support.segment.Fragment;
 
 import java.util.stream.Collectors;
 

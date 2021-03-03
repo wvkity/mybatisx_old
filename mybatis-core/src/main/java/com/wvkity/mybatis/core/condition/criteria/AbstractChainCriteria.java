@@ -15,12 +15,12 @@
  */
 package com.wvkity.mybatis.core.condition.criteria;
 
+import com.wvkity.mybatis.basic.exception.MyBatisException;
+import com.wvkity.mybatis.basic.metadata.Column;
+import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.core.property.PropertiesMappingCache;
 import com.wvkity.mybatis.core.property.Property;
-import com.wvkity.mybatis.core.exception.MyBatisException;
 import com.wvkity.mybatis.core.invoke.SerializedLambda;
-import com.wvkity.mybatis.core.metadata.Column;
-import com.wvkity.mybatis.core.utils.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.ext.service;
 
-import com.wvkity.mybatis.core.mapper.BaseMapper;
+import com.wvkity.mybatis.support.mapper.BaseMapper;
 
 /**
  * 基础Service接口

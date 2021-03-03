@@ -15,14 +15,14 @@
  */
 package com.wvkity.mybatis.spring;
 
+import com.wvkity.mybatis.basic.config.MyBatisGlobalConfiguration;
+import com.wvkity.mybatis.basic.config.MyBatisLocalConfigurationCache;
+import com.wvkity.mybatis.basic.inject.Injector;
+import com.wvkity.mybatis.basic.parser.EntityParser;
+import com.wvkity.mybatis.basic.parser.FieldParser;
+import com.wvkity.mybatis.basic.type.JdbcTypeMappingRegistry;
 import com.wvkity.mybatis.builder.xml.MyBatisXMLConfigBuilder;
-import com.wvkity.mybatis.core.config.MyBatisGlobalConfiguration;
-import com.wvkity.mybatis.core.config.MyBatisLocalConfigurationCache;
-import com.wvkity.mybatis.core.inject.Injector;
-import com.wvkity.mybatis.core.parser.EntityParser;
-import com.wvkity.mybatis.core.parser.FieldParser;
 import com.wvkity.sequence.Sequence;
-import com.wvkity.mybatis.core.type.JdbcTypeMappingRegistry;
 import com.wvkity.mybatis.session.MyBatisConfiguration;
 import com.wvkity.mybatis.session.MyBatisSqlSessionFactoryBuilder;
 import com.wvkity.mybatis.spring.comparator.AnnotationAwareInterceptorOrderComparator;

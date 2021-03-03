@@ -15,8 +15,9 @@
  */
 package com.wvkity.mybatis.core.condition.criteria;
 
-import com.wvkity.mybatis.core.condition.expression.Expression;
-import com.wvkity.mybatis.core.utils.Objects;
+import com.wvkity.mybatis.basic.utils.Objects;
+import com.wvkity.mybatis.support.condition.criteria.Criteria;
+import com.wvkity.mybatis.support.condition.expression.Expression;
 
 import java.util.List;
 import java.util.function.Function;
