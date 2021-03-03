@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.builder.annotation;
 
-import com.wvkity.mybatis.core.config.MyBatisLocalConfigurationCache;
+import com.wvkity.mybatis.basic.config.MyBatisLocalConfigurationCache;
 import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.CacheNamespaceRef;

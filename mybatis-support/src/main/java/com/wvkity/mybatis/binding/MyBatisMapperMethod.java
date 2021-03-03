@@ -15,8 +15,8 @@
  */
 package com.wvkity.mybatis.binding;
 
-import com.wvkity.mybatis.core.constant.Constants;
-import com.wvkity.mybatis.core.utils.Objects;
+import com.wvkity.mybatis.basic.constant.Constants;
+import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.executor.resultset.EmbeddedResult;
 import org.apache.ibatis.annotations.Flush;
 import org.apache.ibatis.annotations.MapKey;

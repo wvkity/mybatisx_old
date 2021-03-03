@@ -15,8 +15,8 @@
  */
 package com.wvkity.mybatis.executor.resultset;
 
-import com.wvkity.mybatis.core.constant.Constants;
-import com.wvkity.mybatis.core.utils.Objects;
+import com.wvkity.mybatis.basic.constant.Constants;
+import com.wvkity.mybatis.basic.utils.Objects;
 import org.apache.ibatis.annotations.AutomapConstructor;
 import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.cache.CacheKey;

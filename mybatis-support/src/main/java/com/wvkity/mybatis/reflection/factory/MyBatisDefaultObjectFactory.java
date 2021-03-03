@@ -15,8 +15,8 @@
  */
 package com.wvkity.mybatis.reflection.factory;
 
-import com.wvkity.mybatis.core.config.MyBatisGlobalConfiguration;
-import com.wvkity.mybatis.core.utils.Objects;
+import com.wvkity.mybatis.basic.config.MyBatisGlobalConfiguration;
+import com.wvkity.mybatis.basic.utils.Objects;
 import org.apache.ibatis.reflection.ReflectionException;
 import org.apache.ibatis.reflection.Reflector;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
@@ -97,7 +97,8 @@ public class MyBatisDefaultObjectFactory implements ObjectFactory, Serializable 
                 .stream().map(Class::getSimpleName).collect(Collectors.joining(","));
             String argValues = Optional.ofNullable(constructorArgs).orElseGet(Collections::emptyList)
                 .stream().map(String::valueOf).collect(Collectors.joining(","));
-            throw new ReflectionException("Error instantiating " + type + " with invalid types (" + argTypes + ") or values (" + argValues + "). Cause: " + e, e);
+            throw new ReflectionException("Error instantiating " + type
+                + " with invalid types (" + argTypes + ") or values (" + argValues + "). Cause: " + e, e);
         }
     }
 

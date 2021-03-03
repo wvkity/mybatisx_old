@@ -15,11 +15,12 @@
  */
 package com.wvkity.mybatis.session;
 
+import com.wvkity.mybatis.basic.config.MyBatisGlobalConfiguration;
+import com.wvkity.mybatis.basic.config.MyBatisLocalConfigurationCache;
+import com.wvkity.mybatis.basic.session.LocalConfiguration;
 import com.wvkity.mybatis.binding.MyBatisMapperRegistry;
-import com.wvkity.mybatis.core.config.MyBatisGlobalConfiguration;
-import com.wvkity.mybatis.core.config.MyBatisLocalConfigurationCache;
-import com.wvkity.mybatis.core.inject.mapping.sql.Supplier;
-import com.wvkity.mybatis.core.inject.mapping.sql.SupplierRegistry;
+import com.wvkity.mybatis.support.inject.mapping.sql.Supplier;
+import com.wvkity.mybatis.support.inject.mapping.sql.SupplierRegistry;
 import com.wvkity.mybatis.executor.resultset.MyBatisDefaultResultSetHandler;
 import com.wvkity.mybatis.reflection.factory.MyBatisDefaultObjectFactory;
 import com.wvkity.mybatis.scripting.xmltags.MyBatisXMLLanguageDriver;
@@ -57,7 +58,7 @@ import java.util.function.BiFunction;
  * @created 2020-10-01
  * @since 1.0.0
  */
-public class MyBatisConfiguration extends Configuration {
+public class MyBatisConfiguration extends Configuration implements LocalConfiguration {
 
     protected ObjectFactory objectFactory;
     /**
@@ -93,7 +94,7 @@ public class MyBatisConfiguration extends Configuration {
             .orElse(MyBatisLocalConfigurationCache.newInstance()));
         this.objectFactory = new MyBatisDefaultObjectFactory(this.globalConfigurationRef);
         super.setObjectFactory(this.objectFactory);
-        // TODO registry JDK8+ TIME API(jsr-310)
+        // TODO registry JDK8+ TIME API(JSR310)
     }
 
     @Override
@@ -325,7 +326,8 @@ public class MyBatisConfiguration extends Configuration {
                 ResultMap entryResultMap = entry.getValue();
                 if (entryResultMap != null) {
                     if (!entryResultMap.hasNestedResultMaps() && entryResultMap.getDiscriminator() != null) {
-                        Collection<String> discriminatedResultMapNames = entryResultMap.getDiscriminator().getDiscriminatorMap().values();
+                        Collection<String> discriminatedResultMapNames =
+                            entryResultMap.getDiscriminator().getDiscriminatorMap().values();
                         if (discriminatedResultMapNames.contains(rm.getId())) {
                             entryResultMap.forceNestedResultMaps();
                         }
@@ -439,10 +441,12 @@ public class MyBatisConfiguration extends Configuration {
         }
     }
 
+    @Override
     public MyBatisGlobalConfiguration getGlobalConfiguration() {
         return this.globalConfigurationRef.get();
     }
 
+    @Override
     public void setGlobalConfiguration(MyBatisGlobalConfiguration globalConfiguration) {
         final MyBatisGlobalConfiguration local = this.globalConfigurationRef.get();
         this.globalConfigurationRef.compareAndSet(local, globalConfiguration);

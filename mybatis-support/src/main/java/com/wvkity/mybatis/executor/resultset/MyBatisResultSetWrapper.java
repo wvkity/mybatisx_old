@@ -16,7 +16,7 @@
 package com.wvkity.mybatis.executor.resultset;
 
 import com.wvkity.mybatis.annotation.NamingStrategy;
-import com.wvkity.mybatis.core.constant.Constants;
+import com.wvkity.mybatis.basic.constant.Constants;
 import org.apache.ibatis.executor.resultset.ResultSetWrapper;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.ResultMap;

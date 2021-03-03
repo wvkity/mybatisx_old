@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.builder.xml;
 
-import com.wvkity.mybatis.core.config.MyBatisGlobalConfiguration;
+import com.wvkity.mybatis.basic.config.MyBatisGlobalConfiguration;
 import com.wvkity.mybatis.session.MyBatisConfiguration;
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;

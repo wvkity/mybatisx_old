@@ -2,7 +2,6 @@ dependencies {
     api project(':pageable')
     api project(':sequence')
     api project(':result')
-    api project(':mybatis-annotation')
     api project(':mybatis-auditable')
     api project(':mybatis-batch')
     api "${libs.mybatis}"
