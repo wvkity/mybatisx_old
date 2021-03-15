@@ -31,13 +31,13 @@ import java.util.concurrent.TimeUnit;
 public class SnowflakeConfig {
 
     /**
-     * 默认开始时间(2021-02-18 22:00:00)
+     * 默认开始时间(2021-03-15 00:00:00)
      */
-    public static final long SECOND_EPOCH_TIMESTAMP = 1613656800L;
+    public static final long SECOND_EPOCH_TIMESTAMP = 1615737600L;
     /**
-     * 默认开始时间(2021-02-18 22:00:00)
+     * 默认开始时间(2021-02-15 00:00:00)
      */
-    public static final long MILLIS_EPOCH_TIMESTAMP = 1613656800000L;
+    public static final long MILLIS_EPOCH_TIMESTAMP = 1615737600000L;
     public static final int TOTAL_BITS = 1 << 6;
     public static final int DEF_CACHE_SIZE = 30;
     // [sign - timestamp - dataCenterId - workerId - sequence]

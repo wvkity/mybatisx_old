@@ -41,7 +41,7 @@ public abstract class AbstractSnowflakeSequence {
         this.parser = new SnowflakeParser(config);
     }
 
-    protected long nextId() {
+    protected long nextValue() {
         long newTimestamp = this.config.getTimestamp();
         if (newTimestamp < lastTimestamp) {
             throw new SnowflakeException(String.format("Clock moved backwards. Refusing for %s timeStamp",

@@ -56,7 +56,7 @@ public class CacheableSnowflakeSequence extends AbstractSnowflakeSequence implem
 
     private void batchGenerated(final int size) {
         for (int i = 0; i < size; i++) {
-            this.queue.offer(this.nextId());
+            this.queue.offer(this.nextValue());
         }
     }
 

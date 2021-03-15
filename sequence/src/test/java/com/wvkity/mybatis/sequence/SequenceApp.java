@@ -37,37 +37,46 @@ public class SequenceApp {
     @Test
     public void defSequenceTest() {
         final SnowflakeSequence defSeq = new DefaultSnowflakeSequence(SnowflakeConfig.millisSnowflakeConfig(Strategy.DEFAULT));
+        for (int i = 0; i < 15; i++) {
+            log.info("id = {}", defSeq.nextId());
+        }
+        /*log.info("{}", defSeq.parse(defSeq.nextId()).toJsonString());
         log.info("{}", defSeq.parse(defSeq.nextId()).toJsonString());
         log.info("{}", defSeq.parse(defSeq.nextId()).toJsonString());
         log.info("{}", defSeq.parse(defSeq.nextId()).toJsonString());
         log.info("{}", defSeq.parse(defSeq.nextId()).toJsonString());
         log.info("{}", defSeq.parse(defSeq.nextId()).toJsonString());
-        log.info("{}", defSeq.parse(defSeq.nextId()).toJsonString());
-        log.info("{}", defSeq.parse(defSeq.nextId()).toJsonString());
+        log.info("{}", defSeq.parse(defSeq.nextId()).toJsonString());*/
     }
 
     @Test
     public void cacheableSequenceTest() {
         final SnowflakeSequence cacheSeq = new CacheableSnowflakeSequence(SnowflakeConfig.secondSnowflakeConfig());
+        for (int i = 0; i < 15; i++) {
+            log.info("id = {}", cacheSeq.nextId());
+        }
+        /*log.info("{}", cacheSeq.parse(cacheSeq.nextId()).toJsonString());
         log.info("{}", cacheSeq.parse(cacheSeq.nextId()).toJsonString());
         log.info("{}", cacheSeq.parse(cacheSeq.nextId()).toJsonString());
         log.info("{}", cacheSeq.parse(cacheSeq.nextId()).toJsonString());
         log.info("{}", cacheSeq.parse(cacheSeq.nextId()).toJsonString());
         log.info("{}", cacheSeq.parse(cacheSeq.nextId()).toJsonString());
-        log.info("{}", cacheSeq.parse(cacheSeq.nextId()).toJsonString());
-        log.info("{}", cacheSeq.parse(cacheSeq.nextId()).toJsonString());
+        log.info("{}", cacheSeq.parse(cacheSeq.nextId()).toJsonString());*/
     }
 
     @Test
     public void atomicSequenceTest() {
         final SnowflakeSequence atomicSeq = new AtomicStampedSnowflakeSequence(SnowflakeConfig.millisSnowflakeConfig(Strategy.ATOMIC));
+        for (int i = 0; i < 30; i++) {
+            log.info("id = {}", atomicSeq.nextId());
+        }
+        /*log.info("{}", atomicSeq.parse(atomicSeq.nextId()).toJsonString());
         log.info("{}", atomicSeq.parse(atomicSeq.nextId()).toJsonString());
         log.info("{}", atomicSeq.parse(atomicSeq.nextId()).toJsonString());
         log.info("{}", atomicSeq.parse(atomicSeq.nextId()).toJsonString());
         log.info("{}", atomicSeq.parse(atomicSeq.nextId()).toJsonString());
         log.info("{}", atomicSeq.parse(atomicSeq.nextId()).toJsonString());
-        log.info("{}", atomicSeq.parse(atomicSeq.nextId()).toJsonString());
-        log.info("{}", atomicSeq.parse(atomicSeq.nextId()).toJsonString());
+        log.info("{}", atomicSeq.parse(atomicSeq.nextId()).toJsonString());*/
     }
 
 

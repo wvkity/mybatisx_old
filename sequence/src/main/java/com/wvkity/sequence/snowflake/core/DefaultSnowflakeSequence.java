@@ -38,7 +38,7 @@ public class DefaultSnowflakeSequence extends AbstractSnowflakeSequence implemen
     public long nextId() {
         final long stamp = this.lock.writeLock(), id;
         try {
-            id = this.nextId();
+            id = this.nextValue();
         } finally {
             this.lock.unlockWrite(stamp);
         }
