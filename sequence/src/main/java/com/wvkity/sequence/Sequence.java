@@ -29,14 +29,14 @@ public interface Sequence extends Serializable {
      * 生成ID
      * @return ID
      */
-    long nextValue();
+    long nextId();
 
     /**
      * 生成ID
      * @return ID
      */
-    default String nextString() {
-        return String.valueOf(this.nextValue());
+    default String nextIdString() {
+        return String.valueOf(this.nextId());
     }
 
 }

@@ -39,7 +39,7 @@ public class CacheableSnowflakeSequence extends AbstractSnowflakeSequence implem
     }
 
     @Override
-    public long nextValue() {
+    public long nextId() {
         Long id;
         while ((id = this.queue.poll()) == null) {
             final long stamp = this.lock.writeLock();

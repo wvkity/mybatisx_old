@@ -38,7 +38,7 @@ public class AtomicStampedSnowflakeSequence extends AbstractSnowflakeSequence im
     }
 
     @Override
-    public long nextValue() {
+    public long nextId() {
         Long newTimestamp, oldTimestamp;
         int newSequence, oldSequence;
         for (; ; ) {

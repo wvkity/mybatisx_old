@@ -35,7 +35,7 @@ public class DefaultSnowflakeSequence extends AbstractSnowflakeSequence implemen
     }
 
     @Override
-    public long nextValue() {
+    public long nextId() {
         final long stamp = this.lock.writeLock(), id;
         try {
             id = this.nextId();

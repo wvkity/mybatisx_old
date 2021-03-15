@@ -37,37 +37,37 @@ public class SequenceApp {
     @Test
     public void defSequenceTest() {
         final SnowflakeSequence defSeq = new DefaultSnowflakeSequence(SnowflakeConfig.millisSnowflakeConfig(Strategy.DEFAULT));
-        log.info("{}", defSeq.parse(defSeq.nextValue()).toJsonString());
-        log.info("{}", defSeq.parse(defSeq.nextValue()).toJsonString());
-        log.info("{}", defSeq.parse(defSeq.nextValue()).toJsonString());
-        log.info("{}", defSeq.parse(defSeq.nextValue()).toJsonString());
-        log.info("{}", defSeq.parse(defSeq.nextValue()).toJsonString());
-        log.info("{}", defSeq.parse(defSeq.nextValue()).toJsonString());
-        log.info("{}", defSeq.parse(defSeq.nextValue()).toJsonString());
+        log.info("{}", defSeq.parse(defSeq.nextId()).toJsonString());
+        log.info("{}", defSeq.parse(defSeq.nextId()).toJsonString());
+        log.info("{}", defSeq.parse(defSeq.nextId()).toJsonString());
+        log.info("{}", defSeq.parse(defSeq.nextId()).toJsonString());
+        log.info("{}", defSeq.parse(defSeq.nextId()).toJsonString());
+        log.info("{}", defSeq.parse(defSeq.nextId()).toJsonString());
+        log.info("{}", defSeq.parse(defSeq.nextId()).toJsonString());
     }
 
     @Test
     public void cacheableSequenceTest() {
         final SnowflakeSequence cacheSeq = new CacheableSnowflakeSequence(SnowflakeConfig.secondSnowflakeConfig());
-        log.info("{}", cacheSeq.parse(cacheSeq.nextValue()).toJsonString());
-        log.info("{}", cacheSeq.parse(cacheSeq.nextValue()).toJsonString());
-        log.info("{}", cacheSeq.parse(cacheSeq.nextValue()).toJsonString());
-        log.info("{}", cacheSeq.parse(cacheSeq.nextValue()).toJsonString());
-        log.info("{}", cacheSeq.parse(cacheSeq.nextValue()).toJsonString());
-        log.info("{}", cacheSeq.parse(cacheSeq.nextValue()).toJsonString());
-        log.info("{}", cacheSeq.parse(cacheSeq.nextValue()).toJsonString());
+        log.info("{}", cacheSeq.parse(cacheSeq.nextId()).toJsonString());
+        log.info("{}", cacheSeq.parse(cacheSeq.nextId()).toJsonString());
+        log.info("{}", cacheSeq.parse(cacheSeq.nextId()).toJsonString());
+        log.info("{}", cacheSeq.parse(cacheSeq.nextId()).toJsonString());
+        log.info("{}", cacheSeq.parse(cacheSeq.nextId()).toJsonString());
+        log.info("{}", cacheSeq.parse(cacheSeq.nextId()).toJsonString());
+        log.info("{}", cacheSeq.parse(cacheSeq.nextId()).toJsonString());
     }
 
     @Test
     public void atomicSequenceTest() {
         final SnowflakeSequence atomicSeq = new AtomicStampedSnowflakeSequence(SnowflakeConfig.millisSnowflakeConfig(Strategy.ATOMIC));
-        log.info("{}", atomicSeq.parse(atomicSeq.nextValue()).toJsonString());
-        log.info("{}", atomicSeq.parse(atomicSeq.nextValue()).toJsonString());
-        log.info("{}", atomicSeq.parse(atomicSeq.nextValue()).toJsonString());
-        log.info("{}", atomicSeq.parse(atomicSeq.nextValue()).toJsonString());
-        log.info("{}", atomicSeq.parse(atomicSeq.nextValue()).toJsonString());
-        log.info("{}", atomicSeq.parse(atomicSeq.nextValue()).toJsonString());
-        log.info("{}", atomicSeq.parse(atomicSeq.nextValue()).toJsonString());
+        log.info("{}", atomicSeq.parse(atomicSeq.nextId()).toJsonString());
+        log.info("{}", atomicSeq.parse(atomicSeq.nextId()).toJsonString());
+        log.info("{}", atomicSeq.parse(atomicSeq.nextId()).toJsonString());
+        log.info("{}", atomicSeq.parse(atomicSeq.nextId()).toJsonString());
+        log.info("{}", atomicSeq.parse(atomicSeq.nextId()).toJsonString());
+        log.info("{}", atomicSeq.parse(atomicSeq.nextId()).toJsonString());
+        log.info("{}", atomicSeq.parse(atomicSeq.nextId()).toJsonString());
     }
 
 
