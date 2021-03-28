@@ -1,0 +1,5 @@
+dependencies {
+    api project(":mybatisx-plugin")
+    api project(":pageable")
+    api "${libs.jsqlparser}"
+}

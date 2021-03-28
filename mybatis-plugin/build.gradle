@@ -1,4 +1,0 @@
-dependencies {
-    api "${libs.mybatis}"
-    api "${libs.caffeine}"
-}

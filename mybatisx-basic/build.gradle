@@ -1,0 +1,5 @@
+dependencies {
+    api project(":sequence")
+    api project(":mybatisx-annotation")
+    api "${libs.mybatis}"
+}

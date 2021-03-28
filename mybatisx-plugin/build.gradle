@@ -1,0 +1,5 @@
+dependencies {
+    api "${libs.mybatis}"
+    api "${libs.jsqlparser}"
+    api "${libs.caffeine}"
+}

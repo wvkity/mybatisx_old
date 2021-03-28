@@ -1,0 +1,15 @@
+{
+    "groups": [
+        {
+            "sourceType": "com.wvkity.mybatis.spring.boot.auditable.config.MyBatisAuditingProperties",
+            "name": "wvkity.mybatis.plugin.batch",
+            "type": "com.wvkity.mybatis.spring.boot.auditable.config.MyBatisAuditingProperties"
+        },
+        {
+            "sourceType": "com.wvkity.mybatis.spring.boot.auditable.config.MyBatisAuditingProperties",
+            "name": "wvkity.mybatis.plugin.batch.properties",
+            "sourceMethod": "getProperties()",
+            "type": "java.util.Properties"
+        }
+    ]
+}

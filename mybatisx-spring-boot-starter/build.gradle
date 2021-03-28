@@ -1,0 +1,22 @@
+dependencies {
+    api project(":mybatisx-spring")
+    api project(":mybatisx-extension")
+    api project(":mybatisx-datasource-spring-boot-starter")
+    api project(":mybatisx-pageable-spring-boot-starter")
+    api project(":mybatisx-sequence-spring-boot-starter")
+    api project(':mybatisx-batch-spring-boot-starter')
+    api project(':mybatisx-auditable-spring-boot-starter')
+    implementation "${libs["spring-aspects"]}"
+    implementation "${libs["springboot-jdbc"]}"
+    implementation "${libs["springboot-autoconfigure"]}"
+    implementation "${libs["mybatis-thymeleaf"]}"
+    implementation "${libs["mybatis-velocity"]}"
+    implementation "${libs["mybatis-freemarker"]}"
+    implementation(enforcedPlatform("${libs["springboot-dependencies"]}" as String))
+    implementation "${libs["springboot-autoconfigure-processor"]}"
+    implementation "${libs["springboot-configuration-processor"]}"
+    annotationProcessor "${libs["springboot-autoconfigure-processor"]}:${springBoot}"
+    annotationProcessor "${libs["springboot-configuration-processor"]}:${springBoot}"
+}
+
+compileJava.dependsOn(processResources)

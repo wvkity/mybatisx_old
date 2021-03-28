@@ -1,0 +1,9 @@
+dependencies {
+    api project(':pageable')
+    api project(':sequence')
+    api project(':result')
+    api project(':mybatisx-basic')
+    api project(':mybatisx-auditable')
+    api project(':mybatisx-batch')
+    api "${libs.mybatis}"
+}

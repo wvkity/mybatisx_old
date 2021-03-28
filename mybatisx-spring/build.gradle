@@ -1,0 +1,10 @@
+dependencies {
+    api project(":mybatisx-core")
+    api "${libs["mybatis-spring"]}"
+    runtimeOnly "${libs["spring-jdbc"]}"
+    compileOnly "${libs["spring-jdbc"]}"
+    runtimeOnly "${libs["spring-context"]}"
+    compileOnly "${libs["spring-context"]}"
+    runtimeOnly "${libs["spring-aspects"]}"
+    compileOnly "${libs["spring-aspects"]}"
+}

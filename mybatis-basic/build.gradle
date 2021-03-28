@@ -1,6 +1,0 @@
-dependencies {
-    api project(":sequence")
-    api project(":mybatis-annotation")
-    runtimeOnly "${libs.mybatis}"
-    compileOnly "${libs.mybatis}"
-}

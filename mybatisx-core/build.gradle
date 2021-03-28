@@ -1,0 +1,12 @@
+dependencies {
+    api project(':mybatisx-support')
+    api project(":mybatisx-auditable-plugin")
+    api project(":mybatisx-pageable-plugin")
+    api project(':mybatisx-batch-plugin')
+    api "${libs.inject}"
+    api "${libs.cglib}"
+    api "${libs.slf4j}"
+    compileOnly "${libs.jpa}"
+    compileOnly "${libs.fastjson}"
+    compileOnly "${libs["spring-tx"]}"
+}

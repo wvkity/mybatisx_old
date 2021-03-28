@@ -1,0 +1,4 @@
+# Auto Configure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.wvkity.mybatis.spring.boot.autoconfigure.MyBatisAutoConfiguration,\
+  com.wvkity.mybatis.spring.boot.plugin.MyBatisSystemPluginAutoConfiguration

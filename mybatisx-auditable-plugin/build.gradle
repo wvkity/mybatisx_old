@@ -1,0 +1,5 @@
+dependencies {
+    api project(':mybatisx-auditable')
+    api project(':mybatisx-batch')
+    api project(':mybatisx-plugin')
+}
