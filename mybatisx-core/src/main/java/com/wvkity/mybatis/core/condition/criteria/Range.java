@@ -41,20 +41,20 @@ public interface Range<T, Chain extends Range<T, Chain>> {
      */
     @SuppressWarnings({"unchecked"})
     default <V> Chain in(final Property<T, V> property, final V... values) {
-        return in(property, Slot.AND, values);
+        return in(Slot.AND, property, values);
     }
 
     /**
      * IN
+     * @param slot     {@link Slot}
      * @param property 属性
      * @param values   多个值
-     * @param slot     {@link Slot}
      * @param <V>      属性类型
      * @return {@link Chain}
      */
     @SuppressWarnings({"unchecked"})
-    default <V> Chain in(final Property<T, V> property, final Slot slot, final V... values) {
-        return in(property, Objects.asList(values), slot);
+    default <V> Chain in(final Slot slot, final Property<T, V> property, final V... values) {
+        return in(slot, property, Objects.asList(values));
     }
 
     /**
@@ -65,18 +65,18 @@ public interface Range<T, Chain extends Range<T, Chain>> {
      * @return {@link Chain}
      */
     default <V> Chain in(final Property<T, V> property, final Collection<V> values) {
-        return in(property, values, Slot.AND);
+        return in(Slot.AND, property, values);
     }
 
     /**
      * IN
+     * @param slot     {@link Slot}
      * @param property 属性
      * @param values   多个值
-     * @param slot     {@link Slot}
      * @param <V>      属性类型
      * @return {@link Chain}
      */
-    <V> Chain in(final Property<T, V> property, final Collection<V> values, final Slot slot);
+    <V> Chain in(final Slot slot, final Property<T, V> property, final Collection<V> values);
 
     /**
      * IN
@@ -85,18 +85,18 @@ public interface Range<T, Chain extends Range<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain in(final String property, final Object... values) {
-        return in(property, Slot.AND, values);
+        return in(Slot.AND, property, values);
     }
 
     /**
      * IN
+     * @param slot     {@link Slot}
      * @param property 属性
      * @param values   多个值
-     * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    default Chain in(final String property, final Slot slot, final Object... values) {
-        return in(property, Objects.asList(values), slot);
+    default Chain in(final Slot slot, final String property, final Object... values) {
+        return in(slot, property, Objects.asList(values));
     }
 
     /**
@@ -106,17 +106,17 @@ public interface Range<T, Chain extends Range<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain in(final String property, final Collection<Object> values) {
-        return in(property, values, Slot.AND);
+        return in(Slot.AND, property, values);
     }
 
     /**
      * IN
+     * @param slot     {@link Slot}
      * @param property 属性
      * @param values   多个值
-     * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    Chain in(final String property, final Collection<Object> values, final Slot slot);
+    Chain in(final Slot slot, final String property, final Collection<Object> values);
 
     /**
      * IN
@@ -125,18 +125,18 @@ public interface Range<T, Chain extends Range<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain colIn(final String column, final Object... values) {
-        return colIn(column, Slot.AND, values);
+        return colIn(Slot.AND, column, values);
     }
 
     /**
      * IN
+     * @param slot   {@link Slot}
      * @param column 字段
      * @param values 多个值
-     * @param slot   {@link Slot}
      * @return {@link Chain}
      */
-    default Chain colIn(final String column, final Slot slot, final Object... values) {
-        return colIn(column, Objects.asList(values), slot);
+    default Chain colIn(final Slot slot, final String column, final Object... values) {
+        return colIn(slot, column, Objects.asList(values));
     }
 
     /**
@@ -146,17 +146,17 @@ public interface Range<T, Chain extends Range<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain colIn(final String column, final Collection<Object> values) {
-        return colIn(column, values, Slot.AND);
+        return colIn(Slot.AND, column, values);
     }
 
     /**
      * IN
+     * @param slot   {@link Slot}
      * @param column 字段
      * @param values 多个值
-     * @param slot   {@link Slot}
      * @return {@link Chain}
      */
-    Chain colIn(final String column, final Collection<Object> values, final Slot slot);
+    Chain colIn(final Slot slot, final String column, final Collection<Object> values);
 
     // endregion
 
@@ -171,20 +171,20 @@ public interface Range<T, Chain extends Range<T, Chain>> {
      */
     @SuppressWarnings({"unchecked"})
     default <V> Chain notIn(final Property<T, V> property, final V... values) {
-        return notIn(property, Slot.AND, values);
+        return notIn(Slot.AND, property, values);
     }
 
     /**
      * NOT IN
+     * @param slot     {@link Slot}
      * @param property 属性
      * @param values   多个值
-     * @param slot     {@link Slot}
      * @param <V>      属性类型
      * @return {@link Chain}
      */
     @SuppressWarnings({"unchecked"})
-    default <V> Chain notIn(final Property<T, V> property, final Slot slot, final V... values) {
-        return notIn(property, Objects.asList(values), slot);
+    default <V> Chain notIn(final Slot slot, final Property<T, V> property, final V... values) {
+        return notIn(slot, property, Objects.asList(values));
     }
 
     /**
@@ -195,18 +195,18 @@ public interface Range<T, Chain extends Range<T, Chain>> {
      * @return {@link Chain}
      */
     default <V> Chain notIn(final Property<T, V> property, final Collection<V> values) {
-        return notIn(property, values, Slot.AND);
+        return notIn(Slot.AND, property, values);
     }
 
     /**
      * NOT IN
+     * @param slot     {@link Slot}
      * @param property 属性
      * @param values   多个值
-     * @param slot     {@link Slot}
      * @param <V>      属性类型
      * @return {@link Chain}
      */
-    <V> Chain notIn(final Property<T, V> property, final Collection<V> values, final Slot slot);
+    <V> Chain notIn(final Slot slot, final Property<T, V> property, final Collection<V> values);
 
     /**
      * NOT IN
@@ -215,18 +215,18 @@ public interface Range<T, Chain extends Range<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain notIn(final String property, final Object... values) {
-        return notIn(property, Slot.AND, values);
+        return notIn(Slot.AND, property, values);
     }
 
     /**
      * NOT IN
+     * @param slot     {@link Slot}
      * @param property 属性
      * @param values   多个值
-     * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    default Chain notIn(final String property, final Slot slot, final Object... values) {
-        return notIn(property, Objects.asList(values), slot);
+    default Chain notIn(final Slot slot, final String property, final Object... values) {
+        return notIn(slot, property, Objects.asList(values));
     }
 
     /**
@@ -236,17 +236,17 @@ public interface Range<T, Chain extends Range<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain notIn(final String property, final Collection<Object> values) {
-        return notIn(property, values, Slot.AND);
+        return notIn(Slot.AND, property, values);
     }
 
     /**
      * NOT IN
+     * @param slot     {@link Slot}
      * @param property 属性
      * @param values   多个值
-     * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    Chain notIn(final String property, final Collection<Object> values, final Slot slot);
+    Chain notIn(final Slot slot, final String property, final Collection<Object> values);
 
     /**
      * NOT IN
@@ -255,17 +255,17 @@ public interface Range<T, Chain extends Range<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain colNotIn(final String column, final Object... values) {
-        return colNotIn(column, Slot.AND, values);
+        return colNotIn(Slot.AND, column, values);
     }
 
     /**
      * NOT IN
+     * @param slot   {@link Slot}
      * @param column 字段
      * @param values 多个值
-     * @param slot   {@link Slot}
      * @return {@link Chain}
      */
-    default Chain colNotIn(final String column, final Slot slot, final Object... values) {
+    default Chain colNotIn(final Slot slot, final String column, final Object... values) {
         return colNotIn(column, Objects.asList(values), slot);
     }
 
@@ -276,17 +276,17 @@ public interface Range<T, Chain extends Range<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain colNotIn(final String column, final Collection<Object> values) {
-        return colNotIn(column, values, Slot.AND);
+        return colNotIn(Slot.AND, column, values);
     }
 
     /**
      * NOT IN
+     * @param slot   {@link Slot}
      * @param column 字段
      * @param values 多个值
-     * @param slot   {@link Slot}
      * @return {@link Chain}
      */
-    Chain colNotIn(final String column, final Collection<Object> values, final Slot slot);
+    Chain colNotIn(final Slot slot, final String column, final Collection<Object> values);
 
     // endregion
 
@@ -301,19 +301,19 @@ public interface Range<T, Chain extends Range<T, Chain>> {
      * @return {@link Chain}
      */
     default <V> Chain between(final Property<T, V> property, final V begin, final V end) {
-        return between(property, begin, end, Slot.AND);
+        return between(Slot.AND, property, begin, end);
     }
 
     /**
      * Between
+     * @param slot     {@link Slot}
      * @param property 属性
      * @param begin    开始值
      * @param end      结束值
-     * @param slot     {@link Slot}
      * @param <V>      属性类型
      * @return {@link Chain}
      */
-    <V> Chain between(final Property<T, V> property, final V begin, final V end, final Slot slot);
+    <V> Chain between(final Slot slot, final Property<T, V> property, final V begin, final V end);
 
     /**
      * Between
@@ -323,18 +323,18 @@ public interface Range<T, Chain extends Range<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain between(final String property, final Object begin, final Object end) {
-        return between(property, begin, end, Slot.AND);
+        return between(Slot.AND, property, begin, end);
     }
 
     /**
      * Between
+     * @param slot     {@link Slot}
      * @param property 属性
      * @param begin    开始值
      * @param end      结束值
-     * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    Chain between(final String property, final Object begin, final Object end, final Slot slot);
+    Chain between(final Slot slot, final String property, final Object begin, final Object end);
 
     /**
      * Between
@@ -344,18 +344,18 @@ public interface Range<T, Chain extends Range<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain colBetween(final String column, final Object begin, final Object end) {
-        return colBetween(column, begin, end, Slot.AND);
+        return colBetween(Slot.AND, column, begin, end);
     }
 
     /**
      * Between
+     * @param slot   {@link Slot}
      * @param column 字段
      * @param begin  开始值
      * @param end    结束值
-     * @param slot   {@link Slot}
      * @return {@link Chain}
      */
-    Chain colBetween(final String column, final Object begin, final Object end, final Slot slot);
+    Chain colBetween(final Slot slot, final String column, final Object begin, final Object end);
 
     // endregion
 
@@ -370,19 +370,19 @@ public interface Range<T, Chain extends Range<T, Chain>> {
      * @return {@link Chain}
      */
     default <V> Chain notBetween(final Property<T, V> property, final V begin, final V end) {
-        return notBetween(property, begin, end, Slot.AND);
+        return notBetween(Slot.AND, property, begin, end);
     }
 
     /**
      * Not Between
+     * @param slot     {@link Slot}
      * @param property 属性
      * @param begin    开始值
      * @param end      结束值
-     * @param slot     {@link Slot}
      * @param <V>      属性类型
      * @return {@link Chain}
      */
-    <V> Chain notBetween(final Property<T, V> property, final V begin, final V end, final Slot slot);
+    <V> Chain notBetween(final Slot slot, final Property<T, V> property, final V begin, final V end);
 
     /**
      * Not Between
@@ -392,18 +392,18 @@ public interface Range<T, Chain extends Range<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain notBetween(final String property, final Object begin, final Object end) {
-        return notBetween(property, begin, end, Slot.AND);
+        return notBetween(Slot.AND, property, begin, end);
     }
 
     /**
      * Not Between
+     * @param slot     {@link Slot}
      * @param property 属性
      * @param begin    开始值
      * @param end      结束值
-     * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    Chain notBetween(final String property, final Object begin, final Object end, final Slot slot);
+    Chain notBetween(final Slot slot, final String property, final Object begin, final Object end);
 
     /**
      * Not Between
@@ -413,18 +413,18 @@ public interface Range<T, Chain extends Range<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain colNotBetween(final String column, final Object begin, final Object end) {
-        return colNotBetween(column, begin, end, Slot.AND);
+        return colNotBetween(Slot.AND, column, begin, end);
     }
 
     /**
      * Not Between
+     * @param slot   {@link Slot}
      * @param column 字段
      * @param begin  开始值
      * @param end    结束值
-     * @param slot   {@link Slot}
      * @return {@link Chain}
      */
-    Chain colNotBetween(final String column, final Object begin, final Object end, final Slot slot);
+    Chain colNotBetween(final Slot slot, final String column, final Object begin, final Object end);
 
     // endregion
 }

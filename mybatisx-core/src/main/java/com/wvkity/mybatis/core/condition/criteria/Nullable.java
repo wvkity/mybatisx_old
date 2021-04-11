@@ -35,17 +35,17 @@ public interface Nullable<T, Chain extends Nullable<T, Chain>> {
      * @return {@link Chain}
      */
     default <V> Chain isNull(final Property<T, V> property) {
-        return isNull(property, Slot.AND);
+        return isNull(Slot.AND, property);
     }
 
     /**
      * IS NULL
-     * @param property 属性
      * @param slot     {@link Slot}
+     * @param property 属性
      * @param <V>      属性类型
      * @return {@link Chain}
      */
-    <V> Chain isNull(final Property<T, V> property, final Slot slot);
+    <V> Chain isNull(final Slot slot, final Property<T, V> property);
 
     /**
      * IS NULL
@@ -53,7 +53,7 @@ public interface Nullable<T, Chain extends Nullable<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain isNull(final String property) {
-        return isNull(property, Slot.AND);
+        return isNull(Slot.AND, property);
     }
 
     /**
@@ -62,7 +62,7 @@ public interface Nullable<T, Chain extends Nullable<T, Chain>> {
      * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    Chain isNull(final String property, final Slot slot);
+    Chain isNull(final Slot slot, final String property);
 
     /**
      * IS NULL
@@ -70,16 +70,16 @@ public interface Nullable<T, Chain extends Nullable<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain colIsNull(final String column) {
-        return colIsNull(column, Slot.AND);
+        return colIsNull(Slot.AND, column);
     }
 
     /**
      * IS NULL
-     * @param column 字段
      * @param slot   {@link Slot}
+     * @param column 字段
      * @return {@link Chain}
      */
-    Chain colIsNull(final String column, final Slot slot);
+    Chain colIsNull(final Slot slot, final String column);
 
     /**
      * IS NOT NULL
@@ -88,17 +88,17 @@ public interface Nullable<T, Chain extends Nullable<T, Chain>> {
      * @return {@link Chain}
      */
     default <V> Chain notNull(final Property<T, V> property) {
-        return notNull(property, Slot.AND);
+        return notNull(Slot.AND, property);
     }
 
     /**
      * IS NOT NULL
-     * @param property 属性
      * @param slot     {@link Slot}
+     * @param property 属性
      * @param <V>      属性类型
      * @return {@link Chain}
      */
-    <V> Chain notNull(final Property<T, V> property, final Slot slot);
+    <V> Chain notNull(final Slot slot, final Property<T, V> property);
 
     /**
      * IS NOT NULL
@@ -106,16 +106,16 @@ public interface Nullable<T, Chain extends Nullable<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain notNull(final String property) {
-        return notNull(property, Slot.AND);
+        return notNull(Slot.AND, property);
     }
 
     /**
      * IS NOT NULL
-     * @param property 属性
      * @param slot     {@link Slot}
+     * @param property 属性
      * @return {@link Chain}
      */
-    Chain notNull(final String property, final Slot slot);
+    Chain notNull(final Slot slot, final String property);
 
     /**
      * IS NOT NULL
@@ -123,15 +123,15 @@ public interface Nullable<T, Chain extends Nullable<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain colNotNull(final String column) {
-        return colNotNull(column, Slot.AND);
+        return colNotNull(Slot.AND, column);
     }
 
     /**
      * IS NOT NULL
-     * @param column 字段
      * @param slot   {@link Slot}
+     * @param column 字段
      * @return {@link Chain}
      */
-    Chain colNotNull(final String column, final Slot slot);
+    Chain colNotNull(final Slot slot, final String column);
 
 }

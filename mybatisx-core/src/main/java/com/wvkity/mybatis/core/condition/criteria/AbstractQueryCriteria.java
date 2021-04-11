@@ -72,6 +72,11 @@ public abstract class AbstractQueryCriteria<T> extends AbstractCriteria<T> imple
      */
     protected String mapKey;
     /**
+     * Map实现类
+     */
+    @SuppressWarnings("rawtypes")
+    protected Class<? extends Map> mapType;
+    /**
      * 查询SQL片段
      */
     protected String selectSegment = "";
@@ -601,6 +606,19 @@ public abstract class AbstractQueryCriteria<T> extends AbstractCriteria<T> imple
     @Override
     public AbstractQueryCriteria<T> mapKey(String mapKey) {
         this.mapKey = mapKey;
+        return this;
+    }
+
+    @Override
+    @SuppressWarnings("rawtypes")
+    public Class<? extends Map> getMapType() {
+        return this.mapType;
+    }
+
+    @Override
+    @SuppressWarnings("rawtypes")
+    public AbstractQueryCriteria<T> mapType(Class<? extends Map> mapClass) {
+        this.mapType = mapClass;
         return this;
     }
 

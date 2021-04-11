@@ -34,6 +34,7 @@ public interface CriteriaWrapper<T, Chain extends CriteriaWrapper<T, Chain>> ext
      * 或{@link com.wvkity.mybatis.core.condition.expression.ImmediateTemplate ImmediateTemplate}模板条件表达式实现对应的功能.</p>
      * @param condition 条件
      * @return {@link Chain}
+     * @see Template
      */
     Chain nativeCondition(final String condition);
 }

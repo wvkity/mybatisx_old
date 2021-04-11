@@ -22,12 +22,6 @@ import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.metadata.Table;
 import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.core.condition.basic.SegmentManager;
-import com.wvkity.mybatis.core.condition.expression.AbstractBasicExpression;
-import com.wvkity.mybatis.core.condition.expression.AbstractBetweenExpression;
-import com.wvkity.mybatis.core.condition.expression.AbstractFuzzyExpression;
-import com.wvkity.mybatis.core.condition.expression.AbstractNullableExpression;
-import com.wvkity.mybatis.core.condition.expression.AbstractRangeExpression;
-import com.wvkity.mybatis.core.condition.expression.AbstractTemplateExpression;
 import com.wvkity.mybatis.core.condition.expression.ImmediateBetween;
 import com.wvkity.mybatis.core.condition.expression.ImmediateEqual;
 import com.wvkity.mybatis.core.condition.expression.ImmediateGreaterThan;
@@ -62,26 +56,20 @@ import com.wvkity.mybatis.core.condition.expression.StandardNotNull;
 import com.wvkity.mybatis.core.condition.expression.StandardNull;
 import com.wvkity.mybatis.core.condition.expression.StandardTemplate;
 import com.wvkity.mybatis.core.condition.expression.TemplateMatch;
-import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
 import com.wvkity.mybatis.core.invoke.SerializedLambda;
 import com.wvkity.mybatis.core.property.PropertiesMappingCache;
 import com.wvkity.mybatis.core.property.Property;
-import com.wvkity.mybatis.core.utils.Placeholders;
-import com.wvkity.mybatis.support.condition.basic.Matched;
 import com.wvkity.mybatis.support.condition.criteria.Criteria;
 import com.wvkity.mybatis.support.condition.expression.Expression;
 import com.wvkity.mybatis.support.constant.Like;
 import com.wvkity.mybatis.support.constant.Slot;
 import com.wvkity.mybatis.support.helper.TableHelper;
-import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.TypeHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -90,7 +78,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -198,6 +185,10 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
      * 是否存在条件(where/group/order/having)
      */
     protected boolean hasCondition;
+    /**
+     * 条件解析器
+     */
+    protected ConditionConverter conditionConverter;
 
     // endregion
 
@@ -214,6 +205,7 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
         this.useAlias = new AtomicBoolean(false);
         this.tableAliasRef = new AtomicReference<>(Objects.isBlank(alias) ? Constants.EMPTY : alias);
         this.defTableAlias = DEF_TABLE_ALIAS_PREFIX + this.tableAliasSequence.incrementAndGet();
+        this.conditionConverter = new ConditionConverter(this);
     }
 
     // region Add criterion methods
@@ -224,7 +216,7 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
      * @return {@link Chain}
      */
     protected Chain add(final Expression expression) {
-        Optional.ofNullable(convert(expression)).ifPresent(this.segmentManager::where);
+        Optional.ofNullable(this.conditionConverter.convert(expression)).ifPresent(this.segmentManager::where);
         return this.context;
     }
 
@@ -262,32 +254,32 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     // region Compare conditions
 
     @Override
-    public Chain idEq(Object value, Slot slot) {
+    public Chain idEq(Slot slot, Object value) {
         return add(new StandardIdEqual(this, slot, value));
     }
 
     @Override
-    public <V> Chain eq(Property<T, V> property, V value, Slot slot) {
-        return eq(this.convert(property), value, slot);
+    public <V> Chain eq(Slot slot, Property<T, V> property, V value) {
+        return eq(slot, this.convert(property), value);
     }
 
     @Override
-    public Chain eq(String property, Object value, Slot slot) {
+    public Chain eq(Slot slot, String property, Object value) {
         return add(new StandardEqual(this, property, slot, value));
     }
 
     @Override
-    public Chain colEq(String column, Object value, Slot slot) {
+    public Chain colEq(Slot slot, String column, Object value) {
         return add(new ImmediateEqual(this, column, slot, value));
     }
 
     @Override
-    public Chain eq(Map<String, Object> properties, Slot slot) {
+    public Chain eq(Slot slot, Map<String, Object> properties) {
         if (Objects.isNotEmpty(properties)) {
             for (Map.Entry<String, Object> entry : properties.entrySet()) {
                 final String property = entry.getKey();
                 if (Objects.isNotBlank(property)) {
-                    this.eq(property, entry.getValue(), slot);
+                    this.eq(slot, property, entry.getValue());
                 }
             }
         }
@@ -295,12 +287,12 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     }
 
     @Override
-    public Chain colEq(Map<String, Object> properties, Slot slot) {
-        if (Objects.isNotEmpty(properties)) {
-            for (Map.Entry<String, Object> entry : properties.entrySet()) {
+    public Chain colEq(Slot slot, Map<String, Object> columns) {
+        if (Objects.isNotEmpty(columns)) {
+            for (Map.Entry<String, Object> entry : columns.entrySet()) {
                 final String column = entry.getKey();
                 if (Objects.isNotBlank(column)) {
-                    this.colEq(column, entry.getValue(), slot);
+                    this.colEq(slot, column, entry.getValue());
                 }
             }
         }
@@ -308,77 +300,77 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     }
 
     @Override
-    public <V> Chain ne(Property<T, V> property, V value, Slot slot) {
-        return this.ne(this.convert(property), value, slot);
+    public <V> Chain ne(Slot slot, Property<T, V> property, V value) {
+        return this.ne(slot, this.convert(property), value);
     }
 
     @Override
-    public Chain ne(String property, Object value, Slot slot) {
+    public Chain ne(Slot slot, String property, Object value) {
         return add(new StandardNotEqual(this, property, slot, value));
     }
 
     @Override
-    public Chain colNe(String column, Object value, Slot slot) {
+    public Chain colNe(Slot slot, String column, Object value) {
         return add(new ImmediateNotEqual(this, column, slot, value));
     }
 
     @Override
-    public <V> Chain gt(Property<T, V> property, V value, Slot slot) {
-        return this.gt(this.convert(property), value, slot);
+    public <V> Chain gt(Slot slot, Property<T, V> property, V value) {
+        return this.gt(slot, this.convert(property), value);
     }
 
     @Override
-    public Chain gt(String property, Object value, Slot slot) {
+    public Chain gt(Slot slot, String property, Object value) {
         return add(new StandardGreaterThan(this, property, slot, value));
     }
 
     @Override
-    public Chain colGt(String column, Object value, Slot slot) {
+    public Chain colGt(Slot slot, String column, Object value) {
         return add(new ImmediateGreaterThan(this, column, slot, value));
     }
 
     @Override
-    public <V> Chain ge(Property<T, V> property, V value, Slot slot) {
-        return this.ge(this.convert(property), value, slot);
+    public <V> Chain ge(Slot slot, Property<T, V> property, V value) {
+        return this.ge(slot, this.convert(property), value);
     }
 
     @Override
-    public Chain ge(String property, Object value, Slot slot) {
+    public Chain ge(Slot slot, String property, Object value) {
         return add(new StandardGreaterThanOrEqual(this, property, slot, value));
     }
 
     @Override
-    public Chain colGe(String column, Object value, Slot slot) {
+    public Chain colGe(Slot slot, String column, Object value) {
         return add(new ImmediateGreaterThanOrEqual(this, column, slot, value));
     }
 
     @Override
-    public <V> Chain lt(Property<T, V> property, V value, Slot slot) {
-        return this.lt(this.convert(property), value, slot);
+    public <V> Chain lt(Slot slot, Property<T, V> property, V value) {
+        return this.lt(slot, this.convert(property), value);
     }
 
     @Override
-    public Chain lt(String property, Object value, Slot slot) {
+    public Chain lt(Slot slot, String property, Object value) {
         return add(new StandardLessThan(this, property, slot, value));
     }
 
     @Override
-    public Chain colLt(String column, Object value, Slot slot) {
+    public Chain colLt(Slot slot, String column, Object value) {
         return add(new ImmediateLessThan(this, column, slot, value));
     }
 
     @Override
-    public <V> Chain le(Property<T, V> property, V value, Slot slot) {
-        return this.le(this.convert(property), value, slot);
+    public <V> Chain le(Slot slot, Property<T, V> property, V value) {
+        return this.le(slot, this.convert(property), value);
     }
 
     @Override
-    public Chain le(String property, Object value, Slot slot) {
+    public Chain le(Slot slot, String property, Object value) {
         return add(new StandardLessThanOrEqual(this, property, slot, value));
     }
 
     @Override
-    public Chain colLe(String column, Object value, Slot slot) {
+    public Chain colLe(Slot slot, String column, Object value) {
         return add(new ImmediateLessThanOrEqual(this, column, slot, value));
     }
 
@@ -388,33 +380,33 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
 
     @Override
     @SuppressWarnings("unchecked")
-    public <V> Chain in(Property<T, V> property, Collection<V> values, Slot slot) {
+    public <V> Chain in(Slot slot, Property<T, V> property, Collection<V> values) {
         return add(new StandardNotIn(this, this.convert(property), slot, (Collection<Object>) values));
     }
 
     @Override
-    public Chain in(String property, Collection<Object> values, Slot slot) {
+    public Chain in(Slot slot, String property, Collection<Object> values) {
         return add(new StandardIn(this, property, slot, values));
     }
 
     @Override
-    public Chain colIn(String column, Collection<Object> values, Slot slot) {
+    public Chain colIn(Slot slot, String column, Collection<Object> values) {
         return add(new ImmediateIn(this, column, slot, values));
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <V> Chain notIn(Property<T, V> property, Collection<V> values, Slot slot) {
+    public <V> Chain notIn(Slot slot, Property<T, V> property, Collection<V> values) {
         return add(new StandardNotIn(this, this.convert(property), slot, (Collection<Object>) values));
     }
 
     @Override
-    public Chain notIn(String property, Collection<Object> values, Slot slot) {
+    public Chain notIn(Slot slot, String property, Collection<Object> values) {
         return add(new StandardNotIn(this, property, slot, values));
     }
 
     @Override
-    public Chain colNotIn(String column, Collection<Object> values, Slot slot) {
+    public Chain colNotIn(Slot slot, String column, Collection<Object> values) {
         return add(new ImmediateNotIn(this, column, slot, values));
     }
 
@@ -423,32 +415,32 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     // region Between conditions
 
     @Override
-    public <V> Chain between(Property<T, V> property, V begin, V end, Slot slot) {
-        return this.between(this.convert(property), begin, end, slot);
+    public <V> Chain between(Slot slot, Property<T, V> property, V begin, V end) {
+        return this.between(slot, this.convert(property), begin, end);
     }
 
     @Override
-    public Chain between(String property, Object begin, Object end, Slot slot) {
+    public Chain between(Slot slot, String property, Object begin, Object end) {
         return add(new StandardBetween(this, property, slot, begin, end));
     }
 
     @Override
-    public Chain colBetween(String column, Object begin, Object end, Slot slot) {
+    public Chain colBetween(Slot slot, String column, Object begin, Object end) {
         return add(new ImmediateBetween(this, column, slot, begin, end));
     }
 
     @Override
-    public <V> Chain notBetween(Property<T, V> property, V begin, V end, Slot slot) {
-        return this.notBetween(this.convert(property), begin, end, slot);
+    public <V> Chain notBetween(Slot slot, Property<T, V> property, V begin, V end) {
+        return this.notBetween(slot, this.convert(property), begin, end);
     }
 
     @Override
-    public Chain notBetween(String property, Object begin, Object end, Slot slot) {
+    public Chain notBetween(Slot slot, String property, Object begin, Object end) {
         return add(new StandardNotBetween(this, property, slot, begin, end));
     }
 
     @Override
-    public Chain colNotBetween(String column, Object begin, Object end, Slot slot) {
+    public Chain colNotBetween(Slot slot, String column, Object begin, Object end) {
         return add(new ImmediateNotBetween(this, column, slot, begin, end));
     }
 
@@ -457,32 +449,32 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     // region Fuzzy conditions
 
     @Override
-    public <V> Chain like(Property<T, V> property, V value, Like mode, Character escape, Slot slot) {
-        return this.like(this.convert(property), value, mode, escape, slot);
+    public <V> Chain like(Slot slot, Property<T, V> property, V value, Like mode, Character escape) {
+        return this.like(slot, this.convert(property), value, mode, escape);
     }
 
     @Override
-    public Chain like(String property, Object value, Like mode, Character escape, Slot slot) {
+    public Chain like(Slot slot, String property, Object value, Like mode, Character escape) {
         return add(new StandardLike(this, property, mode, escape, slot, value));
     }
 
     @Override
-    public Chain colLike(String column, Object value, Like mode, Character escape, Slot slot) {
+    public Chain colLike(Slot slot, String column, Object value, Like mode, Character escape) {
         return add(new ImmediateLike(this, column, mode, escape, slot, value));
     }
 
     @Override
-    public <V> Chain notLike(Property<T, V> property, V value, Like mode, Character escape, Slot slot) {
-        return this.notLike(this.convert(property), value, mode, escape, slot);
+    public <V> Chain notLike(Slot slot, Property<T, V> property, V value, Like mode, Character escape) {
+        return this.notLike(slot, this.convert(property), value, mode, escape);
     }
 
     @Override
-    public Chain notLike(String property, Object value, Like mode, Character escape, Slot slot) {
+    public Chain notLike(Slot slot, String property, Object value, Like mode, Character escape) {
         return add(new StandardNotLike(this, property, mode, escape, slot, value));
     }
 
     @Override
-    public Chain colNotLike(String column, Object value, Like mode, Character escape, Slot slot) {
+    public Chain colNotLike(Slot slot, String column, Object value, Like mode, Character escape) {
         return add(new ImmediateNotLike(this, column, mode, escape, slot, value));
     }
 
@@ -491,32 +483,32 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     // region Nullable conditions
 
     @Override
-    public <V> Chain isNull(Property<T, V> property, Slot slot) {
-        return this.isNull(this.convert(property), slot);
+    public <V> Chain isNull(Slot slot, Property<T, V> property) {
+        return this.isNull(slot, this.convert(property));
     }
 
     @Override
-    public Chain isNull(String property, Slot slot) {
+    public Chain isNull(Slot slot, String property) {
         return add(new StandardNull(this, property, slot));
     }
 
     @Override
-    public Chain colIsNull(String column, Slot slot) {
+    public Chain colIsNull(Slot slot, String column) {
         return add(new ImmediateNull(this, column, slot));
     }
 
     @Override
-    public <V> Chain notNull(Property<T, V> property, Slot slot) {
-        return this.notNull(this.convert(property), slot);
+    public <V> Chain notNull(Slot slot, Property<T, V> property) {
+        return this.notNull(slot, this.convert(property));
     }
 
     @Override
-    public Chain notNull(String property, Slot slot) {
+    public Chain notNull(Slot slot, String property) {
         return add(new StandardNotNull(this, property, slot));
     }
 
     @Override
-    public Chain colNotNull(String column, Slot slot) {
+    public Chain colNotNull(Slot slot, String column) {
         return add(new ImmediateNotNull(this, column, slot));
     }
 
@@ -525,77 +517,77 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     // region Template conditions
 
     @Override
-    public Chain template(String template, Property<T, ?> property, Object value, Slot slot) {
-        return this.template(template, this.convert(property), value, slot);
+    public Chain tpl(Slot slot, String template, Property<T, ?> property, Object value) {
+        return this.tpl(slot, template, this.convert(property), value);
     }
 
     @Override
-    public Chain template(String template, String property, Object value, Slot slot) {
+    public Chain tpl(Slot slot, String template, String property, Object value) {
         return add(new StandardTemplate(this, property, template, TemplateMatch.SINGLE, slot, value, null, null));
     }
 
     @Override
-    public Chain template(String template, Object value) {
+    public Chain tpl(String template, Object value) {
         return add(new ImmediateTemplate(this, null, template, TemplateMatch.SINGLE, Slot.NONE, value, null, null));
     }
 
     @Override
-    public Chain template(String template, Object value, Slot slot) {
+    public Chain tpl(Slot slot, String template, Object value) {
         return add(new ImmediateTemplate(this, null, template, TemplateMatch.SINGLE, slot, value, null, null));
     }
 
     @Override
-    public Chain colTemplate(String template, String column, Object value, Slot slot) {
+    public Chain colTpl(Slot slot, String template, String column, Object value) {
         return add(new ImmediateTemplate(this, column, template, TemplateMatch.SINGLE, slot, value, null, null));
     }
 
     @Override
-    public Chain template(String template, Property<T, ?> property, Collection<Object> values, Slot slot) {
-        return this.template(template, this.convert(property), values, slot);
+    public Chain tpl(Slot slot, String template, Property<T, ?> property, Collection<Object> values) {
+        return this.tpl(slot, template, this.convert(property), values);
     }
 
     @Override
-    public Chain template(String template, String property, Collection<Object> values, Slot slot) {
+    public Chain tpl(Slot slot, String template, String property, Collection<Object> values) {
         return add(new StandardTemplate(this, property, template, null, slot, null, values, null));
     }
 
     @Override
-    public Chain template(String template, Collection<Object> values) {
+    public Chain tpl(String template, Collection<Object> values) {
         return add(new ImmediateTemplate(this, null, template, null, Slot.NONE, null, values, null));
     }
 
     @Override
-    public Chain template(String template, Collection<Object> values, Slot slot) {
+    public Chain tpl(Slot slot, String template, Collection<Object> values) {
         return add(new ImmediateTemplate(this, null, template, null, slot, null, values, null));
     }
 
     @Override
-    public Chain colTemplate(String template, String column, Collection<Object> values, Slot slot) {
+    public Chain colTpl(Slot slot, String template, String column, Collection<Object> values) {
         return add(new ImmediateTemplate(this, column, template, null, slot, null, values, null));
     }
 
     @Override
-    public Chain template(String template, Property<T, ?> property, Map<String, Object> values, Slot slot) {
-        return this.template(template, this.convert(property), values, slot);
+    public Chain tpl(Slot slot, String template, Property<T, ?> property, Map<String, Object> values) {
+        return this.tpl(slot, template, this.convert(property), values);
     }
 
     @Override
-    public Chain template(String template, String property, Map<String, Object> values, Slot slot) {
+    public Chain tpl(Slot slot, String template, String property, Map<String, Object> values) {
         return add(new StandardTemplate(this, property, template, TemplateMatch.MAP, slot, null, null, values));
     }
 
     @Override
-    public Chain template(String template, Map<String, Object> values) {
+    public Chain tpl(String template, Map<String, Object> values) {
         return add(new ImmediateTemplate(this, null, template, TemplateMatch.MAP, Slot.NONE, null, null, values));
     }
 
     @Override
-    public Chain template(String template, Map<String, Object> values, Slot slot) {
+    public Chain tpl(Slot slot, String template, Map<String, Object> values) {
         return add(new ImmediateTemplate(this, null, template, TemplateMatch.MAP, slot, null, null, values));
     }
 
     @Override
-    public Chain colTemplate(String template, String column, Map<String, Object> values, Slot slot) {
+    public Chain colTpl(Slot slot, String template, String column, Map<String, Object> values) {
         return add(new ImmediateTemplate(this, column, template, TemplateMatch.MAP, slot, null, null, values));
     }
 
@@ -791,175 +783,6 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
                 return source.replace(DEF_PARAMETER_PLACEHOLDER_ZERO,
                     String.format(DEF_PARAMETER_VALUE_MAPPING, DEF_PARAMETER_ALIAS, paramName));
             }).collect(Collectors.toList());
-        }
-        return null;
-    }
-
-    // endregion
-
-    // region Condition convert methods
-
-    /**
-     * 表达式转换成条件对象
-     * @param expression {@link Expression}
-     * @return {@link Criterion}
-     */
-    Criterion convert(final Expression expression) {
-        if (Objects.nonNull(expression)) {
-            final Matched matched = expression.getExprMode();
-            switch (matched) {
-                case IMMEDIATE:
-                    if (expression instanceof Native) {
-                        return ((Native) expression)::getCriterion;
-                    }
-                    return this.convertToImmediateCondition(expression);
-                case STANDARD:
-                    return this.convertToStandardCondition(expression);
-            }
-        }
-        return null;
-    }
-
-    /**
-     * 条件表达式转条件对象
-     * @param expression {@link Expression}
-     * @return {@link Criterion}
-     */
-    Criterion convertToImmediateCondition(final Expression expression) {
-        return convertToCondition(expression, expression.getTarget());
-    }
-
-    /**
-     * 条件表达式转条件对象
-     * @param expression {@link Expression}
-     * @return {@link Criterion}
-     */
-    Criterion convertToStandardCondition(final Expression expression) {
-        if (expression instanceof StandardIdEqual) {
-            return convertToCondition(expression, ((AbstractBasicCriteria<?, ?>) expression.getCriteria()).getId());
-        }
-        final Column column = this.findColumn(expression.getTarget());
-        if (Objects.nonNull(column)) {
-            return convertToCondition(expression, column);
-        }
-        return null;
-    }
-
-    /**
-     * 条件表达式转条件对象
-     * @param expression {@link Expression}
-     * @param column     字段名
-     * @return {@link Criterion}
-     */
-    private Criterion convertToCondition(final Expression expression, final String column) {
-        return convertToCondition(expression, column, null, false, null, null);
-    }
-
-    /**
-     * 条件表达式转条件对象
-     * @param expression {@link Expression}
-     * @param column     {@link Column}
-     * @return {@link Criterion}
-     */
-    private Criterion convertToCondition(final Expression expression, final Column column) {
-        return convertToCondition(expression, column.getColumn(), column.getTypeHandler(),
-            column.isUseJavaType(), column.getJavaType(), column.getJdbcType());
-    }
-
-    /**
-     * 条件表达式转条件对象
-     * @param expression  {@link Expression}
-     * @param column      字段名
-     * @param typeHandler 类型处理器类
-     * @param useJavaType 是否拼接JAVA类型
-     * @param javaType    JAVA类型
-     * @param jdbcType    JDBC类型
-     * @return {@link Criterion}
-     */
-    private Criterion convertToCondition(final Expression expression, final String column,
-                                         final Class<? extends TypeHandler<?>> typeHandler, final boolean useJavaType,
-                                         final Class<?> javaType, final JdbcType jdbcType) {
-        if (Objects.isNotBlank(column) || expression instanceof StandardNesting
-            || expression instanceof AbstractTemplateExpression) {
-            if (expression instanceof AbstractBasicExpression) {
-                final AbstractBasicExpression<?> basic = (AbstractBasicExpression<?>) expression;
-                return new Condition(basic.getCriteria(), basic.getAlias(), column,
-                    Scripts.convertConditionPartArg(basic.getSymbol(), basic.getSlot(), typeHandler,
-                        useJavaType, javaType, jdbcType, this.defPlaceholder(basic.getValue())));
-            } else if (expression instanceof AbstractBetweenExpression) {
-                final AbstractBetweenExpression<?> between = (AbstractBetweenExpression<?>) expression;
-                return new Condition(between.getCriteria(), between.getAlias(), column,
-                    Scripts.convertConditionPartArg(between.getSymbol(), between.getSlot(), typeHandler, useJavaType,
-                        javaType, jdbcType, this.defPlaceholders(between.getBegin(), between.getEnd())));
-            } else if (expression instanceof AbstractFuzzyExpression) {
-                final AbstractFuzzyExpression<?> fuzzy = (AbstractFuzzyExpression<?>) expression;
-                final Like like = Optional.ofNullable(fuzzy.getLike()).orElse(Like.ANYWHERE);
-                final StringBuilder builder = new StringBuilder(50);
-                builder.append(Scripts.convertConditionPartArg(fuzzy.getSymbol(), fuzzy.getSlot(),
-                    typeHandler, useJavaType, javaType, jdbcType,
-                    this.defPlaceholder(like.getSegment(String.valueOf(fuzzy.getValue())))));
-                if (Objects.nonNull(fuzzy.getEscape())) {
-                    builder.append(" ESCAPE ").append("'").append(fuzzy.getEscape()).append("'");
-                }
-                return new Condition(fuzzy.getCriteria(), fuzzy.getAlias(), column, builder.toString());
-            } else if (expression instanceof AbstractNullableExpression) {
-                return new Condition(expression.getCriteria(), expression.getAlias(), column,
-                    Scripts.convertConditionPartArg(expression.getSymbol(), expression.getSlot(),
-                        typeHandler, useJavaType, javaType, jdbcType));
-            } else if (expression instanceof AbstractRangeExpression) {
-                final AbstractRangeExpression<?> range = (AbstractRangeExpression<?>) expression;
-                return new Condition(range.getCriteria(), range.getAlias(), column,
-                    Scripts.convertConditionPartArg(range.getSymbol(), range.getSlot(), typeHandler, useJavaType,
-                        javaType, jdbcType, this.defPlaceholders(range.getValues())));
-            } else if (expression instanceof AbstractTemplateExpression) {
-                final AbstractTemplateExpression<?> template = (AbstractTemplateExpression<?>) expression;
-                final String templateString = template.getTemplate();
-                if (Objects.isNotBlank(templateString)) {
-                    template.checkMatch();
-                    final TemplateMatch match = template.getMatch();
-                    final StringBuilder builder = new StringBuilder(60);
-                    final Slot slot = template.getSlot();
-                    final Object value = template.getValue();
-                    final Collection<Object> listValues = template.getListValues();
-                    final Map<String, Object> mapValues = template.getMapValues();
-                    if (Objects.nonNull(slot) && slot != Slot.NONE) {
-                        builder.append(slot.getSegment()).append(Constants.SPACE);
-                    }
-                    switch (match) {
-                        case MULTIPLE:
-                            builder.append(Placeholders.format(templateString, listValues.stream().map(it ->
-                                Scripts.safeJoining(this.defPlaceholder(it))).collect(Collectors.toList())));
-                            break;
-                        case MAP:
-                            builder.append(Placeholders.format(templateString, mapValues.entrySet().stream()
-                                .collect(Collectors.toMap(Map.Entry::getKey,
-                                    it -> Scripts.safeJoining(this.defPlaceholder(it)),
-                                    (o, n) -> n, (Supplier<LinkedHashMap<String, Object>>) LinkedHashMap::new))));
-                            break;
-                        default:
-                            if (Objects.isNotEmpty(listValues)) {
-                                builder.append(Placeholders.format(templateString, listValues.stream().map(it ->
-                                    Scripts.safeJoining(this.defPlaceholder(it)))
-                                    .collect(Collectors.joining(Constants.COMMA_SPACE))));
-                            } else {
-                                builder.append(Placeholders.format(templateString,
-                                    Scripts.safeJoining(this.defPlaceholder(value))));
-                            }
-                            break;
-                    }
-                    return new Condition(template.getCriteria(), template.getAlias(), column, builder.toString());
-                }
-            } else if (expression instanceof StandardNesting) {
-                final StandardNesting nesting = (StandardNesting) expression;
-                final List<Expression> expressions = nesting.getConditions();
-                if (Objects.isNotEmpty(expressions)) {
-                    final List<Criterion> conditions = expressions.stream().map(this::convert)
-                        .filter(Objects::nonNull).collect(Collectors.toList());
-                    if (Objects.isNotEmpty(conditions)) {
-                        return new NestedCondition(nesting.isNot(), nesting.getSlot(), conditions);
-                    }
-                }
-            }
         }
         return null;
     }

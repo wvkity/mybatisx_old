@@ -32,13 +32,13 @@ import java.util.Map;
  *
  *     // No1:
  *     final String template1 = "user_name = ?0 AND pwd = ?1";
- *     query.template(template1, "admin", "123456");
+ *     query.tpl(template1, "admin", "123456");
  *     // output
- *     // OR user_name = ? AND pwd = ?
+ *     // AND user_name = ? AND pwd = ?
  *
  *     // No2:
  *     final String template2 = "user_name = :0 AND pwd = :1;
- *     query.template(template2, Slot.OR, "root", "654321");
+ *     query.tpl(Slot.OR, template2, "root", "654321");
  *     // output
  *     // OR user_name = ? AND pwd = ?
  *
@@ -47,7 +47,7 @@ import java.util.Map;
  *     final Map<String, Object> args1 = new LinkedHashMap();
  *     args1.put("0", "root");
  *     args1.put("1", "123456");
- *     query.template(template3, args1);
+ *     query.tpl(template3, args1);
  *     // output
  *     // AND user_name = ? AND pwd = ?
  *
@@ -56,7 +56,7 @@ import java.util.Map;
  *     final Map<String, Object> args2 = new HashMap();
  *     args2.put("userName", "admin");
  *     args2.put("password", "123456");
- *     query.template(template4, args2);
+ *     query.tpl(template4, args2);
  *     // output
  *     // AND user_name = ? AND pwd = ?
  *
@@ -65,8 +65,8 @@ import java.util.Map;
  * @param <Chain> 子类
  * @author wvkity
  * @created 2021-01-15
- * @since 1.0.0
  * @see com.wvkity.mybatis.core.utils.Placeholders
+ * @since 1.0.0
  */
 public interface Template<T, Chain extends Template<T, Chain>> {
 
@@ -77,40 +77,40 @@ public interface Template<T, Chain extends Template<T, Chain>> {
      * @param value    值
      * @return {@link Chain}
      */
-    default Chain template(final String template, final Property<T, ?> property, final Object value) {
-        return template(template, property, value, Slot.AND);
+    default Chain tpl(final String template, final Property<T, ?> property, final Object value) {
+        return tpl(Slot.AND, template, property, value);
     }
+
+    /**
+     * 模板条件
+     * @param slot     {@link Slot}
+     * @param template 模板
+     * @param property 属性
+     * @param value    值
+     * @return {@link Chain}
+     */
+    Chain tpl(final Slot slot, final String template, final Property<T, ?> property, final Object value);
 
     /**
      * 模板条件
      * @param template 模板
      * @param property 属性
      * @param value    值
-     * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    Chain template(final String template, final Property<T, ?> property, final Object value, final Slot slot);
-
-    /**
-     * 模板条件
-     * @param template 模板
-     * @param property 属性
-     * @param value    值
-     * @return {@link Chain}
-     */
-    default Chain template(final String template, final String property, final Object value) {
-        return template(template, property, value, Slot.AND);
+    default Chain tpl(final String template, final String property, final Object value) {
+        return tpl(Slot.AND, template, property, value);
     }
 
     /**
      * 模板条件
+     * @param slot     {@link Slot}
      * @param template 模板
      * @param property 属性
      * @param value    值
-     * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    Chain template(final String template, final String property, final Object value, final Slot slot);
+    Chain tpl(final Slot slot, final String template, final String property, final Object value);
 
     /**
      * 模板条件
@@ -118,16 +118,16 @@ public interface Template<T, Chain extends Template<T, Chain>> {
      * @param value    值
      * @return {@link Chain}
      */
-    Chain template(final String template, final Object value);
+    Chain tpl(final String template, final Object value);
 
     /**
      * 模板条件
+     * @param slot     {@link Slot}
      * @param template 模板
      * @param value    值
-     * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    Chain template(final String template, final Object value, final Slot slot);
+    Chain tpl(final Slot slot, final String template, final Object value);
 
     /**
      * 模板条件
@@ -136,19 +136,43 @@ public interface Template<T, Chain extends Template<T, Chain>> {
      * @param value    值
      * @return {@link Chain}
      */
-    default Chain colTemplate(final String template, final String column, final Object value) {
-        return colTemplate(template, column, value, Slot.AND);
+    default Chain colTpl(final String template, final String column, final Object value) {
+        return colTpl(Slot.AND, template, column, value);
     }
 
     /**
      * 模板条件
+     * @param slot     {@link Slot}
      * @param template 模板
      * @param column   字段
      * @param value    值
+     * @return {@link Chain}
+     */
+    Chain colTpl(final Slot slot, final String template, final String column, final Object value);
+
+    /**
+     * 模板条件
+     * @param template 模板
+     * @param property 属性
+     * @param values   多个值
+     * @return {@link Chain}
+     */
+    default Chain tpl(final String template, final Property<T, ?> property, final Object... values) {
+        return tpl(Slot.AND, template, property, Objects.asList(values));
+    }
+
+    /**
+     * 模板条件
      * @param slot     {@link Slot}
+     * @param template 模板
+     * @param property 属性
+     * @param values   多个值
      * @return {@link Chain}
      */
-    Chain colTemplate(final String template, final String column, final Object value, final Slot slot);
+    default Chain tpl(final Slot slot, final String template,
+                      final Property<T, ?> property, final Object... values) {
+        return tpl(slot, template, property, Objects.asList(values));
+    }
 
     /**
      * 模板条件
@@ -157,22 +181,20 @@ public interface Template<T, Chain extends Template<T, Chain>> {
      * @param values   多个值
      * @return {@link Chain}
      */
-    default Chain template(final String template, final Property<T, ?> property, final Object... values) {
-        return template(template, property, Objects.asList(values), Slot.AND);
+    default Chain tpl(final String template, final Property<T, ?> property, final Collection<Object> values) {
+        return tpl(Slot.AND, template, property, values);
     }
 
     /**
      * 模板条件
-     * @param template 模板
      * @param slot     {@link Slot}
+     * @param template 模板
      * @param property 属性
      * @param values   多个值
      * @return {@link Chain}
      */
-    default Chain template(final String template, final Slot slot,
-                           final Property<T, ?> property, final Object... values) {
-        return template(template, property, Objects.asList(values), slot);
-    }
+    Chain tpl(final Slot slot, final String template, final Property<T, ?> property,
+              final Collection<Object> values);
 
     /**
      * 模板条件
@@ -181,64 +203,42 @@ public interface Template<T, Chain extends Template<T, Chain>> {
      * @param values   多个值
      * @return {@link Chain}
      */
-    default Chain template(final String template, final Property<T, ?> property, final Collection<Object> values) {
-        return template(template, property, values, Slot.AND);
+    default Chain tpl(final String template, final String property, final Object... values) {
+        return tpl(Slot.AND, template, property, Objects.asList(values));
     }
 
     /**
      * 模板条件
-     * @param template 模板
      * @param slot     {@link Slot}
-     * @param property 属性
-     * @param values   多个值
-     * @return {@link Chain}
-     */
-    Chain template(final String template, final Property<T, ?> property,
-                   final Collection<Object> values, final Slot slot);
-
-    /**
-     * 模板条件
      * @param template 模板
      * @param property 属性
      * @param values   多个值
      * @return {@link Chain}
      */
-    default Chain template(final String template, final String property, final Object... values) {
-        return template(template, property, Objects.asList(values), Slot.AND);
+    default Chain tpl(final Slot slot, final String template, final String property, final Object... values) {
+        return tpl(slot, template, property, Objects.asList(values));
     }
 
     /**
      * 模板条件
      * @param template 模板
+     * @param property 属性
+     * @param values   多个值
+     * @return {@link Chain}
+     */
+    default Chain tpl(final String template, final String property, final Collection<Object> values) {
+        return tpl(Slot.AND, template, property, values);
+    }
+
+    /**
+     * 模板条件
      * @param slot     {@link Slot}
-     * @param property 属性
-     * @param values   多个值
-     * @return {@link Chain}
-     */
-    default Chain template(final String template, final Slot slot, final String property, final Object... values) {
-        return template(template, property, Objects.asList(values), slot);
-    }
-
-    /**
-     * 模板条件
      * @param template 模板
      * @param property 属性
      * @param values   多个值
      * @return {@link Chain}
      */
-    default Chain template(final String template, final String property, final Collection<Object> values) {
-        return template(template, property, values, Slot.AND);
-    }
-
-    /**
-     * 模板条件
-     * @param template 模板
-     * @param property 属性
-     * @param values   多个值
-     * @param slot     {@link Slot}
-     * @return {@link Chain}
-     */
-    Chain template(final String template, final String property, final Collection<Object> values, final Slot slot);
+    Chain tpl(final Slot slot, final String template, final String property, final Collection<Object> values);
 
     /**
      * 模板条件
@@ -246,8 +246,8 @@ public interface Template<T, Chain extends Template<T, Chain>> {
      * @param values   多个值
      * @return {@link Chain}
      */
-    default Chain template(final String template, final Object... values) {
-        return template(template, Objects.asList(values));
+    default Chain tpl(final String template, final Object... values) {
+        return tpl(template, Objects.asList(values));
     }
 
     /**
@@ -256,27 +256,27 @@ public interface Template<T, Chain extends Template<T, Chain>> {
      * @param values   多个值
      * @return {@link Chain}
      */
-    Chain template(final String template, final Collection<Object> values);
+    Chain tpl(final String template, final Collection<Object> values);
 
     /**
      * 模板条件
+     * @param slot     {@link Slot}
      * @param template 模板
      * @param values   多个值
-     * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    default Chain template(final String template, final Slot slot, final Object... values) {
-        return template(template, Objects.asList(values), slot);
+    default Chain tpl(final Slot slot, final String template, final Object... values) {
+        return tpl(slot, template, Objects.asList(values));
     }
 
     /**
      * 模板条件
+     * @param slot     {@link Slot}
      * @param template 模板
      * @param values   多个值
-     * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    Chain template(final String template, final Collection<Object> values, final Slot slot);
+    Chain tpl(final Slot slot, final String template, final Collection<Object> values);
 
     /**
      * 模板条件
@@ -285,20 +285,20 @@ public interface Template<T, Chain extends Template<T, Chain>> {
      * @param values   多个值
      * @return {@link Chain}
      */
-    default Chain colTemplate(final String template, final String column, final Object... values) {
-        return colTemplate(template, column, Objects.asList(values), Slot.AND);
+    default Chain colTpl(final String template, final String column, final Object... values) {
+        return colTpl(Slot.AND, template, column, Objects.asList(values));
     }
 
     /**
      * 模板条件
-     * @param template 模板
      * @param slot     {@link Slot}
+     * @param template 模板
      * @param column   字段
      * @param values   多个值
      * @return {@link Chain}
      */
-    default Chain colTemplate(final String template, final Slot slot, final String column, final Object... values) {
-        return colTemplate(template, column, Objects.asList(values), slot);
+    default Chain colTpl(final Slot slot, final String template, final String column, final Object... values) {
+        return colTpl(slot, template, column, Objects.asList(values));
     }
 
     /**
@@ -308,19 +308,19 @@ public interface Template<T, Chain extends Template<T, Chain>> {
      * @param values   多个值
      * @return {@link Chain}
      */
-    default Chain colTemplate(final String template, final String column, final Collection<Object> values) {
-        return colTemplate(template, column, values, Slot.AND);
+    default Chain colTpl(final String template, final String column, final Collection<Object> values) {
+        return colTpl(Slot.AND, template, column, values);
     }
 
     /**
      * 模板条件
-     * @param template 模板
-     * @param column   字段
-     * @param values   多个值
      * @param slot     {@link Slot}
+     * @param template 模板
+     * @param column   字段
+     * @param values   多个值
      * @return {@link Chain}
      */
-    Chain colTemplate(final String template, final String column, final Collection<Object> values, final Slot slot);
+    Chain colTpl(final Slot slot, final String template, final String column, final Collection<Object> values);
 
     /**
      * 模板条件
@@ -332,25 +332,25 @@ public interface Template<T, Chain extends Template<T, Chain>> {
      * @param v2       占位符2对应值
      * @return {@link Chain}
      */
-    default Chain template(final String template, final Property<T, ?> property, final String k1, final Object v1,
-                           final String k2, final Object v2) {
-        return template(template, property, ImmutableLinkedMap.of(k1, v1, k2, v2), Slot.AND);
+    default Chain tpl(final String template, final Property<T, ?> property, final String k1, final Object v1,
+                      final String k2, final Object v2) {
+        return tpl(Slot.AND, template, property, ImmutableLinkedMap.of(k1, v1, k2, v2));
     }
 
     /**
      * 模板条件
+     * @param slot     {@link Slot}
      * @param template 模板
      * @param property 属性
      * @param k1       占位符1
      * @param v1       占位符1对应值
      * @param k2       占位符2
      * @param v2       占位符2对应值
-     * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    default Chain template(final String template, final Property<T, ?> property, final String k1, final Object v1,
-                           final String k2, final Object v2, final Slot slot) {
-        return template(template, property, ImmutableLinkedMap.of(k1, v1, k2, v2), slot);
+    default Chain tpl(final Slot slot, final String template, final Property<T, ?> property, final String k1,
+                      final Object v1, final String k2, final Object v2) {
+        return tpl(slot, template, property, ImmutableLinkedMap.of(k1, v1, k2, v2));
     }
 
     /**
@@ -365,9 +365,80 @@ public interface Template<T, Chain extends Template<T, Chain>> {
      * @param v3       占位符3对应值
      * @return {@link Chain}
      */
-    default Chain template(final String template, final Property<T, ?> property, final String k1, final Object v1,
-                           final String k2, final Object v2, final String k3, final Object v3) {
-        return template(template, property, ImmutableLinkedMap.of(k1, v1, k2, v2, k3, v3), Slot.AND);
+    default Chain tpl(final String template, final Property<T, ?> property, final String k1, final Object v1,
+                      final String k2, final Object v2, final String k3, final Object v3) {
+        return tpl(Slot.AND, template, property, ImmutableLinkedMap.of(k1, v1, k2, v2, k3, v3));
+    }
+
+    /**
+     * 模板条件
+     * @param slot     {@link Slot}
+     * @param template 模板
+     * @param property 属性
+     * @param k1       占位符1
+     * @param v1       占位符1对应值
+     * @param k2       占位符2
+     * @param v2       占位符2对应值
+     * @param k3       占位符3
+     * @param v3       占位符3对应值
+     * @return {@link Chain}
+     */
+    default Chain tpl(final Slot slot, final String template, final Property<T, ?> property, final String k1,
+                      final Object v1, final String k2, final Object v2, final String k3, final Object v3) {
+        return tpl(slot, template, property, ImmutableLinkedMap.of(k1, v1, k2, v2, k3, v3));
+    }
+
+    /**
+     * 模板条件
+     * @param template 模板
+     * @param property 属性
+     * @param values   多个值
+     * @return {@link Chain}
+     */
+    default Chain tpl(final String template, final Property<T, ?> property, final Map<String, Object> values) {
+        return tpl(Slot.AND, template, property, values);
+    }
+
+    /**
+     * 模板条件
+     * @param slot     {@link Slot}
+     * @param template 模板
+     * @param property 属性
+     * @param values   多个值
+     * @return {@link Chain}
+     */
+    Chain tpl(final Slot slot, final String template, final Property<T, ?> property,
+              final Map<String, Object> values);
+
+    /**
+     * 模板条件
+     * @param template 模板
+     * @param property 属性
+     * @param k1       占位符1
+     * @param v1       占位符1对应值
+     * @param k2       占位符2
+     * @param v2       占位符2对应值
+     * @return {@link Chain}
+     */
+    default Chain tpl(final String template, final String property, final String k1, final Object v1,
+                      final String k2, final Object v2) {
+        return tpl(Slot.AND, template, property, ImmutableLinkedMap.of(k1, v1, k2, v2));
+    }
+
+    /**
+     * 模板条件
+     * @param slot     {@link Slot}
+     * @param template 模板
+     * @param property 属性
+     * @param k1       占位符1
+     * @param v1       占位符1对应值
+     * @param k2       占位符2
+     * @param v2       占位符2对应值
+     * @return {@link Chain}
+     */
+    default Chain tpl(final Slot slot, final String template, final String property, final String k1, final Object v1,
+                      final String k2, final Object v2) {
+        return tpl(slot, template, property, ImmutableLinkedMap.of(k1, v1, k2, v2));
     }
 
     /**
@@ -380,70 +451,16 @@ public interface Template<T, Chain extends Template<T, Chain>> {
      * @param v2       占位符2对应值
      * @param k3       占位符3
      * @param v3       占位符3对应值
+     * @return {@link Chain}
+     */
+    default Chain tpl(final String template, final String property, final String k1, final Object v1,
+                      final String k2, final Object v2, final String k3, final Object v3) {
+        return tpl(Slot.AND, template, property, ImmutableLinkedMap.of(k1, v1, k2, v2, k3, v3));
+    }
+
+    /**
+     * 模板条件
      * @param slot     {@link Slot}
-     * @return {@link Chain}
-     */
-    default Chain template(final String template, final Property<T, ?> property, final String k1, final Object v1,
-                           final String k2, final Object v2, final String k3, final Object v3, final Slot slot) {
-        return template(template, property, ImmutableLinkedMap.of(k1, v1, k2, v2, k3, v3), slot);
-    }
-
-    /**
-     * 模板条件
-     * @param template 模板
-     * @param property 属性
-     * @param values   多个值
-     * @return {@link Chain}
-     */
-    default Chain template(final String template, final Property<T, ?> property,
-                           final Map<String, Object> values) {
-        return template(template, property, values, Slot.AND);
-    }
-
-    /**
-     * 模板条件
-     * @param template 模板
-     * @param property 属性
-     * @param values   多个值
-     * @param slot     {@link Slot}
-     * @return {@link Chain}
-     */
-    Chain template(final String template, final Property<T, ?> property,
-                   final Map<String, Object> values, final Slot slot);
-
-    /**
-     * 模板条件
-     * @param template 模板
-     * @param property 属性
-     * @param k1       占位符1
-     * @param v1       占位符1对应值
-     * @param k2       占位符2
-     * @param v2       占位符2对应值
-     * @return {@link Chain}
-     */
-    default Chain template(final String template, final String property, final String k1, final Object v1,
-                           final String k2, final Object v2) {
-        return template(template, property, ImmutableLinkedMap.of(k1, v1, k2, v2), Slot.AND);
-    }
-
-    /**
-     * 模板条件
-     * @param template 模板
-     * @param property 属性
-     * @param k1       占位符1
-     * @param v1       占位符1对应值
-     * @param k2       占位符2
-     * @param v2       占位符2对应值
-     * @param slot     {@link Slot}
-     * @return {@link Chain}
-     */
-    default Chain template(final String template, final String property, final String k1, final Object v1,
-                           final String k2, final Object v2, final Slot slot) {
-        return template(template, property, ImmutableLinkedMap.of(k1, v1, k2, v2), slot);
-    }
-
-    /**
-     * 模板条件
      * @param template 模板
      * @param property 属性
      * @param k1       占位符1
@@ -454,27 +471,9 @@ public interface Template<T, Chain extends Template<T, Chain>> {
      * @param v3       占位符3对应值
      * @return {@link Chain}
      */
-    default Chain template(final String template, final String property, final String k1, final Object v1,
-                           final String k2, final Object v2, final String k3, final Object v3) {
-        return template(template, property, ImmutableLinkedMap.of(k1, v1, k2, v2, k3, v3), Slot.AND);
-    }
-
-    /**
-     * 模板条件
-     * @param template 模板
-     * @param property 属性
-     * @param k1       占位符1
-     * @param v1       占位符1对应值
-     * @param k2       占位符2
-     * @param v2       占位符2对应值
-     * @param k3       占位符3
-     * @param v3       占位符3对应值
-     * @param slot     {@link Slot}
-     * @return {@link Chain}
-     */
-    default Chain template(final String template, final String property, final String k1, final Object v1,
-                           final String k2, final Object v2, final String k3, final Object v3, final Slot slot) {
-        return template(template, property, ImmutableLinkedMap.of(k1, v1, k2, v2, k3, v3), slot);
+    default Chain tpl(final Slot slot, final String template, final String property, final String k1, final Object v1,
+                      final String k2, final Object v2, final String k3, final Object v3) {
+        return tpl(slot, template, property, ImmutableLinkedMap.of(k1, v1, k2, v2, k3, v3));
     }
 
     /**
@@ -484,8 +483,8 @@ public interface Template<T, Chain extends Template<T, Chain>> {
      * @param values   多个值
      * @return {@link Chain}
      */
-    default Chain template(final String template, final String property, final Map<String, Object> values) {
-        return template(template, property, values, Slot.AND);
+    default Chain tpl(final String template, final String property, final Map<String, Object> values) {
+        return tpl(Slot.AND, template, property, values);
     }
 
     /**
@@ -496,7 +495,7 @@ public interface Template<T, Chain extends Template<T, Chain>> {
      * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    Chain template(final String template, final String property, final Map<String, Object> values, final Slot slot);
+    Chain tpl(final Slot slot, final String template, final String property, final Map<String, Object> values);
 
     /**
      * 模板条件
@@ -507,8 +506,8 @@ public interface Template<T, Chain extends Template<T, Chain>> {
      * @param v2       占位符2对应值
      * @return {@link Chain}
      */
-    default Chain template(final String template, final String k1, final Object v1, final String k2, final Object v2) {
-        return template(template, ImmutableLinkedMap.of(k1, v1, k2, v2));
+    default Chain tpl(final String template, final String k1, final Object v1, final String k2, final Object v2) {
+        return tpl(template, ImmutableLinkedMap.of(k1, v1, k2, v2));
     }
 
     /**
@@ -522,9 +521,9 @@ public interface Template<T, Chain extends Template<T, Chain>> {
      * @param v3       占位符3对应值
      * @return {@link Chain}
      */
-    default Chain template(final String template, final String k1, final Object v1,
-                           final String k2, final Object v2, final String k3, final Object v3) {
-        return template(template, ImmutableLinkedMap.of(k1, v1, k2, v2, k3, v3));
+    default Chain tpl(final String template, final String k1, final Object v1,
+                      final String k2, final Object v2, final String k3, final Object v3) {
+        return tpl(template, ImmutableLinkedMap.of(k1, v1, k2, v2, k3, v3));
     }
 
     /**
@@ -533,7 +532,7 @@ public interface Template<T, Chain extends Template<T, Chain>> {
      * @param values   多个值
      * @return {@link Chain}
      */
-    Chain template(final String template, final Map<String, Object> values);
+    Chain tpl(final String template, final Map<String, Object> values);
 
     /**
      * 模板条件
@@ -545,13 +544,14 @@ public interface Template<T, Chain extends Template<T, Chain>> {
      * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    default Chain template(final String template, final String k1, final Object v1,
-                           final String k2, final Object v2, final Slot slot) {
-        return template(template, ImmutableLinkedMap.of(k1, v1, k2, v2), slot);
+    default Chain tpl(final Slot slot, final String template, final String k1, final Object v1,
+                      final String k2, final Object v2) {
+        return tpl(slot, template, ImmutableLinkedMap.of(k1, v1, k2, v2));
     }
 
     /**
      * 模板条件
+     * @param slot     {@link Slot}
      * @param template 模板
      * @param k1       占位符1
      * @param v1       占位符1对应值
@@ -559,22 +559,21 @@ public interface Template<T, Chain extends Template<T, Chain>> {
      * @param v2       占位符2对应值
      * @param k3       占位符3
      * @param v3       占位符3对应值
-     * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    default Chain template(final String template, final String k1, final Object v1,
-                           final String k2, final Object v2, final String k3, final Object v3, final Slot slot) {
-        return template(template, ImmutableLinkedMap.of(k1, v1, k2, v2, k3, v3), slot);
+    default Chain tpl(final Slot slot, final String template, final String k1, final Object v1,
+                      final String k2, final Object v2, final String k3, final Object v3) {
+        return tpl(slot, template, ImmutableLinkedMap.of(k1, v1, k2, v2, k3, v3));
     }
 
     /**
      * 模板条件
+     * @param slot     {@link Slot}
      * @param template 模板
      * @param values   多个值
-     * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    Chain template(final String template, final Map<String, Object> values, final Slot slot);
+    Chain tpl(final Slot slot, final String template, final Map<String, Object> values);
 
     /**
      * 模板条件
@@ -586,42 +585,25 @@ public interface Template<T, Chain extends Template<T, Chain>> {
      * @param v2       占位符2对应值
      * @return {@link Chain}
      */
-    default Chain colTemplate(final String template, final String column, final String k1, final Object v1,
-                              final String k2, final Object v2) {
-        return colTemplate(template, column, ImmutableLinkedMap.of(k1, v1, k2, v2), Slot.AND);
+    default Chain colTpl(final String template, final String column, final String k1, final Object v1,
+                         final String k2, final Object v2) {
+        return colTpl(Slot.AND, template, column, ImmutableLinkedMap.of(k1, v1, k2, v2));
     }
 
     /**
      * 模板条件
-     * @param template 模板
-     * @param column   字段
-     * @param k1       占位符1
-     * @param v1       占位符1对应值
-     * @param k2       占位符2
-     * @param v2       占位符2对应值
      * @param slot     {@link Slot}
-     * @return {@link Chain}
-     */
-    default Chain colTemplate(final String template, final String column, final String k1, final Object v1,
-                              final String k2, final Object v2, final Slot slot) {
-        return colTemplate(template, column, ImmutableLinkedMap.of(k1, v1, k2, v2), slot);
-    }
-
-    /**
-     * 模板条件
      * @param template 模板
      * @param column   字段
      * @param k1       占位符1
      * @param v1       占位符1对应值
      * @param k2       占位符2
      * @param v2       占位符2对应值
-     * @param k3       占位符3
-     * @param v3       占位符3对应值
      * @return {@link Chain}
      */
-    default Chain colTemplate(final String template, final String column, final String k1, final Object v1,
-                              final String k2, final Object v2, final String k3, final Object v3) {
-        return colTemplate(template, column, ImmutableLinkedMap.of(k1, v1, k2, v2, k3, v3), Slot.AND);
+    default Chain colTpl(final Slot slot, final String template, final String column, final String k1, final Object v1,
+                         final String k2, final Object v2) {
+        return colTpl(slot, template, column, ImmutableLinkedMap.of(k1, v1, k2, v2));
     }
 
     /**
@@ -634,12 +616,29 @@ public interface Template<T, Chain extends Template<T, Chain>> {
      * @param v2       占位符2对应值
      * @param k3       占位符3
      * @param v3       占位符3对应值
-     * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    default Chain colTemplate(final String template, final String column, final String k1, final Object v1,
-                              final String k2, final Object v2, final String k3, final Object v3, final Slot slot) {
-        return colTemplate(template, column, ImmutableLinkedMap.of(k1, v1, k2, v2, k3, v3), slot);
+    default Chain colTpl(final String template, final String column, final String k1, final Object v1,
+                         final String k2, final Object v2, final String k3, final Object v3) {
+        return colTpl(Slot.AND, template, column, ImmutableLinkedMap.of(k1, v1, k2, v2, k3, v3));
+    }
+
+    /**
+     * 模板条件
+     * @param slot     {@link Slot}
+     * @param template 模板
+     * @param column   字段
+     * @param k1       占位符1
+     * @param v1       占位符1对应值
+     * @param k2       占位符2
+     * @param v2       占位符2对应值
+     * @param k3       占位符3
+     * @param v3       占位符3对应值
+     * @return {@link Chain}
+     */
+    default Chain colTpl(final Slot slot, final String template, final String column, final String k1, final Object v1,
+                         final String k2, final Object v2, final String k3, final Object v3) {
+        return colTpl(slot, template, column, ImmutableLinkedMap.of(k1, v1, k2, v2, k3, v3));
     }
 
     /**
@@ -649,18 +648,18 @@ public interface Template<T, Chain extends Template<T, Chain>> {
      * @param values   多个值
      * @return {@link Chain}
      */
-    default Chain colTemplate(final String template, final String column, final Map<String, Object> values) {
-        return colTemplate(template, column, values, Slot.AND);
+    default Chain colTpl(final String template, final String column, final Map<String, Object> values) {
+        return colTpl(Slot.AND, template, column, values);
     }
 
     /**
      * 模板条件
+     * @param slot     {@link Slot}
      * @param template 模板
      * @param column   字段
      * @param values   多个值
-     * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    Chain colTemplate(final String template, final String column, final Map<String, Object> values, final Slot slot);
+    Chain colTpl(final Slot slot, final String template, final String column, final Map<String, Object> values);
 
 }

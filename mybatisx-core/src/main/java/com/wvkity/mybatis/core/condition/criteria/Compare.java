@@ -38,16 +38,16 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain idEq(final Object value) {
-        return idEq(value, Slot.AND);
+        return idEq(Slot.AND, value);
     }
 
     /**
      * 主键等于
-     * @param value 值
      * @param slot  {@link Slot}
+     * @param value 值
      * @return {@link Chain}
      */
-    Chain idEq(final Object value, final Slot slot);
+    Chain idEq(final Slot slot, final Object value);
 
     /**
      * 等于
@@ -57,18 +57,18 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      * @return {@link Chain}
      */
     default <V> Chain eq(final Property<T, V> property, final V value) {
-        return eq(property, value, Slot.AND);
+        return eq(Slot.AND, property, value);
     }
 
     /**
      * 等于
+     * @param slot     {@link Slot}
      * @param property {@link Property}
      * @param value    值
-     * @param slot     {@link Slot}
      * @param <V>      属性类型
      * @return {@link Chain}
      */
-    <V> Chain eq(final Property<T, V> property, final V value, final Slot slot);
+    <V> Chain eq(final Slot slot, final Property<T, V> property, final V value);
 
     /**
      * 等于
@@ -77,17 +77,17 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain eq(final String property, final Object value) {
-        return eq(property, value, Slot.AND);
+        return eq(Slot.AND, property, value);
     }
 
     /**
      * 等于
+     * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
-     * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    Chain eq(final String property, final Object value, final Slot slot);
+    Chain eq(final Slot slot, final String property, final Object value);
 
     /**
      * 等于
@@ -96,17 +96,17 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain colEq(final String column, final Object value) {
-        return colEq(column, value, Slot.AND);
+        return colEq(Slot.AND, column, value);
     }
 
     /**
      * 等于
+     * @param slot   {@link Slot}
      * @param column 字段
      * @param value  值
-     * @param slot   {@link Slot}
      * @return {@link Chain}
      */
-    Chain colEq(final String column, final Object value, final Slot slot);
+    Chain colEq(final Slot slot, final String column, final Object value);
 
     // endregion
 
@@ -120,18 +120,18 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      * @return {@link Chain}
      */
     default <V> Chain ne(final Property<T, V> property, final V value) {
-        return ne(property, value, Slot.AND);
+        return ne(Slot.AND, property, value);
     }
 
     /**
      * 不等于
+     * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
-     * @param slot     {@link Slot}
      * @param <V>      属性类型
      * @return {@link Chain}
      */
-    <V> Chain ne(final Property<T, V> property, final V value, final Slot slot);
+    <V> Chain ne(final Slot slot, final Property<T, V> property, final V value);
 
     /**
      * 不等于
@@ -140,17 +140,17 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain ne(final String property, final Object value) {
-        return ne(property, value, Slot.AND);
+        return ne(Slot.AND, property, value);
     }
 
     /**
      * 不等于
+     * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
-     * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    Chain ne(final String property, final Object value, final Slot slot);
+    Chain ne(final Slot slot, final String property, final Object value);
 
 
     /**
@@ -160,17 +160,17 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain colNe(final String column, final Object value) {
-        return colNe(column, value, Slot.AND);
+        return colNe(Slot.AND, column, value);
     }
 
     /**
      * 不等于
+     * @param slot   {@link Slot}
      * @param column 字段
      * @param value  值
-     * @param slot   {@link Slot}
      * @return {@link Chain}
      */
-    Chain colNe(final String column, final Object value, final Slot slot);
+    Chain colNe(final Slot slot, final String column, final Object value);
 
     // endregion
 
@@ -184,18 +184,18 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      * @return {@link Chain}
      */
     default <V> Chain gt(final Property<T, V> property, final V value) {
-        return gt(property, value, Slot.AND);
+        return gt(Slot.AND, property, value);
     }
 
     /**
      * 大于
+     * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
-     * @param slot     {@link Slot}
      * @param <V>      属性类型
      * @return {@link Chain}
      */
-    <V> Chain gt(final Property<T, V> property, final V value, final Slot slot);
+    <V> Chain gt(final Slot slot, final Property<T, V> property, final V value);
 
     /**
      * 大于
@@ -204,17 +204,17 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain gt(final String property, final Object value) {
-        return gt(property, value, Slot.AND);
+        return gt(Slot.AND, property, value);
     }
 
     /**
      * 大于
+     * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
-     * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    Chain gt(final String property, final Object value, final Slot slot);
+    Chain gt(final Slot slot, final String property, final Object value);
 
     /**
      * 大于
@@ -223,17 +223,17 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain colGt(final String column, final Object value) {
-        return colGt(column, value, Slot.AND);
+        return colGt(Slot.AND, column, value);
     }
 
     /**
      * 大于
+     * @param slot   {@link Slot}
      * @param column 属性
      * @param value  值
-     * @param slot   {@link Slot}
      * @return {@link Chain}
      */
-    Chain colGt(final String column, final Object value, final Slot slot);
+    Chain colGt(final Slot slot, final String column, final Object value);
 
     // endregion
 
@@ -247,18 +247,18 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      * @return {@link Chain}
      */
     default <V> Chain ge(final Property<T, V> property, final V value) {
-        return ge(property, value, Slot.AND);
+        return ge(Slot.AND, property, value);
     }
 
     /**
      * 大于或等于
+     * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
-     * @param slot     {@link Slot}
      * @param <V>      属性类型
      * @return {@link Chain}
      */
-    <V> Chain ge(final Property<T, V> property, final V value, final Slot slot);
+    <V> Chain ge(final Slot slot, final Property<T, V> property, final V value);
 
     /**
      * 大于或等于
@@ -267,17 +267,17 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain ge(final String property, final Object value) {
-        return ge(property, value, Slot.AND);
+        return ge(Slot.AND, property, value);
     }
 
     /**
      * 大于或等于
+     * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
-     * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    Chain ge(final String property, final Object value, final Slot slot);
+    Chain ge(final Slot slot, final String property, final Object value);
 
     /**
      * 大于或等于
@@ -286,17 +286,17 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain colGe(final String column, final Object value) {
-        return colGe(column, value, Slot.AND);
+        return colGe(Slot.AND, column, value);
     }
 
     /**
      * 大于或等于
+     * @param slot   {@link Slot}
      * @param column 字段
      * @param value  值
-     * @param slot   {@link Slot}
      * @return {@link Chain}
      */
-    Chain colGe(final String column, final Object value, final Slot slot);
+    Chain colGe(final Slot slot, final String column, final Object value);
 
     // endregion
 
@@ -310,18 +310,18 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      * @return {@link Chain}
      */
     default <V> Chain lt(final Property<T, V> property, final V value) {
-        return lt(property, value, Slot.AND);
+        return lt(Slot.AND, property, value);
     }
 
     /**
      * 小于
+     * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
-     * @param slot     {@link Slot}
      * @param <V>      属性类型
      * @return {@link Chain}
      */
-    <V> Chain lt(final Property<T, V> property, final V value, final Slot slot);
+    <V> Chain lt(final Slot slot, final Property<T, V> property, final V value);
 
     /**
      * 小于
@@ -330,17 +330,17 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain lt(final String property, final Object value) {
-        return lt(property, value, Slot.AND);
+        return lt(Slot.AND, property, value);
     }
 
     /**
      * 小于
+     * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
-     * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    Chain lt(final String property, final Object value, final Slot slot);
+    Chain lt(final Slot slot, final String property, final Object value);
 
     /**
      * 小于
@@ -349,17 +349,17 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain colLt(final String column, final Object value) {
-        return colLt(column, value, Slot.AND);
+        return colLt(Slot.AND, column, value);
     }
 
     /**
      * 大于
+     * @param slot   {@link Slot}
      * @param column 属性
      * @param value  值
-     * @param slot   {@link Slot}
      * @return {@link Chain}
      */
-    Chain colLt(final String column, final Object value, final Slot slot);
+    Chain colLt(final Slot slot, final String column, final Object value);
 
     // endregion
 
@@ -373,18 +373,18 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      * @return {@link Chain}
      */
     default <V> Chain le(final Property<T, V> property, final V value) {
-        return le(property, value, Slot.AND);
+        return le(Slot.AND, property, value);
     }
 
     /**
      * 大于或等于
+     * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
-     * @param slot     {@link Slot}
      * @param <V>      属性类型
      * @return {@link Chain}
      */
-    <V> Chain le(final Property<T, V> property, final V value, final Slot slot);
+    <V> Chain le(final Slot slot, final Property<T, V> property, final V value);
 
     /**
      * 大于或等于
@@ -393,17 +393,17 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain le(final String property, final Object value) {
-        return le(property, value, Slot.AND);
+        return le(Slot.AND, property, value);
     }
 
     /**
      * 大于或等于
+     * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
-     * @param slot     {@link Slot}
      * @return {@link Chain}
      */
-    Chain le(final String property, final Object value, final Slot slot);
+    Chain le(final Slot slot, final String property, final Object value);
 
     /**
      * 大于或等于
@@ -412,17 +412,17 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain colLe(final String column, final Object value) {
-        return colLe(column, value, Slot.AND);
+        return colLe(Slot.AND, column, value);
     }
 
     /**
      * 大于或等于
+     * @param slot   {@link Slot}
      * @param column 字段
      * @param value  值
-     * @param slot   {@link Slot}
      * @return {@link Chain}
      */
-    Chain colLe(final String column, final Object value, final Slot slot);
+    Chain colLe(final Slot slot, final String column, final Object value);
 
     // endregion
 
@@ -441,23 +441,23 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      * @return {@link Chain}
      */
     default <V1, V2> Chain eq(final Property<T, V1> p1, final V1 v1, final Property<T, V2> p2, final V2 v2) {
-        return eq(p1, v1, p2, v2, Slot.AND);
+        return eq(Slot.AND, p1, v1, p2, v2);
     }
 
     /**
      * 等于
+     * @param slot {@link Slot}
      * @param p1   属性1
      * @param v1   属性1对应值
      * @param p2   属性2
      * @param v2   属性2对应值
-     * @param slot {@link Slot}
      * @param <V1> 属性1类型
      * @param <V2> 属性2类型
      * @return {@link Chain}
      */
-    default <V1, V2> Chain eq(final Property<T, V1> p1, final V1 v1, final Property<T, V2> p2, final V2 v2,
-                              final Slot slot) {
-        return this.eq(p1, v1, slot).eq(p2, v2, slot);
+    default <V1, V2> Chain eq(final Slot slot, final Property<T, V1> p1, final V1 v1, final Property<T, V2> p2,
+                              final V2 v2) {
+        return this.eq(slot, p1, v1).eq(slot, p2, v2);
     }
 
     /**
@@ -475,26 +475,26 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      */
     default <V1, V2, V3> Chain eq(final Property<T, V1> p1, final V1 v1, final Property<T, V2> p2, final V2 v2,
                                   final Property<T, V3> p3, final V3 v3) {
-        return eq(p1, v1, p2, v2, p3, v3, Slot.AND);
+        return eq(Slot.AND, p1, v1, p2, v2, p3, v3);
     }
 
     /**
      * 等于
+     * @param slot {@link Slot}
      * @param p1   属性1
      * @param v1   属性1对应值
      * @param p2   属性2
      * @param v2   属性2对应值
      * @param p3   属性3
      * @param v3   属性3对应值
-     * @param slot {@link Slot}
      * @param <V1> 属性1类型
      * @param <V2> 属性2类型
      * @param <V3> 属性3类型
      * @return {@link Chain}
      */
-    default <V1, V2, V3> Chain eq(final Property<T, V1> p1, final V1 v1, final Property<T, V2> p2, final V2 v2,
-                                  final Property<T, V3> p3, final V3 v3, final Slot slot) {
-        return this.eq(p1, v1, slot).eq(p2, v2, slot).eq(p3, v3, slot);
+    default <V1, V2, V3> Chain eq(final Slot slot, final Property<T, V1> p1, final V1 v1, final Property<T, V2> p2,
+                                  final V2 v2, final Property<T, V3> p3, final V3 v3) {
+        return this.eq(slot, p1, v1).eq(slot, p2, v2).eq(slot, p3, v3);
     }
 
 
@@ -507,20 +507,20 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain eq(final String p1, final Object v1, final String p2, final Object v2) {
-        return eq(p1, v1, p2, v2, Slot.AND);
+        return eq(Slot.AND, p1, v1, p2, v2);
     }
 
     /**
      * 等于
+     * @param slot {@link Slot}
      * @param p1   属性1
      * @param v1   属性1对应值
      * @param p2   属性2
      * @param v2   属性2对应值
-     * @param slot {@link Slot}
      * @return {@link Chain}
      */
-    default Chain eq(final String p1, final Object v1, final String p2, final Object v2, final Slot slot) {
-        return this.eq(p1, v1, slot).eq(p2, v2, slot);
+    default Chain eq(final Slot slot, final String p1, final Object v1, final String p2, final Object v2) {
+        return this.eq(slot, p1, v1).eq(slot, p2, v2);
     }
 
     /**
@@ -535,23 +535,23 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      */
     default Chain eq(final String p1, final Object v1, final String p2, final Object v2,
                      final String p3, final Object v3) {
-        return eq(p1, v1, p2, v2, p3, v3, Slot.AND);
+        return eq(Slot.AND, p1, v1, p2, v2, p3, v3);
     }
 
     /**
      * 等于
+     * @param slot {@link Slot}
      * @param p1   属性1
      * @param v1   属性1对应值
      * @param p2   属性2
      * @param v2   属性2对应值
      * @param p3   属性3
      * @param v3   属性3对应值
-     * @param slot {@link Slot}
      * @return {@link Chain}
      */
-    default Chain eq(final String p1, final Object v1, final String p2, final Object v2,
-                     final String p3, final Object v3, final Slot slot) {
-        return this.eq(p1, v1, slot).eq(p2, v2, slot).eq(p3, v3, slot);
+    default Chain eq(final Slot slot, final String p1, final Object v1, final String p2, final Object v2,
+                     final String p3, final Object v3) {
+        return this.eq(slot, p1, v1).eq(slot, p2, v2).eq(slot, p3, v3);
     }
 
 
@@ -561,7 +561,7 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain eq(final Map<String, Object> properties) {
-        return eq(properties, Slot.AND);
+        return eq(Slot.AND, properties);
     }
 
     /**
@@ -570,7 +570,7 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      * @param slot       {@link Slot}
      * @return {@link Chain}
      */
-    Chain eq(final Map<String, Object> properties, final Slot slot);
+    Chain eq(final Slot slot, final Map<String, Object> properties);
 
     /**
      * 等于
@@ -581,20 +581,20 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain colEq(final String c1, final Object v1, final String c2, final Object v2) {
-        return this.colEq(c1, v1, c2, v2, Slot.AND);
+        return this.colEq(Slot.AND, c1, v1, c2, v2);
     }
 
     /**
      * 等于
+     * @param slot {@link Slot}
      * @param c1   字段1
      * @param v1   字段1对应值
      * @param c2   字段2
      * @param v2   字段2对应值
-     * @param slot {@link Slot}
      * @return {@link Chain}
      */
-    default Chain colEq(final String c1, final Object v1, final String c2, final Object v2, final Slot slot) {
-        return this.colEq(c1, v1, slot).colEq(c2, v2, slot);
+    default Chain colEq(final Slot slot, final String c1, final Object v1, final String c2, final Object v2) {
+        return this.colEq(slot, c1, v1).colEq(slot, c2, v2);
     }
 
     /**
@@ -609,41 +609,41 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
      */
     default Chain colEq(final String c1, final Object v1, final String c2,
                         final Object v2, final String c3, final Object v3) {
-        return this.colEq(c1, v1, c2, v2, c3, v3, Slot.AND);
+        return this.colEq(Slot.AND, c1, v1, c2, v2, c3, v3);
     }
 
     /**
      * 等于
+     * @param slot {@link Slot}
      * @param c1   字段1
      * @param v1   字段1对应值
      * @param c2   字段2
      * @param v2   字段2对应值
      * @param c3   字段3
      * @param v3   字段3对应值
-     * @param slot {@link Slot}
      * @return {@link Chain}
      */
-    default Chain colEq(final String c1, final Object v1, final String c2,
-                        final Object v2, final String c3, final Object v3, final Slot slot) {
-        return this.colEq(c1, v1, slot).colEq(c2, v2, slot).colEq(c3, v3, slot);
+    default Chain colEq(final Slot slot, final String c1, final Object v1, final String c2,
+                        final Object v2, final String c3, final Object v3) {
+        return this.colEq(slot, c1, v1).colEq(slot, c2, v2).colEq(slot, c3, v3);
     }
 
     /**
      * 等于
-     * @param properties 字段-值集合
+     * @param columns 字段-值集合
      * @return {@link Chain}
      */
-    default Chain colEq(final Map<String, Object> properties) {
-        return colEq(properties, Slot.AND);
+    default Chain colEq(final Map<String, Object> columns) {
+        return colEq(Slot.AND, columns);
     }
 
     /**
      * 等于
-     * @param properties 字段-值集合
-     * @param slot       {@link Slot}
+     * @param slot    {@link Slot}
+     * @param columns 字段-值集合
      * @return {@link Chain}
      */
-    Chain colEq(final Map<String, Object> properties, final Slot slot);
+    Chain colEq(final Slot slot, final Map<String, Object> columns);
 
     // endregion
 }

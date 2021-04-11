@@ -17,6 +17,8 @@ package com.wvkity.mybatis.core.condition.criteria;
 
 import com.wvkity.mybatis.core.property.Property;
 
+import java.util.Map;
+
 /**
  * 查询包装器
  * @param <T>     实体类
@@ -92,6 +94,14 @@ public interface QueryWrapper<T, Chain extends QueryWrapper<T, Chain>> extends S
      * @return {@link Chain}
      */
     Chain mapKey(final String mapKey);
+
+    /**
+     * 设置{@link Map}实现类
+     * @param mapClass {@link Map}实现类
+     * @return {@link Chain}
+     */
+    @SuppressWarnings("rawtypes")
+    Chain mapType(final Class<? extends Map> mapClass);
 
     /**
      * 指定查询范围
