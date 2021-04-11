@@ -449,33 +449,33 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     // region Fuzzy conditions
 
     @Override
-    public <V> Chain like(Slot slot, Property<T, V> property, V value, Like mode, Character escape) {
-        return this.like(slot, this.convert(property), value, mode, escape);
+    public <V> Chain like(Slot slot, Property<T, V> property, V value, Like like, Character escape) {
+        return this.like(slot, this.convert(property), value, like, escape);
     }
 
     @Override
-    public Chain like(Slot slot, String property, Object value, Like mode, Character escape) {
-        return add(new StandardLike(this, property, mode, escape, slot, value));
+    public Chain like(Slot slot, String property, Object value, Like like, Character escape) {
+        return add(new StandardLike(this, property, like, escape, slot, value));
     }
 
     @Override
-    public Chain colLike(Slot slot, String column, Object value, Like mode, Character escape) {
-        return add(new ImmediateLike(this, column, mode, escape, slot, value));
+    public Chain colLike(Slot slot, String column, Object value, Like like, Character escape) {
+        return add(new ImmediateLike(this, column, like, escape, slot, value));
     }
 
     @Override
-    public <V> Chain notLike(Slot slot, Property<T, V> property, V value, Like mode, Character escape) {
-        return this.notLike(slot, this.convert(property), value, mode, escape);
+    public <V> Chain notLike(Slot slot, Property<T, V> property, V value, Like like, Character escape) {
+        return this.notLike(slot, this.convert(property), value, like, escape);
     }
 
     @Override
-    public Chain notLike(Slot slot, String property, Object value, Like mode, Character escape) {
-        return add(new StandardNotLike(this, property, mode, escape, slot, value));
+    public Chain notLike(Slot slot, String property, Object value, Like like, Character escape) {
+        return add(new StandardNotLike(this, property, like, escape, slot, value));
     }
 
     @Override
-    public Chain colNotLike(Slot slot, String column, Object value, Like mode, Character escape) {
-        return add(new ImmediateNotLike(this, column, mode, escape, slot, value));
+    public Chain colNotLike(Slot slot, String column, Object value, Like like, Character escape) {
+        return add(new ImmediateNotLike(this, column, like, escape, slot, value));
     }
 
     // endregion
