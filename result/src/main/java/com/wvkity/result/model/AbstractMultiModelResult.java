@@ -33,8 +33,8 @@ public abstract class AbstractMultiModelResult extends AbstractError implements 
      * @param value 字符串值
      * @return boolean
      */
-    protected boolean isNotBlank(final String value) {
-        return value != null && value.trim().length() > 0;
+    protected boolean isNonNull(final Object value) {
+        return value != null;
     }
 
     /**

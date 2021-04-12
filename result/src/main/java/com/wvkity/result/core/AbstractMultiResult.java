@@ -38,10 +38,10 @@ public abstract class AbstractMultiResult extends AbstractMultiModelResult {
     /**
      * 数据
      */
-    protected Map<String, Object> data = new HashMap<>();
+    protected Map<Object, Object> data = new HashMap<>();
 
     @Override
-    public Map<String, Object> getData() {
+    public Map<Object, Object> getData() {
         return this.data;
     }
 
@@ -51,15 +51,15 @@ public abstract class AbstractMultiResult extends AbstractMultiModelResult {
     }
 
     @Override
-    public Object getObject(String key) {
-        if (this.isNotBlank(key) && !this.isEmpty()) {
+    public Object getObject(Object key) {
+        if (this.isNonNull(key) && !this.isEmpty()) {
             return this.data.get(key);
         }
         return null;
     }
 
     @Override
-    public <T> T get(String key) {
+    public <T> T get(Object key) {
         final Object value = this.getObject(key);
         if (value != null) {
             return (T) value;
@@ -68,7 +68,7 @@ public abstract class AbstractMultiResult extends AbstractMultiModelResult {
     }
 
     @Override
-    public <T> T get(String key, Class<T> clazz) {
+    public <T> T get(Object key, Class<T> clazz) {
         final Object value = this.getObject(key);
         if (value != null && clazz != null && clazz.isAssignableFrom(value.getClass())) {
             return (T) value;
@@ -77,27 +77,27 @@ public abstract class AbstractMultiResult extends AbstractMultiModelResult {
     }
 
     @Override
-    public AbstractMultiResult put(String key, Object value) {
-        if (this.isNotBlank(key)) {
+    public AbstractMultiResult put(Object key, Object value) {
+        if (this.isNonNull(key)) {
             this.data.put(key, value);
         }
         return this;
     }
 
     @Override
-    public AbstractMultiResult putIfAbsent(String key, Object value) {
-        if (this.isNotBlank(key)) {
+    public AbstractMultiResult putIfAbsent(Object key, Object value) {
+        if (this.isNonNull(key)) {
             this.data.putIfAbsent(key, value);
         }
         return this;
     }
 
     @Override
-    public AbstractMultiResult putAll(Map<String, Object> data) {
+    public AbstractMultiResult putAll(Map<?, ?> data) {
         if (data != null && !data.isEmpty()) {
-            for (Map.Entry<String, Object> entry : data.entrySet()) {
-                final String key = entry.getKey();
-                if (this.isNotBlank(key)) {
+            for (Map.Entry<?, ?> entry : data.entrySet()) {
+                final Object key = entry.getKey();
+                if (this.isNonNull(key)) {
                     this.data.put(key, entry.getValue());
                 }
             }
@@ -106,7 +106,7 @@ public abstract class AbstractMultiResult extends AbstractMultiModelResult {
     }
 
     @Override
-    public boolean containsKey(String key) {
+    public boolean containsKey(Object key) {
         return !this.isEmpty() && this.data.containsKey(key);
     }
 
@@ -121,7 +121,7 @@ public abstract class AbstractMultiResult extends AbstractMultiModelResult {
     }
 
     @Override
-    public AbstractMultiResult remove(String key) {
+    public AbstractMultiResult remove(Object key) {
         if (this.containsKey(key)) {
             this.data.remove(key);
         }
@@ -140,12 +140,12 @@ public abstract class AbstractMultiResult extends AbstractMultiModelResult {
 
 
     @Override
-    public <T> AbstractMultiResult array(String key, T... values) {
+    public <T> AbstractMultiResult array(Object key, T... values) {
         return this.put(key, values);
     }
 
     @Override
-    public <T> AbstractMultiResult addArray(String key, T... values) {
+    public <T> AbstractMultiResult addArray(Object key, T... values) {
         if (values != null && values.length > 0) {
             final T[] array = this.getArray(key);
             if (array == null) {
@@ -162,31 +162,31 @@ public abstract class AbstractMultiResult extends AbstractMultiModelResult {
     }
 
     @Override
-    public <T> AbstractMultiResult addArray(String key, Collection<T> values) {
-        if (this.isNotBlank(key) && this.isNotEmpty(values)) {
+    public <T> AbstractMultiResult addArray(Object key, Collection<T> values) {
+        if (this.isNonNull(key) && this.isNotEmpty(values)) {
             this.addArray(key, (T[]) values.toArray());
         }
         return this;
     }
 
     @Override
-    public <T> AbstractMultiResult set(String key, T... values) {
-        if (this.isNotBlank(key) && values != null && values.length > 0) {
+    public <T> AbstractMultiResult set(Object key, T... values) {
+        if (this.isNonNull(key) && values != null && values.length > 0) {
             this.put(key, new HashSet<>(Arrays.asList(values)));
         }
         return this;
     }
 
     @Override
-    public <T> AbstractMultiResult addSet(String key, T... values) {
-        if (this.isNotBlank(key) && values != null && values.length > 0) {
+    public <T> AbstractMultiResult addSet(Object key, T... values) {
+        if (this.isNonNull(key) && values != null && values.length > 0) {
             this.addSet(key, Arrays.asList(values));
         }
         return this;
     }
 
     @Override
-    public <T> AbstractMultiResult addSet(String key, Collection<T> values) {
+    public <T> AbstractMultiResult addSet(Object key, Collection<T> values) {
         if (this.isNotEmpty(values)) {
             final Set<T> set = this.getSet(key);
             if (set == null) {
@@ -199,23 +199,23 @@ public abstract class AbstractMultiResult extends AbstractMultiModelResult {
     }
 
     @Override
-    public <T> AbstractMultiResult list(String key, T... values) {
-        if (this.isNotBlank(key) && values != null && values.length > 0) {
+    public <T> AbstractMultiResult list(Object key, T... values) {
+        if (this.isNonNull(key) && values != null && values.length > 0) {
             this.put(key, new ArrayList<>(Arrays.asList(values)));
         }
         return this;
     }
 
     @Override
-    public <T> AbstractMultiResult addList(String key, T... values) {
-        if (this.isNotBlank(key) && values != null && values.length > 0) {
+    public <T> AbstractMultiResult addList(Object key, T... values) {
+        if (this.isNonNull(key) && values != null && values.length > 0) {
             this.addList(key, Arrays.asList(values));
         }
         return this;
     }
 
     @Override
-    public <T> AbstractMultiResult addList(String key, Collection<T> values) {
+    public <T> AbstractMultiResult addList(Object key, Collection<T> values) {
         if (this.isNotEmpty(values)) {
             final List<T> list = this.getList(key);
             if (list == null) {
@@ -228,15 +228,15 @@ public abstract class AbstractMultiResult extends AbstractMultiModelResult {
     }
 
     @Override
-    public AbstractMultiResult map(String key, Object k, Object v) {
-        if (this.isNotBlank(key) && k != null) {
+    public AbstractMultiResult map(Object key, Object k, Object v) {
+        if (this.isNonNull(key) && k != null) {
             this.put(key, toMap(k, v));
         }
         return this;
     }
 
     @Override
-    public AbstractMultiResult addMap(String key, Object k, Object v) {
+    public AbstractMultiResult addMap(Object key, Object k, Object v) {
         if (k != null) {
             final Map<Object, Object> map = this.getMap(key);
             if (map == null) {
@@ -249,7 +249,7 @@ public abstract class AbstractMultiResult extends AbstractMultiModelResult {
     }
 
     @Override
-    public AbstractMultiResult addMap(String key, Map<Object, Object> values) {
+    public AbstractMultiResult addMap(Object key, Map<Object, Object> values) {
         if (values != null) {
             final Map<Object, Object> map = this.getMap(key);
             if (map == null) {
@@ -264,15 +264,15 @@ public abstract class AbstractMultiResult extends AbstractMultiModelResult {
     }
 
     @Override
-    public AbstractMultiResult mapIfAbsent(String key, Object k, Object v) {
-        if (this.isNotBlank(key) && k != null) {
+    public AbstractMultiResult mapIfAbsent(Object key, Object k, Object v) {
+        if (this.isNonNull(key) && k != null) {
             this.putIfAbsent(key, toMap(k, v));
         }
         return this;
     }
 
     @Override
-    public AbstractMultiResult addMapIfAbsent(String key, Object k, Object v) {
+    public AbstractMultiResult addMapIfAbsent(Object key, Object k, Object v) {
         if (k != null) {
             final Map<Object, Object> map = this.getMap(key);
             if (map == null) {
@@ -285,7 +285,7 @@ public abstract class AbstractMultiResult extends AbstractMultiModelResult {
     }
 
     @Override
-    public AbstractMultiResult addMapIfAbsent(String key, Map<Object, Object> values) {
+    public AbstractMultiResult addMapIfAbsent(Object key, Map<Object, Object> values) {
         if (values != null) {
             final Map<Object, Object> map = this.getMap(key);
             if (map == null) {

@@ -101,16 +101,9 @@ public final class Types {
             return ((Number) value).intValue();
         }
         if (value instanceof String) {
-            String str = ((String) value).trim();
-            if (str.length() == 0 || "null".equalsIgnoreCase(str)) {
+            final String str = trim(value);
+            if (str == null) {
                 return null;
-            }
-            if (str.contains(",")) {
-                str = str.replaceAll(",", "");
-            }
-            final Matcher matcher = PATTERN_NUMBER_WITH_TRAILING_ZEROS.matcher(str);
-            if (matcher.find()) {
-                str = matcher.replaceAll("");
             }
             if (PATTERN_INTEGER.matcher(str).matches()) {
                 return Integer.parseInt(str);
@@ -136,16 +129,9 @@ public final class Types {
             return ((Number) value).longValue();
         }
         if (value instanceof String) {
-            String str = ((String) value).trim();
-            if (str.length() == 0 || "null".equalsIgnoreCase(str)) {
+            final String str = trim(value);
+            if (str == null) {
                 return null;
-            }
-            if (str.contains(",")) {
-                str = str.replaceAll(",", "");
-            }
-            final Matcher matcher = PATTERN_NUMBER_WITH_TRAILING_ZEROS.matcher(str);
-            if (matcher.find()) {
-                str = matcher.replaceAll("");
             }
             if (PATTERN_INTEGER.matcher(str).matches()) {
                 return Long.parseLong(str);
@@ -165,16 +151,9 @@ public final class Types {
             return ((Number) value).floatValue();
         }
         if (value instanceof String) {
-            String str = ((String) value).trim();
-            if (str.length() == 0 || "null".equalsIgnoreCase(str)) {
+            final String str = trim(value);
+            if (str == null) {
                 return null;
-            }
-            if (str.contains(",")) {
-                str = str.replaceAll(",", "");
-            }
-            final Matcher matcher = PATTERN_NUMBER_WITH_TRAILING_ZEROS.matcher(str);
-            if (matcher.find()) {
-                str = matcher.replaceAll("");
             }
             if (PATTERN_INTEGER.matcher(str).matches()) {
                 return Float.parseFloat(str);
@@ -194,16 +173,9 @@ public final class Types {
             return ((Number) value).doubleValue();
         }
         if (value instanceof String) {
-            String str = ((String) value).trim();
-            if (str.length() == 0 || "null".equalsIgnoreCase(str)) {
+            final String str = trim(value);
+            if (str == null) {
                 return null;
-            }
-            if (str.contains(",")) {
-                str = str.replaceAll(",", "");
-            }
-            final Matcher matcher = PATTERN_NUMBER_WITH_TRAILING_ZEROS.matcher(str);
-            if (matcher.find()) {
-                str = matcher.replaceAll("");
             }
             if (PATTERN_INTEGER.matcher(str).matches()) {
                 return Double.parseDouble(str);
@@ -272,5 +244,20 @@ public final class Types {
 
     private static boolean checkScale(final int scale) {
         return scale >= -100 && scale <= 100;
+    }
+
+    private static String trim(final Object value) {
+        String str = ((String) value).trim();
+        if (str.length() == 0 || "null".equalsIgnoreCase(str)) {
+            return null;
+        }
+        if (str.contains(",")) {
+            str = str.replaceAll(",", "");
+        }
+        final Matcher matcher = PATTERN_NUMBER_WITH_TRAILING_ZEROS.matcher(str);
+        if (matcher.find()) {
+            str = matcher.replaceAll("");
+        }
+        return str;
     }
 }

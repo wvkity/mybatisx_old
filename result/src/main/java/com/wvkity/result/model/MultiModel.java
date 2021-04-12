@@ -15,8 +15,11 @@
  */
 package com.wvkity.result.model;
 
+import com.wvkity.result.core.Result;
+
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * {@link java.util.Map Map}类型数据模型
@@ -25,7 +28,7 @@ import java.util.Map;
  * @since 1.0.0
  */
 @SuppressWarnings("unchecked")
-public interface MultiModel extends Model<Map<String, Object>>, Aware {
+public interface MultiModel extends Result<Map<Object, Object>>, Aware {
 
     /**
      * 获取值
@@ -33,7 +36,28 @@ public interface MultiModel extends Model<Map<String, Object>>, Aware {
      * @param <T> 值类型
      * @return 值
      */
-    <T> T get(final String key);
+    <T> T get(final Object key);
+
+    /**
+     * {@link Optional}
+     * @param key 键
+     * @param <T> 泛型类型
+     * @return {@link Optional}
+     */
+    default <T> Optional<T> optional(final Object key) {
+        return Optional.ofNullable(this.get(key));
+    }
+
+    /**
+     * {@link Optional}
+     * @param key   键
+     * @param clazz 值类型
+     * @param <T>   值类型
+     * @return {@link Optional}
+     */
+    default <T> Optional<T> optional(final Object key, final Class<T> clazz) {
+        return Optional.ofNullable(this.get(key, clazz));
+    }
 
     /**
      * 添加值
@@ -41,7 +65,7 @@ public interface MultiModel extends Model<Map<String, Object>>, Aware {
      * @param value 值
      * @return {@link MultiModel}
      */
-    MultiModel put(final String key, final Object value);
+    MultiModel put(final Object key, final Object value);
 
     /**
      * 添加值
@@ -49,21 +73,21 @@ public interface MultiModel extends Model<Map<String, Object>>, Aware {
      * @param value 值
      * @return {@link MultiModel}
      */
-    MultiModel putIfAbsent(final String key, final Object value);
+    MultiModel putIfAbsent(final Object key, final Object value);
 
     /**
      * 添加多个值
      * @param data 值
      * @return {@link MultiModel}
      */
-    MultiModel putAll(final Map<String, Object> data);
+    MultiModel putAll(final Map<?, ?> data);
 
     /**
      * 是否包含指定键
      * @param key 键
      * @return boolean
      */
-    boolean containsKey(final String key);
+    boolean containsKey(final Object key);
 
     /**
      * 是否包含指定值
@@ -83,7 +107,7 @@ public interface MultiModel extends Model<Map<String, Object>>, Aware {
      * @param key 键
      * @return {@link MultiModel}
      */
-    MultiModel remove(final String key);
+    MultiModel remove(final Object key);
 
     /**
      * 清空
@@ -100,7 +124,7 @@ public interface MultiModel extends Model<Map<String, Object>>, Aware {
      * @param <T>    元素值类型
      * @return {@link MultiModel}
      */
-    <T> MultiModel array(final String key, final T... values);
+    <T> MultiModel array(final Object key, final T... values);
 
     /**
      * 追加元素到指定的数组中
@@ -109,7 +133,7 @@ public interface MultiModel extends Model<Map<String, Object>>, Aware {
      * @param <T>    元素值类型
      * @return {@link MultiModel}
      */
-    <T> MultiModel addArray(final String key, final T... values);
+    <T> MultiModel addArray(final Object key, final T... values);
 
     /**
      * 追加元素到指定的数组中
@@ -118,7 +142,7 @@ public interface MultiModel extends Model<Map<String, Object>>, Aware {
      * @param <T>    元素值类型
      * @return {@link MultiModel}
      */
-    <T> MultiModel addArray(final String key, final Collection<T> values);
+    <T> MultiModel addArray(final Object key, final Collection<T> values);
 
     /**
      * 添加{@link java.util.Set Set}元素
@@ -127,7 +151,7 @@ public interface MultiModel extends Model<Map<String, Object>>, Aware {
      * @param <T>    元素值类型
      * @return {@link MultiModel}
      */
-    <T> MultiModel set(final String key, final T... values);
+    <T> MultiModel set(final Object key, final T... values);
 
     /**
      * 追加元素到指定的{@link java.util.Set Set}中
@@ -136,7 +160,7 @@ public interface MultiModel extends Model<Map<String, Object>>, Aware {
      * @param <T>    元素值类型
      * @return {@link MultiModel}
      */
-    <T> MultiModel addSet(final String key, final T... values);
+    <T> MultiModel addSet(final Object key, final T... values);
 
     /**
      * 追加元素到指定的{@link java.util.Set Set}中
@@ -145,7 +169,7 @@ public interface MultiModel extends Model<Map<String, Object>>, Aware {
      * @param <T>    元素值类型
      * @return {@link MultiModel}
      */
-    <T> MultiModel addSet(final String key, final Collection<T> values);
+    <T> MultiModel addSet(final Object key, final Collection<T> values);
 
     /**
      * 添加{@link java.util.List List}元素
@@ -154,7 +178,7 @@ public interface MultiModel extends Model<Map<String, Object>>, Aware {
      * @param <T>    元素值类型
      * @return {@link MultiModel}
      */
-    <T> MultiModel list(final String key, final T... values);
+    <T> MultiModel list(final Object key, final T... values);
 
     /**
      * 追加元素到指定的{@link java.util.List List}中
@@ -163,7 +187,7 @@ public interface MultiModel extends Model<Map<String, Object>>, Aware {
      * @param <T>    元素值类型
      * @return {@link MultiModel}
      */
-    <T> MultiModel addList(final String key, final T... values);
+    <T> MultiModel addList(final Object key, final T... values);
 
     /**
      * 追加元素到指定的{@link java.util.List List}中
@@ -172,7 +196,7 @@ public interface MultiModel extends Model<Map<String, Object>>, Aware {
      * @param <T>    元素值类型
      * @return {@link MultiModel}
      */
-    <T> MultiModel addList(final String key, final Collection<T> values);
+    <T> MultiModel addList(final Object key, final Collection<T> values);
 
     /**
      * 添加{@link Map}元素
@@ -181,7 +205,7 @@ public interface MultiModel extends Model<Map<String, Object>>, Aware {
      * @param v   值
      * @return {@link MultiModel}
      */
-    MultiModel map(final String key, final Object k, final Object v);
+    MultiModel map(final Object key, final Object k, final Object v);
 
     /**
      * 追加元素到指定的{@link Map}中
@@ -190,7 +214,7 @@ public interface MultiModel extends Model<Map<String, Object>>, Aware {
      * @param v   值
      * @return {@link MultiModel}
      */
-    MultiModel addMap(final String key, final Object k, final Object v);
+    MultiModel addMap(final Object key, final Object k, final Object v);
 
     /**
      * 追加元素到指定的{@link Map}中
@@ -198,7 +222,7 @@ public interface MultiModel extends Model<Map<String, Object>>, Aware {
      * @param values 值
      * @return {@link MultiModel}
      */
-    MultiModel addMap(final String key, final Map<Object, Object> values);
+    MultiModel addMap(final Object key, final Map<Object, Object> values);
 
     /**
      * 添加{@link Map}元素
@@ -207,7 +231,7 @@ public interface MultiModel extends Model<Map<String, Object>>, Aware {
      * @param v   值
      * @return {@link MultiModel}
      */
-    MultiModel mapIfAbsent(final String key, final Object k, final Object v);
+    MultiModel mapIfAbsent(final Object key, final Object k, final Object v);
 
     /**
      * 追加元素到指定的{@link Map}中
@@ -216,7 +240,7 @@ public interface MultiModel extends Model<Map<String, Object>>, Aware {
      * @param v   值
      * @return {@link MultiModel}
      */
-    MultiModel addMapIfAbsent(final String key, final Object k, final Object v);
+    MultiModel addMapIfAbsent(final Object key, final Object k, final Object v);
 
     /**
      * 追加元素到指定的{@link Map}中
@@ -224,6 +248,6 @@ public interface MultiModel extends Model<Map<String, Object>>, Aware {
      * @param values 值
      * @return {@link MultiModel}
      */
-    MultiModel addMapIfAbsent(final String key, final Map<Object, Object> values);
+    MultiModel addMapIfAbsent(final Object key, final Map<Object, Object> values);
 
 }

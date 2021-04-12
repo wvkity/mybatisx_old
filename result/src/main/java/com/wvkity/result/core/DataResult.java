@@ -82,25 +82,25 @@ public class DataResult<T> extends AbstractResult<T> implements Result<T> {
 
     ///// Builder /////
 
-    public static class DataResultBuilder<T> {
+    public static class Builder<T> {
         private T data;
         private int code = Status.OK.getCode();
         private String error = "success";
 
-        private DataResultBuilder() {
+        private Builder() {
         }
 
-        public DataResultBuilder<T> data(T data) {
+        public Builder<T> data(T data) {
             this.data = data;
             return this;
         }
 
-        public DataResultBuilder<T> code(int code) {
+        public Builder<T> code(int code) {
             this.code = code;
             return this;
         }
 
-        public DataResultBuilder<T> error(String error) {
+        public Builder<T> error(String error) {
             this.error = error;
             return this;
         }
@@ -121,8 +121,8 @@ public class DataResult<T> extends AbstractResult<T> implements Result<T> {
 
     ///// Static methods /////
 
-    public static <T> DataResultBuilder<T> builder() {
-        return new DataResultBuilder<>();
+    public static <T> Builder<T> create() {
+        return new Builder<>();
     }
 
     public static <T> DataResult<T> of() {
@@ -156,4 +156,25 @@ public class DataResult<T> extends AbstractResult<T> implements Result<T> {
     public static <T> DataResult<T> of(final int code, final String message) {
         return new DataResult<>(code, message);
     }
+
+    public static <T> DataResult<T> ok() {
+        return new DataResult<>();
+    }
+
+    public static <T> DataResult<T> ok(final T data) {
+        return new DataResult<>(data);
+    }
+
+    public static <T> DataResult<T> ok(final T data, final String message) {
+        return new DataResult<>(data, message);
+    }
+
+    public static <T> DataResult<T> failure() {
+        return of(Status.ERR_FAILURE);
+    }
+
+    public static <T> DataResult<T> serverError() {
+        return of(Status.ERR_SERVER);
+    }
+
 }

@@ -42,6 +42,10 @@ public class MultiDataResult extends AbstractMultiResult implements MultiResult 
         this.error = e.getMessage();
     }
 
+    public MultiDataResult(Map<?, ?> data) {
+        this.putAll(data);
+    }
+
     public MultiDataResult(Status status, Throwable e) {
         this.code = status.getCode();
         this.error = e.getMessage();
@@ -57,7 +61,12 @@ public class MultiDataResult extends AbstractMultiResult implements MultiResult 
         this.error = message;
     }
 
-    public MultiDataResult(Map<String, Object> data, int code, String message) {
+    public MultiDataResult(Map<?, ?> data, String message) {
+        this.error = message;
+        this.putAll(data);
+    }
+
+    public MultiDataResult(Map<?, ?> data, int code, String message) {
         this.code = code;
         this.error = message;
         this.putAll(data);
@@ -73,31 +82,33 @@ public class MultiDataResult extends AbstractMultiResult implements MultiResult 
     }
 
     ///// Builder /////
-    public static class MultiDataResultBuilder {
-        private Map<String, Object> data;
+    public static class Builder {
+        private Map<?, ?> data;
         private int code;
         private String error;
 
-        private MultiDataResultBuilder() {
+        private Builder() {
         }
 
-        public MultiDataResultBuilder code(int code) {
+        public Builder code(int code) {
             this.code = code;
             return this;
         }
 
-        public MultiDataResultBuilder error(String error) {
+        public Builder error(String error) {
             this.error = error;
             return this;
         }
 
-        public MultiDataResultBuilder data(Map<String, Object> data) {
+        public Builder data(Map<?, ?> data) {
             this.data = data;
             return this;
         }
 
         public MultiDataResult build() {
-            return new MultiDataResult(this.data, this.code, this.error);
+            final MultiDataResult result = new MultiDataResult(this.code, this.error);
+            result.putAll(this.data);
+            return result;
         }
 
         @Override
@@ -112,8 +123,8 @@ public class MultiDataResult extends AbstractMultiResult implements MultiResult 
 
     ///// Static methods /////
 
-    public static MultiDataResultBuilder builder() {
-        return new MultiDataResultBuilder();
+    public static Builder create() {
+        return new Builder();
     }
 
     public static MultiDataResult of() {
@@ -144,12 +155,20 @@ public class MultiDataResult extends AbstractMultiResult implements MultiResult 
         return of();
     }
 
-    public static MultiDataResult failure() {
-        return new MultiDataResult(Status.ERR_FAILURE);
+    public static MultiDataResult ok(final Map<?, ?> data) {
+        return new MultiDataResult(data);
     }
 
-    public static  MultiDataResult serverError() {
-        return new MultiDataResult(Status.ERR_SERVER);
+    public static MultiDataResult ok(final Map<?, ?> data, final String message) {
+        return new MultiDataResult(data, message);
+    }
+
+    public static MultiDataResult failure() {
+        return of(Status.ERR_FAILURE);
+    }
+
+    public static MultiDataResult serverError() {
+        return of(Status.ERR_SERVER);
     }
 
 }

@@ -36,7 +36,7 @@ public interface Aware extends Serializable {
      * @param key 键
      * @return 值
      */
-    Object getObject(final String key);
+    Object getObject(final Object key);
 
     /**
      * 获取值
@@ -45,7 +45,7 @@ public interface Aware extends Serializable {
      * @param <T>   值类型
      * @return 值
      */
-    <T> T get(final String key, final Class<T> clazz);
+    <T> T get(final Object key, final Class<T> clazz);
 
     /**
      * 获取数组值
@@ -53,7 +53,7 @@ public interface Aware extends Serializable {
      * @param <T> 值类型
      * @return 数组
      */
-    default <T> T[] getArray(final String key) {
+    default <T> T[] getArray(final Object key) {
         final Object value = this.getObject(key);
         if (value != null && value.getClass().isArray()) {
             return (T[]) value;
@@ -67,7 +67,7 @@ public interface Aware extends Serializable {
      * @param <T> 值类型
      * @return {@link Set}
      */
-    default <T> Set<T> getSet(final String key) {
+    default <T> Set<T> getSet(final Object key) {
         final Object value = this.getObject(key);
         if (value != null && Set.class.isAssignableFrom(value.getClass())) {
             return (Set<T>) value;
@@ -81,7 +81,7 @@ public interface Aware extends Serializable {
      * @param <T> 值类型
      * @return {@link List}
      */
-    default <T> List<T> getList(final String key) {
+    default <T> List<T> getList(final Object key) {
         final Object value = this.getObject(key);
         if (value != null && List.class.isAssignableFrom(value.getClass())) {
             return (List<T>) value;
@@ -95,7 +95,7 @@ public interface Aware extends Serializable {
      * @param <T> 值类型
      * @return {@link Collection}
      */
-    default <T> Collection<T> getCollection(final String key) {
+    default <T> Collection<T> getCollection(final Object key) {
         final Object value = this.getObject(key);
         if (value != null && Collection.class.isAssignableFrom(value.getClass())) {
             return (Collection<T>) value;
@@ -106,10 +106,9 @@ public interface Aware extends Serializable {
     /**
      * 获取{@link Map}
      * @param key 键
-     * @param <T> 值类型
      * @return {@link Map}
      */
-    default Map<Object, Object> getMap(final String key) {
+    default Map<Object, Object> getMap(final Object key) {
         final Object value = this.getObject(key);
         if (value != null && Map.class.isAssignableFrom(value.getClass())) {
             return (Map<Object, Object>) value;
@@ -122,7 +121,7 @@ public interface Aware extends Serializable {
      * @param key 键
      * @return {@link String}
      */
-    default String getString(final String key) {
+    default String getString(final Object key) {
         return Types.toString(this.getObject(key));
     }
 
@@ -131,7 +130,7 @@ public interface Aware extends Serializable {
      * @param key 键
      * @return {@link Character}
      */
-    default Character getChar(final String key) {
+    default Character getChar(final Object key) {
         return Types.toChar(this.getObject(key));
     }
 
@@ -140,7 +139,7 @@ public interface Aware extends Serializable {
      * @param key 键
      * @return {@link Boolean}
      */
-    default Boolean getBoolean(final String key) {
+    default Boolean getBoolean(final Object key) {
         return Types.toBoolean(this.getObject(key));
     }
 
@@ -149,7 +148,7 @@ public interface Aware extends Serializable {
      * @param key 键
      * @return boolean
      */
-    default boolean getBooleanValue(final String key) {
+    default boolean getBooleanValue(final Object key) {
         final Boolean value = this.getBoolean(key);
         return value != null && value;
     }
@@ -159,7 +158,7 @@ public interface Aware extends Serializable {
      * @param key 键
      * @return {@link Short}
      */
-    default Short getShort(final String key) {
+    default Short getShort(final Object key) {
         return Types.toShort(this.getObject(key));
     }
 
@@ -168,7 +167,7 @@ public interface Aware extends Serializable {
      * @param key 键
      * @return short
      */
-    default short getShortValue(final String key) {
+    default short getShortValue(final Object key) {
         final Short value = this.getShort(key);
         return value == null ? 0 : value;
     }
@@ -178,7 +177,7 @@ public interface Aware extends Serializable {
      * @param key 键
      * @return {@link Integer}
      */
-    default Integer getInt(final String key) {
+    default Integer getInt(final Object key) {
         return Types.toInt(this.getObject(key));
     }
 
@@ -187,7 +186,7 @@ public interface Aware extends Serializable {
      * @param key 键
      * @return int
      */
-    default int getIntValue(final String key) {
+    default int getIntValue(final Object key) {
         final Integer value = this.getInt(key);
         return value == null ? 0 : value;
     }
@@ -197,7 +196,7 @@ public interface Aware extends Serializable {
      * @param key 键
      * @return {@link Long}
      */
-    default Long getLong(final String key) {
+    default Long getLong(final Object key) {
         return Types.toLong(this.getObject(key));
     }
 
@@ -206,7 +205,7 @@ public interface Aware extends Serializable {
      * @param key 键
      * @return long
      */
-    default Long getLongValue(final String key) {
+    default Long getLongValue(final Object key) {
         final Long value = this.getLong(key);
         return value == null ? 0L : value;
     }
@@ -216,7 +215,7 @@ public interface Aware extends Serializable {
      * @param key 键
      * @return {@link Float}
      */
-    default Float getFloat(final String key) {
+    default Float getFloat(final Object key) {
         return Types.toFloat(key);
     }
 
@@ -225,7 +224,7 @@ public interface Aware extends Serializable {
      * @param key 键
      * @return float
      */
-    default Float getFloatValue(final String key) {
+    default Float getFloatValue(final Object key) {
         final Float value = this.getFloat(key);
         return value == null ? 0.0F : value;
     }
@@ -235,7 +234,7 @@ public interface Aware extends Serializable {
      * @param key 键
      * @return {@link Double}
      */
-    default Double getDouble(final String key) {
+    default Double getDouble(final Object key) {
         return Types.toDouble(key);
     }
 
@@ -244,7 +243,7 @@ public interface Aware extends Serializable {
      * @param key 键
      * @return double
      */
-    default double getDoubleValue(final String key) {
+    default double getDoubleValue(final Object key) {
         final Double value = this.getDouble(key);
         return value == null ? 0.0D : value;
     }
