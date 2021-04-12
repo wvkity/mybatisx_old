@@ -92,12 +92,12 @@ public interface Error extends Serializable {
      * 获取错误描述信息
      * @return 错误信息
      */
-    String getError();
+    String getMessage();
 
     /**
      * 设置错误描述信息
-     * @param error 错误信息
+     * @param message 错误信息
      */
-    void setError(final String error);
+    void setMessage(final String message);
 
 }

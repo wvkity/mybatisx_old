@@ -37,38 +37,38 @@ public class DataResult<T> extends AbstractResult<T> implements Result<T> {
 
     public DataResult(T data, String message) {
         this.data = data;
-        this.error = message;
+        this.message = message;
     }
 
     public DataResult(Status status) {
         this.code = status.getCode();
-        this.error = status.getDesc();
+        this.message = status.getDesc();
     }
 
     public DataResult(Throwable e) {
         this.code = Status.ERR_FAILURE.getCode();
-        this.error = e.getMessage();
+        this.message = e.getMessage();
     }
 
     public DataResult(Status status, Throwable e) {
         this.code = status.getCode();
-        this.error = e.getMessage();
+        this.message = e.getMessage();
     }
 
     public DataResult(int code, Throwable e) {
         this.code = code;
-        this.error = e.getMessage();
+        this.message = e.getMessage();
     }
 
     public DataResult(int code, String message) {
         this.code = code;
-        this.error = message;
+        this.message = message;
     }
 
     public DataResult(T data, int code, String error) {
         this.data = data;
         this.code = code;
-        this.error = error;
+        this.message = error;
     }
 
     @Override
@@ -76,7 +76,7 @@ public class DataResult<T> extends AbstractResult<T> implements Result<T> {
         return "DataResult{" +
             "data=" + data +
             ", code=" + code +
-            ", error='" + error + '\'' +
+            ", message='" + message + '\'' +
             '}';
     }
 
@@ -111,7 +111,7 @@ public class DataResult<T> extends AbstractResult<T> implements Result<T> {
 
         @Override
         public String toString() {
-            return "DataResultBuilder{" +
+            return "Builder{" +
                 "data=" + data +
                 ", code=" + code +
                 ", error='" + error + '\'' +
@@ -141,18 +141,6 @@ public class DataResult<T> extends AbstractResult<T> implements Result<T> {
         return new DataResult<>(status);
     }
 
-    public static <T> DataResult<T> of(final Throwable e) {
-        return new DataResult<>(e);
-    }
-
-    public static <T> DataResult<T> of(final Status status, final Throwable e) {
-        return new DataResult<>(status, e);
-    }
-
-    public static <T> DataResult<T> of(final int code, final Throwable e) {
-        return new DataResult<>(code, e);
-    }
-
     public static <T> DataResult<T> of(final int code, final String message) {
         return new DataResult<>(code, message);
     }
@@ -169,8 +157,20 @@ public class DataResult<T> extends AbstractResult<T> implements Result<T> {
         return new DataResult<>(data, message);
     }
 
-    public static <T> DataResult<T> failure() {
+    public static <T> DataResult<T> fail() {
         return of(Status.ERR_FAILURE);
+    }
+
+    public static <T> DataResult<T> fail(final Throwable e) {
+        return new DataResult<>(e);
+    }
+
+    public static <T> DataResult<T> fail(final Status status, final Throwable e) {
+        return new DataResult<>(status, e);
+    }
+
+    public static <T> DataResult<T> fail(final int code, final Throwable e) {
+        return new DataResult<>(code, e);
     }
 
     public static <T> DataResult<T> serverError() {

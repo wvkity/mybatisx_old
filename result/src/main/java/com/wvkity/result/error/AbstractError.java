@@ -33,12 +33,12 @@ public abstract class AbstractError implements Error {
     /**
      * 响应描述信息
      */
-    protected String error = "success";
+    protected String message = "success";
 
     @Override
     public void error(int code, String error) {
         this.code = code;
-        this.error = error;
+        this.message = error;
     }
 
     @Override
@@ -52,12 +52,12 @@ public abstract class AbstractError implements Error {
     }
 
     @Override
-    public String getError() {
-        return this.error;
+    public String getMessage() {
+        return this.message;
     }
 
     @Override
-    public void setError(String error) {
-        this.error = error;
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

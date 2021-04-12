@@ -96,10 +96,17 @@ public abstract class AbstractMultiResult extends AbstractMultiModelResult {
     public AbstractMultiResult putAll(Map<?, ?> data) {
         if (data != null && !data.isEmpty()) {
             for (Map.Entry<?, ?> entry : data.entrySet()) {
-                final Object key = entry.getKey();
-                if (this.isNonNull(key)) {
-                    this.data.put(key, entry.getValue());
-                }
+                this.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return this;
+    }
+
+    @Override
+    public AbstractMultiResult putAllIfAbsent(Map<?, ?> data) {
+        if (data != null && !data.isEmpty()) {
+            for (Map.Entry<?, ?> entry : data.entrySet()) {
+                this.putIfAbsent(entry.getKey(), entry.getValue());
             }
         }
         return this;
@@ -306,7 +313,9 @@ public abstract class AbstractMultiResult extends AbstractMultiModelResult {
 
     private Map<Object, Object> toMap(final Object k, final Object v) {
         final Map<Object, Object> map = new HashMap<>();
-        map.put(k, v);
+        if (k != null) {
+            map.put(k, v);
+        }
         return map;
     }
 }

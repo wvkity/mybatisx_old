@@ -83,6 +83,13 @@ public interface MultiModel extends Result<Map<Object, Object>>, Aware {
     MultiModel putAll(final Map<?, ?> data);
 
     /**
+     * 添加多个值
+     * @param data 值
+     * @return {@link MultiModel}
+     */
+    MultiModel putAllIfAbsent(final Map<?, ?> data);
+
+    /**
      * 是否包含指定键
      * @param key 键
      * @return boolean

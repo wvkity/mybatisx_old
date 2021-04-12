@@ -34,12 +34,12 @@ public class MultiDataResult extends AbstractMultiResult implements MultiResult 
 
     public MultiDataResult(Status status) {
         this.code = status.getCode();
-        this.error = status.getDesc();
+        this.message = status.getDesc();
     }
 
     public MultiDataResult(Throwable e) {
         this.code = Status.ERR_FAILURE.getCode();
-        this.error = e.getMessage();
+        this.message = e.getMessage();
     }
 
     public MultiDataResult(Map<?, ?> data) {
@@ -48,27 +48,27 @@ public class MultiDataResult extends AbstractMultiResult implements MultiResult 
 
     public MultiDataResult(Status status, Throwable e) {
         this.code = status.getCode();
-        this.error = e.getMessage();
+        this.message = e.getMessage();
     }
 
     public MultiDataResult(int code, Throwable e) {
         this.code = code;
-        this.error = e.getMessage();
+        this.message = e.getMessage();
     }
 
     public MultiDataResult(int code, String message) {
         this.code = code;
-        this.error = message;
+        this.message = message;
     }
 
     public MultiDataResult(Map<?, ?> data, String message) {
-        this.error = message;
+        this.message = message;
         this.putAll(data);
     }
 
     public MultiDataResult(Map<?, ?> data, int code, String message) {
         this.code = code;
-        this.error = message;
+        this.message = message;
         this.putAll(data);
     }
 
@@ -77,7 +77,7 @@ public class MultiDataResult extends AbstractMultiResult implements MultiResult 
         return "MultiDataResult{" +
             "data=" + data +
             ", code=" + code +
-            ", error='" + error + '\'' +
+            ", message='" + message + '\'' +
             '}';
     }
 
@@ -85,7 +85,7 @@ public class MultiDataResult extends AbstractMultiResult implements MultiResult 
     public static class Builder {
         private Map<?, ?> data;
         private int code;
-        private String error;
+        private String message;
 
         private Builder() {
         }
@@ -95,8 +95,8 @@ public class MultiDataResult extends AbstractMultiResult implements MultiResult 
             return this;
         }
 
-        public Builder error(String error) {
-            this.error = error;
+        public Builder message(String message) {
+            this.message = message;
             return this;
         }
 
@@ -106,17 +106,17 @@ public class MultiDataResult extends AbstractMultiResult implements MultiResult 
         }
 
         public MultiDataResult build() {
-            final MultiDataResult result = new MultiDataResult(this.code, this.error);
+            final MultiDataResult result = new MultiDataResult(this.code, this.message);
             result.putAll(this.data);
             return result;
         }
 
         @Override
         public String toString() {
-            return "MultiDataResultBuilder{" +
+            return "Builder{" +
                 "data=" + data +
                 ", code=" + code +
-                ", error='" + error + '\'' +
+                ", message='" + message + '\'' +
                 '}';
         }
     }
@@ -135,18 +135,6 @@ public class MultiDataResult extends AbstractMultiResult implements MultiResult 
         return new MultiDataResult(status);
     }
 
-    public static MultiDataResult of(final Throwable e) {
-        return new MultiDataResult(e);
-    }
-
-    public static MultiDataResult of(final Status status, final Throwable e) {
-        return new MultiDataResult(status, e);
-    }
-
-    public static MultiDataResult of(final int code, final Throwable e) {
-        return new MultiDataResult(code, e);
-    }
-
     public static MultiDataResult of(final int code, final String message) {
         return new MultiDataResult(code, message);
     }
@@ -163,8 +151,20 @@ public class MultiDataResult extends AbstractMultiResult implements MultiResult 
         return new MultiDataResult(data, message);
     }
 
-    public static MultiDataResult failure() {
+    public static MultiDataResult fail() {
         return of(Status.ERR_FAILURE);
+    }
+
+    public static MultiDataResult fail(final Throwable e) {
+        return new MultiDataResult(e);
+    }
+
+    public static MultiDataResult fail(final Status status, final Throwable e) {
+        return new MultiDataResult(status, e);
+    }
+
+    public static MultiDataResult fail(final int code, final Throwable e) {
+        return new MultiDataResult(code, e);
     }
 
     public static MultiDataResult serverError() {
