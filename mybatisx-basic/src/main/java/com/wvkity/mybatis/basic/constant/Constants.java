@@ -139,7 +139,7 @@ public interface Constants {
     /**
      * }
      */
-    String CLOSE_BRACE = "}";
+    String BRACE_CLOSE = "}";
     /**
      * 转义双引号
      */
@@ -183,7 +183,7 @@ public interface Constants {
     /**
      * )
      */
-    String CLOSE_BRACKET = ")";
+    String BRACKET_CLOSE = ")";
     /**
      * item
      */
