@@ -17,11 +17,14 @@ package com.wvkity.mybatis.binding;
 
 import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.basic.utils.Objects;
+import com.wvkity.mybatis.executor.result.MyBatisDefaultMapResultHandler;
 import com.wvkity.mybatis.executor.resultset.EmbeddedResult;
 import org.apache.ibatis.annotations.Flush;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.cursor.Cursor;
+import org.apache.ibatis.executor.result.DefaultMapResultHandler;
+import org.apache.ibatis.executor.result.DefaultResultContext;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.StatementType;
@@ -213,11 +216,12 @@ public class MyBatisMapperMethod {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private <K, V> Map<K, V> executeForMap(SqlSession sqlSession, Object[] args) {
         Map<K, V> result;
         Object param = method.convertArgsToSqlCommandParam(args);
         String mapKey = null;
+        Class<? extends Map> mapType = null;
         if (Objects.isNotBlank(this.method.getMapKey())) {
             mapKey = method.getMapKey();
         } else {
@@ -228,12 +232,17 @@ public class MyBatisMapperMethod {
                     if (value instanceof EmbeddedResult) {
                         final EmbeddedResult embedded = (EmbeddedResult) value;
                         mapKey = embedded.getMapKey();
+                        mapType = embedded.getMapType();
                     }
                 }
             } else if (param instanceof EmbeddedResult) {
                 final EmbeddedResult embedded = (EmbeddedResult) param;
                 mapKey = embedded.getMapKey();
+                mapType = embedded.getMapType();
             }
+        }
+        if (mapType != null) {
+            return this.selectMap(sqlSession, param, mapKey, mapType, args);
         }
         if (method.hasRowBounds()) {
             RowBounds rowBounds = method.extractRowBounds(args);
@@ -242,6 +251,23 @@ public class MyBatisMapperMethod {
             result = sqlSession.selectMap(command.getName(), param, mapKey);
         }
         return result;
+    }
+
+    @SuppressWarnings("rawtypes")
+    private <K, V> Map<K, V> selectMap(final SqlSession sqlSession, final Object parameter,
+                                       final String mapKey, final Class<? extends Map> mapType,
+                                       final Object[] args) {
+        final RowBounds rowBounds = this.method.hasRowBounds() ? this.method.extractRowBounds(args) : RowBounds.DEFAULT;
+        final List<? extends V> list = sqlSession.selectList(this.command.getName(), parameter, rowBounds);
+        final Configuration cfg = sqlSession.getConfiguration();
+        final DefaultMapResultHandler<K, V> mapResultHandler = new MyBatisDefaultMapResultHandler<>(mapKey, mapType,
+            cfg.getObjectFactory(), cfg.getObjectWrapperFactory(), cfg.getReflectorFactory());
+        final DefaultResultContext<V> context = new DefaultResultContext<>();
+        for (V o : list) {
+            context.nextResultObject(o);
+            mapResultHandler.handleResult(context);
+        }
+        return mapResultHandler.getMappedResults();
     }
 
     public static class ParamMap<V> extends HashMap<String, V> {

@@ -73,6 +73,7 @@ import java.util.regex.Pattern;
  * @created 2021-02-06
  * @since 1.0.0
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
 
     private static final Object DEFERRED = new Object();
@@ -109,6 +110,7 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
     // custom return value types
     private final Class<?> embeddedResultType;
     private final String embeddedResultMap;
+    private final Class<? extends Map> embeddedMapType;
 
     private static class PendingRelation {
         public MetaObject metaObject;
@@ -130,7 +132,6 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public MyBatisDefaultResultSetHandler(Executor executor, MappedStatement mappedStatement,
                                           ParameterHandler parameterHandler, ResultHandler<?> resultHandler,
                                           BoundSql boundSql, RowBounds rowBounds) {
@@ -145,30 +146,35 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
         this.objectFactory = configuration.getObjectFactory();
         this.reflectorFactory = configuration.getReflectorFactory();
         this.resultHandler = resultHandler;
-        // process custom return types
+        // process custom return type
         String customResultMap = null;
         Class<?> customResultType = null;
         final String msId = this.mappedStatement.getId();
-        if (EXEC_METHOD_PATTERN.matcher(msId).matches()) {
-            final Object parameter = this.parameterHandler.getParameterObject();
-            if (parameter instanceof Map) {
-                final Map<String, Object> paramMap = (Map<String, Object>) parameter;
-                if (paramMap.containsKey(Constants.PARAM_CRITERIA)) {
-                    final Object paramObject = paramMap.get(Constants.PARAM_CRITERIA);
-                    if (paramObject instanceof EmbeddedResult) {
-                        final EmbeddedResult embedded = (EmbeddedResult) paramObject;
-                        customResultMap = embedded.getResultMap();
-                        customResultType = embedded.getResultType();
-                    }
-                }
-            } else if (parameter instanceof EmbeddedResult) {
-                final EmbeddedResult embedded = (EmbeddedResult) parameter;
-                customResultMap = embedded.getResultMap();
-                customResultType = embedded.getResultType();
-            }
+        final Optional<EmbeddedResult> optional = this.getEmbeddedResult();
+        this.embeddedMapType = optional.map(EmbeddedResult::getMapType).orElse(null);
+        if (EXEC_METHOD_PATTERN.matcher(msId).matches() && optional.isPresent()) {
+            final EmbeddedResult result = optional.get();
+            customResultMap = result.getResultMap();
+            customResultType = result.getResultType();
         }
         this.embeddedResultMap = Objects.isBlank(customResultMap) ? null : customResultMap;
         this.embeddedResultType = customResultType;
+    }
+
+    private Optional<EmbeddedResult> getEmbeddedResult() {
+        final Object parameter = this.parameterHandler.getParameterObject();
+        if (parameter instanceof Map) {
+            final Map<String, Object> paramMap = (Map<String, Object>) parameter;
+            if (paramMap.containsKey(Constants.PARAM_CRITERIA)) {
+                final Object paramObject = paramMap.get(Constants.PARAM_CRITERIA);
+                if (paramObject instanceof EmbeddedResult) {
+                    return Optional.of((EmbeddedResult) paramObject);
+                }
+            }
+        } else if (parameter instanceof EmbeddedResult) {
+            return Optional.of((EmbeddedResult) parameter);
+        }
+        return Optional.empty();
     }
 
     //
@@ -238,9 +244,6 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
             validateResultMapsCount(rsw, resultMapCount);
             while (rsw != null && resultMapCount > resultSetCount) {
                 ResultMap resultMap = resultMaps.get(resultSetCount);
-                // handleResultSet(rsw, resultMap, multipleResults, null);
-                // rsw = getNextResultSet(stmt);
-                // cleanUpAfterHandlingResultSet();
                 rsw = this.handleCustomResultSet(rsw, resultMap, multipleResults, stmt);
                 resultSetCount++;
             }
@@ -370,7 +373,6 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private List<Object> collapseSingleResultList(List<Object> multipleResults) {
         return multipleResults.size() == 1 ? (List<Object>) multipleResults.get(0) : multipleResults;
     }
@@ -393,14 +395,16 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
     private void ensureNoRowBounds() {
         if (configuration.isSafeRowBoundsEnabled() && rowBounds != null
             && (rowBounds.getLimit() < RowBounds.NO_ROW_LIMIT || rowBounds.getOffset() > RowBounds.NO_ROW_OFFSET)) {
-            throw new ExecutorException("Mapped Statements with nested result mappings cannot be safely constrained by RowBounds. "
+            throw new ExecutorException("Mapped Statements with nested result mappings cannot be safely constrained " +
+                "by RowBounds. "
                 + "Use safeRowBoundsEnabled=false setting to bypass this check.");
         }
     }
 
     protected void checkResultHandler() {
         if (resultHandler != null && configuration.isSafeResultHandlerEnabled() && !mappedStatement.isResultOrdered()) {
-            throw new ExecutorException("Mapped Statements with nested result mappings cannot be safely used with a custom ResultHandler. "
+            throw new ExecutorException("Mapped Statements with nested result mappings cannot be safely used with a " +
+                "custom ResultHandler. "
                 + "Use safeResultHandlerEnabled=false setting to bypass this check "
                 + "or ensure your statement returns ordered data and set resultOrdered=true on it.");
         }
@@ -429,7 +433,6 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
         }
     }
 
-    @SuppressWarnings("unchecked" /* because ResultHandler<?> is always ResultHandler<Object>*/)
     private void callResultHandler(ResultHandler<?> resultHandler, DefaultResultContext<Object> resultContext,
                                    Object rowValue) {
         resultContext.nextResultObject(rowValue);
@@ -531,20 +534,6 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
         }
         return foundValues;
     }
-
-    /*private Object getPropertyMappingValue(ResultSet rs, MetaObject metaResultObject, ResultMapping propertyMapping,
-                                           ResultLoaderMap lazyLoader, String columnPrefix) throws SQLException {
-        if (propertyMapping.getNestedQueryId() != null) {
-            return getNestedQueryMappingValue(rs, metaResultObject, propertyMapping, lazyLoader, columnPrefix);
-        } else if (propertyMapping.getResultSet() != null) {
-            addPendingChildRelation(rs, metaResultObject, propertyMapping);   // TODO is that OK?
-            return DEFERRED;
-        } else {
-            final TypeHandler<?> typeHandler = propertyMapping.getTypeHandler();
-            final String column = prependPrefix(propertyMapping.getColumn(), columnPrefix);
-            return typeHandler.getResult(rs, column);
-        }
-    }*/
 
     private Object getPropertyMappingValue(ResultSet rs, MetaObject metaResultObject, ResultMapping propertyMapping,
                                            ResultLoaderMap lazyLoader, String columnPrefix,
@@ -709,7 +698,8 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
                 }
             }
         }
-        this.useConstructorMappings = resultObject != null && !constructorArgTypes.isEmpty(); // set current mapping result
+        this.useConstructorMappings = resultObject != null && !constructorArgTypes.isEmpty(); // set current mapping
+        // result
         return resultObject;
     }
 
@@ -721,7 +711,12 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
         if (this.embeddedResultType != null && !tempResultType.isArray() && tempResultType == Object.class) {
             resultType = this.embeddedResultType;
         } else {
-            resultType = tempResultType;
+            if (Map.class.isAssignableFrom(tempResultType) && embeddedMapType != null) {
+                // 自定义Map类型覆盖默认的Map类型
+                resultType = this.embeddedMapType;
+            } else {
+                resultType = tempResultType;
+            }
         }
         final MetaClass metaType = MetaClass.forClass(resultType, reflectorFactory);
         final List<ResultMapping> constructorMappings = resultMap.getConstructorResultMappings();
@@ -818,7 +813,8 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
         return null;
     }
 
-    private boolean allowedConstructorUsingTypeHandlers(final Constructor<?> constructor, final List<JdbcType> jdbcTypes) {
+    private boolean allowedConstructorUsingTypeHandlers(final Constructor<?> constructor,
+                                                        final List<JdbcType> jdbcTypes) {
         final Class<?>[] parameterTypes = constructor.getParameterTypes();
         if (parameterTypes.length != jdbcTypes.size()) {
             return false;
@@ -941,7 +937,8 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
         for (ResultMapping innerResultMapping : resultMapping.getComposites()) {
             final Class<?> propType = metaObject.getSetterType(innerResultMapping.getProperty());
             final TypeHandler<?> typeHandler = typeHandlerRegistry.getTypeHandler(propType);
-            final Object propValue = typeHandler.getResult(rs, prependPrefix(innerResultMapping.getColumn(), columnPrefix));
+            final Object propValue = typeHandler.getResult(rs, prependPrefix(innerResultMapping.getColumn(),
+                columnPrefix));
             // issue #353 & #560 do not execute nested query if key is null
             if (propValue != null) {
                 metaObject.setValue(innerResultMapping.getProperty(), propValue);
@@ -1059,9 +1056,11 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
                 if (shouldApplyAutomaticMappings(resultMap, true)) {
                     foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, columnPrefix) || foundValues;
                 }
-                foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, columnPrefix) || foundValues;
+                foundValues =
+                    applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, columnPrefix) || foundValues;
                 putAncestor(rowValue, resultMapId);
-                foundValues = applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, true) || foundValues;
+                foundValues =
+                    applyNestedResultMappings(rsw, resultMap, metaObject, columnPrefix, combinedKey, true) || foundValues;
                 ancestorObjects.remove(resultMapId);
                 foundValues = lazyLoader.size() > 0 || foundValues;
                 rowValue = foundValues || configuration.isReturnInstanceForEmptyRow() ? rowValue : null;
@@ -1089,7 +1088,8 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
             if (nestedResultMapId != null && resultMapping.getResultSet() == null) {
                 try {
                     final String columnPrefix = getColumnPrefix(parentPrefix, resultMapping);
-                    final ResultMap nestedResultMap = getNestedResultMap(rsw.getResultSet(), nestedResultMapId, columnPrefix);
+                    final ResultMap nestedResultMap = getNestedResultMap(rsw.getResultSet(), nestedResultMapId,
+                        columnPrefix);
                     if (resultMapping.getColumnPrefix() == null) {
                         // try to fill circular reference only when columnPrefix
                         // is not specified for the nested result map (issue #215)

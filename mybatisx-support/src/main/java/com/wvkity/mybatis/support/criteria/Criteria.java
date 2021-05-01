@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.support.condition.criteria;
+package com.wvkity.mybatis.support.criteria;
 
-import com.wvkity.mybatis.support.condition.expression.Expression;
+import com.wvkity.mybatis.support.expr.Expression;
 import com.wvkity.mybatis.support.segment.Fragment;
 
 import java.util.Collection;
@@ -73,10 +73,25 @@ public interface Criteria<T> extends Fragment {
      * 是否使用属性名只作为别名
      * @return boolean
      */
-    default boolean isUsePropertyAsAlias() {
+    default boolean isPropAsAlias() {
         return false;
     }
 
+    /**
+     * 获取联表查询引用属性
+     * @return 属性
+     */
+    default String getReference() {
+        return null;
+    }
+
+    /**
+     * 完整SQL语句
+     * @return SQL语句
+     */
+    default String completeString() {
+        return null;
+    }
     // endregion
 
 }

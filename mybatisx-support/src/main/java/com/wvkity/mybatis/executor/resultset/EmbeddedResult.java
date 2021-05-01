@@ -15,6 +15,8 @@
  */
 package com.wvkity.mybatis.executor.resultset;
 
+import java.util.Map;
+
 /**
  * 嵌入结果接口
  * @author wvkity
@@ -40,4 +42,11 @@ public interface EmbeddedResult {
      * @return key
      */
     String getMapKey();
+
+    /**
+     * 获取{@link Map}实现类
+     * @return {@link Map}实现类
+     */
+    @SuppressWarnings("rawtypes")
+    Class<? extends Map> getMapType();
 }
