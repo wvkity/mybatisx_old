@@ -13,11 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.criteria;
+package com.wvkity.mybatis.core.criteria;
 
 import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.basic.utils.Objects;
-import com.wvkity.mybatis.support.condition.criteria.Criteria;
+import com.wvkity.mybatis.support.criteria.Criteria;
 
 /**
  * 条件
@@ -61,7 +61,7 @@ public class Condition implements Criterion {
      * @return 表别名
      */
     String getAlias() {
-        return Objects.isNotBlank(tableAlias) ? tableAlias : Objects.nonNull(criteria) ? criteria.as() : null;
+        return Objects.nonNull(tableAlias) ? tableAlias : Objects.nonNull(criteria) ? criteria.as() : null;
     }
 
     @Override

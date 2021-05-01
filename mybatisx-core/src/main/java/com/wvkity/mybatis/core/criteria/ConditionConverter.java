@@ -13,25 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.criteria;
+package com.wvkity.mybatis.core.criteria;
 
 import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.utils.Objects;
-import com.wvkity.mybatis.core.condition.expression.AbstractBasicExpression;
-import com.wvkity.mybatis.core.condition.expression.AbstractBetweenExpression;
-import com.wvkity.mybatis.core.condition.expression.AbstractFuzzyExpression;
-import com.wvkity.mybatis.core.condition.expression.AbstractNullableExpression;
-import com.wvkity.mybatis.core.condition.expression.AbstractRangeExpression;
-import com.wvkity.mybatis.core.condition.expression.AbstractTemplateExpression;
-import com.wvkity.mybatis.core.condition.expression.Native;
-import com.wvkity.mybatis.core.condition.expression.StandardIdEqual;
-import com.wvkity.mybatis.core.condition.expression.StandardNesting;
-import com.wvkity.mybatis.core.condition.expression.TemplateMatch;
+import com.wvkity.mybatis.core.expr.AbstractBasicExpression;
+import com.wvkity.mybatis.core.expr.AbstractBetweenExpression;
+import com.wvkity.mybatis.core.expr.AbstractFuzzyExpression;
+import com.wvkity.mybatis.core.expr.AbstractNullableExpression;
+import com.wvkity.mybatis.core.expr.AbstractRangeExpression;
+import com.wvkity.mybatis.core.expr.AbstractTemplateExpression;
+import com.wvkity.mybatis.core.expr.Native;
+import com.wvkity.mybatis.core.expr.SpecialExpression;
+import com.wvkity.mybatis.core.expr.StandardIdEqual;
+import com.wvkity.mybatis.core.expr.StandardNesting;
+import com.wvkity.mybatis.core.expr.TemplateMatch;
 import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
 import com.wvkity.mybatis.core.utils.Placeholders;
-import com.wvkity.mybatis.support.condition.basic.Matched;
-import com.wvkity.mybatis.support.condition.expression.Expression;
+import com.wvkity.mybatis.support.basic.Matched;
+import com.wvkity.mybatis.support.expr.Expression;
 import com.wvkity.mybatis.support.constant.Like;
 import com.wvkity.mybatis.support.constant.Slot;
 import org.apache.ibatis.type.JdbcType;
@@ -172,6 +173,8 @@ public class ConditionConverter {
             } else if (expression instanceof StandardNesting) {
                 return this.nestingExprConvert((StandardNesting) expression, column, typeHandler, useJavaType,
                     javaType, jdbcType);
+            } else if (expression instanceof SpecialExpression) {
+                return this.specialExprConvert((SpecialExpression) expression);
             }
         }
         return null;
@@ -275,5 +278,11 @@ public class ConditionConverter {
             }
         }
         return null;
+    }
+
+    protected Criterion specialExprConvert(final SpecialExpression special) {
+        return new SpecialCondition(special.getCriteria(), special.getAlias(), special.getTarget(),
+            special.getOtherCriteria(), special.getOtherTableAlias(), special.getOtherTarget(), special.getSymbol(),
+            special.getSlot());
     }
 }
