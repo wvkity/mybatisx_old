@@ -15,7 +15,7 @@
  */
 package com.wvkity.result.model;
 
-import com.wvkity.result.error.AbstractError;
+import com.wvkity.result.core.AbstractResponse;
 
 /**
  * 抽象模型结果集
@@ -25,5 +25,5 @@ import com.wvkity.result.error.AbstractError;
  * @since 1.0.0
  */
 @SuppressWarnings("serial")
-public abstract class AbstractModelResult<T> extends AbstractError implements ModelResult<T> {
+public abstract class AbstractModelResult<T> extends AbstractResponse implements ModelResult<T> {
 }

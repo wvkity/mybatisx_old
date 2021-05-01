@@ -15,7 +15,7 @@
  */
 package com.wvkity.result.model;
 
-import com.wvkity.result.error.AbstractError;
+import com.wvkity.result.core.AbstractResponse;
 
 import java.util.Collection;
 
@@ -26,7 +26,7 @@ import java.util.Collection;
  * @since 1.0.0
  */
 @SuppressWarnings("serial")
-public abstract class AbstractMultiModelResult extends AbstractError implements MultiModelResult {
+public abstract class AbstractMultiModelResult extends AbstractResponse implements MultiModelResult {
 
     /**
      * 检查字符串是否不为空

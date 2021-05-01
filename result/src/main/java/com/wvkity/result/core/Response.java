@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,13 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.criteria;
+package com.wvkity.result.core;
+
+import java.io.Serializable;
 
 /**
- * 条件对象搜索接口
+ * 响应
  * @author wvkity
- * @created 2021-01-06
+ * @created 2021-04-29
  * @since 1.0.0
  */
-public interface SearchCriteria {
+public interface Response extends Serializable {
+
+    /**
+     * 响应状态码
+     * @return 状态码
+     */
+    int getCode();
+
+    /**
+     * 响应信息
+     * @return 描述信息
+     */
+    String getMessage();
+
 }

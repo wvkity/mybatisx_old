@@ -40,4 +40,5 @@ public abstract class AbstractResult<T> extends AbstractModelResult<T> {
     public boolean isEmpty() {
         return this.data == null;
     }
+
 }

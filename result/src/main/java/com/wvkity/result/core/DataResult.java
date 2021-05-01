@@ -72,6 +72,12 @@ public class DataResult<T> extends AbstractResult<T> implements Result<T> {
     }
 
     @Override
+    public DataResult<T> setData(T data) {
+        this.data = data;
+        return this;
+    }
+
+    @Override
     public String toString() {
         return "DataResult{" +
             "data=" + data +

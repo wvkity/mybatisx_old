@@ -24,5 +24,5 @@ import com.wvkity.result.model.Model;
  * @created 2021-02-16
  * @since 1.0.0
  */
-public interface Result<T> extends Model<T> {
+public interface Result<T> extends Model<T>, Response {
 }

@@ -18,9 +18,18 @@ package com.wvkity.result.model;
 import com.wvkity.result.error.Error;
 
 /**
+ * 结果集
+ * @param <T> 数据类型
  * @author wvkity
  * @created 2021-02-15
  * @since 1.0.0
  */
 public interface ModelResult<T> extends Model<T>, Error {
+
+    /**
+     * 设置数据
+     * @param data 数据
+     * @return {@code this}
+     */
+    ModelResult<T> setData(final T data);
 }

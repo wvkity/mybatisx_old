@@ -54,7 +54,7 @@ public interface Error extends Serializable {
     /**
      * 错误
      * @param status {@link Status}
-     * @param e  {@link Throwable}
+     * @param e      {@link Throwable}
      */
     default void error(final Status status, final Throwable e) {
         this.error(status.getCode(), e);
@@ -62,8 +62,8 @@ public interface Error extends Serializable {
 
     /**
      * 错误
-     * @param code  响应状态码
-     * @param e {@link Throwable}
+     * @param code 响应状态码
+     * @param e    {@link Throwable}
      */
     default void error(final int code, final Throwable e) {
         this.error(code, e.getMessage());
@@ -100,4 +100,11 @@ public interface Error extends Serializable {
      */
     void setMessage(final String message);
 
+    /**
+     * 是否成功
+     * @return boolean
+     */
+    default boolean isSuccess() {
+        return this.getCode() == Status.OK.getCode();
+    }
 }
