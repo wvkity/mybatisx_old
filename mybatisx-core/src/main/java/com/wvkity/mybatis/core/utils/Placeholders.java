@@ -15,9 +15,8 @@
  */
 package com.wvkity.mybatis.core.utils;
 
-import com.wvkity.mybatis.basic.immutable.ImmutableMap;
 import com.wvkity.mybatis.basic.utils.Objects;
-import com.wvkity.mybatis.core.condition.expression.TemplateMatch;
+import com.wvkity.mybatis.core.expr.TemplateMatch;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -172,16 +171,10 @@ public final class Placeholders {
                 }
             } else {
                 matcher = PLACEHOLDER_REGEX_CHAR.matcher(target);
-                final Map<?, ?> map = isMap ? (Map<?, ?>) arg : ImmutableMap.of();
+                final Map<?, ?> map = (Map<?, ?>) arg;
                 while (matcher.find()) {
                     final String key = matcher.group(2);
-                    final Object value;
-                    if (isMap) {
-                        value = map.get(key);
-                    } else {
-                        final int i = toInt(key);
-                        value = (i < 0 || i > size) ? null : args.get(i);
-                    }
+                    final Object value = map.get(key);
                     target = replaceFirst(matcher, target, value);
                 }
             }
