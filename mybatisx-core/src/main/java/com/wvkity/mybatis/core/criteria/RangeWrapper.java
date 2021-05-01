@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.criteria;
+package com.wvkity.mybatis.core.criteria;
 
 import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.support.constant.Slot;
@@ -28,7 +28,7 @@ import java.util.Collection;
  * @created 2021-01-07
  * @since 1.0.0
  */
-public interface Range<T, Chain extends Range<T, Chain>> {
+public interface RangeWrapper<T, Chain extends RangeWrapper<T, Chain>> {
 
     // region In
 

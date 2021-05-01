@@ -13,14 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.criteria;
+package com.wvkity.mybatis.core.criteria;
 
 import com.wvkity.mybatis.basic.utils.Objects;
-import com.wvkity.mybatis.core.condition.basic.SegmentManager;
+
+import java.util.function.Consumer;
 
 /**
  * 查询条件
- * @param <T> 泛型类
+ * @param <T> 实体类型
  * @author wvkity
  * @created 2021-01-05
  * @since 1.0.0
@@ -43,7 +44,6 @@ public class Query<T> extends AbstractQueryCriteria<T> {
     @Override
     protected Query<T> newInstance() {
         final Query<T> instance = new Query<>(this.entityClass);
-        instance.segmentManager = new SegmentManager();
         instance.clone(this);
         return instance;
     }
@@ -63,12 +63,43 @@ public class Query<T> extends AbstractQueryCriteria<T> {
     /**
      * 创建{@link Query}对象
      * @param entityClass 实体类
+     * @param action      {@link Consumer}
+     * @param <T>         泛型类型
+     * @return {@link Query}
+     */
+    public static <T> Query<T> from(final Class<T> entityClass, final Consumer<Query<T>> action) {
+        final Query<T> instance = new Query<>(entityClass);
+        if (action != null) {
+            action.accept(instance);
+        }
+        return instance;
+    }
+
+    /**
+     * 创建{@link Query}对象
+     * @param entityClass 实体类
      * @param alias       别名
      * @param <T>         泛型类型
      * @return {@link Query}
      */
     public static <T> Query<T> from(final Class<T> entityClass, final String alias) {
         return new Query<>(entityClass, alias);
+    }
+
+    /**
+     * 创建{@link Query}对象
+     * @param entityClass 实体类
+     * @param alias       别名
+     * @param action      {@link Consumer}
+     * @param <T>         泛型类型
+     * @return {@link Query}
+     */
+    public static <T> Query<T> from(final Class<T> entityClass, final String alias, final Consumer<Query<T>> action) {
+        final Query<T> instance = new Query<>(entityClass, alias);
+        if (action != null) {
+            action.accept(instance);
+        }
+        return instance;
     }
 
     /**

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.criteria;
+package com.wvkity.mybatis.core.criteria;
 
 import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.basic.utils.Objects;
@@ -71,7 +71,7 @@ class NestedCondition implements Criterion {
         } else {
             builder.append(segment);
         }
-        builder.append(Constants.CLOSE_BRACKET);
+        builder.append(Constants.BRACKET_CLOSE);
         return builder.toString();
     }
 }

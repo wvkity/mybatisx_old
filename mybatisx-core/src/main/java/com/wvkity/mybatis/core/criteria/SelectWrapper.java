@@ -13,11 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.criteria;
+package com.wvkity.mybatis.core.criteria;
 
 import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.utils.Objects;
-import com.wvkity.mybatis.core.condition.basic.select.Selection;
+import com.wvkity.mybatis.core.basic.select.Selection;
 import com.wvkity.mybatis.core.property.Property;
 
 import java.util.Collection;
@@ -32,7 +32,15 @@ import java.util.function.Predicate;
  * @created 2021-01-09
  * @since 1.0.0
  */
-public interface Select<T, Chain extends Select<T, Chain>> {
+public interface SelectWrapper<T, Chain extends SelectWrapper<T, Chain>> {
+
+    /**
+     * 查询所有字段
+     * @return {@link Chain}
+     */
+    default Chain select() {
+        return this.filtrate(it -> true);
+    }
 
     /**
      * 筛选查询字段
@@ -145,6 +153,23 @@ public interface Select<T, Chain extends Select<T, Chain>> {
      * @return {@link Chain}
      */
     Chain colSelects(final Map<String, String> columns);
+
+    /**
+     * 添加子查询列
+     * @param query {@link AbstractQueryCriteria}
+     * @return {@link Chain}
+     */
+    default Chain select(final AbstractQueryCriteria<?> query) {
+        return this.select(query, null);
+    }
+
+    /**
+     * 添加子查询列
+     * @param query {@link AbstractQueryCriteria}
+     * @param alias    别名
+     * @return {@link Chain}
+     */
+    Chain select(final AbstractQueryCriteria<?> query, final String alias);
 
     /**
      * 添加多个查询字段

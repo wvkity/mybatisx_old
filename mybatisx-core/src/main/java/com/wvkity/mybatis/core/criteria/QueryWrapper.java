@@ -13,9 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.criteria;
+package com.wvkity.mybatis.core.criteria;
 
+import com.wvkity.mybatis.core.basic.func.Function;
+import com.wvkity.mybatis.core.basic.select.FuncSelection;
 import com.wvkity.mybatis.core.property.Property;
+import com.wvkity.mybatis.support.criteria.Criteria;
 
 import java.util.Map;
 
@@ -27,8 +30,63 @@ import java.util.Map;
  * @created 2021-01-09
  * @since 1.0.0
  */
-public interface QueryWrapper<T, Chain extends QueryWrapper<T, Chain>> extends Select<T, Chain>,
-    GroupBy<T, Chain>, OrderBy<T, Chain> {
+public interface QueryWrapper<T, Chain extends QueryWrapper<T, Chain>> extends Criteria<T>, ForeignWrapper<T, Chain>,
+    SubQueryWrapper<T, Chain>, SubForeignWrapper<T, Chain>, SelectWrapper<T, Chain>, FunctionWrapper<T, Chain>,
+    GroupByWrapper<T, Chain>, HavingWrapper<T, Chain>, OrderByWrapper<T, Chain> {
+
+    /**
+     * 设置引用属性
+     * @param reference 引用属性
+     * @return {@link Chain}
+     */
+    Chain reference(final String reference);
+
+    /**
+     * 是否抓取联表查询字段
+     * @return boolean
+     */
+    default boolean isFetch() {
+        return false;
+    }
+
+    /**
+     * 查询是否包含聚合函数
+     * @return boolean
+     */
+    boolean isContainsFunc();
+
+    /**
+     * 设置查询是否包含聚合函数
+     * @param contains 是否
+     * @return {@link Chain}
+     */
+    Chain containsFunc(final boolean contains);
+
+    /**
+     * 是否仅仅查询聚合函数
+     * @return boolean
+     */
+    boolean isOnlyFunc();
+
+    /**
+     * 设置是否仅仅查询聚合函数
+     * @param only 是否
+     * @return {@link Chain}
+     */
+    Chain onlyFunc(final boolean only);
+
+    /**
+     * 获取聚合函数对象
+     * @param alias 聚合函数别名
+     * @return {@link Function}
+     */
+    Function getFunc(final String alias);
+
+    /**
+     * 获取表别名(非内置的别名)
+     * @return 表别名
+     */
+    String alias();
 
     /**
      * 设置表别名
@@ -51,11 +109,11 @@ public interface QueryWrapper<T, Chain extends QueryWrapper<T, Chain>> extends S
     Chain useAlias(final boolean used);
 
     /**
-     * 设置是否使用属性名作为别名
+     * 使用属性名作为别名
      * @return {@link Chain}
      */
-    default Chain usePropertyAsAlias() {
-        return usePropertyAsAlias(true);
+    default Chain usePropAlias() {
+        return this.usePropAlias(true);
     }
 
     /**
@@ -63,7 +121,7 @@ public interface QueryWrapper<T, Chain extends QueryWrapper<T, Chain>> extends S
      * @param used 是否使用
      * @return {@link Chain}
      */
-    Chain usePropertyAsAlias(final boolean used);
+    Chain usePropAlias(final boolean used);
 
     /**
      * 设置自定义结果集
@@ -78,6 +136,12 @@ public interface QueryWrapper<T, Chain extends QueryWrapper<T, Chain>> extends S
      * @return {@link Chain}
      */
     Chain resultType(final Class<?> resultType);
+
+    /**
+     * 设置map结果中的key值为主键值
+     * @return {@link Chain}
+     */
+    Chain mapKey();
 
     /**
      * 设置map结果中的key值
@@ -97,11 +161,11 @@ public interface QueryWrapper<T, Chain extends QueryWrapper<T, Chain>> extends S
 
     /**
      * 设置{@link Map}实现类
-     * @param mapClass {@link Map}实现类
+     * @param mapImplClass {@link Map}实现类
      * @return {@link Chain}
      */
     @SuppressWarnings("rawtypes")
-    Chain mapType(final Class<? extends Map> mapClass);
+    Chain mapType(final Class<? extends Map> mapImplClass);
 
     /**
      * 指定查询范围

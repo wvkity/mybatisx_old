@@ -13,10 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.criteria;
+package com.wvkity.mybatis.core.criteria;
 
-import com.wvkity.mybatis.support.constant.Slot;
 import com.wvkity.mybatis.core.property.Property;
+import com.wvkity.mybatis.support.constant.Slot;
 
 import java.util.Map;
 
@@ -26,7 +26,7 @@ import java.util.Map;
  * @created 2021-01-05
  * @since 1.0.0
  */
-public interface Compare<T, Chain extends Compare<T, Chain>> {
+public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
 
     // region Single property
 
@@ -426,6 +426,173 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
 
     // endregion
 
+    // region Special
+
+    /**
+     * 字段相等
+     * @param property 属性
+     * @param otherCriteria {@link AbstractCriteria}
+     * @return {@link Chain}
+     */
+    Chain ce(final Property<T, ?> property, final AbstractCriteria<?> otherCriteria);
+
+    /**
+     * 字段相等
+     * @param property 属性
+     * @param otherCriteria {@link AbstractCriteria}
+     * @return {@link Chain}
+     */
+    Chain ce(final String property, final AbstractCriteria<?> otherCriteria);
+
+    /**
+     * 字段相等
+     * @param otherCriteria      {@link AbstractCriteria}
+     * @param otherProperty 属性
+     * @param <E>           实体类型
+     * @return {@link Chain}
+     */
+    default <E> Chain ce(final AbstractCriteria<E> otherCriteria, final Property<E, ?> otherProperty) {
+        return this.ce(otherCriteria, otherCriteria.convert(otherProperty));
+    }
+
+    /**
+     * 字段相等
+     * @param otherCriteria      {@link AbstractCriteria}
+     * @param otherProperty 属性
+     * @return {@link Chain}
+     */
+    Chain ce(final AbstractCriteria<?> otherCriteria, final String otherProperty);
+
+    /**
+     * 字段相等
+     * @param property      属性
+     * @param otherCriteria      {@link AbstractCriteria}
+     * @param otherProperty 其他属性
+     * @param <E>           实体类型
+     * @return {@link Chain}
+     */
+    default <E> Chain ce(final Property<T, ?> property, final AbstractCriteria<E> otherCriteria,
+                         final Property<E, ?> otherProperty) {
+        return this.ce(property, otherCriteria, otherCriteria.convert(otherProperty));
+    }
+
+    /**
+     * 字段相等
+     * @param property      属性
+     * @param otherCriteria      {@link AbstractCriteria}
+     * @param otherProperty 其他属性
+     * @param <E>           实体类型
+     * @return {@link Chain}
+     */
+    default <E> Chain ce(final String property, final AbstractCriteria<E> otherCriteria,
+                         final Property<E, ?> otherProperty) {
+        return this.ce(property, otherCriteria, otherCriteria.convert(otherProperty));
+    }
+
+    /**
+     * 字段相等
+     * @param property      属性
+     * @param otherCriteria      {@link AbstractCriteria}
+     * @param otherProperty 其他属性
+     * @return {@link Chain}
+     */
+    Chain ce(final Property<T, ?> property, final AbstractCriteria<?> otherCriteria, final String otherProperty);
+
+    /**
+     * 字段相等
+     * @param property      属性
+     * @param otherCriteria      {@link AbstractCriteria}
+     * @param otherProperty 其他属性
+     * @return {@link Chain}
+     */
+    Chain ce(final String property, final AbstractCriteria<?> otherCriteria, final String otherProperty);
+
+    /**
+     * 字段相等
+     * @param property    属性
+     * @param otherCriteria    {@link AbstractCriteria}
+     * @param otherColumn 其他字段
+     * @return {@link Chain}
+     */
+    Chain colCe(final Property<T, ?> property, final AbstractCriteria<?> otherCriteria, final String otherColumn);
+
+    /**
+     * 字段相等
+     * @param otherCriteria    {@link AbstractCriteria}
+     * @param otherColumn 其他字段
+     * @return {@link Chain}
+     */
+    Chain colCe(final AbstractCriteria<?> otherCriteria, final String otherColumn);
+
+    /**
+     * 字段相等
+     * @param otherAlias  表别名
+     * @param otherColumn 其他字段
+     * @return {@link Chain}
+     */
+    Chain colCe(final String otherAlias, final String otherColumn);
+
+    /**
+     * 字段相等
+     * @param column   字段
+     * @param otherCriteria {@link AbstractCriteria}
+     * @return {@link Chain}
+     */
+    default Chain colCe(final String column, final AbstractCriteria<?> otherCriteria) {
+        return this.colCe(null, column, otherCriteria);
+    }
+
+    /**
+     * 字段相等
+     * @param alias    表别名
+     * @param column   字段
+     * @param otherCriteria {@link AbstractCriteria}
+     * @return {@link Chain}
+     */
+    Chain colCe(final String alias, final String column, final AbstractCriteria<?> otherCriteria);
+
+    /**
+     * 字段相等
+     * @param column        字段
+     * @param otherCriteria      {@link AbstractCriteria}
+     * @param otherProperty 其他属性
+     * @return {@link Chain}
+     */
+    default <E> Chain colCe(final String column, final AbstractCriteria<E> otherCriteria,
+                            final Property<E, ?> otherProperty) {
+        return this.colCe(column, otherCriteria, otherCriteria.convert(otherProperty));
+    }
+
+    /**
+     * 字段相等
+     * @param column        字段
+     * @param otherCriteria      {@link AbstractCriteria}
+     * @param otherProperty 其他属性
+     * @return {@link Chain}
+     */
+    Chain colCe(final String column, final AbstractCriteria<?> otherCriteria, final String otherProperty);
+
+    /**
+     * 字段相等
+     * @param column      字段名
+     * @param otherAlias  表别名
+     * @param otherColumn 字段名
+     * @return {@link Chain}
+     */
+    Chain colCe(final String column, final String otherAlias, final String otherColumn);
+
+    /**
+     * 字段相等
+     * @param alias       表别名
+     * @param column      字段名
+     * @param otherAlias  表别名
+     * @param otherColumn 字段名
+     * @return {@link Chain}
+     */
+    Chain colCe(final String alias, final String column, final String otherAlias, final String otherColumn);
+
+    // endregion
+
     // endregion
 
     // region Multiple properties
@@ -646,4 +813,5 @@ public interface Compare<T, Chain extends Compare<T, Chain>> {
     Chain colEq(final Slot slot, final Map<String, Object> columns);
 
     // endregion
+
 }

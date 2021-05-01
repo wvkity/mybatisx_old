@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.criteria;
+package com.wvkity.mybatis.core.criteria;
 
 import com.wvkity.mybatis.support.constant.Slot;
 import com.wvkity.mybatis.core.property.Property;
@@ -26,7 +26,7 @@ import com.wvkity.mybatis.core.property.Property;
  * @created 2021-01-09
  * @since 1.0.0
  */
-public interface Nullable<T, Chain extends Nullable<T, Chain>> {
+public interface NullableWrapper<T, Chain extends NullableWrapper<T, Chain>> {
 
     /**
      * IS NULL

@@ -13,10 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.criteria;
+package com.wvkity.mybatis.core.criteria;
 
 import com.wvkity.mybatis.basic.utils.Objects;
-import com.wvkity.mybatis.core.condition.basic.group.Group;
+import com.wvkity.mybatis.core.basic.group.Group;
 import com.wvkity.mybatis.core.property.Property;
 
 import java.util.Collection;
@@ -29,7 +29,22 @@ import java.util.Collection;
  * @created 2021-01-31
  * @since 1.0.0
  */
-public interface GroupBy<T, Chain extends GroupBy<T, Chain>> {
+public interface GroupByWrapper<T, Chain extends GroupByWrapper<T, Chain>> {
+
+    /**
+     * 所有字段分组(除聚合函数)
+     * @return {@link Chain}
+     */
+    default Chain group() {
+        return this.group(true);
+    }
+
+    /**
+     * 是否所有字段分组
+     * @param groupAll 是否所有分组
+     * @return {@link Chain}
+     */
+    Chain group(final boolean groupAll);
 
     /**
      * 分组

@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.criteria;
+package com.wvkity.mybatis.core.criteria;
 
-import com.wvkity.mybatis.support.condition.criteria.Criteria;
+import com.wvkity.mybatis.support.criteria.Criteria;
 
 /**
  * 条件接口包装器
@@ -26,15 +26,15 @@ import com.wvkity.mybatis.support.condition.criteria.Criteria;
  * @since 1.0.0
  */
 public interface CriteriaWrapper<T, Chain extends CriteriaWrapper<T, Chain>> extends Criteria<T>,
-    Compare<T, Chain>, Range<T, Chain>, Fuzzy<T, Chain>, Nullable<T, Chain>, Template<T, Chain>, Nested<Chain> {
+    CompareWrapper<T, Chain>, RangeWrapper<T, Chain>, FuzzyWrapper<T, Chain>, NullableWrapper<T, Chain>, TemplateWrapper<T, Chain>, NestedWrapper<Chain> {
 
     /**
      * 纯SQL条件
-     * <p>本方法存在SQL注入风险，谨慎使用，可参考{@link com.wvkity.mybatis.core.condition.expression.StandardTemplate StandardTemplate}
-     * 或{@link com.wvkity.mybatis.core.condition.expression.ImmediateTemplate ImmediateTemplate}模板条件表达式实现对应的功能.</p>
+     * <p>本方法存在SQL注入风险，谨慎使用，可参考{@link com.wvkity.mybatis.core.expr.StandardTemplate StandardTemplate}
+     * 或{@link com.wvkity.mybatis.core.expr.ImmediateTemplate ImmediateTemplate}模板条件表达式实现对应的功能.</p>
      * @param condition 条件
      * @return {@link Chain}
-     * @see Template
+     * @see TemplateWrapper
      */
     Chain nativeCondition(final String condition);
 }

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.criteria;
+package com.wvkity.mybatis.core.criteria;
 
 import com.wvkity.mybatis.basic.immutable.ImmutableLinkedMap;
 import com.wvkity.mybatis.basic.utils.Objects;
@@ -68,7 +68,7 @@ import java.util.Map;
  * @see com.wvkity.mybatis.core.utils.Placeholders
  * @since 1.0.0
  */
-public interface Template<T, Chain extends Template<T, Chain>> {
+public interface TemplateWrapper<T, Chain extends TemplateWrapper<T, Chain>> {
 
     /**
      * 模板条件

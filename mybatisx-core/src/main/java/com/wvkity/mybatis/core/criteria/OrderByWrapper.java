@@ -13,24 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.criteria;
+package com.wvkity.mybatis.core.criteria;
 
 import com.wvkity.mybatis.basic.utils.Objects;
-import com.wvkity.mybatis.core.condition.basic.order.Order;
+import com.wvkity.mybatis.core.basic.func.Function;
+import com.wvkity.mybatis.core.basic.order.Order;
 import com.wvkity.mybatis.core.property.Property;
-import com.wvkity.mybatis.support.condition.criteria.Criteria;
+import com.wvkity.mybatis.support.criteria.Criteria;
 
 import java.util.List;
 
 /**
- * 排序
+ * 排序包装接口
  * @param <T>     实体类
  * @param <Chain> 子类
  * @author wvkity
  * @created 2021-01-28
  * @since 1.0.0
  */
-public interface OrderBy<T, Chain extends OrderBy<T, Chain>> {
+public interface OrderByWrapper<T, Chain extends OrderByWrapper<T, Chain>> {
 
     // region Asc sort methods
 
@@ -96,7 +97,37 @@ public interface OrderBy<T, Chain extends OrderBy<T, Chain>> {
     Chain colAsc(final List<String> columns);
 
     /**
-     * 升序(不含{@link Criteria}、表别名)
+     * 升序
+     * @param alias 聚合函数别名
+     * @return {@link Chain}
+     */
+    Chain funcAsc(final String alias);
+
+    /**
+     * 升序
+     * @param aliases 聚合函数别名列表
+     * @return {@link Chain}
+     */
+    default Chain funcAsc(final String... aliases) {
+        return this.funcAsc(Objects.asList(aliases));
+    }
+
+    /**
+     * 升序
+     * @param aliases 聚合函数别名列表
+     * @return {@link Chain}
+     */
+    Chain funcAsc(final List<String> aliases);
+
+    /**
+     * 升序
+     * @param function {@link Function}
+     * @return {@link Chain}
+     */
+    Chain funcAsc(final Function function);
+
+    /**
+     * 升序
      * @param columns 字段列表
      * @return {@link Chain}
      */
@@ -105,7 +136,7 @@ public interface OrderBy<T, Chain extends OrderBy<T, Chain>> {
     }
 
     /**
-     * 升序(不含{@link Criteria}、表别名)
+     * 升序
      * @param columns 字段列表
      * @return {@link Chain}
      */
@@ -114,7 +145,7 @@ public interface OrderBy<T, Chain extends OrderBy<T, Chain>> {
     }
 
     /**
-     * 升序(不含{@link Criteria})
+     * 升序
      * @param alias   表别名
      * @param columns 字段列表
      * @return {@link Chain}
@@ -124,7 +155,7 @@ public interface OrderBy<T, Chain extends OrderBy<T, Chain>> {
     }
 
     /**
-     * 升序(不含{@link Criteria})
+     * 升序
      * @param alias   表别名
      * @param columns 字段列表
      * @return {@link Chain}
@@ -197,7 +228,37 @@ public interface OrderBy<T, Chain extends OrderBy<T, Chain>> {
     Chain colDesc(final List<String> columns);
 
     /**
-     * 降序(不含{@link Criteria}、表别名)
+     * 降序
+     * @param alias 聚合函数别名
+     * @return {@link Chain}
+     */
+    Chain funcDesc(final String alias);
+
+    /**
+     * 降序
+     * @param aliases 聚合函数别名列表
+     * @return {@link Chain}
+     */
+    default Chain funcDesc(final String... aliases) {
+        return this.funcDesc(Objects.asList(aliases));
+    }
+
+    /**
+     * 降序
+     * @param aliases 聚合函数别名列表
+     * @return {@link Chain}
+     */
+    Chain funcDesc(final List<String> aliases);
+
+    /**
+     * 降序
+     * @param function {@link Function}
+     * @return {@link Chain}
+     */
+    Chain funcDesc(final Function function);
+
+    /**
+     * 降序
      * @param columns 字段列表
      * @return {@link Chain}
      */
@@ -206,7 +267,7 @@ public interface OrderBy<T, Chain extends OrderBy<T, Chain>> {
     }
 
     /**
-     * 降序(不含{@link Criteria}、表别名)
+     * 降序
      * @param columns 字段列表
      * @return {@link Chain}
      */
@@ -225,7 +286,7 @@ public interface OrderBy<T, Chain extends OrderBy<T, Chain>> {
     }
 
     /**
-     * 降序(不含{@link Criteria})
+     * 降序
      * @param alias   表别名
      * @param columns 字段列表
      * @return {@link Chain}
@@ -235,6 +296,13 @@ public interface OrderBy<T, Chain extends OrderBy<T, Chain>> {
     // endregion
 
     // region Sort methods
+
+    /**
+     * 排序(纯SQL)
+     * @param orderBy 排序语句
+     * @return {@link Chain}
+     */
+    Chain nativeOrder(final String orderBy);
 
     /**
      * 排序

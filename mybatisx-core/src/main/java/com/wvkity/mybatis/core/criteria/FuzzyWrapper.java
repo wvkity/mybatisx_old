@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.criteria;
+package com.wvkity.mybatis.core.criteria;
 
 import com.wvkity.mybatis.support.constant.Like;
 import com.wvkity.mybatis.support.constant.Slot;
@@ -27,7 +27,7 @@ import com.wvkity.mybatis.core.property.Property;
  * @created 2021-01-08
  * @since 1.0.0
  */
-public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
+public interface FuzzyWrapper<T, Chain extends FuzzyWrapper<T, Chain>> {
 
     // region Like methods
 
@@ -129,10 +129,9 @@ public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
      * like模糊匹配(%arg)
      * @param column 字段
      * @param value  值
-     * @param <V>    属性类型
      * @return {@link Chain}
      */
-    default <V> Chain colLikeLeft(final String column, final V value) {
+    default Chain colLikeLeft(final String column, final Object value) {
         return colLike(Slot.AND, column, value, Like.END, null);
     }
 
@@ -141,10 +140,9 @@ public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
      * @param slot   {@link Slot}
      * @param column 字段
      * @param value  值
-     * @param <V>    属性类型
      * @return {@link Chain}
      */
-    default <V> Chain colLikeLeft(final Slot slot, final String column, final V value) {
+    default Chain colLikeLeft(final Slot slot, final String column, final Object value) {
         return colLike(slot, column, value, Like.END, null);
     }
 
@@ -153,10 +151,9 @@ public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
      * @param column 字段
      * @param value  值
      * @param escape 转义字符
-     * @param <V>    属性类型
      * @return {@link Chain}
      */
-    default <V> Chain colLikeLeft(final String column, final V value, final Character escape) {
+    default Chain colLikeLeft(final String column, final Object value, final Character escape) {
         return colLike(Slot.AND, column, value, Like.END, escape);
     }
 
@@ -166,10 +163,9 @@ public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
      * @param value  值
      * @param escape 转义字符
      * @param slot   {@link Slot}
-     * @param <V>    属性类型
      * @return {@link Chain}
      */
-    default <V> Chain colLikeLeft(final Slot slot, final String column, final V value, final Character escape) {
+    default Chain colLikeLeft(final Slot slot, final String column, final Object value, final Character escape) {
         return colLike(slot, column, value, Like.END, escape);
     }
 
@@ -273,10 +269,9 @@ public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
      * like模糊匹配(arg%)
      * @param column 字段
      * @param value  值
-     * @param <V>    属性类型
      * @return {@link Chain}
      */
-    default <V> Chain colLikeRight(final String column, final V value) {
+    default Chain colLikeRight(final String column, final Object value) {
         return colLike(Slot.AND, column, value, Like.START, null);
     }
 
@@ -285,10 +280,9 @@ public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
      * @param slot   {@link Slot}
      * @param column 字段
      * @param value  值
-     * @param <V>    属性类型
      * @return {@link Chain}
      */
-    default <V> Chain colLikeRight(final Slot slot, final String column, final V value) {
+    default Chain colLikeRight(final Slot slot, final String column, final Object value) {
         return colLike(slot, column, value, Like.START, null);
     }
 
@@ -297,10 +291,9 @@ public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
      * @param column 字段
      * @param value  值
      * @param escape 转义字符
-     * @param <V>    属性类型
      * @return {@link Chain}
      */
-    default <V> Chain colLikeRight(final String column, final V value, final Character escape) {
+    default Chain colLikeRight(final String column, final Object value, final Character escape) {
         return colLike(Slot.AND, column, value, Like.START, escape);
     }
 
@@ -310,10 +303,9 @@ public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
      * @param value  值
      * @param escape 转义字符
      * @param slot   {@link Slot}
-     * @param <V>    属性类型
      * @return {@link Chain}
      */
-    default <V> Chain colLikeRight(final Slot slot, final String column, final V value, final Character escape) {
+    default Chain colLikeRight(final Slot slot, final String column, final Object value, final Character escape) {
         return colLike(slot, column, value, Like.START, escape);
     }
 
@@ -417,10 +409,9 @@ public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
      * like模糊匹配(%arg%)
      * @param column 字段
      * @param value  值
-     * @param <V>    属性类型
      * @return {@link Chain}
      */
-    default <V> Chain colLikeAny(final String column, final V value) {
+    default Chain colLikeAny(final String column, final Object value) {
         return colLike(Slot.AND, column, value, Like.ANYWHERE, null);
     }
 
@@ -429,10 +420,9 @@ public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
      * @param slot   {@link Slot}
      * @param column 字段
      * @param value  值
-     * @param <V>    属性类型
      * @return {@link Chain}
      */
-    default <V> Chain colLikeAny(final Slot slot, final String column, final V value) {
+    default Chain colLikeAny(final Slot slot, final String column, final Object value) {
         return colLike(slot, column, value, Like.ANYWHERE, null);
     }
 
@@ -441,10 +431,9 @@ public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
      * @param column 字段
      * @param value  值
      * @param escape 转义字符
-     * @param <V>    属性类型
      * @return {@link Chain}
      */
-    default <V> Chain colLikeAny(final String column, final V value, final Character escape) {
+    default Chain colLikeAny(final String column, final Object value, final Character escape) {
         return colLike(Slot.AND, column, value, Like.ANYWHERE, escape);
     }
 
@@ -454,10 +443,9 @@ public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
      * @param column 字段
      * @param value  值
      * @param escape 转义字符
-     * @param <V>    属性类型
      * @return {@link Chain}
      */
-    default <V> Chain colLikeAny(final Slot slot, final String column, final V value, final Character escape) {
+    default Chain colLikeAny(final Slot slot, final String column, final Object value, final Character escape) {
         return colLike(slot, column, value, Like.ANYWHERE, escape);
     }
 
@@ -717,10 +705,9 @@ public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
      * not like模糊匹配(%arg)
      * @param column 字段
      * @param value  值
-     * @param <V>    属性类型
      * @return {@link Chain}
      */
-    default <V> Chain colNotLikeLeft(final String column, final V value) {
+    default Chain colNotLikeLeft(final String column, final Object value) {
         return colNotLike(Slot.AND, column, value, Like.END, null);
     }
 
@@ -729,10 +716,9 @@ public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
      * @param slot   {@link Slot}
      * @param column 字段
      * @param value  值
-     * @param <V>    属性类型
      * @return {@link Chain}
      */
-    default <V> Chain colNotLikeLeft(final Slot slot, final String column, final V value) {
+    default Chain colNotLikeLeft(final Slot slot, final String column, final Object value) {
         return colNotLike(slot, column, value, Like.END, null);
     }
 
@@ -741,10 +727,9 @@ public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
      * @param column 字段
      * @param value  值
      * @param escape 转义字符
-     * @param <V>    属性类型
      * @return {@link Chain}
      */
-    default <V> Chain colNotLikeLeft(final String column, final V value, final Character escape) {
+    default Chain colNotLikeLeft(final String column, final Object value, final Character escape) {
         return colNotLike(Slot.AND, column, value, Like.END, escape);
     }
 
@@ -754,10 +739,9 @@ public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
      * @param column 字段
      * @param value  值
      * @param escape 转义字符
-     * @param <V>    属性类型
      * @return {@link Chain}
      */
-    default <V> Chain colNotLikeLeft(final Slot slot, final String column, final V value, final Character escape) {
+    default Chain colNotLikeLeft(final Slot slot, final String column, final Object value, final Character escape) {
         return colNotLike(slot, column, value, Like.END, escape);
     }
 
@@ -862,10 +846,9 @@ public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
      * not like模糊匹配(arg%)
      * @param column 字段
      * @param value  值
-     * @param <V>    属性类型
      * @return {@link Chain}
      */
-    default <V> Chain colNotLikeRight(final String column, final V value) {
+    default Chain colNotLikeRight(final String column, final Object value) {
         return colNotLike(Slot.AND, column, value, Like.START, null);
     }
 
@@ -874,10 +857,9 @@ public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
      * @param slot   {@link Slot}
      * @param column 字段
      * @param value  值
-     * @param <V>    属性类型
      * @return {@link Chain}
      */
-    default <V> Chain colNotLikeRight(final Slot slot, final String column, final V value) {
+    default Chain colNotLikeRight(final Slot slot, final String column, final Object value) {
         return colNotLike(slot, column, value, Like.START, null);
     }
 
@@ -886,10 +868,9 @@ public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
      * @param column 字段
      * @param value  值
      * @param escape 转义字符
-     * @param <V>    属性类型
      * @return {@link Chain}
      */
-    default <V> Chain colNotLikeRight(final String column, final V value, final Character escape) {
+    default Chain colNotLikeRight(final String column, final Object value, final Character escape) {
         return colNotLike(Slot.AND, column, value, Like.START, escape);
     }
 
@@ -899,10 +880,9 @@ public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
      * @param column 字段
      * @param value  值
      * @param escape 转义字符
-     * @param <V>    属性类型
      * @return {@link Chain}
      */
-    default <V> Chain colNotLikeRight(final Slot slot, final String column, final V value, final Character escape) {
+    default Chain colNotLikeRight(final Slot slot, final String column, final Object value, final Character escape) {
         return colNotLike(slot, column, value, Like.START, escape);
     }
 
@@ -1007,10 +987,9 @@ public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
      * not like模糊匹配(%arg%)
      * @param column 字段
      * @param value  值
-     * @param <V>    属性类型
      * @return {@link Chain}
      */
-    default <V> Chain colNotLikeAny(final String column, final V value) {
+    default Chain colNotLikeAny(final String column, final Object value) {
         return colNotLike(Slot.AND, column, value, Like.ANYWHERE, null);
     }
 
@@ -1019,10 +998,9 @@ public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
      * @param slot   {@link Slot}
      * @param column 字段
      * @param value  值
-     * @param <V>    属性类型
      * @return {@link Chain}
      */
-    default <V> Chain colNotLikeAny(final Slot slot, final String column, final V value) {
+    default Chain colNotLikeAny(final Slot slot, final String column, final Object value) {
         return colNotLike(slot, column, value, Like.ANYWHERE, null);
     }
 
@@ -1031,10 +1009,9 @@ public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
      * @param column 字段
      * @param value  值
      * @param escape 转义字符
-     * @param <V>    属性类型
      * @return {@link Chain}
      */
-    default <V> Chain colNotLikeAny(final String column, final V value, final Character escape) {
+    default Chain colNotLikeAny(final String column, final Object value, final Character escape) {
         return colNotLike(Slot.AND, column, value, Like.ANYWHERE, escape);
     }
 
@@ -1044,10 +1021,9 @@ public interface Fuzzy<T, Chain extends Fuzzy<T, Chain>> {
      * @param column 字段
      * @param value  值
      * @param escape 转义字符
-     * @param <V>    属性类型
      * @return {@link Chain}
      */
-    default <V> Chain colNotLikeAny(final Slot slot, final String column, final V value, final Character escape) {
+    default Chain colNotLikeAny(final Slot slot, final String column, final Object value, final Character escape) {
         return colNotLike(slot, column, value, Like.ANYWHERE, escape);
     }
 
