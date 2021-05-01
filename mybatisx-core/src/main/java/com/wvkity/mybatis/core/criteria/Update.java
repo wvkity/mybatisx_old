@@ -13,10 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.criteria;
+package com.wvkity.mybatis.core.criteria;
 
 import com.wvkity.mybatis.basic.utils.Objects;
-import com.wvkity.mybatis.core.condition.basic.SegmentManager;
+
+import java.util.function.Consumer;
 
 /**
  * 更新条件
@@ -37,11 +38,9 @@ public class Update<T> extends AbstractUpdateCriteria<T> {
     @Override
     protected Update<T> newInstance() {
         final Update<T> instance = new Update<>(this.entityClass);
-        instance.segmentManager = new SegmentManager();
         instance.clone(this);
         return instance;
     }
-
 
     // region Static methods
 
@@ -56,7 +55,21 @@ public class Update<T> extends AbstractUpdateCriteria<T> {
     }
 
     /**
-     * 根据实例创建{@link Query}对象
+     * 创建{@link Update}对象
+     * @param entityClass 实体类
+     * @param <T>         泛型类型
+     * @return {@link Update}
+     */
+    public static <T> Update<T> from(final Class<T> entityClass, final Consumer<Update<T>> action) {
+        final Update<T> update = new Update<>(entityClass);
+        if (Objects.nonNull(action)) {
+            action.accept(update);
+        }
+        return update;
+    }
+
+    /**
+     * 根据实例创建{@link Update}对象
      * @param instance 实例
      * @param <T>      实例类型
      * @return {@link Query}

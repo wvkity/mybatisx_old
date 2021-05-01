@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.criteria;
+package com.wvkity.mybatis.core.criteria;
 
 import com.wvkity.mybatis.core.property.Property;
 
@@ -35,6 +35,15 @@ public interface UpdateWrapper<T, Chain extends UpdateWrapper<T, Chain>> {
      * @return {@link Chain}
      */
     <V> Chain set(final Property<T, V> property, final V value);
+
+    /**
+     * 更新字段值
+     * @param property 属性
+     * @param value    值
+     * @param <V>      值类型
+     * @return {@link Chain}
+     */
+    <V> Chain setIfAbsent(final Property<T, V> property, final V value);
 
     /**
      * 更新字段值
@@ -70,11 +79,62 @@ public interface UpdateWrapper<T, Chain extends UpdateWrapper<T, Chain>> {
 
     /**
      * 更新字段值
+     * @param property 属性
+     * @param value    值
+     * @return {@link Chain}
+     */
+    Chain set(final String property, final Object value);
+
+    /**
+     * 更新字段值
+     * @param property 属性
+     * @param value    值
+     * @return {@link Chain}
+     */
+    Chain setIfAbsent(final String property, final Object value);
+
+    /**
+     * 更新字段值
+     * @param p1 属性1
+     * @param v1 属性1对应值
+     * @param p2 属性2
+     * @param v2 属性2对应值
+     * @return {@link Chain}
+     */
+    default <V1, V2, V3> Chain set(final String p1, final Object v1, final String p2, final Object v2) {
+        return this.set(p1, v1).set(p2, v2);
+    }
+
+    /**
+     * 更新字段值
+     * @param p1 属性1
+     * @param v1 属性1对应值
+     * @param p2 属性2
+     * @param v2 属性2对应值
+     * @param p3 属性3
+     * @param v3 属性3对应值
+     * @return {@link Chain}
+     */
+    default <V1, V2, V3> Chain set(final String p1, final Object v1, final String p2,
+                                   final Object v2, final String p3, final Object v3) {
+        return this.set(p1, v1).set(p2, v2).set(p3, v3);
+    }
+
+    /**
+     * 更新字段值
      * @param column 字段
      * @param value  值
      * @return {@link Chain}
      */
     Chain colSet(final String column, final Object value);
+
+    /**
+     * 更新字段值
+     * @param column 字段
+     * @param value  值
+     * @return {@link Chain}
+     */
+    Chain colSetIfAbsent(final String column, final Object value);
 
     /**
      * 更新字段值
