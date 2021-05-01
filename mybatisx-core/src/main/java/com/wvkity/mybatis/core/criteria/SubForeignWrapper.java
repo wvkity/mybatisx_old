@@ -150,7 +150,6 @@ public interface SubForeignWrapper<M, Chain extends SubForeignWrapper<M, Chain>>
      * @param subQuery    {@link AbstractSubCriteria}
      * @param alias       别名
      * @param expressions {@link Expression}列表
-     * @param <R>         实体类型
      * @param <S>         实体类型
      * @return {@link SubForeign}
      */
@@ -188,7 +187,6 @@ public interface SubForeignWrapper<M, Chain extends SubForeignWrapper<M, Chain>>
      * 创建子外联表条件({@link Join#LEFT})
      * @param subQuery {@link AbstractSubCriteria}
      * @param action   {@link Consumer}
-     * @param <R>      实体类型
      * @param <S>      实体类型
      * @return {@link SubForeign}
      */
@@ -202,7 +200,6 @@ public interface SubForeignWrapper<M, Chain extends SubForeignWrapper<M, Chain>>
      * @param subQuery {@link AbstractSubCriteria}
      * @param alias    别名
      * @param action   {@link Consumer}
-     * @param <R>      实体类型
      * @param <S>      实体类型
      * @return {@link SubForeign}
      */
@@ -215,7 +212,6 @@ public interface SubForeignWrapper<M, Chain extends SubForeignWrapper<M, Chain>>
      * 创建子外联表条件({@link Join#LEFT})
      * @param subQuery {@link AbstractSubCriteria}
      * @param action   {@link BiConsumer}
-     * @param <R>      实体类型
      * @param <S>      实体类型
      * @return {@link SubForeign}
      */
@@ -229,7 +225,6 @@ public interface SubForeignWrapper<M, Chain extends SubForeignWrapper<M, Chain>>
      * @param subQuery {@link AbstractSubCriteria}
      * @param alias    别名
      * @param action   {@link BiConsumer}
-     * @param <R>      实体类型
      * @param <S>      实体类型
      * @return {@link SubForeign}
      */
@@ -243,7 +238,6 @@ public interface SubForeignWrapper<M, Chain extends SubForeignWrapper<M, Chain>>
      * 创建子外联表条件({@link Join#LEFT})
      * @param subQuery    {@link AbstractSubCriteria}
      * @param expressions {@link Expression}列表
-     * @param <R>         实体类型
      * @param <S>         实体类型
      * @return {@link SubForeign}
      */
@@ -256,7 +250,6 @@ public interface SubForeignWrapper<M, Chain extends SubForeignWrapper<M, Chain>>
      * 创建子外联表条件({@link Join#LEFT})
      * @param subQuery    {@link AbstractSubCriteria}
      * @param expressions {@link Expression}列表
-     * @param <R>         实体类型
      * @param <S>         实体类型
      * @return {@link SubForeign}
      */
@@ -270,7 +263,6 @@ public interface SubForeignWrapper<M, Chain extends SubForeignWrapper<M, Chain>>
      * @param subQuery    {@link AbstractSubCriteria}
      * @param alias       别名
      * @param expressions {@link Expression}列表
-     * @param <R>         实体类型
      * @param <S>         实体类型
      * @return {@link SubForeign}
      */
@@ -284,7 +276,6 @@ public interface SubForeignWrapper<M, Chain extends SubForeignWrapper<M, Chain>>
      * @param subQuery    {@link AbstractSubCriteria}
      * @param alias       别名
      * @param expressions {@link Expression}列表
-     * @param <R>         实体类型
      * @param <S>         实体类型
      * @return {@link SubForeign}
      */
@@ -299,7 +290,6 @@ public interface SubForeignWrapper<M, Chain extends SubForeignWrapper<M, Chain>>
      * 创建子外联表条件
      * @param subQuery {@link AbstractSubCriteria}
      * @param join     {@link Join}
-     * @param <R>      实体类型
      * @param <S>      实体类型
      * @return {@link SubForeign}
      */
@@ -312,7 +302,6 @@ public interface SubForeignWrapper<M, Chain extends SubForeignWrapper<M, Chain>>
      * @param subQuery {@link AbstractSubCriteria}
      * @param join     {@link Join}
      * @param alias    别名
-     * @param <R>      实体类型
      * @param <S>      实体类型
      * @return {@link SubForeign}
      */
@@ -323,7 +312,6 @@ public interface SubForeignWrapper<M, Chain extends SubForeignWrapper<M, Chain>>
      * @param subQuery {@link AbstractSubCriteria}
      * @param join     {@link Join}
      * @param action   {@link Consumer}
-     * @param <R>      实体类型
      * @param <S>      实体类型
      * @return {@link SubForeign}
      */
@@ -338,7 +326,6 @@ public interface SubForeignWrapper<M, Chain extends SubForeignWrapper<M, Chain>>
      * @param join     {@link Join}
      * @param alias    别名
      * @param action   {@link Consumer}
-     * @param <R>      实体类型
      * @param <S>      实体类型
      * @return {@link SubForeign}
      */
@@ -356,7 +343,6 @@ public interface SubForeignWrapper<M, Chain extends SubForeignWrapper<M, Chain>>
      * @param subQuery {@link AbstractSubCriteria}
      * @param join     {@link Join}
      * @param action   {@link BiConsumer}
-     * @param <R>      实体类型
      * @param <S>      实体类型
      * @return {@link SubForeign}
      */
@@ -371,7 +357,6 @@ public interface SubForeignWrapper<M, Chain extends SubForeignWrapper<M, Chain>>
      * @param join     {@link Join}
      * @param alias    别名
      * @param action   {@link BiConsumer}
-     * @param <R>      实体类型
      * @param <S>      实体类型
      * @return {@link SubForeign}
      */
@@ -390,7 +375,6 @@ public interface SubForeignWrapper<M, Chain extends SubForeignWrapper<M, Chain>>
      * @param subQuery    {@link AbstractSubCriteria}
      * @param join        {@link Join}
      * @param expressions {@link Expression}列表
-     * @param <R>         实体类型
      * @param <S>         实体类型
      * @return {@link SubForeign}
      */
@@ -404,7 +388,6 @@ public interface SubForeignWrapper<M, Chain extends SubForeignWrapper<M, Chain>>
      * @param subQuery    {@link AbstractSubCriteria}
      * @param join        {@link Join}
      * @param expressions {@link Expression}列表
-     * @param <R>         实体类型
      * @param <S>         实体类型
      * @return {@link SubForeign}
      */
@@ -419,7 +402,6 @@ public interface SubForeignWrapper<M, Chain extends SubForeignWrapper<M, Chain>>
      * @param join        {@link Join}
      * @param alias       别名
      * @param expressions {@link Expression}列表
-     * @param <R>         实体类型
      * @param <S>         实体类型
      * @return {@link SubForeign}
      */
@@ -434,7 +416,6 @@ public interface SubForeignWrapper<M, Chain extends SubForeignWrapper<M, Chain>>
      * @param join        {@link Join}
      * @param alias       别名
      * @param expressions {@link Expression}列表
-     * @param <R>         实体类型
      * @param <S>         实体类型
      * @return {@link SubForeign}
      */
