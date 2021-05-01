@@ -18,7 +18,7 @@ package com.wvkity.mybatis.core.auditable;
 import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.basic.metadata.Table;
 import com.wvkity.mybatis.basic.reflect.Reflections;
-import com.wvkity.mybatis.support.condition.criteria.Criteria;
+import com.wvkity.mybatis.support.criteria.Criteria;
 import com.wvkity.mybatis.support.helper.TableHelper;
 import org.apache.ibatis.mapping.MappedStatement;
 
