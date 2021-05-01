@@ -13,11 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.criteria;
+package com.wvkity.mybatis.core.criteria;
 
 import com.wvkity.mybatis.basic.utils.Objects;
-import com.wvkity.mybatis.support.condition.criteria.Criteria;
-import com.wvkity.mybatis.support.condition.expression.Expression;
+import com.wvkity.mybatis.support.criteria.Criteria;
+import com.wvkity.mybatis.support.expr.Expression;
 
 import java.util.List;
 import java.util.function.Function;
@@ -29,7 +29,7 @@ import java.util.function.Function;
  * @created 2021-01-07
  * @since 1.0.0
  */
-public interface Nested<Chain extends Nested<Chain>> {
+public interface NestedWrapper<Chain extends NestedWrapper<Chain>> {
 
     /**
      * and嵌套条件
@@ -113,16 +113,16 @@ public interface Nested<Chain extends Nested<Chain>> {
      * @return {@link Chain}
      */
     default Chain and(final Function<Chain, Chain> apply) {
-        return and(apply, false);
+        return and(false, apply);
     }
 
     /**
      * and嵌套条件
-     * @param apply {@link Function}
      * @param not   是否添加not
+     * @param apply {@link Function}
      * @return {@link Chain}
      */
-    Chain and(final Function<Chain, Chain> apply, final boolean not);
+    Chain and(final boolean not, final Function<Chain, Chain> apply);
 
     /**
      * or嵌套条件
@@ -206,14 +206,14 @@ public interface Nested<Chain extends Nested<Chain>> {
      * @return {@link Chain}
      */
     default Chain or(final Function<Chain, Chain> apply) {
-        return or(apply, false);
+        return or(false, apply);
     }
 
     /**
      * or嵌套条件
-     * @param apply {@link Function}
      * @param not   是否添加not
+     * @param apply {@link Function}
      * @return {@link Chain}
      */
-    Chain or(final Function<Chain, Chain> apply, final boolean not);
+    Chain or(final boolean not, final Function<Chain, Chain> apply);
 }
