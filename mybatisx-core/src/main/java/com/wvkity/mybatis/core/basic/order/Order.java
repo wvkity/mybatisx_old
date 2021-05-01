@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.basic.order;
+package com.wvkity.mybatis.core.basic.order;
 
 import com.wvkity.mybatis.support.segment.Fragment;
 

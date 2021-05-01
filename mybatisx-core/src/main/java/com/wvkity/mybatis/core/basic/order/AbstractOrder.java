@@ -13,11 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.basic.order;
+package com.wvkity.mybatis.core.basic.order;
 
 import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.basic.utils.Objects;
-import com.wvkity.mybatis.support.condition.criteria.Criteria;
+import com.wvkity.mybatis.support.criteria.Criteria;
 import com.wvkity.mybatis.support.segment.AbstractFragmentList;
 
 import java.util.List;
