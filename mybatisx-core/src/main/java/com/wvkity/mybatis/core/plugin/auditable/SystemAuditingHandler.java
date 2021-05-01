@@ -133,7 +133,8 @@ public class SystemAuditingHandler extends AbstractAuditingHandler<OriginalPrope
      * @param cacheKey 缓存key
      * @return {@link AuditedAlterData}
      */
-    protected AuditedAlterData invoke(final Column column, final Object target, final Object value, final String cacheKey) {
+    protected AuditedAlterData invoke(final Column column, final Object target, final Object value,
+                                      final String cacheKey) {
         final CacheData<OriginalProperty> cache = this.getCache(cacheKey);
         final OriginalProperty property;
         if (cache != null && (property = cache.getData()) != null) {
