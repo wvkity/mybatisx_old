@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,33 +13,33 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.basic;
+package com.wvkity.mybatis.core.basic.manager;
 
 import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.basic.immutable.ImmutableList;
 import com.wvkity.mybatis.basic.utils.Objects;
-import com.wvkity.mybatis.core.condition.criteria.Criterion;
+import com.wvkity.mybatis.core.criteria.Criterion;
 import com.wvkity.mybatis.support.segment.AbstractFragmentList;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 条件片段管理器
+ * 条件片段存储器
  * @author wvkity
- * @created 2021-01-05
+ * @created 2021-04-22
  * @since 1.0.0
  */
-public class WhereManager extends AbstractFragmentList<Criterion> {
+public class WhereFragmentStorage extends AbstractFragmentList<Criterion> {
 
-    private static final long serialVersionUID = 5417095393578894180L;
+    private static final long serialVersionUID = 3445770521976104346L;
 
     /**
-     * 获取所有条件表达式片段
-     * @return {@link Criterion}集合
+     * 获取所有条件
+     * @return {@link Criterion}列表
      */
-    final List<Criterion> getConditions() {
-        return this.isEmpty() ? ImmutableList.of() : ImmutableList.of(new ArrayList<>(this.fragments));
+    public List<Criterion> getConditions() {
+        return this.isEmpty() ? ImmutableList.of() : ImmutableList.of(this.fragments);
     }
 
     @Override
