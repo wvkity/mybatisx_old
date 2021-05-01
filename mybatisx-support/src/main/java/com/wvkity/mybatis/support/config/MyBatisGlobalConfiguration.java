@@ -16,8 +16,8 @@
 package com.wvkity.mybatis.support.config;
 
 import com.wvkity.mybatis.annotation.ColumnExt;
-import com.wvkity.mybatis.annotation.NamingStrategy;
 import com.wvkity.mybatis.annotation.IdStrategy;
+import com.wvkity.mybatis.annotation.NamingStrategy;
 import com.wvkity.mybatis.basic.filter.Filter;
 import com.wvkity.mybatis.basic.inject.Injector;
 import com.wvkity.mybatis.basic.keygen.KeyGenerator;
@@ -43,6 +43,7 @@ import java.util.Optional;
  * @created 2020-10-01
  * @since 1.0.0
  */
+@SuppressWarnings("rawtypes")
 public class MyBatisGlobalConfiguration {
 
     /**
@@ -153,7 +154,7 @@ public class MyBatisGlobalConfiguration {
      * 覆盖boolean类型属性默认映射的JDBC类型
      * <p>
      * 当{@code autoMappingJdbcType}等于true时且{@code booleanPropertyOverrideMappedJdbcType}不等{@link JdbcType#UNDEFINED}
-     * 会覆盖{@link com.wvkity.mybatis.core.type.JdbcTypeMappingRegistry}中的默认值，如果不需要覆盖请使用{@link ColumnExt#jdbcType()}
+     * 会覆盖{@link com.wvkity.mybatis.basic.type.JdbcTypeMappingRegistry}中的默认值，如果不需要覆盖请使用{@link ColumnExt#jdbcType()}
      * 指定对应的{@link JdbcType}即可
      * </p>
      */
