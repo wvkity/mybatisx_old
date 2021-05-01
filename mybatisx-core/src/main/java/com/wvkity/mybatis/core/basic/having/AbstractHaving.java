@@ -62,7 +62,7 @@ public abstract class AbstractHaving implements Having {
         }
         builder.append(Constants.SPACE);
         final String funcBody = this.function.getFuncBody();
-        if (comparator.contains(":@")) {
+        if (comparator.contains(Constants.DEF_STR_COLUMN_PH)) {
             builder.append(comparator.replaceAll(DEF_PLACEHOLDER_COLUMN, this.function.getFuncBody()));
         } else {
             builder.append(funcBody).append(Constants.SPACE).append(comparator).append(Constants.SPACE);

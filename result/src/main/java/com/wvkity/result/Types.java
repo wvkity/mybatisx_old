@@ -32,6 +32,16 @@ public final class Types {
 
     private static final Pattern PATTERN_NUMBER_WITH_TRAILING_ZEROS = Pattern.compile("\\.0*$");
     private static final Pattern PATTERN_INTEGER = Pattern.compile("^([\\-+])?(0|[1-9]\\d*)");
+    private static final String DEF_NULL = "null";
+    private static final String DEF_STR_ZERO = "0";
+    private static final String DEF_STR_ONE = "1";
+    private static final String DEF_STR_FALSE = "false";
+    private static final String DEF_STR_F = "F";
+    private static final String DEF_STR_N = "N";
+    private static final String DEF_STR_TRUE = "true";
+    private static final String DEF_STR_Y = "Y";
+    private static final String DEF_STR_T = "T";
+    private static final String DEF_COMMA = ",";
 
     public static String toString(final Object value) {
         if (value == null) {
@@ -79,7 +89,7 @@ public final class Types {
         }
         if (value instanceof String) {
             final String str = ((String) value).trim();
-            if (str.length() == 0 || "null".equalsIgnoreCase(str)) {
+            if (str.length() == 0 || DEF_NULL.equalsIgnoreCase(str)) {
                 return 0;
             }
             return Short.parseShort(str);
@@ -202,19 +212,19 @@ public final class Types {
 
         if (value instanceof String) {
             final String str = (String) value;
-            if (str.length() == 0 || "null".equalsIgnoreCase(str)) {
+            if (str.length() == 0 || DEF_NULL.equalsIgnoreCase(str)) {
                 return null;
             }
-            if ("true".equalsIgnoreCase(str) || "1".equals(str)) {
+            if (DEF_STR_TRUE.equalsIgnoreCase(str) || DEF_STR_ONE.equals(str)) {
                 return Boolean.TRUE;
             }
-            if ("false".equalsIgnoreCase(str) || "0".equals(str)) {
+            if (DEF_STR_FALSE.equalsIgnoreCase(str) || DEF_STR_ZERO.equals(str)) {
                 return Boolean.FALSE;
             }
-            if ("Y".equalsIgnoreCase(str) || "T".equals(str)) {
+            if (DEF_STR_Y.equalsIgnoreCase(str) || DEF_STR_T.equals(str)) {
                 return Boolean.TRUE;
             }
-            if ("F".equalsIgnoreCase(str) || "N".equals(str)) {
+            if (DEF_STR_F.equalsIgnoreCase(str) || DEF_STR_N.equals(str)) {
                 return Boolean.FALSE;
             }
         }
@@ -248,11 +258,11 @@ public final class Types {
 
     private static String trim(final Object value) {
         String str = ((String) value).trim();
-        if (str.length() == 0 || "null".equalsIgnoreCase(str)) {
+        if (str.length() == 0 || DEF_NULL.equalsIgnoreCase(str)) {
             return null;
         }
-        if (str.contains(",")) {
-            str = str.replaceAll(",", "");
+        if (str.contains(DEF_COMMA)) {
+            str = str.replaceAll(DEF_COMMA, "");
         }
         final Matcher matcher = PATTERN_NUMBER_WITH_TRAILING_ZEROS.matcher(str);
         if (matcher.find()) {

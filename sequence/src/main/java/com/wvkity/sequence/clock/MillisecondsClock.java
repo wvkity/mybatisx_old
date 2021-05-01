@@ -15,7 +15,7 @@
  */
 package com.wvkity.sequence.clock;
 
-import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -37,7 +37,7 @@ public class MillisecondsClock {
     }
 
     private void start() {
-        Executors.newSingleThreadScheduledExecutor(it -> {
+        new ScheduledThreadPoolExecutor(1, it -> {
             final Thread thread = new Thread(it, "MILLISECOND CLOCK");
             thread.setDaemon(true);
             return thread;

@@ -15,6 +15,7 @@
  */
 package com.wvkity.mybatis.core.cache;
 
+import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.core.plugin.exception.MyBatisPluginException;
 import com.wvkity.mybatis.core.plugin.utils.Objects;
 
@@ -32,6 +33,8 @@ import java.util.Properties;
  */
 public final class CacheFactory {
 
+    static final String DEF_CACHE_TYPE = "caffeine";
+
     private CacheFactory() {
     }
 
@@ -47,8 +50,8 @@ public final class CacheFactory {
     @SuppressWarnings("unchecked")
     public static <K, V> LocalCache<K, V> create(final String cacheImplClass, final Properties properties,
                                                  final String prefix) {
-        if (Objects.isBlank(cacheImplClass) || "false".equalsIgnoreCase(cacheImplClass)
-            || "caffeine".equalsIgnoreCase(cacheImplClass)) {
+        if (Objects.isBlank(cacheImplClass) || Constants.DEF_STR_FALSE.equalsIgnoreCase(cacheImplClass)
+            || DEF_CACHE_TYPE.equalsIgnoreCase(cacheImplClass)) {
             try {
                 Class.forName("com.github.benmanes.caffeine.cache.Cache");
                 return new CaffeineCache<>(properties, prefix);

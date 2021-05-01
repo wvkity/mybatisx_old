@@ -286,16 +286,7 @@ public interface HavingWrapper<T, Chain extends HavingWrapper<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain having(final Having... havingArray) {
-        if (Objects.isEmpty(havingArray)) {
-            final int length = havingArray.length;
-            if (length == 1) {
-                return this.having(havingArray[0]);
-            } else if (length == 2) {
-                return this.having(havingArray[0]).having(havingArray[1]);
-            }
-            return this.having(Objects.asList(havingArray));
-        }
-        return this.having((Having) null);
+        return this.having(Objects.asList(havingArray));
     }
 
     /**

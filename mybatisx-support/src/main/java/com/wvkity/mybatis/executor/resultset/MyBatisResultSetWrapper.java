@@ -58,7 +58,6 @@ public class MyBatisResultSetWrapper extends ResultSetWrapper {
     private final Map<String, List<String>> mappedColumnNamesMap = new HashMap<>();
     private final Map<String, List<String>> unMappedColumnNamesMap = new HashMap<>();
 
-    // 无法自动映射
     private final List<String> sameColumnNames = new ArrayList<>();
     private final Map<String, String> sameColumnNamesMap = new HashMap<>();
     private final Map<String, String> originalColumnNamesMap = new HashMap<>();
@@ -102,22 +101,27 @@ public class MyBatisResultSetWrapper extends ResultSetWrapper {
         return NamingStrategy.UPPER_CAMEL.to(NamingStrategy.UPPER_UNDERSCORE, value);
     }
 
+    @Override
     public ResultSet getResultSet() {
         return resultSet;
     }
 
+    @Override
     public List<String> getColumnNames() {
         return this.columnNames;
     }
 
+    @Override
     public List<String> getClassNames() {
         return Collections.unmodifiableList(classNames);
     }
 
+    @Override
     public List<JdbcType> getJdbcTypes() {
         return jdbcTypes;
     }
 
+    @Override
     public JdbcType getJdbcType(String columnName) {
         for (int i = 0; i < columnNames.size(); i++) {
             if (columnNames.get(i).equalsIgnoreCase(columnName)) {
@@ -135,6 +139,7 @@ public class MyBatisResultSetWrapper extends ResultSetWrapper {
      * @param columnName   字段名
      * @return {@link TypeHandler}
      */
+    @Override
     public TypeHandler<?> getTypeHandler(Class<?> propertyType, String columnName) {
         TypeHandler<?> handler = null;
         Map<Class<?>, TypeHandler<?>> columnHandlers = typeHandlerMap.get(columnName);
@@ -197,6 +202,7 @@ public class MyBatisResultSetWrapper extends ResultSetWrapper {
         unMappedColumnNamesMap.put(getMapKey(resultMap, columnPrefix), unmappedColumnNames);
     }
 
+    @Override
     public List<String> getMappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {
         List<String> mappedColumnNames = mappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));
         if (mappedColumnNames == null) {
@@ -206,6 +212,7 @@ public class MyBatisResultSetWrapper extends ResultSetWrapper {
         return mappedColumnNames;
     }
 
+    @Override
     public List<String> getUnmappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {
         List<String> unMappedColumnNames = unMappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));
         if (unMappedColumnNames == null) {

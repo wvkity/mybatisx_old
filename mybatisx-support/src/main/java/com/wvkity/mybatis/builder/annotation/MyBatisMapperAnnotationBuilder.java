@@ -15,6 +15,7 @@
  */
 package com.wvkity.mybatis.builder.annotation;
 
+import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.support.config.MyBatisLocalConfigurationCache;
 import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.CacheNamespace;
@@ -128,6 +129,7 @@ public class MyBatisMapperAnnotationBuilder extends MapperAnnotationBuilder {
         this.type = type;
     }
 
+    @Override
     public void parse() {
         String resource = type.toString();
         if (!configuration.isResourceLoaded(resource)) {
@@ -577,8 +579,8 @@ public class MyBatisMapperAnnotationBuilder extends MapperAnnotationBuilder {
         if (nestedSelect.length() < 1) {
             nestedSelect = result.many().select();
         }
-        if (!nestedSelect.contains(".")) {
-            nestedSelect = type.getName() + "." + nestedSelect;
+        if (!nestedSelect.contains(Constants.DOT)) {
+            nestedSelect = type.getName() + Constants.DOT + nestedSelect;
         }
         return nestedSelect;
     }

@@ -217,8 +217,12 @@ public class Auditor {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Auditor)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Auditor)) {
+            return false;
+        }
         Auditor auditor = (Auditor) o;
         return version == auditor.version &&
             multiTenant == auditor.multiTenant &&

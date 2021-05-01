@@ -250,8 +250,12 @@ public class Column {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Column)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Column)) {
+            return false;
+        }
         Column column1 = (Column) o;
         return unique == column1.unique &&
             priority == column1.priority &&

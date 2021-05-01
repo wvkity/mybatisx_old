@@ -174,8 +174,12 @@ public class OriginalProperty {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof OriginalProperty)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof OriginalProperty)) {
+            return false;
+        }
         OriginalProperty that = (OriginalProperty) o;
         return Objects.equals(entity, that.entity) &&
             Objects.equals(field, that.field) &&

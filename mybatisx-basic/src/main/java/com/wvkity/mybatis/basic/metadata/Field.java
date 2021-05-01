@@ -141,18 +141,24 @@ public class Field implements AnnotationMetadata {
         return primaryKey;
     }
 
+    @Override
     public Set<? extends Annotation> getAnnotations() {
         return annotations;
     }
 
+    @Override
     public Map<String, ? extends Annotation> getAnnotationCaches() {
         return annotationCaches;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Field)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Field)) {
+            return false;
+        }
         Field field = (Field) o;
         return Objects.equals(originalField, field.originalField) &&
             Objects.equals(name, field.name) &&

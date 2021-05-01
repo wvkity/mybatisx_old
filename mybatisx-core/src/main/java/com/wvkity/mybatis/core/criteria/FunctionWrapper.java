@@ -652,16 +652,7 @@ public interface FunctionWrapper<T, Chain extends FunctionWrapper<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain func(final Function... functions) {
-        if (!Objects.isEmpty(functions)) {
-            final int length = functions.length;
-            if (length == 1) {
-                return this.func(functions[0]);
-            } else if (length == 2) {
-                return this.func(functions[0]).func(functions[1]);
-            }
-            return this.func(Objects.asList(functions));
-        }
-        return this.func((Function) null);
+        return this.func(Objects.asList(functions));
     }
 
     /**

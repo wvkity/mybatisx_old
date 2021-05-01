@@ -401,6 +401,7 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
         }
     }
 
+    @Override
     protected void checkResultHandler() {
         if (resultHandler != null && configuration.isSafeResultHandlerEnabled() && !mappedStatement.isResultOrdered()) {
             throw new ExecutorException("Mapped Statements with nested result mappings cannot be safely used with a " +
@@ -962,6 +963,7 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
     // DISCRIMINATOR
     //
 
+    @Override
     public ResultMap resolveDiscriminatedResultMap(ResultSet rs, ResultMap resultMap,
                                                    String columnPrefix) throws SQLException {
         Set<String> pastDiscriminators = new HashSet<>();
@@ -1180,7 +1182,8 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
         } else {
             createRowKeyForMappedProperties(resultMap, rsw, cacheKey, resultMappings, columnPrefix);
         }
-        if (cacheKey.getUpdateCount() < 2) {
+        final int size = 2;
+        if (cacheKey.getUpdateCount() < size) {
             return CacheKey.NULL_CACHE_KEY;
         }
         return cacheKey;

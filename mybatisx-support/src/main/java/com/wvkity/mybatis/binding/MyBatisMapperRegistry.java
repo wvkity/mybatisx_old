@@ -42,6 +42,7 @@ public class MyBatisMapperRegistry extends MapperRegistry {
         this.config = config;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public <T> T getMapper(Class<T> type, SqlSession sqlSession) {
         final MyBatisMapperProxyFactory<T> mapperProxyFactory = (MyBatisMapperProxyFactory<T>) knownMappers.get(type);
@@ -60,6 +61,7 @@ public class MyBatisMapperRegistry extends MapperRegistry {
         return this.knownMappers.containsKey(type);
     }
 
+    @Override
     public <T> void addMapper(Class<T> type) {
         if (type.isInterface()) {
             // 检查是否已注册

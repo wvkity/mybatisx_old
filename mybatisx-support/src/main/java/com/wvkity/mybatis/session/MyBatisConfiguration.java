@@ -15,6 +15,7 @@
  */
 package com.wvkity.mybatis.session;
 
+import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.binding.MyBatisMapperRegistry;
 import com.wvkity.mybatis.support.config.MyBatisGlobalConfiguration;
 import com.wvkity.mybatis.support.config.MyBatisLocalConfigurationCache;
@@ -320,6 +321,7 @@ public class MyBatisConfiguration extends Configuration {
     }
 
     // Slow but a one time cost. A better solution is welcome.
+    @Override
     protected void checkGloballyForDiscriminatedNestedResultMaps(ResultMap rm) {
         if (rm.hasNestedResultMaps()) {
             for (Map.Entry<String, ResultMap> entry : resultMaps.entrySet()) {
@@ -338,6 +340,7 @@ public class MyBatisConfiguration extends Configuration {
     }
 
     // Slow but a one time cost. A better solution is welcome.
+    @Override
     protected void checkLocallyForDiscriminatedNestedResultMaps(ResultMap rm) {
         if (!rm.hasNestedResultMaps() && rm.getDiscriminator() != null) {
             for (Map.Entry<String, String> entry : rm.getDiscriminator().getDiscriminatorMap().entrySet()) {
@@ -399,7 +402,7 @@ public class MyBatisConfiguration extends Configuration {
                 throw new IllegalArgumentException(name + " already contains value for " + key
                     + (conflictMessageProducer == null ? "" : conflictMessageProducer.apply(super.get(key), value)));
             }
-            if (key.contains(".")) {
+            if (key.contains(Constants.DOT)) {
                 final String shortKey = getShortName(key);
                 if (super.get(shortKey) == null) {
                     super.put(shortKey, value);

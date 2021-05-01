@@ -87,7 +87,8 @@ public abstract class AbstractFunction extends AbstractBasicFunction {
             builder.append("CAST(");
         }
         builder.append(this.func.getSegment()).append(Constants.BRACKET_OPEN);
-        if (notIsCount || (!"*".equals(this.column) && !"1".equals(this.column) && !"0".equals(this.column))) {
+        if (notIsCount || (!Constants.STAR.equals(this.column) && !Constants.DEF_STR_ONE.equals(this.column)
+            && !Constants.DEF_STR_ZERO.equals(this.column))) {
             if (this.distinct) {
                 builder.append("DISTINCT ");
             }

@@ -1,5 +1,5 @@
 dependencies {
-    api "${libs.mybatis}"
+    api project(':mybatisx-basic')
     api "${libs.jsqlparser}"
     api "${libs.caffeine}"
 }

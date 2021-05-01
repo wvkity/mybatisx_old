@@ -64,6 +64,7 @@ public final class ObjectBuilder<T> implements Builder<T> {
      * 构建指定对象
      * @return 泛型对象
      */
+    @Override
     public T build() {
         final T instance = this.supplier.get();
         if (!this.consumers.isEmpty()) {
@@ -100,6 +101,11 @@ public final class ObjectBuilder<T> implements Builder<T> {
      */
     @FunctionalInterface
     public interface SingleConsumer<T, V> {
+        /**
+         * 消费
+         * @param t 目标类型
+         * @param v 值
+         */
         void accept(final T t, final V v);
     }
 

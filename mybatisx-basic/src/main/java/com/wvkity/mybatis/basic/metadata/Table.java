@@ -379,8 +379,12 @@ public class Table {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Table)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Table)) {
+            return false;
+        }
         Table table = (Table) o;
         return onlyOneId == table.onlyOneId && logicDelete == table.logicDelete && multiTenant == table.multiTenant
             && hasPrimaryKey == table.hasPrimaryKey

@@ -208,7 +208,7 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
      * @param alias 表别名
      */
     protected void initialize(final String alias) {
-        this.parameterValueMapping = new ConcurrentHashMap<>();
+        this.parameterValueMapping = new ConcurrentHashMap<>(16);
         this.parameterSequence = new AtomicInteger(0);
         this.notMatchingWithThrows = new AtomicBoolean(true);
         this.tableAliasSequence = new AtomicInteger(0);
@@ -234,19 +234,7 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
 
     @Override
     public Chain where(Expression... expressions) {
-        if (!Objects.isEmpty(expressions)) {
-            final int size = expressions.length;
-            if (size == 1) {
-                this.add(expressions[0]);
-            } else if (size == 2) {
-                this.add(expressions[0]).add(expressions[1]);
-            } else {
-                for (Expression expression : expressions) {
-                    this.add(expression);
-                }
-            }
-        }
-        return this.context;
+        return this.where(Objects.asList(expressions));
     }
 
     @Override

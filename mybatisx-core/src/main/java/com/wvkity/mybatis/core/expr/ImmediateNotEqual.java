@@ -50,6 +50,7 @@ public class ImmediateNotEqual extends AbstractBasicExpression<String> {
         private Builder() {
         }
 
+        @Override
         public ImmediateNotEqual build() {
             if (Objects.isNotBlank(this.target)) {
                 return new ImmediateNotEqual(this.criteria, this.target, this.slot, this.value);

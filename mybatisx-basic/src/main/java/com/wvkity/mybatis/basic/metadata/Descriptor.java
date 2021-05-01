@@ -77,8 +77,12 @@ public class Descriptor {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Descriptor)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Descriptor)) {
+            return false;
+        }
         Descriptor that = (Descriptor) o;
         return Objects.equals(field, that.field) &&
             Objects.equals(javaType, that.javaType) &&

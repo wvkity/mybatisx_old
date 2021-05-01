@@ -142,13 +142,16 @@ public abstract class AbstractImmutableList<E> extends AbstractImmutableCollecti
     }
 
     static void subListRangeCheck(int fromIndex, int toIndex, int size) {
-        if (fromIndex < 0)
+        if (fromIndex < 0) {
             throw new IndexOutOfBoundsException("fromIndex = " + fromIndex);
-        if (toIndex > size)
+        }
+        if (toIndex > size) {
             throw new IndexOutOfBoundsException("toIndex = " + toIndex);
-        if (fromIndex > toIndex)
+        }
+        if (fromIndex > toIndex) {
             throw new IllegalArgumentException("fromIndex(" + fromIndex +
                 ") > toIndex(" + toIndex + ")");
+        }
     }
 
     static final class ImmutableSubList<E> extends AbstractImmutableList<E>
@@ -179,6 +182,7 @@ public abstract class AbstractImmutableList<E> extends AbstractImmutableCollecti
             return new ImmutableSubList<>(list, fromIndex, toIndex - fromIndex);
         }
 
+        @Override
         public E get(int index) {
             if (index < 0 || index > this.size) {
                 throw new IndexOutOfBoundsException("Index: " + index + " Size: " + size());
@@ -186,19 +190,23 @@ public abstract class AbstractImmutableList<E> extends AbstractImmutableCollecti
             return root.get(offset + index);
         }
 
+        @Override
         public int size() {
             return size;
         }
 
+        @Override
         public Iterator<E> iterator() {
             return new ImmutableListIterator<>(this, size());
         }
 
+        @Override
         public ListIterator<E> listIterator(int index) {
             rangeCheck(index);
             return new ImmutableListIterator<>(this, size(), index);
         }
 
+        @Override
         public List<E> subList(int fromIndex, int toIndex) {
             subListRangeCheck(fromIndex, toIndex, size);
             return ImmutableSubList.fromSubList(this, fromIndex, toIndex);
@@ -232,10 +240,12 @@ public abstract class AbstractImmutableList<E> extends AbstractImmutableCollecti
             isListIterator = true;
         }
 
+        @Override
         public boolean hasNext() {
             return cursor != size;
         }
 
+        @Override
         public E next() {
             try {
                 int i = cursor;
@@ -247,10 +257,12 @@ public abstract class AbstractImmutableList<E> extends AbstractImmutableCollecti
             }
         }
 
+        @Override
         public void remove() {
             throw UOE;
         }
 
+        @Override
         public boolean hasPrevious() {
             if (!isListIterator) {
                 throw UOE;
@@ -258,6 +270,7 @@ public abstract class AbstractImmutableList<E> extends AbstractImmutableCollecti
             return cursor != 0;
         }
 
+        @Override
         public E previous() {
             if (!isListIterator) {
                 throw UOE;
@@ -272,6 +285,7 @@ public abstract class AbstractImmutableList<E> extends AbstractImmutableCollecti
             }
         }
 
+        @Override
         public int nextIndex() {
             if (!isListIterator) {
                 throw UOE;
@@ -279,6 +293,7 @@ public abstract class AbstractImmutableList<E> extends AbstractImmutableCollecti
             return cursor;
         }
 
+        @Override
         public int previousIndex() {
             if (!isListIterator) {
                 throw UOE;
@@ -286,10 +301,12 @@ public abstract class AbstractImmutableList<E> extends AbstractImmutableCollecti
             return cursor - 1;
         }
 
+        @Override
         public void set(E e) {
             throw UOE;
         }
 
+        @Override
         public void add(E e) {
             throw UOE;
         }

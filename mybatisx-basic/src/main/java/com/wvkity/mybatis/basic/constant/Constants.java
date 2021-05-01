@@ -27,47 +27,38 @@ public interface Constants {
      * JPA中的{@code @Table}注解
      */
     String JPA_TABLE = "javax.persistence.Table";
-
     /**
      * JPA中的{@code @Entity}注解
      */
     String JPA_ENTITY = "javax.persistence.Entity";
-
     /**
      * JPA中的{@code @Column}注解
      */
     String JPA_COLUMN = "javax.persistence.Column";
-
     /**
      * JPA中的{@code @Transient}注解
      */
     String JPA_TRANSIENT = "javax.persistence.Transient";
-
     /**
      * JPA中的{@code @Id}注解
      */
     String JPA_ID = "javax.persistence.Id";
-
     /**
      * JPA中的{@code @OrderBy}注解
      */
     String JPA_ORDER_BY = "javax.persistence.OrderBy";
-
     /**
      * JPA中的{@code @SequenceGenerator}注解
      */
     String JPA_SEQUENCE_GENERATOR = "javax.persistence.SequenceGenerator";
-
     /**
      * JPA中的{@code @GeneratedValue}注解
      */
     String JPA_GENERATED_VALUE = "javax.persistence.GeneratedValue";
-
     /**
      * JPA中的{@code @Version}注解
      */
     String JPA_VERSION = "javax.persistence.Version";
-
     /**
      * JPA Table: name属性
      */
@@ -128,6 +119,10 @@ public interface Constants {
      * NULL
      */
     String NULL = null;
+    /**
+     * 下划线
+     */
+    String UNDER_LINE = "_";
     /**
      * #{
      */
@@ -223,11 +218,19 @@ public interface Constants {
     /**
      * &lt;![CDATA[
      */
-    String OPEN_CDATA = "<![CDATA[";
+    String CDATA_OPEN = "<![CDATA[";
     /**
      * ]]&gt;
      */
-    String CLOSE_CDATA = "]]>";
+    String CDATA_CLOSE = "]]>";
+    /**
+     * {@code <script>}
+     */
+    String SCRIPT_OPEN = "<script>";
+    /**
+     * {@code </script>}
+     */
+    String SCRIPT_CLOSE = "</script>";
     /***
      * 换行符
      */
@@ -268,4 +271,52 @@ public interface Constants {
      * 逻辑删除审计值key
      */
     String PARAM_LOGICAL_DELETED_KEY = "logical_deleted_auditing_value";
+    /**
+     * 未定义
+     */
+    String DEF_UNDEFINED = "UNDEFINED";
+    /**
+     * 0
+     */
+    String DEF_STR_ZERO = "0";
+    /**
+     * 1
+     */
+    String DEF_STR_ONE = "1";
+    /**
+     * 字段名占位符
+     */
+    String DEF_STR_COLUMN_PH = ":@";
+    /**
+     * 字符串false
+     */
+    String DEF_STR_FALSE = "false";
+    /**
+     * F
+     */
+    String DEF_STR_F = "F";
+    /**
+     * N
+     */
+    String DEF_STR_N = "N";
+    /**
+     * 字符串true
+     */
+    String DEF_STR_TRUE = "true";
+    /**
+     * Y
+     */
+    String DEF_STR_Y = "Y";
+    /**
+     * T
+     */
+    String DEF_STR_T = "T";
+    /**
+     * 字符串占位符标识
+     */
+    String DEF_STR_PH = "%s";
+    /**
+     * null
+     */
+    String DEF_STR_NULL = "null";
 }

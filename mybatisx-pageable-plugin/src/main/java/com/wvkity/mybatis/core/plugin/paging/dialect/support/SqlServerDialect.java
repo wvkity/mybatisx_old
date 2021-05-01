@@ -42,6 +42,8 @@ import java.util.Properties;
  */
 public class SqlServerDialect extends AbstractPageableDialect {
 
+    protected static final String DEF_SIMPLE = "simple";
+    protected static final String DEF_REGEX = "regex";
     private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
     protected SqlServerPageableSqlParser pageableSqlParser = new SqlServerPageableSqlParser();
     protected Replacer replacer;
@@ -91,9 +93,9 @@ public class SqlServerDialect extends AbstractPageableDialect {
     public void setProperties(Properties properties) {
         super.setProperties(properties);
         final String replacerClass = properties.getProperty(PROP_KEY_WITH_NO_LOCK_REPLACER_CLASS);
-        if (Objects.isBlank(replacerClass) || "simple".equalsIgnoreCase(replacerClass)) {
+        if (Objects.isBlank(replacerClass) || DEF_SIMPLE.equalsIgnoreCase(replacerClass)) {
             this.replacer = new SimpleWithNoLockReplacer();
-        } else if ("regex".equalsIgnoreCase(replacerClass)) {
+        } else if (DEF_REGEX.equalsIgnoreCase(replacerClass)) {
             this.replacer = new RegexWithNoLockReplacer();
         } else {
             this.replacer = newInstance(replacerClass);

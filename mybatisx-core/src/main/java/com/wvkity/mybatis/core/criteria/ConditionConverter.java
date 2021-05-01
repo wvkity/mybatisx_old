@@ -76,6 +76,8 @@ public class ConditionConverter {
                     return this.convertToImmediateCondition(expression);
                 case STANDARD:
                     return this.convertToStandardCondition(expression);
+                default:
+                    break;
             }
         }
         return null;

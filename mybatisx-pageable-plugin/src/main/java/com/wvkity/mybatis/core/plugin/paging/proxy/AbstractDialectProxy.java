@@ -15,6 +15,7 @@
  */
 package com.wvkity.mybatis.core.plugin.paging.proxy;
 
+import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.core.plugin.exception.MyBatisPluginException;
 import com.wvkity.mybatis.core.plugin.paging.dialect.AbstractDialect;
 import com.wvkity.mybatis.core.plugin.paging.dialect.Dialect;
@@ -134,7 +135,7 @@ public abstract class AbstractDialectProxy {
      * @return {@link AbstractDialect}
      */
     private AbstractDialect getDialectFromSpecified(final String dialect) {
-        if (Objects.isNotBlank(dialect) && !"UNDEFINED".equalsIgnoreCase(dialect)) {
+        if (Objects.isNotBlank(dialect) && !Constants.DEF_UNDEFINED.equalsIgnoreCase(dialect)) {
             final String key = dialect.toUpperCase(Locale.ENGLISH);
             if (this.dialectFromSpecifiedCache.containsKey(key)) {
                 return this.dialectFromSpecifiedCache.get(key);
@@ -157,7 +158,8 @@ public abstract class AbstractDialectProxy {
                 this.lock.unlock();
             }
         } else {
-            throw new MyBatisPluginException("The paging plugin initialization must specify the database dialect value");
+            throw new MyBatisPluginException("The paging plugin initialization must specify the database dialect " +
+                "value");
         }
     }
 
@@ -277,7 +279,8 @@ public abstract class AbstractDialectProxy {
                 .map(Objects::toBool).orElse(false);
         Optional.ofNullable(properties.getProperty(Dialect.PROP_KEY_AUTO_RELEASE_CONNECT))
             .ifPresent(release -> this.autoReleaseConnect = Objects.toBool(release));
-        if (Objects.isNotBlank(this.databaseDialect) && !"UNDEFINED".equalsIgnoreCase(this.databaseDialect)) {
+        if (Objects.isNotBlank(this.databaseDialect)
+            && !Constants.DEF_UNDEFINED.equalsIgnoreCase(this.databaseDialect)) {
             this.autoRuntimeParsingJdbc = false;
             this.delegate = this.getDialectFromSpecified(this.databaseDialect);
         }

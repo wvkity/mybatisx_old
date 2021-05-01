@@ -18,7 +18,7 @@ package com.wvkity.mybatis.basic.immutable;
 import java.util.Map;
 import java.util.Objects;
 
-final class KeyValueHolder<K,V> implements Map.Entry<K,V> {
+final class KeyValueHolder<K, V> implements Map.Entry<K, V> {
     final K key;
     final V value;
 
@@ -29,7 +29,6 @@ final class KeyValueHolder<K,V> implements Map.Entry<K,V> {
 
     /**
      * Gets the key from this holder.
-     *
      * @return the key
      */
     @Override
@@ -39,7 +38,6 @@ final class KeyValueHolder<K,V> implements Map.Entry<K,V> {
 
     /**
      * Gets the value from this holder.
-     *
      * @return the value
      */
     @Override
@@ -49,7 +47,6 @@ final class KeyValueHolder<K,V> implements Map.Entry<K,V> {
 
     /**
      * Throws {@link UnsupportedOperationException}.
-     *
      * @param value ignored
      * @return never returns normally
      */
@@ -66,9 +63,10 @@ final class KeyValueHolder<K,V> implements Map.Entry<K,V> {
      */
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Map.Entry))
+        if (!(o instanceof Map.Entry)) {
             return false;
-        Map.Entry<?,?> e = (Map.Entry<?,?>)o;
+        }
+        Map.Entry<?, ?> e = (Map.Entry<?, ?>) o;
         return key.equals(e.getKey()) && value.equals(e.getValue());
     }
 
@@ -87,7 +85,6 @@ final class KeyValueHolder<K,V> implements Map.Entry<K,V> {
      * implementation returns the string representation of this
      * entry's key followed by the equals character ("{@code =}")
      * followed by the string representation of this entry's value.
-     *
      * @return a String representation of this map entry
      */
     @Override

@@ -78,8 +78,12 @@ public class ReflectField {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ReflectField)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ReflectField)) {
+            return false;
+        }
         ReflectField that = (ReflectField) o;
         return Objects.equals(field, that.field) &&
             Objects.equals(javaType, that.javaType) &&

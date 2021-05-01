@@ -593,7 +593,7 @@ public abstract class AbstractQueryCriteria<T> extends AbstractCriteria<T> imple
     String toAlias(final AggFunc func, final String aliasPrefix) {
         final String funcName = func.getSegment();
         if (Objects.isNotBlank(aliasPrefix)) {
-            if (aliasPrefix.endsWith("_")) {
+            if (aliasPrefix.endsWith(Constants.UNDER_LINE)) {
                 return aliasPrefix + funcName;
             } else {
                 return aliasPrefix + NamingStrategy.UPPER.to(NamingStrategy.UPPER_CAMEL, funcName);

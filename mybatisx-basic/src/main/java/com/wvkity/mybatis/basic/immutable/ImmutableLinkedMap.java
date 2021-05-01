@@ -41,6 +41,7 @@ import java.util.Set;
 public final class ImmutableLinkedMap<K, V> extends AbstractImmutableMap<K, V> implements Serializable {
 
     private static final Map<?, ?> EMPTY_MAP = new ImmutableLinkedMap<>();
+    private static final int STEP = 2;
     static final int SALT;
     final Object[] table;
     final Object[] keys;
@@ -63,12 +64,12 @@ public final class ImmutableLinkedMap<K, V> extends AbstractImmutableMap<K, V> i
             throw new IllegalArgumentException("The parameter length must be even.");
         }
         Set<Object> tmp = new HashSet<>();
-        for (int i = 0; i < length; i += 2) {
+        for (int i = 0; i < length; i += STEP) {
             tmp.add(args[i]);
         }
         this.size = tmp.size();
         if (this.size > 0) {
-            this.table = new Object[(((this.size << 2) + 1) & ~1)];
+            this.table = new Object[(((this.size << STEP) + 1) & ~1)];
             this.keys = new Object[this.size];
             this.init(args);
         } else {
@@ -87,7 +88,7 @@ public final class ImmutableLinkedMap<K, V> extends AbstractImmutableMap<K, V> i
         if (this.size == 0 || value == null) {
             return false;
         }
-        for (int i = 1, j = table.length; i < j; i += 2) {
+        for (int i = 1, j = table.length; i < j; i += STEP) {
             Object v = table[i];
             if (value.equals(v)) {
                 return true;
@@ -114,7 +115,7 @@ public final class ImmutableLinkedMap<K, V> extends AbstractImmutableMap<K, V> i
     @Override
     public int hashCode() {
         int hash = 0;
-        for (int i = 0; i < table.length; i += 2) {
+        for (int i = 0; i < table.length; i += STEP) {
             Object k = table[i];
             if (k != null) {
                 hash += k.hashCode() ^ table[i + 1].hashCode();
@@ -125,7 +126,7 @@ public final class ImmutableLinkedMap<K, V> extends AbstractImmutableMap<K, V> i
 
     private void init(Object... args) {
         int kk = 0;
-        for (int i = 0, j = args.length; i < j; i += 2) {
+        for (int i = 0, j = args.length; i < j; i += STEP) {
             @SuppressWarnings("unchecked")
             K k = (K) Objects.requireNonNull(args[i]);
             @SuppressWarnings("unchecked")
@@ -213,7 +214,7 @@ public final class ImmutableLinkedMap<K, V> extends AbstractImmutableMap<K, V> i
         Object[] array = new Object[2 * size];
         int len = table.length;
         int dest = 0;
-        for (int i = 0; i < len; i += 2) {
+        for (int i = 0; i < len; i += STEP) {
             if (table[i] != null) {
                 array[dest++] = table[i];
                 array[dest++] = table[i + 1];

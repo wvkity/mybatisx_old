@@ -59,12 +59,12 @@ public class BalanceDataSourceStrategy implements DataSourceStrategy {
         final int index;
         if (ReadWriteDataSourceContextHolder.isRead()) {
             index = this.readCounter.incrementAndGet();
-            if (index > 9999) {
+            if (index > MAX_VALUE) {
                 this.readCounter.set(1);
             }
         } else {
             index = this.writeCounter.incrementAndGet();
-            if (index > 9999) {
+            if (index > MAX_VALUE) {
                 this.writeCounter.set(1);
             }
         }

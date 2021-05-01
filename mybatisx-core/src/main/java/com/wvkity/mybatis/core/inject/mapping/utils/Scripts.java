@@ -690,6 +690,8 @@ public final class Scripts implements Constants {
                         safeJoining(pd, concatIntactTypeArg(typeHandler, useJavaType, javaType, jdbcType)))
                         .collect(Collectors.joining(SPACE_AND_SPACE)));
                     break;
+                default:
+                    break;
             }
         }
     }

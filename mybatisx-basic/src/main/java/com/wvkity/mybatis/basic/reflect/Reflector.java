@@ -399,10 +399,12 @@ public class Reflector implements AnnotationMetadata {
         return clazz;
     }
 
+    @Override
     public Set<? extends Annotation> getAnnotations() {
         return this.annotations;
     }
 
+    @Override
     public Map<String, ? extends Annotation> getAnnotationCaches() {
         return this.annotationCaches;
     }

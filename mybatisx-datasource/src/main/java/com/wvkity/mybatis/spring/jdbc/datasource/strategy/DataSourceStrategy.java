@@ -26,6 +26,8 @@ import java.util.List;
  */
 public interface DataSourceStrategy {
 
+    int MAX_VALUE = 9999;
+
     /**
      * 确定数据源
      * @param dataSources {@link DataSource}集合

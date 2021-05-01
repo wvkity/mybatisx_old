@@ -42,7 +42,7 @@ public abstract class AbstractSelectHandler extends AbstractHandler {
         final Executor executor = (Executor) invocation.getTarget();
         final CacheKey cacheKey;
         final BoundSql boundSql;
-        if (size == 4) {
+        if (size == ARG_SIZE_OF_FOUR) {
             boundSql = ms.getBoundSql(parameter);
             cacheKey = executor.createCacheKey(ms, parameter, rowBounds, boundSql);
         } else {
@@ -52,7 +52,7 @@ public abstract class AbstractSelectHandler extends AbstractHandler {
         if (filter(ms, parameter)) {
             return handle(invocation, executor, ms, parameter, rowBounds, resultHandler, cacheKey, boundSql);
         } else {
-            if (size == 4) {
+            if (size == ARG_SIZE_OF_FOUR) {
                 return executor.query(ms, parameter, rowBounds, resultHandler);
             }
             return executor.query(ms, parameter, rowBounds, resultHandler, cacheKey, boundSql);

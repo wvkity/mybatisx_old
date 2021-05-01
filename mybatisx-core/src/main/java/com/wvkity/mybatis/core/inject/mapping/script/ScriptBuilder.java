@@ -15,6 +15,7 @@
  */
 package com.wvkity.mybatis.core.inject.mapping.script;
 
+import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.basic.utils.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,7 @@ public class ScriptBuilder {
      */
     public static String build(final String sql) {
         if (Objects.isNotBlank(sql)) {
-            if (sql.toLowerCase(Locale.ENGLISH).startsWith("<script>")) {
+            if (sql.toLowerCase(Locale.ENGLISH).startsWith(Constants.SCRIPT_OPEN)) {
                 return sql;
             }
             return "<script>" + sql + "</script>";

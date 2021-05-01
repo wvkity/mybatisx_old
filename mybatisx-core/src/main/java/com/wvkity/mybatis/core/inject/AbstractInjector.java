@@ -135,14 +135,15 @@ public abstract class AbstractInjector implements Injector {
     @Override
     public void inject(MapperBuilderAssistant assistant, Class<?> mapperInterface) {
         final Type[] types = getGenericTypes(mapperInterface);
-        final Class<?> entityClass = getGenericType(types, 0);
+        final int maxLen = 2;
+        final Class<?> entityClass = getGenericType(types, maxLen, 0);
         Optional.ofNullable(entityClass).ifPresent(it -> {
             if (MyBatisLocalConfigurationCache.mapperInterfaceRegistryIfNotExists(assistant.getConfiguration(),
                 mapperInterface)) {
                 final Collection<MappedMethod> methods = getMappedMethods(mapperInterface);
                 if (Objects.isNotEmpty(methods)) {
                     final int index = index(mapperInterface);
-                    final Class<?> resultClass = index == 0 ? entityClass : getGenericType(types, index);
+                    final Class<?> resultClass = index == 0 ? entityClass : getGenericType(types, maxLen, index);
                     // 解析Table对象
                     final Table table = TableHelper.parse(assistant, entityClass);
                     methods.forEach(m -> m.invoke(assistant, mapperInterface, resultClass, table));
@@ -176,12 +177,12 @@ public abstract class AbstractInjector implements Injector {
      * @param index        索引
      * @return 泛型实体类
      */
-    public Class<?> getGenericType(Type[] genericTypes, int index) {
+    public Class<?> getGenericType(Type[] genericTypes, int max, int index) {
         if (genericTypes == null || genericTypes.length == 0 || index < 0) {
             return null;
         }
         final int len = genericTypes.length;
-        if (len >= 2 && index > len) {
+        if (len >= max && index > len) {
             return null;
         }
         Type target = len == 1 ? genericTypes[0] : genericTypes[index];

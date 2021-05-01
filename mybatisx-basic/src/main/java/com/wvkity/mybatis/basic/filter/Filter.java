@@ -26,5 +26,9 @@ import java.util.function.Predicate;
 @FunctionalInterface
 public interface Filter<T> extends Predicate<T> {
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     boolean test(T it);
 }

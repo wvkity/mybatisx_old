@@ -76,9 +76,9 @@ public class Condition implements Criterion {
         }
         final String realColumn = builder.toString();
         final String template = this.fragment;
-        if (template.contains(":@")) {
+        if (template.contains(Constants.DEF_STR_COLUMN_PH)) {
             return template.replaceAll(DEF_PLACEHOLDER_COLUMN, realColumn);
-        } else if (template.contains("%s")) {
+        } else if (template.contains(Constants.DEF_STR_PH)) {
             return String.format(template, realColumn);
         }
         return template;

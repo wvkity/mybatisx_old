@@ -153,7 +153,6 @@ public abstract class AbstractPageable implements Pageable {
         } else {
             this.totals = pages + 1;
         }
-        // this.page = Math.max(Math.min(this.page, this.totals), DEF_PAGE_FIRST);
         this.calculatePageStartAndEnd();
     }
 
@@ -165,7 +164,7 @@ public abstract class AbstractPageable implements Pageable {
             this.start = DEF_ONE;
             this.end = this.totals;
         } else {
-            if (this.visible <= 2L) {
+            if (this.visible <= DEF_VISIBLE_MIN_PAGE_SIZE) {
                 this.start = this.page;
                 this.end = this.page + DEF_ONE;
                 if (this.end > this.totals) {

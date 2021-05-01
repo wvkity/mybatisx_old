@@ -93,8 +93,12 @@ public class PrimaryKey {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof PrimaryKey)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof PrimaryKey)) {
+            return false;
+        }
         PrimaryKey that = (PrimaryKey) o;
         return priority == that.priority &&
             uuid == that.uuid &&

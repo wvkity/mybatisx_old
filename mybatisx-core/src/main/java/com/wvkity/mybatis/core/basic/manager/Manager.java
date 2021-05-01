@@ -45,15 +45,6 @@ public interface Manager<C extends Criteria<?>> extends Fragment {
      * @return {@link Manager}
      */
     default Manager<C> where(final Criterion... conditions) {
-        if (Objects.isEmpty(conditions)) {
-            return this;
-        }
-        final int length = conditions.length;
-        if (length == 1) {
-            return this.where(conditions[0]);
-        } else if (length == 2) {
-            return this.where(conditions[0]).where(conditions[1]);
-        }
         return this.where(Objects.asList(conditions));
     }
 

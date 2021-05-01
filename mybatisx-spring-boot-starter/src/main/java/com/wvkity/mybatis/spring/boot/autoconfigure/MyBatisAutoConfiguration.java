@@ -76,6 +76,7 @@ import java.util.stream.Stream;
  * @created 2020-10-01
  * @since 1.0.0
  */
+@SuppressWarnings({"rawtypes"})
 @org.springframework.context.annotation.Configuration
 @ConditionalOnClass({SqlSessionFactory.class, SqlSessionFactoryBean.class})
 @ConditionalOnSingleCandidate(DataSource.class)

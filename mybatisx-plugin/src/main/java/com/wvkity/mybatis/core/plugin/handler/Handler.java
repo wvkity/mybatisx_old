@@ -27,6 +27,8 @@ import java.util.Properties;
  */
 public interface Handler {
 
+    int ARG_SIZE_OF_FOUR = 4;
+
     /**
      * 拦截
      * @param invocation 代理对象
