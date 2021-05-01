@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.criteria;
+package com.wvkity.mybatis.core.criteria;
 
 import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.basic.exception.MyBatisException;
@@ -21,48 +21,50 @@ import com.wvkity.mybatis.basic.immutable.ImmutableLinkedMap;
 import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.metadata.Table;
 import com.wvkity.mybatis.basic.utils.Objects;
-import com.wvkity.mybatis.core.condition.basic.SegmentManager;
-import com.wvkity.mybatis.core.condition.expression.ImmediateBetween;
-import com.wvkity.mybatis.core.condition.expression.ImmediateEqual;
-import com.wvkity.mybatis.core.condition.expression.ImmediateGreaterThan;
-import com.wvkity.mybatis.core.condition.expression.ImmediateGreaterThanOrEqual;
-import com.wvkity.mybatis.core.condition.expression.ImmediateIn;
-import com.wvkity.mybatis.core.condition.expression.ImmediateLessThan;
-import com.wvkity.mybatis.core.condition.expression.ImmediateLessThanOrEqual;
-import com.wvkity.mybatis.core.condition.expression.ImmediateLike;
-import com.wvkity.mybatis.core.condition.expression.ImmediateNotBetween;
-import com.wvkity.mybatis.core.condition.expression.ImmediateNotEqual;
-import com.wvkity.mybatis.core.condition.expression.ImmediateNotIn;
-import com.wvkity.mybatis.core.condition.expression.ImmediateNotLike;
-import com.wvkity.mybatis.core.condition.expression.ImmediateNotNull;
-import com.wvkity.mybatis.core.condition.expression.ImmediateNull;
-import com.wvkity.mybatis.core.condition.expression.ImmediateTemplate;
-import com.wvkity.mybatis.core.condition.expression.Native;
-import com.wvkity.mybatis.core.condition.expression.StandardBetween;
-import com.wvkity.mybatis.core.condition.expression.StandardEqual;
-import com.wvkity.mybatis.core.condition.expression.StandardGreaterThan;
-import com.wvkity.mybatis.core.condition.expression.StandardGreaterThanOrEqual;
-import com.wvkity.mybatis.core.condition.expression.StandardIdEqual;
-import com.wvkity.mybatis.core.condition.expression.StandardIn;
-import com.wvkity.mybatis.core.condition.expression.StandardLessThan;
-import com.wvkity.mybatis.core.condition.expression.StandardLessThanOrEqual;
-import com.wvkity.mybatis.core.condition.expression.StandardLike;
-import com.wvkity.mybatis.core.condition.expression.StandardNesting;
-import com.wvkity.mybatis.core.condition.expression.StandardNotBetween;
-import com.wvkity.mybatis.core.condition.expression.StandardNotEqual;
-import com.wvkity.mybatis.core.condition.expression.StandardNotIn;
-import com.wvkity.mybatis.core.condition.expression.StandardNotLike;
-import com.wvkity.mybatis.core.condition.expression.StandardNotNull;
-import com.wvkity.mybatis.core.condition.expression.StandardNull;
-import com.wvkity.mybatis.core.condition.expression.StandardTemplate;
-import com.wvkity.mybatis.core.condition.expression.TemplateMatch;
+import com.wvkity.mybatis.core.basic.manager.StandardFragmentManager;
+import com.wvkity.mybatis.core.basic.manager.StandardManager;
+import com.wvkity.mybatis.core.expr.ImmediateBetween;
+import com.wvkity.mybatis.core.expr.ImmediateEqual;
+import com.wvkity.mybatis.core.expr.ImmediateGreaterThan;
+import com.wvkity.mybatis.core.expr.ImmediateGreaterThanOrEqual;
+import com.wvkity.mybatis.core.expr.ImmediateIn;
+import com.wvkity.mybatis.core.expr.ImmediateLessThan;
+import com.wvkity.mybatis.core.expr.ImmediateLessThanOrEqual;
+import com.wvkity.mybatis.core.expr.ImmediateLike;
+import com.wvkity.mybatis.core.expr.ImmediateNotBetween;
+import com.wvkity.mybatis.core.expr.ImmediateNotEqual;
+import com.wvkity.mybatis.core.expr.ImmediateNotIn;
+import com.wvkity.mybatis.core.expr.ImmediateNotLike;
+import com.wvkity.mybatis.core.expr.ImmediateNotNull;
+import com.wvkity.mybatis.core.expr.ImmediateNull;
+import com.wvkity.mybatis.core.expr.ImmediateTemplate;
+import com.wvkity.mybatis.core.expr.Native;
+import com.wvkity.mybatis.core.expr.SpecialExpression;
+import com.wvkity.mybatis.core.expr.StandardBetween;
+import com.wvkity.mybatis.core.expr.StandardEqual;
+import com.wvkity.mybatis.core.expr.StandardGreaterThan;
+import com.wvkity.mybatis.core.expr.StandardGreaterThanOrEqual;
+import com.wvkity.mybatis.core.expr.StandardIdEqual;
+import com.wvkity.mybatis.core.expr.StandardIn;
+import com.wvkity.mybatis.core.expr.StandardLessThan;
+import com.wvkity.mybatis.core.expr.StandardLessThanOrEqual;
+import com.wvkity.mybatis.core.expr.StandardLike;
+import com.wvkity.mybatis.core.expr.StandardNesting;
+import com.wvkity.mybatis.core.expr.StandardNotBetween;
+import com.wvkity.mybatis.core.expr.StandardNotEqual;
+import com.wvkity.mybatis.core.expr.StandardNotIn;
+import com.wvkity.mybatis.core.expr.StandardNotLike;
+import com.wvkity.mybatis.core.expr.StandardNotNull;
+import com.wvkity.mybatis.core.expr.StandardNull;
+import com.wvkity.mybatis.core.expr.StandardTemplate;
+import com.wvkity.mybatis.core.expr.TemplateMatch;
 import com.wvkity.mybatis.core.invoke.SerializedLambda;
 import com.wvkity.mybatis.core.property.PropertiesMappingCache;
 import com.wvkity.mybatis.core.property.Property;
-import com.wvkity.mybatis.support.condition.criteria.Criteria;
-import com.wvkity.mybatis.support.condition.expression.Expression;
 import com.wvkity.mybatis.support.constant.Like;
 import com.wvkity.mybatis.support.constant.Slot;
+import com.wvkity.mybatis.support.criteria.Criteria;
+import com.wvkity.mybatis.support.expr.Expression;
 import com.wvkity.mybatis.support.helper.TableHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,6 +72,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -121,6 +124,10 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
      */
     protected static final String DEF_PARAMETER_PLACEHOLDER_ZERO = "{0}";
     /**
+     * #{}参数模板
+     */
+    protected static final String DEF_PARAMETER_PLACEHOLDER_SAFE = "#{{0}}";
+    /**
      * {@link Criteria}默认参数名
      */
     protected static final String DEF_PARAMETER_ALIAS = Constants.PARAM_CRITERIA;
@@ -128,6 +135,10 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
      * 默认表别名前缀
      */
     protected static final String DEF_TABLE_ALIAS_PREFIX = "_it_";
+    /**
+     * 参数占位正则
+     */
+    protected static final Pattern DEF_PATTERN_QM = Pattern.compile(".*#\\{((?!#\\{).)*}.*");
     /**
      * 当前对象
      */
@@ -144,7 +155,7 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     /**
      * SQL片段管理器
      */
-    protected SegmentManager segmentManager;
+    protected StandardManager<? extends Criteria<?>> segmentManager;
     /**
      * SQL片段
      */
@@ -199,13 +210,14 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     protected void initialize(final String alias) {
         this.parameterValueMapping = new ConcurrentHashMap<>();
         this.parameterSequence = new AtomicInteger(0);
-        this.segmentManager = new SegmentManager();
         this.notMatchingWithThrows = new AtomicBoolean(true);
         this.tableAliasSequence = new AtomicInteger(0);
-        this.useAlias = new AtomicBoolean(false);
-        this.tableAliasRef = new AtomicReference<>(Objects.isBlank(alias) ? Constants.EMPTY : alias);
+        final boolean hasAlias = Objects.isNotBlank(alias);
+        this.useAlias = new AtomicBoolean(hasAlias);
+        this.tableAliasRef = new AtomicReference<>(hasAlias ? alias : Constants.EMPTY);
         this.defTableAlias = DEF_TABLE_ALIAS_PREFIX + this.tableAliasSequence.incrementAndGet();
         this.conditionConverter = new ConditionConverter(this);
+        this.segmentManager = new StandardFragmentManager(this);
     }
 
     // region Add criterion methods
@@ -255,7 +267,7 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
 
     @Override
     public Chain idEq(Slot slot, Object value) {
-        return add(new StandardIdEqual(this, slot, value));
+        return this.add(new StandardIdEqual(this, slot, value));
     }
 
     @Override
@@ -265,12 +277,12 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
 
     @Override
     public Chain eq(Slot slot, String property, Object value) {
-        return add(new StandardEqual(this, property, slot, value));
+        return this.add(new StandardEqual(this, property, slot, value));
     }
 
     @Override
     public Chain colEq(Slot slot, String column, Object value) {
-        return add(new ImmediateEqual(this, column, slot, value));
+        return this.add(new ImmediateEqual(this, column, slot, value));
     }
 
     @Override
@@ -306,12 +318,12 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
 
     @Override
     public Chain ne(Slot slot, String property, Object value) {
-        return add(new StandardNotEqual(this, property, slot, value));
+        return this.add(new StandardNotEqual(this, property, slot, value));
     }
 
     @Override
     public Chain colNe(Slot slot, String column, Object value) {
-        return add(new ImmediateNotEqual(this, column, slot, value));
+        return this.add(new ImmediateNotEqual(this, column, slot, value));
     }
 
     @Override
@@ -321,12 +333,12 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
 
     @Override
     public Chain gt(Slot slot, String property, Object value) {
-        return add(new StandardGreaterThan(this, property, slot, value));
+        return this.add(new StandardGreaterThan(this, property, slot, value));
     }
 
     @Override
     public Chain colGt(Slot slot, String column, Object value) {
-        return add(new ImmediateGreaterThan(this, column, slot, value));
+        return this.add(new ImmediateGreaterThan(this, column, slot, value));
     }
 
     @Override
@@ -336,12 +348,12 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
 
     @Override
     public Chain ge(Slot slot, String property, Object value) {
-        return add(new StandardGreaterThanOrEqual(this, property, slot, value));
+        return this.add(new StandardGreaterThanOrEqual(this, property, slot, value));
     }
 
     @Override
     public Chain colGe(Slot slot, String column, Object value) {
-        return add(new ImmediateGreaterThanOrEqual(this, column, slot, value));
+        return this.add(new ImmediateGreaterThanOrEqual(this, column, slot, value));
     }
 
     @Override
@@ -351,12 +363,12 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
 
     @Override
     public Chain lt(Slot slot, String property, Object value) {
-        return add(new StandardLessThan(this, property, slot, value));
+        return this.add(new StandardLessThan(this, property, slot, value));
     }
 
     @Override
     public Chain colLt(Slot slot, String column, Object value) {
-        return add(new ImmediateLessThan(this, column, slot, value));
+        return this.add(new ImmediateLessThan(this, column, slot, value));
     }
 
     @Override
@@ -366,12 +378,123 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
 
     @Override
     public Chain le(Slot slot, String property, Object value) {
-        return add(new StandardLessThanOrEqual(this, property, slot, value));
+        return this.add(new StandardLessThanOrEqual(this, property, slot, value));
     }
 
     @Override
     public Chain colLe(Slot slot, String column, Object value) {
-        return add(new ImmediateLessThanOrEqual(this, column, slot, value));
+        return this.add(new ImmediateLessThanOrEqual(this, column, slot, value));
+    }
+
+    @Override
+    public Chain ce(Property<T, ?> property, AbstractCriteria<?> otherCriteria) {
+        return this.ce(this.convert(property), otherCriteria);
+    }
+
+    @Override
+    public Chain ce(String property, AbstractCriteria<?> otherCriteria) {
+        final Column column = this.findColumn(property);
+        final Column oid = otherCriteria.getId();
+        if (column != null && oid != null) {
+            this.add(new SpecialExpression(this, column.getColumn(), otherCriteria, oid.getColumn()));
+        }
+        return this.context;
+    }
+
+    @Override
+    public Chain ce(AbstractCriteria<?> otherCriteria, String otherProperty) {
+        final Column id = this.getId();
+        final Column column = otherCriteria.getColumn(otherProperty);
+        if (id != null && column != null) {
+            this.add(new SpecialExpression(this, id.getColumn(), otherCriteria, column.getColumn()));
+        }
+        return this.context;
+    }
+
+    @Override
+    public Chain ce(Property<T, ?> property, AbstractCriteria<?> otherCriteria, String otherProperty) {
+        return this.ce(this.convert(property), otherCriteria, otherProperty);
+    }
+
+    @Override
+    public Chain ce(String property, AbstractCriteria<?> otherCriteria, String otherProperty) {
+        final Column column = this.findColumn(property);
+        final Column oColumn = otherCriteria.findColumn(otherProperty);
+        if (column != null && oColumn != null) {
+            this.add(new SpecialExpression(this, column.getColumn(), otherCriteria, oColumn.getColumn()));
+        }
+        return this.context;
+    }
+
+    @Override
+    public Chain colCe(Property<T, ?> property, AbstractCriteria<?> otherCriteria, String otherColumn) {
+        if (Objects.isNotBlank(otherColumn)) {
+            final Column column = this.findColumn(property);
+            if (column != null) {
+                this.add(new SpecialExpression(this, column.getColumn(), otherCriteria, otherColumn));
+            }
+        }
+        return this.context;
+    }
+
+    @Override
+    public Chain colCe(AbstractCriteria<?> otherCriteria, String otherColumn) {
+        if (Objects.isNotBlank(otherColumn)) {
+            final Column id = this.getId();
+            if (id != null) {
+                this.add(new SpecialExpression(this, id.getColumn(), otherCriteria, otherColumn));
+            }
+        }
+        return this.context;
+    }
+
+    @Override
+    public Chain colCe(String otherAlias, String otherColumn) {
+        if (Objects.isNotBlank(otherColumn)) {
+            final Column id = this.getId();
+            if (id != null) {
+                this.add(new SpecialExpression(this, id.getColumn(), otherAlias, otherColumn));
+            }
+        }
+        return this.context;
+    }
+
+    @Override
+    public Chain colCe(String alias, String column, AbstractCriteria<?> otherCriteria) {
+        if (Objects.isNotBlank(column)) {
+            final Column oid = otherCriteria.getId();
+            if (oid != null) {
+                this.add(new SpecialExpression(this, alias, column, otherCriteria, oid.getColumn()));
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Chain colCe(String column, AbstractCriteria<?> otherCriteria, String otherProperty) {
+        if (Objects.isNotBlank(column)) {
+            final Column oColumn = otherCriteria.findColumn(otherProperty);
+            if (oColumn != null) {
+                this.add(new SpecialExpression(this, column, otherCriteria, oColumn.getColumn()));
+            }
+        }
+        return this.context;
+    }
+
+    @Override
+    public Chain colCe(String column, String otherAlias, String otherColumn) {
+        if (Objects.isNotBlank(column) && Objects.isNotBlank(otherColumn)) {
+            this.add(new SpecialExpression(this, column, otherAlias, otherColumn));
+        }
+        return this.context;
+    }
+
+    @Override
+    public Chain colCe(String alias, String column, String otherAlias, String otherColumn) {
+        if (Objects.isNotBlank(column) && Objects.isNotBlank(otherColumn)) {
+            this.add(new SpecialExpression(this, alias, column, null, otherAlias, otherColumn));
+        }
+        return this.context;
     }
 
     // endregion
@@ -381,33 +504,33 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     @Override
     @SuppressWarnings("unchecked")
     public <V> Chain in(Slot slot, Property<T, V> property, Collection<V> values) {
-        return add(new StandardNotIn(this, this.convert(property), slot, (Collection<Object>) values));
+        return this.add(new StandardNotIn(this, this.convert(property), slot, (Collection<Object>) values));
     }
 
     @Override
     public Chain in(Slot slot, String property, Collection<Object> values) {
-        return add(new StandardIn(this, property, slot, values));
+        return this.add(new StandardIn(this, property, slot, values));
     }
 
     @Override
     public Chain colIn(Slot slot, String column, Collection<Object> values) {
-        return add(new ImmediateIn(this, column, slot, values));
+        return this.add(new ImmediateIn(this, column, slot, values));
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <V> Chain notIn(Slot slot, Property<T, V> property, Collection<V> values) {
-        return add(new StandardNotIn(this, this.convert(property), slot, (Collection<Object>) values));
+        return this.add(new StandardNotIn(this, this.convert(property), slot, (Collection<Object>) values));
     }
 
     @Override
     public Chain notIn(Slot slot, String property, Collection<Object> values) {
-        return add(new StandardNotIn(this, property, slot, values));
+        return this.add(new StandardNotIn(this, property, slot, values));
     }
 
     @Override
     public Chain colNotIn(Slot slot, String column, Collection<Object> values) {
-        return add(new ImmediateNotIn(this, column, slot, values));
+        return this.add(new ImmediateNotIn(this, column, slot, values));
     }
 
     // endregion
@@ -421,12 +544,12 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
 
     @Override
     public Chain between(Slot slot, String property, Object begin, Object end) {
-        return add(new StandardBetween(this, property, slot, begin, end));
+        return this.add(new StandardBetween(this, property, slot, begin, end));
     }
 
     @Override
     public Chain colBetween(Slot slot, String column, Object begin, Object end) {
-        return add(new ImmediateBetween(this, column, slot, begin, end));
+        return this.add(new ImmediateBetween(this, column, slot, begin, end));
     }
 
     @Override
@@ -436,12 +559,12 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
 
     @Override
     public Chain notBetween(Slot slot, String property, Object begin, Object end) {
-        return add(new StandardNotBetween(this, property, slot, begin, end));
+        return this.add(new StandardNotBetween(this, property, slot, begin, end));
     }
 
     @Override
     public Chain colNotBetween(Slot slot, String column, Object begin, Object end) {
-        return add(new ImmediateNotBetween(this, column, slot, begin, end));
+        return this.add(new ImmediateNotBetween(this, column, slot, begin, end));
     }
 
     // endregion
@@ -455,12 +578,12 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
 
     @Override
     public Chain like(Slot slot, String property, Object value, Like like, Character escape) {
-        return add(new StandardLike(this, property, like, escape, slot, value));
+        return this.add(new StandardLike(this, property, like, escape, slot, value));
     }
 
     @Override
     public Chain colLike(Slot slot, String column, Object value, Like like, Character escape) {
-        return add(new ImmediateLike(this, column, like, escape, slot, value));
+        return this.add(new ImmediateLike(this, column, like, escape, slot, value));
     }
 
     @Override
@@ -470,12 +593,12 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
 
     @Override
     public Chain notLike(Slot slot, String property, Object value, Like like, Character escape) {
-        return add(new StandardNotLike(this, property, like, escape, slot, value));
+        return this.add(new StandardNotLike(this, property, like, escape, slot, value));
     }
 
     @Override
     public Chain colNotLike(Slot slot, String column, Object value, Like like, Character escape) {
-        return add(new ImmediateNotLike(this, column, like, escape, slot, value));
+        return this.add(new ImmediateNotLike(this, column, like, escape, slot, value));
     }
 
     // endregion
@@ -489,12 +612,12 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
 
     @Override
     public Chain isNull(Slot slot, String property) {
-        return add(new StandardNull(this, property, slot));
+        return this.add(new StandardNull(this, property, slot));
     }
 
     @Override
     public Chain colIsNull(Slot slot, String column) {
-        return add(new ImmediateNull(this, column, slot));
+        return this.add(new ImmediateNull(this, column, slot));
     }
 
     @Override
@@ -504,12 +627,12 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
 
     @Override
     public Chain notNull(Slot slot, String property) {
-        return add(new StandardNotNull(this, property, slot));
+        return this.add(new StandardNotNull(this, property, slot));
     }
 
     @Override
     public Chain colNotNull(Slot slot, String column) {
-        return add(new ImmediateNotNull(this, column, slot));
+        return this.add(new ImmediateNotNull(this, column, slot));
     }
 
     // endregion
@@ -523,22 +646,23 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
 
     @Override
     public Chain tpl(Slot slot, String template, String property, Object value) {
-        return add(new StandardTemplate(this, property, template, TemplateMatch.SINGLE, slot, value, null, null));
+        return this.add(new StandardTemplate(this, property, template, TemplateMatch.SINGLE, slot, value, null, null));
     }
 
     @Override
     public Chain tpl(String template, Object value) {
-        return add(new ImmediateTemplate(this, null, template, TemplateMatch.SINGLE, Slot.NONE, value, null, null));
+        return this.add(new ImmediateTemplate(this, null, template, TemplateMatch.SINGLE, Slot.NONE, value, null,
+            null));
     }
 
     @Override
     public Chain tpl(Slot slot, String template, Object value) {
-        return add(new ImmediateTemplate(this, null, template, TemplateMatch.SINGLE, slot, value, null, null));
+        return this.add(new ImmediateTemplate(this, null, template, TemplateMatch.SINGLE, slot, value, null, null));
     }
 
     @Override
     public Chain colTpl(Slot slot, String template, String column, Object value) {
-        return add(new ImmediateTemplate(this, column, template, TemplateMatch.SINGLE, slot, value, null, null));
+        return this.add(new ImmediateTemplate(this, column, template, TemplateMatch.SINGLE, slot, value, null, null));
     }
 
     @Override
@@ -548,22 +672,22 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
 
     @Override
     public Chain tpl(Slot slot, String template, String property, Collection<Object> values) {
-        return add(new StandardTemplate(this, property, template, null, slot, null, values, null));
+        return this.add(new StandardTemplate(this, property, template, null, slot, null, values, null));
     }
 
     @Override
     public Chain tpl(String template, Collection<Object> values) {
-        return add(new ImmediateTemplate(this, null, template, null, Slot.NONE, null, values, null));
+        return this.add(new ImmediateTemplate(this, null, template, null, Slot.NONE, null, values, null));
     }
 
     @Override
     public Chain tpl(Slot slot, String template, Collection<Object> values) {
-        return add(new ImmediateTemplate(this, null, template, null, slot, null, values, null));
+        return this.add(new ImmediateTemplate(this, null, template, null, slot, null, values, null));
     }
 
     @Override
     public Chain colTpl(Slot slot, String template, String column, Collection<Object> values) {
-        return add(new ImmediateTemplate(this, column, template, null, slot, null, values, null));
+        return this.add(new ImmediateTemplate(this, column, template, null, slot, null, values, null));
     }
 
     @Override
@@ -573,22 +697,22 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
 
     @Override
     public Chain tpl(Slot slot, String template, String property, Map<String, Object> values) {
-        return add(new StandardTemplate(this, property, template, TemplateMatch.MAP, slot, null, null, values));
+        return this.add(new StandardTemplate(this, property, template, TemplateMatch.MAP, slot, null, null, values));
     }
 
     @Override
     public Chain tpl(String template, Map<String, Object> values) {
-        return add(new ImmediateTemplate(this, null, template, TemplateMatch.MAP, Slot.NONE, null, null, values));
+        return this.add(new ImmediateTemplate(this, null, template, TemplateMatch.MAP, Slot.NONE, null, null, values));
     }
 
     @Override
     public Chain tpl(Slot slot, String template, Map<String, Object> values) {
-        return add(new ImmediateTemplate(this, null, template, TemplateMatch.MAP, slot, null, null, values));
+        return this.add(new ImmediateTemplate(this, null, template, TemplateMatch.MAP, slot, null, null, values));
     }
 
     @Override
     public Chain colTpl(Slot slot, String template, String column, Map<String, Object> values) {
-        return add(new ImmediateTemplate(this, column, template, TemplateMatch.MAP, slot, null, null, values));
+        return this.add(new ImmediateTemplate(this, column, template, TemplateMatch.MAP, slot, null, null, values));
     }
 
     // endregion
@@ -597,31 +721,31 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
 
     @Override
     public Chain and(boolean not, List<Expression> conditions) {
-        return add(new StandardNesting(this, not, Slot.AND, conditions));
+        return this.add(new StandardNesting(this, not, Slot.AND, conditions));
     }
 
     @Override
     public Chain and(boolean not, Criteria<?> criteria, List<Expression> conditions) {
-        return add(new StandardNesting(criteria, not, Slot.AND, conditions));
+        return this.add(new StandardNesting(criteria, not, Slot.AND, conditions));
     }
 
     @Override
-    public Chain and(Function<Chain, Chain> apply, boolean not) {
+    public Chain and(boolean not, Function<Chain, Chain> apply) {
         return this.doIt(apply, true, not);
     }
 
     @Override
     public Chain or(boolean not, List<Expression> conditions) {
-        return add(new StandardNesting(this, not, Slot.OR, conditions));
+        return this.add(new StandardNesting(this, not, Slot.OR, conditions));
     }
 
     @Override
     public Chain or(boolean not, Criteria<?> criteria, List<Expression> conditions) {
-        return add(new StandardNesting(criteria, not, Slot.OR, conditions));
+        return this.add(new StandardNesting(criteria, not, Slot.OR, conditions));
     }
 
     @Override
-    public Chain or(Function<Chain, Chain> apply, boolean not) {
+    public Chain or(boolean not, Function<Chain, Chain> apply) {
         return this.doIt(apply, false, not);
     }
 
@@ -699,10 +823,6 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
 
     @Override
     public String as() {
-        if (this.useAlias.get()) {
-            final String alias = this.tableAliasRef.get();
-            return Objects.isBlank(alias) ? this.defTableAlias : alias;
-        }
         return Constants.EMPTY;
     }
 
@@ -747,6 +867,15 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     }
 
     /**
+     * 默认参数值转占位符
+     * @param args 参数集合
+     * @return SQL字符串
+     */
+    protected Map<String, String> defPlaceHolders(final Map<String, Object> args) {
+        return this.placeholder(DEF_PARAMETER_PLACEHOLDER_ZERO, args);
+    }
+
+    /**
      * 参数值转占位符
      * @param template 模板
      * @param args     参数列表
@@ -772,6 +901,17 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
             return template;
         }
         return source;
+    }
+
+    protected Map<String, String> placeholder(String source, Map<String, Object> args) {
+        if (Objects.isNotBlank(source) && Objects.isNotEmpty(args)) {
+            final Map<String, String> newArgs = new HashMap<>(args.size());
+            for (Map.Entry<String, Object> entry: args.entrySet()) {
+                newArgs.put(entry.getKey(), this.defPlaceholder(source, true, entry.getValue()));
+            }
+            return newArgs;
+        }
+        return new HashMap<>(0);
     }
 
     protected List<String> placeholder(String source, Collection<Object> args) {
@@ -802,10 +942,19 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
      * @return 表名
      */
     public String getTableName() {
+        return this.getTableName(true);
+    }
+
+    /**
+     * 获取表名
+     * @param joinAs 是否拼接`AS`关键字
+     * @return 表名
+     */
+    public String getTableName(boolean joinAs) {
         final Table table = TableHelper.getTable(this.entityClass);
         final String tabName = table.getFullName();
         final String as = this.as();
-        return Objects.isBlank(as) ? tabName : (tabName + " AS " + as);
+        return Objects.isBlank(as) ? tabName : joinAs ? (tabName + " AS " + as) : (tabName + Constants.SPACE + as);
     }
 
     /**
@@ -828,21 +977,47 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     }
 
     public boolean isHasCondition() {
-        return this.segmentManager.hasCondition();
+        return this.segmentManager.hasSegment();
+    }
+
+    /**
+     * 完整SQL语句
+     * @return SQL语句
+     */
+    protected String intactString() {
+        return this.getWhereSegment();
     }
 
     @Override
     public String getSegment() {
-        return this.segmentManager.getSegment();
+        return this.intactString();
     }
 
+    /**
+     * 获取条件片段
+     * @return 条件片段
+     */
     public String getWhereSegment() {
+        return this.getWhereSegment(null);
+    }
+
+    /**
+     * 获取条件片段
+     * @param groupReplacement 分组替换片段
+     * @return 条件片段
+     */
+    public String getWhereSegment(final String groupReplacement) {
         if (this.isHasCondition()) {
-            final String condition = this.getSegment();
-            if (DEF_PATTERN_AND_OR.matcher(condition).matches()) {
-                return "WHERE " + condition.replaceFirst(DEF_REGEX_AND_OR_STR, "$2");
+            final String condition = this.segmentManager.getSegment(groupReplacement);
+            if (Objects.isNotBlank(condition)) {
+                if (this.segmentManager.hasCondition()) {
+                    if (DEF_PATTERN_AND_OR.matcher(condition).matches()) {
+                        return "WHERE " + condition.replaceFirst(DEF_REGEX_AND_OR_STR, "$2");
+                    }
+                    return "WHERE " + condition;
+                }
+                return condition;
             }
-            return "WHERE " + condition;
         }
         return Constants.EMPTY;
     }
