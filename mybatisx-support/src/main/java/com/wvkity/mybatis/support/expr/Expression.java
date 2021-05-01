@@ -13,10 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.support.condition.expression;
+package com.wvkity.mybatis.support.expr;
 
-import com.wvkity.mybatis.support.condition.basic.Matched;
-import com.wvkity.mybatis.support.condition.criteria.Criteria;
+import com.wvkity.mybatis.support.basic.Matched;
+import com.wvkity.mybatis.support.criteria.Criteria;
 import com.wvkity.mybatis.support.constant.Slot;
 import com.wvkity.mybatis.support.constant.Symbol;
 

@@ -128,7 +128,7 @@ public final class Objects {
      * @param <T>        泛型类型
      * @return {@link Predicate}
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public static <T> Predicate<T> and(final Predicate... predicates) {
         if (isEmpty(predicates)) {
             return null;

@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.ext.service;
 
-import com.wvkity.mybatis.support.condition.criteria.Criteria;
+import com.wvkity.mybatis.support.criteria.Criteria;
 
 /**
  * 删除操作Service接口

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.support.condition.basic;
+package com.wvkity.mybatis.support.basic;
 
 /**
  * 字段匹配模式
@@ -24,5 +24,9 @@ package com.wvkity.mybatis.support.condition.basic;
 public enum Matched {
 
     STANDARD,
-    IMMEDIATE
+    IMMEDIATE,
+    QUERY,
+    FUNCTION,
+    CASE,
+    OTHER
 }

@@ -161,16 +161,16 @@ public abstract class AbstractAuditingHandler<T> extends AbstractUpdateHandler i
         super.setProperties(properties);
         this.rollback = Optional.ofNullable(this.properties.getProperty(PROP_KEY_ROLLBACK))
             .map("true"::equals).orElse(false);
-        final String interceptMethodString;
-        if (this.isNotBlank((interceptMethodString = properties.getProperty(PROP_KEY_AUDITING_INTERCEPT_METHODS)))) {
-            this.interceptMethods = Collections.unmodifiableSet(Arrays.stream(interceptMethodString.split(","))
+        final String interceptMethodStr;
+        if (this.isNotBlank((interceptMethodStr = properties.getProperty(PROP_KEY_AUDITING_INTERCEPT_METHODS)))) {
+            this.interceptMethods = Collections.unmodifiableSet(Arrays.stream(interceptMethodStr.split(","))
                 .filter(this::isNotBlank).map(String::trim).collect(Collectors.toSet()));
         } else {
             this.interceptMethods = Collections.unmodifiableSet(new HashSet<>(0));
         }
-        final String filterMethodString;
-        if (this.isNotBlank((filterMethodString = properties.getProperty(PROP_KEY_AUDITING_FILTER_METHODS)))) {
-            this.filterMethods = Collections.unmodifiableSet(Arrays.stream(filterMethodString.split(","))
+        final String filterMethodStr;
+        if (this.isNotBlank((filterMethodStr = properties.getProperty(PROP_KEY_AUDITING_FILTER_METHODS)))) {
+            this.filterMethods = Collections.unmodifiableSet(Arrays.stream(filterMethodStr.split(","))
                 .filter(this::isNotBlank).map(String::trim).collect(Collectors.toSet()));
         } else {
             this.filterMethods = Collections.unmodifiableSet(new HashSet<>(0));
@@ -178,9 +178,9 @@ public abstract class AbstractAuditingHandler<T> extends AbstractUpdateHandler i
         final Set<String> logicDelMethods = new HashSet<>();
         logicDelMethods.add("logicDelete");
         logicDelMethods.add("logicDeleteByCriteria");
-        final String logicDeleteMethodString;
-        if (this.isNotBlank((logicDeleteMethodString = properties.getProperty(PROP_KEY_AUDITING_LOGIC_DELETE_METHODS)))) {
-            logicDelMethods.addAll(Arrays.stream(logicDeleteMethodString.split(","))
+        final String logicDeleteMethodStr;
+        if (this.isNotBlank((logicDeleteMethodStr = properties.getProperty(PROP_KEY_AUDITING_LOGIC_DELETE_METHODS)))) {
+            logicDelMethods.addAll(Arrays.stream(logicDeleteMethodStr.split(","))
                 .filter(this::isNotBlank).map(String::trim).collect(Collectors.toSet()));
         }
         this.logicDeleteMethods = Collections.unmodifiableSet(logicDelMethods);

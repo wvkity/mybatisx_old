@@ -17,10 +17,8 @@ package com.wvkity.mybatis.core.plugin.auditable;
 
 import com.wvkity.mybatis.core.auditable.MatchMode;
 import com.wvkity.mybatis.core.auditable.OriginalProperty;
-import com.wvkity.mybatis.core.auditable.event.AuditedEvent;
-import com.wvkity.mybatis.core.auditable.event.AuditedEventPublisher;
-import com.wvkity.mybatis.core.auditable.event.Event;
 import com.wvkity.mybatis.core.auditable.alter.AuditedAlterData;
+import com.wvkity.mybatis.core.auditable.event.AuditedEventPublisher;
 import com.wvkity.mybatis.core.cache.CacheFactory;
 import com.wvkity.mybatis.core.plugin.auditable.cache.CacheData;
 import com.wvkity.mybatis.core.plugin.auditable.cache.DefaultCacheData;

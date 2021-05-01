@@ -16,7 +16,7 @@
 package com.wvkity.mybatis.support.mapper;
 
 import com.wvkity.mybatis.basic.constant.Constants;
-import com.wvkity.mybatis.support.condition.criteria.Criteria;
+import com.wvkity.mybatis.support.criteria.Criteria;
 import org.apache.ibatis.annotations.Param;
 
 /**

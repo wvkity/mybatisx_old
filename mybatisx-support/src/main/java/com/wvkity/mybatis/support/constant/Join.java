@@ -18,33 +18,51 @@ package com.wvkity.mybatis.support.constant;
 import com.wvkity.mybatis.support.segment.Fragment;
 
 /**
- * AND/OR操作符
+ * 连接模式
  * @author wvkity
- * @created 2020-10-25
+ * @created 2021-04-12
  * @since 1.0.0
  */
-public enum Slot implements Fragment {
+public enum Join implements Fragment {
 
     /**
-     * AND
+     * INNER JOIN
      */
-    AND,
-    /**
-     * OR
-     */
-    OR,
-    /**
-     * NONE
-     */
-    NONE {
+    INNER {
         @Override
         public String getSegment() {
-            return "";
+            return "INNER JOIN ";
         }
-    };
+    },
 
-    @Override
-    public String getSegment() {
-        return this.name();
+    /**
+     * LEFT JOIN
+     */
+    LEFT {
+        @Override
+        public String getSegment() {
+            return "LEFT JOIN ";
+        }
+    },
+
+    /**
+     * RIGHT JOIN
+     */
+    RIGHT {
+        @Override
+        public String getSegment() {
+            return "RIGHT JOIN ";
+        }
+    },
+
+    /**
+     * FULL JOIN
+     */
+    FULL {
+        @Override
+        public String getSegment() {
+            return "FULL JOIN ";
+        }
     }
+
 }

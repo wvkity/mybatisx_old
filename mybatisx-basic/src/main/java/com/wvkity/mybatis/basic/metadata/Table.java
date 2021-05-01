@@ -133,6 +133,10 @@ public class Table {
      */
     private final Set<Column> readOnlyUpdatableColumnCache;
     /**
+     * 所有逻辑删除审计字段缓存(只读)
+     */
+    private final Set<Column> readOnlyLogicDeleteAuditColumnCache;
+    /**
      * 构造方法
      */
     private final MethodHandle constructMethod;
@@ -164,6 +168,8 @@ public class Table {
         this.readOnlyPropertyColumnCache = this.init();
         this.readOnlyInsertableColumnCache = ImmutableLinkedSet.of(this.filtrate(Column::isInsertable));
         this.readOnlyUpdatableColumnCache = ImmutableLinkedSet.of(this.filtrate(Column::isUpdatable));
+        this.readOnlyLogicDeleteAuditColumnCache =
+            ImmutableLinkedSet.of(this.filtrate(it -> it.isUpdatable() && it.getAuditor().deletedAuditable()));
         final MethodHandles.Lookup lookup = MethodHandles.lookup();
         MethodHandle handle = null;
         try {
@@ -288,6 +294,14 @@ public class Table {
     }
 
     /**
+     * 所有逻辑审计字段
+     * @return 字段列表
+     */
+    public Set<Column> logicDeleteAuditColumns() {
+        return this.readOnlyLogicDeleteAuditColumnCache;
+    }
+
+    /**
      * 获取所有属性-字段映射信息
      * @return {@link ImmutableLinkedMap}字段集合
      */
@@ -368,37 +382,29 @@ public class Table {
         if (this == o) return true;
         if (!(o instanceof Table)) return false;
         Table table = (Table) o;
-        return onlyOneId == table.onlyOneId &&
-            logicDelete == table.logicDelete &&
-            multiTenant == table.multiTenant &&
-            java.util.Objects.equals(entity, table.entity) &&
-            java.util.Objects.equals(name, table.name) &&
-            java.util.Objects.equals(namespace, table.namespace) &&
-            java.util.Objects.equals(catalog, table.catalog) &&
-            java.util.Objects.equals(schema, table.schema) &&
-            java.util.Objects.equals(prefix, table.prefix) &&
-            java.util.Objects.equals(order, table.order) &&
-            java.util.Objects.equals(idProperty, table.idProperty) &&
-            java.util.Objects.equals(idColumn, table.idColumn) &&
-            java.util.Objects.equals(optimisticLockColumn, table.optimisticLockColumn) &&
-            java.util.Objects.equals(logicalDeleteColumn, table.logicalDeleteColumn) &&
-            java.util.Objects.equals(multiTenantColumn, table.multiTenantColumn) &&
-            java.util.Objects.equals(propertyColumnCache, table.propertyColumnCache) &&
-            java.util.Objects.equals(readOnlyPropertyColumnCache, table.readOnlyPropertyColumnCache) &&
-            java.util.Objects.equals(idColumns, table.idColumns) &&
-            java.util.Objects.equals(columns, table.columns) &&
-            java.util.Objects.equals(readOnlyColumnCache, table.readOnlyColumnCache) &&
-            java.util.Objects.equals(readOnlyInsertableColumnCache, table.readOnlyInsertableColumnCache) &&
-            java.util.Objects.equals(readOnlyUpdatableColumnCache, table.readOnlyUpdatableColumnCache);
+        return onlyOneId == table.onlyOneId && logicDelete == table.logicDelete && multiTenant == table.multiTenant
+            && hasPrimaryKey == table.hasPrimaryKey
+            && java.util.Objects.equals(entity, table.entity)
+            && java.util.Objects.equals(name, table.name)
+            && java.util.Objects.equals(namespace, table.namespace)
+            && java.util.Objects.equals(catalog, table.catalog)
+            && java.util.Objects.equals(schema, table.schema)
+            && java.util.Objects.equals(prefix, table.prefix)
+            && java.util.Objects.equals(order, table.order)
+            && java.util.Objects.equals(idProperty, table.idProperty)
+            && java.util.Objects.equals(idColumn, table.idColumn)
+            && java.util.Objects.equals(optimisticLockColumn, table.optimisticLockColumn)
+            && java.util.Objects.equals(logicalDeleteColumn, table.logicalDeleteColumn)
+            && java.util.Objects.equals(multiTenantColumn, table.multiTenantColumn)
+            && java.util.Objects.equals(idColumns, table.idColumns)
+            && java.util.Objects.equals(columns, table.columns);
     }
 
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(entity, name, namespace, catalog, schema, prefix, order,
-            onlyOneId, logicDelete, multiTenant, idProperty, idColumn, optimisticLockColumn,
-            logicalDeleteColumn, multiTenantColumn, propertyColumnCache,
-            readOnlyPropertyColumnCache, idColumns, columns, readOnlyColumnCache, readOnlyInsertableColumnCache,
-            readOnlyUpdatableColumnCache);
+        return java.util.Objects.hash(entity, name, namespace, catalog, schema, prefix, order, onlyOneId, logicDelete
+            , multiTenant, idProperty, idColumn, hasPrimaryKey, optimisticLockColumn,
+            logicalDeleteColumn, multiTenantColumn, idColumns, columns);
     }
 
     @Override
@@ -427,6 +433,8 @@ public class Table {
             ", readOnlyColumnCache=" + readOnlyColumnCache +
             ", readOnlyInsertableColumnCache=" + readOnlyInsertableColumnCache +
             ", readOnlyUpdatableColumnCache=" + readOnlyUpdatableColumnCache +
+            ", readOnlyLogicDeleteAuditColumnCache=" + readOnlyLogicDeleteAuditColumnCache +
+            ", constructMethod=" + constructMethod +
             '}';
     }
 }
