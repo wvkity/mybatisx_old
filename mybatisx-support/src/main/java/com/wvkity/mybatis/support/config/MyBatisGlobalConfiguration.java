@@ -193,7 +193,7 @@ public class MyBatisGlobalConfiguration {
     /**
      * 返回值为Map类型时，采用具体{@link Map}实现类
      */
-    private Class<? extends Map> mapResultImplementClass;
+    private Class<? extends Map> mapImplementClass;
     /**
      * 将内置的拦截器注册到Spring上下文中
      */
@@ -501,12 +501,12 @@ public class MyBatisGlobalConfiguration {
         this.schema = schema;
     }
 
-    public Class<? extends Map> getMapResultImplementClass() {
-        return mapResultImplementClass;
+    public Class<? extends Map> getMapImplementClass() {
+        return mapImplementClass;
     }
 
-    public MyBatisGlobalConfiguration setMapResultImplementClass(Class<? extends Map> mapResultImplementClass) {
-        this.mapResultImplementClass = mapResultImplementClass;
+    public MyBatisGlobalConfiguration setMapImplementClass(Class<? extends Map> mapImplementClass) {
+        this.mapImplementClass = mapImplementClass;
         return this;
     }
 

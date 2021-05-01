@@ -107,9 +107,10 @@ public class MyBatisDefaultObjectFactory implements ObjectFactory, Serializable 
         if (type == List.class || type == Collection.class || type == Iterable.class) {
             classToCreate = ArrayList.class;
         } else if (type == Map.class) {
+            // 不指定实现类，使用全局配置
             final MyBatisGlobalConfiguration configuration = this.globalConfigurationRef.get();
-            if (Objects.nonNull(configuration) && Objects.nonNull(configuration.getMapResultImplementClass())) {
-                classToCreate = configuration.getMapResultImplementClass();
+            if (Objects.nonNull(configuration) && Objects.nonNull(configuration.getMapImplementClass())) {
+                classToCreate = configuration.getMapImplementClass();
             } else {
                 classToCreate = HashMap.class;
             }
