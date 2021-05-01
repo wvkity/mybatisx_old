@@ -15,21 +15,10 @@
  */
 package com.wvkity.mybatis.core.inject.method.invoke;
 
-import com.wvkity.mybatis.core.inject.mapping.sql.select.SelectListWithMapObjectSupplier;
-import com.wvkity.mybatis.core.inject.method.support.AbstractCriteriaMethod;
-
-import java.util.LinkedHashMap;
-
 /**
- * {@code selectListWithMapObject}方法映射
  * @author wvkity
- * @created 2021-02-07
+ * @created 2021-04-02
  * @since 1.0.0
  */
-public class SelectListWithMapObject extends AbstractCriteriaMethod<SelectListWithMapObjectSupplier> {
-
-    @Override
-    public Class<?> getResultType() {
-        return LinkedHashMap.class;
-    }
+public class LogicDelete {
 }

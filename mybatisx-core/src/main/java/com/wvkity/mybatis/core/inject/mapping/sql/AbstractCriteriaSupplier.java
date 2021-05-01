@@ -18,7 +18,7 @@ package com.wvkity.mybatis.core.inject.mapping.sql;
 import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.basic.metadata.Table;
 import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
-import com.wvkity.mybatis.support.condition.criteria.Criteria;
+import com.wvkity.mybatis.support.criteria.Criteria;
 import com.wvkity.mybatis.support.config.MyBatisGlobalConfiguration;
 
 /**

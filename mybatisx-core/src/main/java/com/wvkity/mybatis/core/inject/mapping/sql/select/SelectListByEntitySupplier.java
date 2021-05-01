@@ -41,7 +41,6 @@ public class SelectListByEntitySupplier extends AbstractSupplier {
 
     @Override
     public String get() {
-        final Set<Column> columns = this.table.columns();
         return this.select(this.table.columns().stream().map(Column::getColumn).collect(Collectors.joining(COMMA_SPACE)),
             Scripts.convertToWhereTag(this.table.columns().stream().map(it ->
                 Scripts.convertToIfTag(PARAM_ENTITY, Symbol.EQ, Operation.REPLACE, NULL, it,

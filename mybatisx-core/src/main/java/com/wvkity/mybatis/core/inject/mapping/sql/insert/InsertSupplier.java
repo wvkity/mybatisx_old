@@ -41,10 +41,10 @@ public class InsertSupplier extends AbstractSupplier {
     public String get() {
         final Set<Column> columns = this.table.insertableColumns();
         final String columnSegment = columns.stream().map(Column::getColumn)
-            .collect(Collectors.joining(COMMA_SPACE, BRACKET_OPEN, CLOSE_BRACKET));
+            .collect(Collectors.joining(COMMA_SPACE, BRACKET_OPEN, BRACKET_CLOSE));
         final String valueSegment = columns.stream().map(it ->
             Scripts.convertToPartArg(PARAM_ENTITY, Operation.INSERT, it))
-            .collect(Collectors.joining(COMMA_SPACE, BRACKET_OPEN, CLOSE_BRACKET));
+            .collect(Collectors.joining(COMMA_SPACE, BRACKET_OPEN, BRACKET_CLOSE));
         return insert(columnSegment, valueSegment);
     }
 }

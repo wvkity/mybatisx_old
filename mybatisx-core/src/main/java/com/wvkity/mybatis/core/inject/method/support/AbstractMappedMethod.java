@@ -106,8 +106,8 @@ public abstract class AbstractMappedMethod implements MappedMethod {
         }
         final String statementName = mapperInterface.getName() + "." + realId;
         if (hasStatement(statementName)) {
-            log.warn("The `{}` MappedStatement object has been loaded into the container by XML or SqlProvider configuration, " +
-                "and the SQL injection is automatically ignored.", statementName);
+            log.warn("The `{}` MappedStatement object has been loaded into the container by XML or SqlProvider " +
+                "configuration, and the SQL injection is automatically ignored.", statementName);
             return this.configuration.getMappedStatement(statementName, false);
         }
         final boolean isSelect = SqlCommandType.SELECT == commandType;

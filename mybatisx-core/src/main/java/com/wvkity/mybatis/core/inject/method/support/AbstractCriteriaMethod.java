@@ -16,12 +16,13 @@
 package com.wvkity.mybatis.core.inject.method.support;
 
 import com.wvkity.mybatis.basic.metadata.Table;
-import com.wvkity.mybatis.support.condition.criteria.Criteria;
+import com.wvkity.mybatis.support.criteria.Criteria;
 import com.wvkity.mybatis.support.inject.mapping.sql.Supplier;
 import org.apache.ibatis.mapping.MappedStatement;
 
 /**
  * 抽象{@link Criteria Criteria}相关方法
+ * @param <T> {@link Supplier}类型
  * @author wvkity
  * @created 2021-02-02
  * @since 1.0.0

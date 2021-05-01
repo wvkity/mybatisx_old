@@ -13,13 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.basic;
+package com.wvkity.mybatis.core.inject.method.invoke;
 
 /**
- * 分组筛选片段管理器
  * @author wvkity
- * @created 2021-01-12
+ * @created 2021-04-02
  * @since 1.0.0
  */
-public class HavingManager {
+public class LogicDeleteByCriteria {
 }

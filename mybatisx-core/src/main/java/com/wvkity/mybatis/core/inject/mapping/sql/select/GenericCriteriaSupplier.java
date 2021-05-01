@@ -17,7 +17,7 @@ package com.wvkity.mybatis.core.inject.mapping.sql.select;
 
 import com.wvkity.mybatis.basic.metadata.Table;
 import com.wvkity.mybatis.core.inject.mapping.sql.AbstractCriteriaSupplier;
-import com.wvkity.mybatis.support.condition.criteria.Criteria;
+import com.wvkity.mybatis.support.criteria.Criteria;
 import com.wvkity.mybatis.support.config.MyBatisGlobalConfiguration;
 
 /**
@@ -34,6 +34,7 @@ public class GenericCriteriaSupplier extends AbstractCriteriaSupplier {
 
     @Override
     public String get() {
-        return this.criteriaSelect(this.getSelectCondition());
+        // return this.criteriaSelect(this.getSelectCondition());
+        return this.criteriaSelect();
     }
 }

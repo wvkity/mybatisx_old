@@ -44,12 +44,12 @@ public class InsertWithNonNullSupplier extends AbstractSupplier {
             Scripts.convertToTrimTag(columns.stream().map(it ->
                 Scripts.convertToIfTag(PARAM_ENTITY, null, Operation.INSERT, NULL, it, COMMA_SPACE, false, false, null))
                 .collect(Collectors.joining(NEW_LINE)), NULL, NULL, NULL, COMMA_SPACE) +
-            CLOSE_BRACKET;
+                BRACKET_CLOSE;
         final String vsb = BRACKET_OPEN +
             Scripts.convertToTrimTag(columns.stream().map(it ->
                 Scripts.convertToIfTag(PARAM_ENTITY, null, Operation.INSERT, NULL, it, COMMA_SPACE, false, true, null))
                 .collect(Collectors.joining(NEW_LINE)), NULL, NULL, NULL, COMMA_SPACE) +
-            CLOSE_BRACKET;
+                BRACKET_CLOSE;
         return insert(csb, vsb);
     }
 }

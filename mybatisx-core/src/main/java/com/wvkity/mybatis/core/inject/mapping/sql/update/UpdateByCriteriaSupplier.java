@@ -35,6 +35,6 @@ public class UpdateByCriteriaSupplier extends AbstractCriteriaSupplier {
     @Override
     public String get() {
         return this.update("SET " + Constants.DOLLAR_OPEN_BRACE + Constants.PARAM_CRITERIA + Constants.DOT +
-            "updateSegment" + Constants.CLOSE_BRACE, this.getUpdateCondition());
+            "updateSegment" + Constants.BRACE_CLOSE, this.getUpdateCondition());
     }
 }

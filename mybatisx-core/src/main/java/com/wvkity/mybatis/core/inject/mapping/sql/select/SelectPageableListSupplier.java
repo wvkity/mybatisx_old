@@ -36,6 +36,7 @@ public class SelectPageableListSupplier extends AbstractSupplier {
 
     @Override
     public String get() {
-        return this.select(this.table.columns().stream().map(Column::getColumn).collect(Collectors.joining(COMMA_SPACE)), "");
+        return this.select(this.table.columns().stream().map(Column::getColumn)
+            .collect(Collectors.joining(COMMA_SPACE)), "");
     }
 }

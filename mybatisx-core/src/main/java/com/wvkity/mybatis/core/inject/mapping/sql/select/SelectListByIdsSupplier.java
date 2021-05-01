@@ -43,6 +43,6 @@ public class SelectListByIdsSupplier extends AbstractSupplier {
         }
         return this.select(this.table.columns().stream().map(Column::getColumn).collect(Collectors.joining(COMMA_SPACE)),
             "WHERE " + this.table.getIdColumn().getColumn() + " IN " + NEW_LINE +
-                Scripts.convertToForeachTag(PARAM_IDS, "item", BRACKET_OPEN, CLOSE_BRACKET, COMMA_SPACE, "#{item}"));
+                Scripts.convertToForeachTag(PARAM_IDS, "item", BRACKET_OPEN, BRACKET_CLOSE, COMMA_SPACE, "#{item}"));
     }
 }

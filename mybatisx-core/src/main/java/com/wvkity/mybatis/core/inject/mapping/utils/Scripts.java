@@ -198,7 +198,7 @@ public final class Scripts implements Constants {
      */
     public static String safeJoining(final String... args) {
         final String result = Arrays.stream(args).filter(Objects::nonNull).collect(Collectors.joining(EMPTY));
-        return Objects.isBlank(result) ? EMPTY : (HASH_OPEN_BRACE + result + CLOSE_BRACE);
+        return Objects.isBlank(result) ? EMPTY : (HASH_OPEN_BRACE + result + BRACE_CLOSE);
     }
 
     /**
@@ -213,7 +213,7 @@ public final class Scripts implements Constants {
      */
     public static String unsafeJoining(final String... args) {
         final String result = Arrays.stream(args).filter(Objects::nonNull).collect(Collectors.joining(EMPTY));
-        return Objects.isBlank(result) ? EMPTY : (DOLLAR_OPEN_BRACE + result + CLOSE_BRACE);
+        return Objects.isBlank(result) ? EMPTY : (DOLLAR_OPEN_BRACE + result + BRACE_CLOSE);
     }
 
     /**
@@ -229,7 +229,7 @@ public final class Scripts implements Constants {
                                              final JdbcType jdbcType) {
         final StringBuilder builder = new StringBuilder();
         if (jdbcType != null && jdbcType != JdbcType.UNDEFINED) {
-            builder.append(", jdbcType=").append(jdbcType.toString());
+            builder.append(", jdbcType=").append(jdbcType);
         }
         if (typeHandler != null && typeHandler != UnknownTypeHandler.class) {
             builder.append(", typeHandler=").append(typeHandler.getCanonicalName());
@@ -237,7 +237,7 @@ public final class Scripts implements Constants {
         if (useJavaType && javaType != null) {
             builder.append(", javaType=").append(javaType.getCanonicalName());
         }
-        return builder.toString();
+        return builder.length() > 0 ? builder.toString() : null;
     }
 
     /**
@@ -682,7 +682,7 @@ public final class Scripts implements Constants {
                 case NOT_IN:
                     builder.append(placeholders.stream().map(pd ->
                         safeJoining(pd, concatIntactTypeArg(typeHandler, useJavaType, javaType, jdbcType)))
-                        .collect(Collectors.joining(COMMA_SPACE, BRACKET_OPEN, CLOSE_BRACKET)));
+                        .collect(Collectors.joining(COMMA_SPACE, BRACKET_OPEN, BRACKET_CLOSE)));
                     break;
                 case BETWEEN:
                 case NOT_BETWEEN:

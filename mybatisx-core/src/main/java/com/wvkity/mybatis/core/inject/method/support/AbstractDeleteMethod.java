@@ -21,6 +21,7 @@ import org.apache.ibatis.mapping.MappedStatement;
 
 /**
  * 抽象删除方法
+ * @param <T> {@link Supplier}类型
  * @author wvkity
  * @created 2021-01-03
  * @since 1.0.0

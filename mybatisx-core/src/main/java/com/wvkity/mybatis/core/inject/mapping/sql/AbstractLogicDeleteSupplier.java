@@ -16,8 +16,12 @@
 package com.wvkity.mybatis.core.inject.mapping.sql;
 
 
+import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.metadata.Table;
+import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.support.config.MyBatisGlobalConfiguration;
+
+import java.util.Set;
 
 /**
  * 抽象逻辑删除SQL提供器
@@ -29,5 +33,16 @@ public abstract class AbstractLogicDeleteSupplier extends AbstractSupplier {
 
     public AbstractLogicDeleteSupplier(Table table, MyBatisGlobalConfiguration configuration) {
         super(table, configuration);
+    }
+
+    protected String logicDelete(final String condition) {
+        if (!this.table.isLogicDelete()) {
+            return EMPTY;
+        }
+        final Set<Column> columns = this.table.logicDeleteAuditColumns();
+        if (Objects.isNotEmpty(columns)) {
+            return EMPTY;
+        }
+        return null;
     }
 }

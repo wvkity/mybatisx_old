@@ -18,8 +18,6 @@ package com.wvkity.mybatis.core.inject.method.invoke;
 import com.wvkity.mybatis.core.inject.mapping.sql.select.SelectPageableMapSupplier;
 import com.wvkity.mybatis.core.inject.method.support.AbstractCriteriaMethod;
 
-import java.util.Map;
-
 /**
  * {@code selectPageableMap}方法映射
  * @author wvkity

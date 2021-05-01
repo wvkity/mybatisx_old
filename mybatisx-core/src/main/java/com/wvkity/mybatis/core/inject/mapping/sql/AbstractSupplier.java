@@ -20,7 +20,7 @@ import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.metadata.Table;
 import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
-import com.wvkity.mybatis.support.condition.criteria.Criteria;
+import com.wvkity.mybatis.support.criteria.Criteria;
 import com.wvkity.mybatis.support.config.MyBatisGlobalConfiguration;
 import com.wvkity.mybatis.support.inject.mapping.sql.Supplier;
 import org.slf4j.Logger;
@@ -113,6 +113,14 @@ public abstract class AbstractSupplier implements Supplier, Constants {
      */
     public String criteriaSelect(final String selectSegment, final String whereSegment) {
         return "SELECT <![CDATA[" + selectSegment + "]]> FROM ${" + PARAM_CRITERIA + ".tableName}" + whereSegment;
+    }
+
+    /**
+     * {@link Criteria Criteria}条件查询SQL语句
+     * @return 完整查询SQL语句
+     */
+    public String criteriaSelect() {
+        return "${" + Constants.PARAM_CRITERIA + ".segment}";
     }
 
     /**
