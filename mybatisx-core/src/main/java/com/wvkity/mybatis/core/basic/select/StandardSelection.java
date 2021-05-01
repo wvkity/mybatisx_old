@@ -13,15 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.basic.select;
+package com.wvkity.mybatis.core.basic.select;
 
-import com.wvkity.mybatis.basic.constant.Constants;
-import com.wvkity.mybatis.basic.utils.Objects;
-import com.wvkity.mybatis.support.condition.basic.Matched;
-import com.wvkity.mybatis.support.condition.criteria.Criteria;
-import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
-
-import java.util.Optional;
+import com.wvkity.mybatis.support.basic.Matched;
+import com.wvkity.mybatis.support.criteria.Criteria;
 
 /**
  * 查询字段
@@ -75,21 +70,4 @@ public class StandardSelection extends AbstractSelection<String> {
         return this.column;
     }
 
-    @Override
-    public String getSegment(boolean isQuery) {
-        final String tabAlias = this.getTableAlias();
-        if (isQuery) {
-            final String as;
-            if (Objects.isNotBlank(this.alias)) {
-                as = (Objects.isNotBlank(this.refProp) ? (this.refProp + Constants.DOT) : "") + this.alias;
-            } else {
-                final boolean isUsed = Optional.ofNullable(this.criteria).map(Criteria::isUsePropertyAsAlias)
-                    .orElse(false);
-                as = isUsed && Objects.isNotBlank(this.property) ? (Objects.isNotBlank(this.refProp) ?
-                    (this.refProp + Constants.DOT + this.property) : this.property) : "";
-            }
-            return Scripts.convertToSelectArg(tabAlias, this.column, as);
-        }
-        return Scripts.convertToSelectArg(tabAlias, this.column, null);
-    }
 }

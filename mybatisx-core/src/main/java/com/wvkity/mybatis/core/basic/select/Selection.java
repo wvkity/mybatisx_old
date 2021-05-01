@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.condition.basic.select;
+package com.wvkity.mybatis.core.basic.select;
 
-import com.wvkity.mybatis.support.condition.basic.Matched;
+import com.wvkity.mybatis.support.basic.Matched;
 import com.wvkity.mybatis.support.segment.Fragment;
 
 /**
@@ -45,10 +45,29 @@ public interface Selection extends Fragment {
     String getProperty();
 
     /**
+     * 获取引用属性
+     * @return 引用属性
+     */
+    String getRefProp();
+
+    /**
      * 获取字段匹配模式
      * @return {@link Matched}
      */
     Matched getMatched();
+
+    /**
+     * 别名
+     * @return 别名
+     */
+    String as();
+
+    /**
+     * 设置别名
+     * @param alias 别名
+     * @return {@link Selection}
+     */
+    Selection as(final String alias);
 
     @Override
     default String getSegment() {
