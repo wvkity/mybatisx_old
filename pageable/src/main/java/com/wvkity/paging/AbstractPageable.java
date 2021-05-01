@@ -81,7 +81,7 @@ public abstract class AbstractPageable implements Pageable {
     /**
      * 显示页码数
      */
-    protected long visible;
+    protected long visible = DEF_VISIBLE_PAGE_SIZE;
     /**
      * 起始页码
      */
