@@ -15,6 +15,7 @@
  */
 package com.wvkity.mybatis.core.basic.manager;
 
+import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.core.basic.group.Group;
 import com.wvkity.mybatis.core.basic.having.Having;
@@ -170,15 +171,35 @@ public abstract class AbstractStandardManager<C extends Criteria<?>> extends Abs
 
     @Override
     public String getSegment() {
-        return this.getWhereString() + this.getGroupString() + this.getHavingString() + this.getOrderString();
+        return this.getSegment(null);
     }
 
     @Override
     public String getSegment(String groupReplacement) {
-        if (Objects.isNotBlank(groupReplacement)) {
-            return this.getWhereString() + " GROUP BY " + groupReplacement + this.getHavingString() +
-                this.getOrderString();
+        if (this.hasSegment()) {
+            final StringBuilder builder = new StringBuilder();
+            final String where = this.getWhereString();
+            if (Objects.isNotBlank(where)) {
+                builder.append(where.trim());
+            }
+            if (Objects.isNotBlank(groupReplacement)) {
+                builder.append(" GROUP BY ").append(groupReplacement.trim());
+            } else {
+                final String group = this.getGroupString();
+                if (Objects.isNotBlank(group)) {
+                    builder.append(Constants.SPACE).append(group.trim());
+                }
+            }
+            final String having = this.getHavingString();
+            if (Objects.isNotBlank(having)) {
+                builder.append(Constants.SPACE).append(having.trim());
+            }
+            final String order = this.getOrderString();
+            if (Objects.isNotBlank(order)) {
+                builder.append(Constants.SPACE).append(order.trim());
+            }
+            return builder.toString().trim();
         }
-        return this.getSegment();
+        return Constants.EMPTY;
     }
 }
