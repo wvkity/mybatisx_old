@@ -16,6 +16,7 @@
 package com.wvkity.mybatis.core.expr;
 
 import com.wvkity.mybatis.basic.utils.Objects;
+import com.wvkity.mybatis.support.basic.Matched;
 import com.wvkity.mybatis.support.criteria.Criteria;
 import com.wvkity.mybatis.core.expr.builder.AbstractRangeExprBuilder;
 import com.wvkity.mybatis.support.constant.Slot;
@@ -39,6 +40,7 @@ public class StandardNotIn extends AbstractRangeExpression<String> {
         this.slot = slot;
         this.values = values;
         this.symbol = Symbol.NOT_IN;
+        this.matched = Matched.STANDARD;
     }
 
     public static StandardNotIn.Builder create() {
