@@ -24,7 +24,7 @@ import com.wvkity.mybatis.support.basic.Matched;
  * @created 2021-01-16
  * @since 1.0.0
  */
-public class Native extends AbstractExpression<String> {
+public class NativeExpression extends AbstractExpression<String> {
 
     private static final long serialVersionUID = 1802248293107856419L;
 
@@ -33,7 +33,7 @@ public class Native extends AbstractExpression<String> {
      */
     private final String criterion;
 
-    public Native(String criterion) {
+    public NativeExpression(String criterion) {
         this.criterion = criterion;
         this.matched = Matched.IMMEDIATE;
     }
@@ -42,9 +42,9 @@ public class Native extends AbstractExpression<String> {
         return criterion;
     }
 
-    public static Native of(final String criterion) {
+    public static NativeExpression of(final String criterion) {
         if (Objects.isNotBlank(criterion)) {
-            return new Native(criterion);
+            return new NativeExpression(criterion);
         }
         return null;
     }
