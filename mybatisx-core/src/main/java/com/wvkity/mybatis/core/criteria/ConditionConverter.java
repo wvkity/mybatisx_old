@@ -24,7 +24,8 @@ import com.wvkity.mybatis.core.expr.AbstractFuzzyExpression;
 import com.wvkity.mybatis.core.expr.AbstractNullableExpression;
 import com.wvkity.mybatis.core.expr.AbstractRangeExpression;
 import com.wvkity.mybatis.core.expr.AbstractTemplateExpression;
-import com.wvkity.mybatis.core.expr.Native;
+import com.wvkity.mybatis.core.expr.ExistsExpression;
+import com.wvkity.mybatis.core.expr.NativeExpression;
 import com.wvkity.mybatis.core.expr.SpecialExpression;
 import com.wvkity.mybatis.core.expr.StandardIdEqual;
 import com.wvkity.mybatis.core.expr.StandardNesting;
@@ -70,12 +71,18 @@ public class ConditionConverter {
             final Matched matched = expression.getExprMode();
             switch (matched) {
                 case IMMEDIATE:
-                    if (expression instanceof Native) {
-                        return ((Native) expression)::getCriterion;
+                    if (expression instanceof NativeExpression) {
+                        return ((NativeExpression) expression)::getCriterion;
                     }
                     return this.convertToImmediateCondition(expression);
                 case STANDARD:
                     return this.convertToStandardCondition(expression);
+                case EXISTS:
+                    if (expression instanceof ExistsExpression) {
+                        final ExistsExpression exists = (ExistsExpression) expression;
+                        return new ExistsCondition(exists.getCriteria(), exists.getSymbol(), exists.getSlot());
+                    }
+                    return null;
                 default:
                     break;
             }
@@ -217,7 +224,7 @@ public class ConditionConverter {
                                          final Class<?> javaType, final JdbcType jdbcType) {
         return new Condition(range.getCriteria(), range.getAlias(), column,
             Scripts.convertConditionPartArg(range.getSymbol(), range.getSlot(), typeHandler, useJavaType,
-                javaType, jdbcType, this.defPlaceholders(range.getValues())));
+                javaType, jdbcType, this.defPlaceholders(range.getValues().toArray(new Object[0]))));
     }
 
     protected Criterion templateExprConvert(final AbstractTemplateExpression<?> template, final String column,

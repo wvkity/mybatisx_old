@@ -23,6 +23,7 @@ import com.wvkity.mybatis.basic.metadata.Table;
 import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.core.basic.manager.StandardFragmentManager;
 import com.wvkity.mybatis.core.basic.manager.StandardManager;
+import com.wvkity.mybatis.core.expr.ExistsExpression;
 import com.wvkity.mybatis.core.expr.ImmediateBetween;
 import com.wvkity.mybatis.core.expr.ImmediateEqual;
 import com.wvkity.mybatis.core.expr.ImmediateGreaterThan;
@@ -38,7 +39,7 @@ import com.wvkity.mybatis.core.expr.ImmediateNotLike;
 import com.wvkity.mybatis.core.expr.ImmediateNotNull;
 import com.wvkity.mybatis.core.expr.ImmediateNull;
 import com.wvkity.mybatis.core.expr.ImmediateTemplate;
-import com.wvkity.mybatis.core.expr.Native;
+import com.wvkity.mybatis.core.expr.NativeExpression;
 import com.wvkity.mybatis.core.expr.SpecialExpression;
 import com.wvkity.mybatis.core.expr.StandardBetween;
 import com.wvkity.mybatis.core.expr.StandardEqual;
@@ -138,7 +139,11 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     /**
      * 参数占位正则
      */
-    protected static final Pattern DEF_PATTERN_QM = Pattern.compile(".*#\\{((?!#\\{).)*}.*");
+    protected static final String DEF_PATTERN_PM_STR = ".*#\\{((?!#\\{).)*}.*";
+    /**
+     * 参数占位正则
+     */
+    protected static final Pattern DEF_PATTERN_PM = Pattern.compile(DEF_PATTERN_PM_STR);
     /**
      * 当前对象
      */
@@ -492,7 +497,7 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     @Override
     @SuppressWarnings("unchecked")
     public <V> Chain in(Slot slot, Property<T, V> property, Collection<V> values) {
-        return this.add(new StandardNotIn(this, this.convert(property), slot, (Collection<Object>) values));
+        return this.add(new StandardIn(this, this.convert(property), slot, (Collection<Object>) values));
     }
 
     @Override
@@ -622,6 +627,27 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     public Chain colNotNull(Slot slot, String column) {
         return this.add(new ImmediateNotNull(this, column, slot));
     }
+
+    // endregion
+
+    // region Exists conditions
+
+    @Override
+    public Chain exists(Slot slot, QueryWrapper<?, ?> query) {
+        if (Objects.nonNull(query)) {
+            this.add(new ExistsExpression(query, slot));
+        }
+        return this.context;
+    }
+
+    @Override
+    public Chain notExists(Slot slot, QueryWrapper<?, ?> query) {
+        if (Objects.nonNull(query)) {
+            this.add(new ExistsExpression(query, true, slot));
+        }
+        return this.context;
+    }
+
 
     // endregion
 
@@ -756,7 +782,7 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     @Override
     public Chain nativeCondition(String condition) {
         if (Objects.isNotBlank(condition)) {
-            this.add(Native.of(condition));
+            this.add(NativeExpression.of(condition));
         }
         return this.context;
     }
