@@ -41,7 +41,7 @@ public class FuncOrder extends AbstractOrder<Function> {
     public String getSegment() {
         if (!this.isEmpty()) {
             final String sortMode = this.ascending ? ASC : DESC;
-            return this.fragments.stream().map(it -> it.getFuncBody() + Constants.SPACE + sortMode)
+            return this.fragments.stream().map(it -> it.getFuncBody() + sortMode )
                 .collect(Collectors.joining(Constants.COMMA_SPACE));
         }
         return Constants.EMPTY;
