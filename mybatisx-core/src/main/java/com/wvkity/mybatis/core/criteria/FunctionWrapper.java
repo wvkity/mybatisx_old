@@ -578,7 +578,7 @@ public interface FunctionWrapper<T, Chain extends FunctionWrapper<T, Chain>> {
      * @return {@link Chain}
      */
     default Chain func(final String property, final String aliasPrefix) {
-        return this.func(property, aliasPrefix, (Integer) null);
+        return this.func(property, aliasPrefix, null);
     }
 
     /**
@@ -601,13 +601,32 @@ public interface FunctionWrapper<T, Chain extends FunctionWrapper<T, Chain>> {
 
     /**
      * 所有聚合函数
+     * @param column      字段名
+     * @param aliasPrefix 别名前缀
+     * @return {@link Chain}
+     */
+    default Chain colFunc(final String column, final String aliasPrefix) {
+        return this.colFunc(column, aliasPrefix, (Integer) null);
+    }
+
+    /**
+     * 所有聚合函数
+     * @param column      字段名
+     * @param aliasPrefix 别名前缀
+     * @param scale       保留小数位数
+     * @return {@link Chain}
+     */
+    Chain colFunc(final String column, final String aliasPrefix, final Integer scale);
+
+    /**
+     * 所有聚合函数
      * @param tableAlias  表别名
      * @param column      字段名
      * @param aliasPrefix 别名前缀
      * @return {@link Chain}
      */
-    default Chain func(final String tableAlias, final String column, final String aliasPrefix) {
-        return this.func(tableAlias, column, aliasPrefix, null);
+    default Chain colFunc(final String tableAlias, final String column, final String aliasPrefix) {
+        return this.colFunc(tableAlias, column, aliasPrefix, null);
     }
 
     /**
@@ -618,7 +637,7 @@ public interface FunctionWrapper<T, Chain extends FunctionWrapper<T, Chain>> {
      * @param scale       保留小数位数
      * @return {@link Chain}
      */
-    Chain func(final String tableAlias, final String column, final String aliasPrefix, final Integer scale);
+    Chain colFunc(final String tableAlias, final String column, final String aliasPrefix, final Integer scale);
 
     // endregion
 
