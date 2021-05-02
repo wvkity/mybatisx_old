@@ -27,6 +27,6 @@ public enum Matched {
     IMMEDIATE,
     QUERY,
     FUNCTION,
-    CASE,
+    EXISTS,
     OTHER
 }
