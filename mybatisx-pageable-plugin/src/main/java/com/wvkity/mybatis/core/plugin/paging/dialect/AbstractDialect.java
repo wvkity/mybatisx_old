@@ -15,10 +15,10 @@
  */
 package com.wvkity.mybatis.core.plugin.paging.dialect;
 
+import com.wvkity.mybatis.core.jsql.parser.SqlParser;
 import com.wvkity.mybatis.core.plugin.paging.RangePageable;
 import com.wvkity.mybatis.core.plugin.paging.config.RangePageableThreadLocalCache;
 import com.wvkity.mybatis.core.plugin.paging.config.StandardPageableThreadLocalCache;
-import com.wvkity.mybatis.core.plugin.paging.parser.RecordsSqlParser;
 import com.wvkity.mybatis.reflection.MetaObjects;
 import com.wvkity.paging.DataPageable;
 import com.wvkity.paging.Pageable;
@@ -51,7 +51,7 @@ public abstract class AbstractDialect implements Dialect {
     /**
      * SQL转换器
      */
-    protected RecordsSqlParser recordsSqlParser = new RecordsSqlParser();
+    protected SqlParser sqlParser = new SqlParser();
 
     protected boolean isRange() {
         final RangePageable rp = RangePageableThreadLocalCache.getPageable();
@@ -67,7 +67,7 @@ public abstract class AbstractDialect implements Dialect {
     @Override
     public String makeQueryRecordSQL(MappedStatement ms, BoundSql bs, Object parameter,
                                      RowBounds rb, CacheKey cacheKey) {
-        return this.recordsSqlParser.smartParse(bs.getSql());
+        return this.sqlParser.smartCountParse(bs.getSql());
     }
 
     @Override

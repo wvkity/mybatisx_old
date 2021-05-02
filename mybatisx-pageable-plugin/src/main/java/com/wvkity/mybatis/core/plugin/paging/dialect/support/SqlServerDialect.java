@@ -59,7 +59,7 @@ public class SqlServerDialect extends AbstractPageableDialect {
             return cache;
         }
         String newSql = this.replacer.replace(originalSql);
-        newSql = this.recordsSqlParser.smartParse(newSql);
+        newSql = this.sqlParser.smartCountParse(newSql);
         newSql = this.replacer.restore(newSql);
         this.withNoLockCacheOfRs.put(originalSql, newSql);
         return newSql;

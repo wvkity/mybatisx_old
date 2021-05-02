@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.plugin.paging.parser;
+package com.wvkity.mybatis.core.jsql.parser;
 
 import net.sf.jsqlparser.expression.Alias;
 import net.sf.jsqlparser.expression.Expression;
@@ -37,12 +37,16 @@ import net.sf.jsqlparser.statement.select.WithItem;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 总记录数SQL解析器
@@ -50,9 +54,17 @@ import java.util.Set;
  * @created 2021-02-08
  * @since 1.0.0
  */
-public class RecordsSqlParser {
+public class SqlParser {
 
     public static final String KEEP_ORDER_BY = "/*keep orderby*/";
+    public static final String DEF_REGEX_SELECT_ONE_STR = "^(?i)(\\s*select\\s+1\\s+)(.*)$";
+    public static final Pattern DEF_PATTERN_SELECT_ONE =
+        Pattern.compile(DEF_REGEX_SELECT_ONE_STR, Pattern.CASE_INSENSITIVE);
+    public static final String DEF_REGEX_SELECT_STR = "^(?i)((\\s*select\\s*)(((?!select).)*)(\\s*from)(\\s*.*))$";
+    public static final String DEF_PATTERN_PM_STR = "(#\\{[^(#{)]+})";
+    public static final Pattern DEF_PATTERN_PM = Pattern.compile(DEF_PATTERN_PM_STR);
+    public static final Pattern DEF_PATTERN_MATCHER = Pattern.compile(".*#\\{((?!#\\{).)*}.*");
+    public static final Pattern DEF_PATTERN_PM_RESTORE = Pattern.compile("((?<!\\\\)(\\?))");
     private static final Alias TAB_ALIAS;
     /**
      * 忽略聚合函数
@@ -111,8 +123,8 @@ public class RecordsSqlParser {
      * @param originalSql 原SQL语句
      * @return 总记录数SQL
      */
-    public String smartParse(final String originalSql) {
-        return this.smartParse(originalSql, "0");
+    public String smartCountParse(final String originalSql) {
+        return this.smartCountParse(originalSql, "0");
     }
 
     /**
@@ -121,15 +133,15 @@ public class RecordsSqlParser {
      * @param colName     列名
      * @return 总记录数SQL
      */
-    public String smartParse(final String originalSql, final String colName) {
+    public String smartCountParse(final String originalSql, final String colName) {
         if (originalSql.contains(KEEP_ORDER_BY)) {
-            return toSimpleQueryRecordSql(originalSql, colName);
+            return this.toSimpleQueryRecordSql(originalSql, colName);
         }
         final Statement stmt;
         try {
             stmt = CCJSqlParserUtil.parse(originalSql);
         } catch (Exception ignore) {
-            return toSimpleQueryRecordSql(originalSql, colName);
+            return this.toSimpleQueryRecordSql(originalSql, colName);
         }
         final Select select = (Select) stmt;
         final SelectBody selectBody = select.getSelectBody();
@@ -144,6 +156,130 @@ public class RecordsSqlParser {
         }
         this.toQueryRecordSql(select, colName);
         return select.toString();
+    }
+
+    /**
+     * 智能转换成exists查询语句
+     * @param originalSql 原SQL
+     * @return exists查询语句
+     */
+    public String smartExistsParse(final String originalSql) {
+        if (this.isSelectOne(originalSql)) {
+            return originalSql;
+        }
+        final Statement stmt;
+        final StringBuilder builder = new StringBuilder(originalSql);
+        final Map<Integer, String> params = this.replaceOriginalSql(builder);
+        final boolean hasParam = params != null && !params.isEmpty();
+        final String replaceSql = hasParam ? builder.toString() : originalSql;
+        try {
+            stmt = CCJSqlParserUtil.parse(replaceSql);
+        } catch (Exception ignore) {
+            return this.regexExistsParse(originalSql);
+        }
+        final Select select = (Select) stmt;
+        if (originalSql.contains(KEEP_ORDER_BY)) {
+            return this.toSelectOneSql(select, params);
+        }
+        final SelectBody selectBody = select.getSelectBody();
+        try {
+            this.handleSelectBodyTryRemoveOrderBy(selectBody);
+        } catch (Exception ignore) {
+            return this.toSelectOneSql(select, params);
+        }
+        final List<WithItem> items;
+        if (isNotEmpty((items = select.getWithItemsList()))) {
+            items.forEach(this::handleSelectBodyTryRemoveOrderBy);
+        }
+        return this.toSelectOneSql(select, params);
+    }
+
+    /**
+     * 转成select 1 from tab语句
+     * @param select {@link Select}
+     * @return 新的查询语句
+     */
+    public String toSelectOneSql(final Select select, final Map<Integer, String> params) {
+        final SelectBody body = select.getSelectBody();
+        final PlainSelect psl = (PlainSelect) body;
+        final List<SelectItem> selectItems = new ArrayList<>(1);
+        selectItems.add(new SelectExpressionItem(new Column("1")));
+        psl.setSelectItems(selectItems);
+        return this.restoreOriginalSql(select.toString(), params);
+    }
+
+    /**
+     * 智能转换成exists查询语句
+     * @param originalSql 原SQL
+     * @return exists查询语句
+     */
+    public String regexExistsParse(final String originalSql) {
+        if (originalSql != null) {
+            if (this.isSelectOne(originalSql)) {
+                return originalSql;
+            }
+            return String.format(originalSql.replaceFirst(DEF_REGEX_SELECT_STR, "$2%s$4$5$6"), "1");
+        }
+        return null;
+    }
+
+    /**
+     * 检查是否为select 1语句
+     * @param originalSql 原SQL
+     * @return boolean
+     */
+    public boolean isSelectOne(final String originalSql) {
+        return originalSql != null && DEF_PATTERN_SELECT_ONE.matcher(originalSql).matches();
+    }
+
+    /**
+     * 替换原SQL语句
+     * @param builder {@link StringBuilder}
+     * @return 占位符参数集合
+     */
+    public Map<Integer, String> replaceOriginalSql(final StringBuilder builder) {
+        String originalSql = builder.toString();
+        final StringBuffer buffer = new StringBuffer(originalSql.length());
+        if (DEF_PATTERN_MATCHER.matcher(originalSql).matches()) {
+            Integer index = 0;
+            final Matcher matcher = DEF_PATTERN_PM.matcher(originalSql);
+            final Map<Integer, String> map = new HashMap<>();
+            while (matcher.find()) {
+                final String placeholder = matcher.group();
+                matcher.appendReplacement(buffer, "?");
+                map.put(index, placeholder);
+                index++;
+            }
+            matcher.appendTail(buffer);
+            if (!map.isEmpty()) {
+                builder.setLength(0);
+                builder.append(buffer);
+                return map;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 还原SQL语句
+     * @param replaceSql 替换的SQL语句
+     * @param params     占位符参数列表
+     * @return SQL语句
+     */
+    public String restoreOriginalSql(final String replaceSql, final Map<Integer, String> params) {
+        if (params != null && !params.isEmpty()) {
+            final StringBuffer buffer = new StringBuffer();
+            final Matcher matcher = DEF_PATTERN_PM_RESTORE.matcher(replaceSql);
+            Integer index = 0;
+            while (matcher.find()) {
+                final String placeholder = params.get(index);
+                matcher.appendReplacement(buffer, placeholder);
+                index++;
+            }
+            matcher.appendTail(buffer);
+            return buffer.toString();
+        }
+        return replaceSql;
     }
 
     /**
