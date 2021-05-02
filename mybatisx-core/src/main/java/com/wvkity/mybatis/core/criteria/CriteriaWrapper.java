@@ -15,6 +15,7 @@
  */
 package com.wvkity.mybatis.core.criteria;
 
+import com.wvkity.mybatis.support.constant.Slot;
 import com.wvkity.mybatis.support.criteria.Criteria;
 
 /**
@@ -26,7 +27,8 @@ import com.wvkity.mybatis.support.criteria.Criteria;
  * @since 1.0.0
  */
 public interface CriteriaWrapper<T, Chain extends CriteriaWrapper<T, Chain>> extends Criteria<T>,
-    CompareWrapper<T, Chain>, RangeWrapper<T, Chain>, FuzzyWrapper<T, Chain>, NullableWrapper<T, Chain>, TemplateWrapper<T, Chain>, NestedWrapper<Chain> {
+    CompareWrapper<T, Chain>, RangeWrapper<T, Chain>, FuzzyWrapper<T, Chain>, NullableWrapper<T, Chain>,
+    TemplateWrapper<T, Chain>, NestedWrapper<Chain> {
 
     /**
      * 纯SQL条件
@@ -37,4 +39,39 @@ public interface CriteriaWrapper<T, Chain extends CriteriaWrapper<T, Chain>> ext
      * @see TemplateWrapper
      */
     Chain nativeCondition(final String condition);
+
+    /**
+     * exists
+     * @param query {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain exists(final QueryWrapper<?, ?> query) {
+        return this.exists(Slot.AND, query);
+    }
+
+    /**
+     * exists
+     * @param slot  {@link Slot}
+     * @param query {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain exists(final Slot slot, final QueryWrapper<?, ?> query);
+
+    /**
+     * not exists
+     * @param query {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain notExists(final QueryWrapper<?, ?> query) {
+        return this.notExists(Slot.AND, query);
+    }
+
+    /**
+     * not exists
+     * @param slot  {@link Slot}
+     * @param query {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain notExists(final Slot slot, final QueryWrapper<?, ?> query);
+
 }

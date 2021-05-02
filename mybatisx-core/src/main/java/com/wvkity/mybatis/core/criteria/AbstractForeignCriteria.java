@@ -171,7 +171,7 @@ public abstract class AbstractForeignCriteria<M, S> extends AbstractQueryCriteri
         builder.append(this.getTableName(false));
         if (this.isHasCondition()) {
             builder.append(" ON ");
-            final String condition = this.segmentManager.getWhereString();
+            final String condition = this.segmentManager.getWhereString().trim();
             if (DEF_PATTERN_AND_OR.matcher(condition).matches()) {
                 builder.append(condition.replaceFirst(DEF_REGEX_AND_OR_STR, "$2"));
             } else {

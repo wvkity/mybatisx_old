@@ -566,9 +566,16 @@ public abstract class AbstractQueryCriteria<T> extends AbstractCriteria<T> imple
 
     @Override
     public AbstractQueryCriteria<T> func(String property, String aliasPrefix, Integer scale) {
-        final Column it = this.findColumn(property);
-        if (Objects.nonNull(it)) {
-            final String column = it.getColumn();
+        final Column it;
+        if (Objects.nonNull((it = this.findColumn(property)))) {
+            this.colFunc(it.getColumn(), aliasPrefix, scale);
+        }
+        return this;
+    }
+
+    @Override
+    public AbstractQueryCriteria<T> colFunc(String column, String aliasPrefix, Integer scale) {
+        if (Objects.isNotBlank(column)) {
             this.func(new Count(this, column, this.toAlias(AggFunc.COUNT, aliasPrefix), false));
             this.func(new Sum(this, column, this.toAlias(AggFunc.SUM, aliasPrefix), scale));
             this.func(new Avg(this, column, this.toAlias(AggFunc.AVG, aliasPrefix), scale));
@@ -579,7 +586,7 @@ public abstract class AbstractQueryCriteria<T> extends AbstractCriteria<T> imple
     }
 
     @Override
-    public AbstractQueryCriteria<T> func(String tableAlias, String column, String aliasPrefix, Integer scale) {
+    public AbstractQueryCriteria<T> colFunc(String tableAlias, String column, String aliasPrefix, Integer scale) {
         if (Objects.isNotBlank(column)) {
             this.func(new Count(tableAlias, column, this.toAlias(AggFunc.COUNT, aliasPrefix), false));
             this.func(new Sum(tableAlias, column, this.toAlias(AggFunc.SUM, aliasPrefix), scale));
@@ -1287,7 +1294,7 @@ public abstract class AbstractQueryCriteria<T> extends AbstractCriteria<T> imple
     @Override
     public String completeString() {
         final String sql = this.intactString();
-        if (DEF_PATTERN_QM.matcher(sql).matches()) {
+        if (DEF_PATTERN_PM.matcher(sql).matches()) {
             return sql.replaceAll("#\\{((?!#\\{).)*}", "?");
         }
         return sql;
