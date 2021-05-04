@@ -33,9 +33,9 @@ import com.wvkity.mybatis.core.expr.TemplateMatch;
 import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
 import com.wvkity.mybatis.core.utils.Placeholders;
 import com.wvkity.mybatis.support.basic.Matched;
-import com.wvkity.mybatis.support.expr.Expression;
 import com.wvkity.mybatis.support.constant.Like;
 import com.wvkity.mybatis.support.constant.Slot;
+import com.wvkity.mybatis.support.expr.Expression;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
@@ -46,6 +46,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * 条件转换器
@@ -56,9 +58,11 @@ import java.util.stream.Collectors;
 public class ConditionConverter {
 
     private final AbstractBasicCriteria<?, ?> criteria;
+    private final ParameterConverter parameterConverter;
 
     public ConditionConverter(AbstractBasicCriteria<?, ?> criteria) {
         this.criteria = criteria;
+        this.parameterConverter = criteria.parameterConverter;
     }
 
     /**
@@ -91,11 +95,11 @@ public class ConditionConverter {
     }
 
     protected String defPlaceholder(final Object... values) {
-        return this.criteria.defPlaceholder(values);
+        return this.parameterConverter.defPlaceholder(values);
     }
 
     protected List<String> defPlaceholders(final Object... values) {
-        return this.criteria.defPlaceholders(values);
+        return this.parameterConverter.defPlaceholders(values);
     }
 
     /**
@@ -180,8 +184,7 @@ public class ConditionConverter {
                 return this.templateExprConvert((AbstractTemplateExpression<?>) expression, column, typeHandler,
                     useJavaType, javaType, jdbcType);
             } else if (expression instanceof StandardNesting) {
-                return this.nestingExprConvert((StandardNesting) expression, column, typeHandler, useJavaType,
-                    javaType, jdbcType);
+                return this.nestingExprConvert((StandardNesting) expression);
             } else if (expression instanceof SpecialExpression) {
                 return this.specialExprConvert((SpecialExpression) expression);
             }
@@ -189,6 +192,16 @@ public class ConditionConverter {
         return null;
     }
 
+    /**
+     * 基本条件表达式转条件对象
+     * @param basic       {@link AbstractBasicCriteria}
+     * @param column      字段名
+     * @param typeHandler 类型处理器类
+     * @param useJavaType 是否拼接JAVA类型
+     * @param javaType    JAVA类型
+     * @param jdbcType    JDBC类型
+     * @return {@link Criterion}
+     */
     protected Criterion basicExprConvert(final AbstractBasicExpression<?> basic, final String column,
                                          final Class<? extends TypeHandler<?>> typeHandler, final boolean useJavaType,
                                          final Class<?> javaType, final JdbcType jdbcType) {
@@ -197,6 +210,16 @@ public class ConditionConverter {
                 useJavaType, javaType, jdbcType, this.defPlaceholder(basic.getValue())));
     }
 
+    /**
+     * between条件表达式转条件对象
+     * @param between     {@link AbstractBetweenExpression}
+     * @param column      字段名
+     * @param typeHandler 类型处理器类
+     * @param useJavaType 是否拼接JAVA类型
+     * @param javaType    JAVA类型
+     * @param jdbcType    JDBC类型
+     * @return {@link Criterion}
+     */
     protected Criterion betweenExprConvert(final AbstractBetweenExpression<?> between, final String column,
                                            final Class<? extends TypeHandler<?>> typeHandler, final boolean useJavaType,
                                            final Class<?> javaType, final JdbcType jdbcType) {
@@ -205,6 +228,16 @@ public class ConditionConverter {
                 javaType, jdbcType, this.defPlaceholders(between.getBegin(), between.getEnd())));
     }
 
+    /**
+     * like条件表达式转条件对象
+     * @param fuzzy       {@link AbstractFuzzyExpression}
+     * @param column      字段名
+     * @param typeHandler 类型处理器类
+     * @param useJavaType 是否拼接JAVA类型
+     * @param javaType    JAVA类型
+     * @param jdbcType    JDBC类型
+     * @return {@link Criterion}
+     */
     protected Criterion fuzzyExprConvert(final AbstractFuzzyExpression<?> fuzzy, final String column,
                                          final Class<? extends TypeHandler<?>> typeHandler, final boolean useJavaType,
                                          final Class<?> javaType, final JdbcType jdbcType) {
@@ -219,6 +252,16 @@ public class ConditionConverter {
         return new Condition(fuzzy.getCriteria(), fuzzy.getAlias(), column, builder.toString());
     }
 
+    /**
+     * in条件表达式转条件对象
+     * @param range       {@link AbstractRangeExpression}
+     * @param column      字段名
+     * @param typeHandler 类型处理器类
+     * @param useJavaType 是否拼接JAVA类型
+     * @param javaType    JAVA类型
+     * @param jdbcType    JDBC类型
+     * @return {@link Criterion}
+     */
     protected Criterion rangeExprConvert(final AbstractRangeExpression<?> range, final String column,
                                          final Class<? extends TypeHandler<?>> typeHandler, final boolean useJavaType,
                                          final Class<?> javaType, final JdbcType jdbcType) {
@@ -227,6 +270,16 @@ public class ConditionConverter {
                 javaType, jdbcType, this.defPlaceholders(range.getValues().toArray(new Object[0]))));
     }
 
+    /**
+     * 模板条件表达式转条件对象
+     * @param template    {@link AbstractTemplateExpression}
+     * @param column      字段名
+     * @param typeHandler 类型处理器类
+     * @param useJavaType 是否拼接JAVA类型
+     * @param javaType    JAVA类型
+     * @param jdbcType    JDBC类型
+     * @return {@link Criterion}
+     */
     protected Criterion templateExprConvert(final AbstractTemplateExpression<?> template, final String column,
                                             final Class<? extends TypeHandler<?>> typeHandler,
                                             final boolean useJavaType,
@@ -245,24 +298,20 @@ public class ConditionConverter {
             }
             switch (match) {
                 case MULTIPLE:
-                    builder.append(Placeholders.format(templateStr, listValues.stream().map(it ->
-                        Scripts.safeJoining(this.defPlaceholder(it),
-                            Scripts.concatIntactTypeArg(typeHandler, useJavaType, javaType, jdbcType)))
-                        .collect(Collectors.toList())));
+                    if (template.getExprMode() == Matched.STANDARD) {
+                        builder.append(Placeholders.format(templateStr, this.parseParams(listValues, typeHandler,
+                            useJavaType, javaType, jdbcType)));
+                    } else {
+                        builder.append(Placeholders.format(templateStr, this.parseParams(listValues)));
+                    }
                     break;
                 case MAP:
-                    builder.append(Placeholders.format(templateStr, mapValues.entrySet().stream()
-                        .collect(Collectors.toMap(Map.Entry::getKey,
-                            it -> Scripts.safeJoining(this.defPlaceholder(it),
-                                Scripts.concatIntactTypeArg(typeHandler, useJavaType, javaType, jdbcType)),
-                            (o, n) -> n, (Supplier<LinkedHashMap<String, Object>>) LinkedHashMap::new))));
+                    builder.append(Placeholders.format(templateStr, this.parseParams(mapValues)));
                     break;
                 default:
                     if (Objects.isNotEmpty(listValues)) {
-                        builder.append(Placeholders.format(templateStr, listValues.stream().map(it ->
-                            Scripts.safeJoining(this.defPlaceholder(it),
-                                Scripts.concatIntactTypeArg(typeHandler, useJavaType, javaType, jdbcType)))
-                            .collect(Collectors.joining(Constants.COMMA_SPACE))));
+                        builder.append(Placeholders.format(templateStr, this.parseParams(listValues, typeHandler,
+                            useJavaType, javaType, jdbcType)));
                     } else {
                         builder.append(Placeholders.format(templateStr,
                             Scripts.safeJoining(this.defPlaceholder(value),
@@ -275,9 +324,12 @@ public class ConditionConverter {
         return null;
     }
 
-    protected Criterion nestingExprConvert(final StandardNesting nesting, final String column,
-                                           final Class<? extends TypeHandler<?>> typeHandler, final boolean useJavaType,
-                                           final Class<?> javaType, final JdbcType jdbcType) {
+    /**
+     * 嵌套条件表达式转条件对象
+     * @param nesting {@link StandardNesting}
+     * @return {@link Criterion}
+     */
+    protected Criterion nestingExprConvert(final StandardNesting nesting) {
         final List<Expression> expressions = nesting.getConditions();
         if (Objects.isNotEmpty(expressions)) {
             final List<Criterion> conditions = expressions.stream().map(this::convert)
@@ -289,9 +341,84 @@ public class ConditionConverter {
         return null;
     }
 
+    /**
+     * 特殊条件表达式转条件对象
+     * @param special {@link SpecialExpression}
+     * @return {@link Criterion}
+     */
     protected Criterion specialExprConvert(final SpecialExpression special) {
         return new SpecialCondition(special.getCriteria(), special.getAlias(), special.getTarget(),
             special.getOtherCriteria(), special.getOtherTableAlias(), special.getOtherTarget(), special.getSymbol(),
             special.getSlot());
     }
+
+    /**
+     * 解析参数值成占位符参数
+     * @param arg 参数值
+     * @return 占位符参数
+     */
+    @SuppressWarnings("unchecked")
+    private Object parseParam(final Object arg) {
+        if (arg == null) {
+            return Constants.DEF_STR_NULL;
+        }
+        final Class<?> clazz = arg.getClass();
+        if (Iterable.class.isAssignableFrom(clazz)) {
+            return this.parseParams((Iterable<?>) arg);
+        } else if (Map.class.isAssignableFrom(clazz)) {
+            return this.parseParams((Map<String, Object>) arg);
+        } else if (clazz.isArray()) {
+            return this.parseParams(Objects.asList((Object[]) arg)).toArray(new Object[0]);
+        } else {
+            return Scripts.safeJoining(this.defPlaceholder(arg));
+        }
+    }
+
+    /**
+     * 解析参数值列表成占位符参数列表
+     * @param args        参数列表
+     * @param typeHandler 类型处理器类
+     * @param useJavaType 是否拼接JAVA类型
+     * @param javaType    JAVA类型
+     * @param jdbcType    JDBC类型
+     * @return 占位符参数列表
+     */
+    private List<Object> parseParams(final Iterable<?> args, final Class<? extends TypeHandler<?>> typeHandler,
+                                     final boolean useJavaType, final Class<?> javaType, final JdbcType jdbcType) {
+        final Stream<?> stream = StreamSupport.stream(args.spliterator(), false);
+        if (Placeholders.isPureType(args)) {
+            return stream.map(it ->
+                Scripts.safeJoining(this.defPlaceholder(it),
+                    Scripts.concatIntactTypeArg(typeHandler, useJavaType, javaType, jdbcType)))
+                .collect(Collectors.toList());
+        } else {
+            return this.parseParams(args);
+        }
+    }
+
+    /**
+     * 解析参数值列表成占位符参数列表
+     * @param args 参数列表
+     * @return 占位符参数列表
+     */
+    private List<Object> parseParams(final Iterable<?> args) {
+        final Stream<?> stream = StreamSupport.stream(args.spliterator(), false);
+        if (Placeholders.isPureType(args)) {
+            return stream.map(it -> Scripts.safeJoining(this.defPlaceholder(it))).collect(Collectors.toList());
+        } else {
+            return stream.map(this::parseParam).collect(Collectors.toList());
+        }
+    }
+
+    /**
+     * 解析参数值列表成占位符参数列表
+     * @param args 参数列表
+     * @return 占位符参数列表
+     */
+    private Map<String, Object> parseParams(final Map<String, Object> args) {
+        return args.entrySet().stream()
+            .collect(Collectors.toMap(Map.Entry::getKey, it -> this.parseParam(it.getValue()),
+                (o, n) -> n, (Supplier<LinkedHashMap<String, Object>>) LinkedHashMap::new));
+    }
+
 }

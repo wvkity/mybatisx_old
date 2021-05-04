@@ -15,15 +15,21 @@
  */
 package com.wvkity.mybatis.core.utils;
 
+import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.core.expr.TemplateMatch;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * 占位符工具
@@ -78,6 +84,10 @@ public final class Placeholders {
      * 数字占位符
      */
     private static final Pattern PLACEHOLDER_MATCHER_DIGIT = Pattern.compile(".*((?<!\\\\)\\?(\\d+)).*");
+    /**
+     * 数字占位符正则表达式字符串
+     */
+    private static final String PLACEHOLDER_REGEX_DIGIT_STR = "((?<!\\\\)\\?(\\d+))";
     /**
      * 数字占位符
      */
@@ -163,11 +173,17 @@ public final class Placeholders {
             String target = template;
             final Matcher matcher;
             if (!isMap) {
-                matcher = PLACEHOLDER_REGEX_DIGIT.matcher(target);
-                while (matcher.find()) {
-                    final int i = toInt(matcher.group(2));
-                    final Object value = (i < 0 || i > size) ? null : args.get(i);
-                    target = replaceFirst(matcher, target, value);
+                // 列表参数且只有一个参数占位符时
+                if (match == TemplateMatch.MULTIPLE && isOnlyOnce(target)) {
+                    final String value = isPureType(args) ? toString(args) : toString(args.get(0));
+                    target = target.replaceAll(PLACEHOLDER_REGEX_DIGIT_STR, value);
+                } else {
+                    matcher = PLACEHOLDER_REGEX_DIGIT.matcher(target);
+                    while (matcher.find()) {
+                        final int i = toInt(matcher.group(2));
+                        final Object value = (i < 0 || i > size) ? null : args.get(i);
+                        target = replaceFirst(matcher, target, value);
+                    }
                 }
             } else {
                 matcher = PLACEHOLDER_REGEX_CHAR.matcher(target);
@@ -183,6 +199,13 @@ public final class Placeholders {
         return template;
     }
 
+    /**
+     * 替换字符串
+     * @param matcher {@link Matcher}
+     * @param target  待替换字符串
+     * @param arg     替换值
+     * @return 替换后的字符串
+     */
     private static String replaceFirst(final Matcher matcher, final String target, final Object arg) {
         final String group = matcher.group();
         final String regex;
@@ -191,11 +214,147 @@ public final class Placeholders {
         } else {
             regex = group;
         }
-        return target.replaceFirst(regex, String.valueOf(arg));
+        return target.replaceFirst(regex, toString(arg));
     }
 
+    /**
+     * 参数转成字符串
+     * @param arg 参数
+     * @return 字符串值
+     */
+    private static String toString(final Object arg) {
+        if (Objects.nonNull(arg)) {
+            final Class<?> clazz = arg.getClass();
+            if (clazz.isArray()) {
+                return Arrays.stream((Object[]) arg).map(it -> it == null ? Constants.DEF_STR_NULL : it.toString())
+                    .collect(Collectors.joining(Constants.COMMA_SPACE));
+            } else if (Iterable.class.isAssignableFrom(clazz)) {
+                return StreamSupport.stream(((Iterable<?>) arg).spliterator(), false).map(it -> it == null ?
+                    Constants.DEF_STR_NULL : it.toString()).collect(Collectors.joining(Constants.COMMA_SPACE));
+            } else if (Map.class.isAssignableFrom(clazz)) {
+                return ((Map<?, ?>) arg).values().stream().map(it -> it == null ?
+                    Constants.DEF_STR_NULL : it.toString()).collect(Collectors.joining(Constants.COMMA_SPACE));
+            } else {
+                return arg.toString();
+            }
+        }
+        return Constants.DEF_STR_NULL;
+    }
+
+    /**
+     * 检查参数列表是否不包含数组、集合
+     * @param args 参数列表
+     * @return boolean
+     */
+    public static boolean isPureType(final Iterable<?> args) {
+        for (Object v : args) {
+            final Class<?> clazz = v.getClass();
+            if (clazz.isArray() || Map.class.isAssignableFrom(clazz) || Iterable.class.isAssignableFrom(clazz)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 检查数字参数占位符是否仅仅出现一次
+     * @param target 字符串
+     * @return boolean
+     */
+    public static boolean isOnlyOnce(final String target) {
+        String ignore = target;
+        int count = 0;
+        final Matcher matcher = PLACEHOLDER_REGEX_DIGIT.matcher(ignore);
+        String history = "";
+        while (matcher.find()) {
+            final String replacement = String.format("\\%s", matcher.group());
+            ignore = target.replaceFirst(replacement, "?");
+            if (!Objects.equals(history, replacement)) {
+                count++;
+                if (count > 1) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 检查数字参数占位符是否仅仅出现一次
+     * @param target 字符串
+     * @return boolean
+     */
+    public static PlaceholderMatcher matcher(final String target) {
+        String ignore = target;
+        int count = 0;
+        final Matcher matcher = PLACEHOLDER_REGEX_DIGIT.matcher(ignore);
+        String history = "";
+        final PlaceholderMatcher pm = new PlaceholderMatcher();
+        while (matcher.find()) {
+            final String replacement = String.format("\\%s", matcher.group());
+            ignore = target.replaceFirst(replacement, "?");
+            if (pm.compare(replacement)) {
+                break;
+            }
+        }
+        return pm;
+    }
+
+    /**
+     * 转成整数
+     * @param target 字符串值
+     * @return 整数
+     */
     private static int toInt(final String target) {
         return Objects.isBlank(target) ? -1 : PATTERN_INTEGER.matcher(target).matches() ? Integer.parseInt(target) : -1;
+    }
+
+    public static class PlaceholderMatcher {
+        /**
+         * 占位符出现次数
+         */
+        private final AtomicInteger placeholderCounter = new AtomicInteger(0);
+        /**
+         * 同一个占位符出现的次数
+         */
+        private final AtomicInteger counter = new AtomicInteger(1);
+        /**
+         * 历史占位符
+         */
+        private final AtomicReference<String> history = new AtomicReference<>("");
+
+        public PlaceholderMatcher() {
+        }
+
+        public boolean compare(final String replacement) {
+            final String source = history.get();
+            if (history.compareAndSet(source, replacement)) {
+                return this.pcIncrement() > 1;
+            } else {
+                this.counter.incrementAndGet();
+            }
+            return false;
+        }
+
+        private int pcIncrement() {
+            return this.placeholderCounter.incrementAndGet();
+        }
+
+        /**
+         * 是否仅仅只有一个占位符
+         * @return boolean
+         */
+        public boolean isSingle() {
+            return this.placeholderCounter.get() != 1;
+        }
+
+        /**
+         * 相同占位符是否仅仅只出现一次
+         * @return boolean
+         */
+        public boolean isOnlyOnce() {
+            return this.counter.get() == 1;
+        }
     }
 
 }
