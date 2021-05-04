@@ -31,11 +31,23 @@ import com.wvkity.mybatis.support.constant.Symbol;
  */
 public class ImmediateNotLike extends AbstractFuzzyExpression<String> {
 
-    private static final long serialVersionUID = -2947044664048234865L;
+        private static final long serialVersionUID = -2947044664048234865L;
 
     public ImmediateNotLike(Criteria<?> criteria, String column, Like like,
                             Character escape, Slot slot, Object value) {
         this.criteria = criteria;
+        this.target = column;
+        this.like = like;
+        this.escape = escape;
+        this.slot = slot;
+        this.value = value;
+        this.symbol = Symbol.LIKE;
+        this.matched = Matched.IMMEDIATE;
+    }
+
+    public ImmediateNotLike(String alias, String column, Like like,
+                            Character escape, Slot slot, Object value) {
+        this.tableAlias = alias;
         this.target = column;
         this.like = like;
         this.escape = escape;

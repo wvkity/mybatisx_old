@@ -42,6 +42,16 @@ public class ImmediateNotBetween extends AbstractBetweenExpression<String> {
         this.end = end;
     }
 
+    public ImmediateNotBetween(String alias, String column, Slot slot, Object begin, Object end) {
+        this.tableAlias = alias;
+        this.target = column;
+        this.slot = slot;
+        this.symbol = Symbol.NOT_BETWEEN;
+        this.matched = Matched.IMMEDIATE;
+        this.begin = begin;
+        this.end = end;
+    }
+
     public static ImmediateNotBetween.Builder create() {
         return new ImmediateNotBetween.Builder();
     }

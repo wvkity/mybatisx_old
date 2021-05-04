@@ -17,6 +17,8 @@ package com.wvkity.mybatis.core.expr;
 
 import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.support.basic.Matched;
+import com.wvkity.mybatis.support.criteria.Criteria;
+import com.wvkity.mybatis.support.expr.Expression;
 
 /**
  * 纯SQL
@@ -47,5 +49,10 @@ public class NativeExpression extends AbstractExpression<String> {
             return new NativeExpression(criterion);
         }
         return null;
+    }
+
+    @Override
+    public Expression setIfNecessary(Criteria<?> criteria) {
+        return this;
     }
 }

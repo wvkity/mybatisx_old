@@ -40,6 +40,14 @@ public class ImmediateNotNull extends AbstractNullableExpression<String> {
         this.matched = Matched.IMMEDIATE;
     }
 
+    public ImmediateNotNull(String alias, String column, Slot slot) {
+        this.tableAlias = alias;
+        this.target = column;
+        this.slot = slot;
+        this.symbol = Symbol.NOT_NULL;
+        this.matched = Matched.IMMEDIATE;
+    }
+
     public static ImmediateNotNull.Builder create() {
         return new ImmediateNotNull.Builder();
     }

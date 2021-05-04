@@ -45,6 +45,18 @@ public class ImmediateLike extends AbstractFuzzyExpression<String> {
         this.matched = Matched.IMMEDIATE;
     }
 
+    public ImmediateLike(String alias, String column, Like like,
+                         Character escape, Slot slot, Object value) {
+        this.tableAlias = alias;
+        this.target = column;
+        this.like = like;
+        this.escape = escape;
+        this.slot = slot;
+        this.value = value;
+        this.symbol = Symbol.LIKE;
+        this.matched = Matched.IMMEDIATE;
+    }
+
     public static ImmediateLike.Builder create() {
         return new ImmediateLike.Builder();
     }

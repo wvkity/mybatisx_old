@@ -39,6 +39,14 @@ public class ImmediateLessThanOrEqual extends AbstractBasicExpression<String> {
         this.value = value;
     }
 
+    public ImmediateLessThanOrEqual(String alias, String column, Slot slot, Object value) {
+        this.tableAlias = alias;
+        this.target = column;
+        this.slot = slot;
+        this.symbol = Symbol.LE;
+        this.value = value;
+    }
+
     public static ImmediateLessThanOrEqual.Builder create() {
         return new ImmediateLessThanOrEqual.Builder();
     }

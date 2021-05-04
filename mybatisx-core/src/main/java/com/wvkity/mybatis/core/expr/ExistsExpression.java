@@ -19,6 +19,8 @@ import com.wvkity.mybatis.core.criteria.QueryWrapper;
 import com.wvkity.mybatis.support.basic.Matched;
 import com.wvkity.mybatis.support.constant.Slot;
 import com.wvkity.mybatis.support.constant.Symbol;
+import com.wvkity.mybatis.support.criteria.Criteria;
+import com.wvkity.mybatis.support.expr.Expression;
 
 /**
  * EXISTS条件表达式
@@ -41,4 +43,8 @@ public class ExistsExpression extends AbstractExpression<String> {
         this.matched = Matched.EXISTS;
     }
 
+    @Override
+    public Expression setIfNecessary(Criteria<?> criteria) {
+        return this;
+    }
 }

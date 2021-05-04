@@ -41,6 +41,15 @@ public class ImmediateNotEqual extends AbstractBasicExpression<String> {
         this.value = value;
     }
 
+    public ImmediateNotEqual(String alias, String column, Slot slot, Object value) {
+        this.tableAlias = alias;
+        this.target = column;
+        this.slot = slot;
+        this.symbol = Symbol.NE;
+        this.matched = Matched.IMMEDIATE;
+        this.value = value;
+    }
+
     public static ImmediateNotEqual.Builder create() {
         return new ImmediateNotEqual.Builder();
     }

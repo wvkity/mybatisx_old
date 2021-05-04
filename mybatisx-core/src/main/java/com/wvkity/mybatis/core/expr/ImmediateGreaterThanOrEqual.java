@@ -41,6 +41,15 @@ public class ImmediateGreaterThanOrEqual extends AbstractBasicExpression<String>
         this.value = value;
     }
 
+    public ImmediateGreaterThanOrEqual(String alias, String column, Slot slot, Object value) {
+        this.tableAlias = alias;
+        this.target = column;
+        this.slot = slot;
+        this.symbol = Symbol.GE;
+        this.matched = Matched.IMMEDIATE;
+        this.value = value;
+    }
+
     public static ImmediateGreaterThanOrEqual.Builder create() {
         return new ImmediateGreaterThanOrEqual.Builder();
     }

@@ -34,7 +34,7 @@ public class StandardNotIn extends AbstractRangeExpression<String> {
 
     private static final long serialVersionUID = 2448932045855706827L;
 
-    public StandardNotIn(Criteria<?> criteria, String property, Slot slot, Collection<Object> values) {
+    public StandardNotIn(Criteria<?> criteria, String property, Slot slot, Collection<?> values) {
         this.criteria = criteria;
         this.target = property;
         this.slot = slot;

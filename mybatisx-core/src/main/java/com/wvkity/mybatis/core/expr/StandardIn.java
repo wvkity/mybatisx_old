@@ -34,7 +34,7 @@ public class StandardIn extends AbstractRangeExpression<String> {
 
     private static final long serialVersionUID = 5462592687934802949L;
 
-    public StandardIn(Criteria<?> criteria, String property, Slot slot, Collection<Object> values) {
+    public StandardIn(Criteria<?> criteria, String property, Slot slot, Collection<?> values) {
         this.criteria = criteria;
         this.target = property;
         this.slot = slot;

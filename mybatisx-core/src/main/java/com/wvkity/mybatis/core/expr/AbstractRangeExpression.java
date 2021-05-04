@@ -31,9 +31,9 @@ public abstract class AbstractRangeExpression<E> extends AbstractExpression<E> {
     /**
      * 多个值
      */
-    protected Collection<Object> values;
+    protected Collection<?> values;
 
-    public Collection<Object> getValues() {
+    public Collection<?> getValues() {
         return values;
     }
 }

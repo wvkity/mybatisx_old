@@ -41,6 +41,15 @@ public class ImmediateLessThan extends AbstractBasicExpression<String> {
         this.value = value;
     }
 
+    public ImmediateLessThan(String alias, String column, Slot slot, Object value) {
+        this.tableAlias = alias;
+        this.target = column;
+        this.slot = slot;
+        this.symbol = Symbol.LT;
+        this.matched = Matched.IMMEDIATE;
+        this.value = value;
+    }
+
     public static ImmediateLessThan.Builder create() {
         return new ImmediateLessThan.Builder();
     }
