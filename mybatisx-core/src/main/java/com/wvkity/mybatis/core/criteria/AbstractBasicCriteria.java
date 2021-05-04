@@ -525,9 +525,8 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public <V> Chain notIn(Slot slot, Property<T, V> property, Collection<V> values) {
-        return this.add(new StandardNotIn(this, this.convert(property), slot, (Collection<Object>) values));
+        return this.add(new StandardNotIn(this, this.convert(property), slot, values));
     }
 
     @Override
