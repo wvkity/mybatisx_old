@@ -19,6 +19,7 @@ import com.wvkity.mybatis.support.expr.Expression;
 import com.wvkity.mybatis.support.segment.Fragment;
 
 import java.util.Collection;
+import java.util.function.Consumer;
 
 /**
  * 条件
@@ -52,6 +53,13 @@ public interface Criteria<T> extends Fragment {
      * @return boolean
      */
     boolean isStrict();
+
+    /**
+     * 添加{@link Expression}
+     * @param action {@link Consumer}
+     * @return {@link Criteria}
+     */
+    Criteria<T> where(final Consumer<Criteria<T>> action);
 
     /**
      * 添加多个{@link Expression}
