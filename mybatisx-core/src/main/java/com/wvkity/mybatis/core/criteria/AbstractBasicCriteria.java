@@ -940,7 +940,7 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
      * @param column 列名
      * @return {@link Column}
      */
-    public Column findOrgColumn(final String column) {
+    protected Column findOrgColumn(final String column) {
         return this.search.findOrgColumn(column);
     }
 
