@@ -32,6 +32,9 @@ public class SubQuery<S> extends AbstractSubCriteria<S> {
 
     private static final long serialVersionUID = 2456566849505666044L;
 
+    private SubQuery() {
+    }
+
     public <R> SubQuery(AbstractQueryCriteria<R> root, Class<S> entity) {
         this(root, entity, null);
     }
@@ -41,6 +44,7 @@ public class SubQuery<S> extends AbstractSubCriteria<S> {
         this.entityClass = entity;
         this.parameterSequence = root.parameterSequence;
         this.parameterValueMapping = root.parameterValueMapping;
+        this.parameterConverter = master.parameterConverter;
         this.notMatchingWithThrows = root.notMatchingWithThrows;
         this.tableAliasSequence = root.tableAliasSequence;
         this.useAlias = root.useAlias;
@@ -48,11 +52,14 @@ public class SubQuery<S> extends AbstractSubCriteria<S> {
         this.defTableAlias = DEF_TABLE_ALIAS_PREFIX + this.tableAliasSequence.incrementAndGet();
         this.conditionConverter = new ConditionConverter(this);
         this.segmentManager = new StandardFragmentManager(this);
+        this.search = new ColumnSearch(this);
     }
 
     @Override
     protected SubQuery<S> newInstance() {
-        final SubQuery<S> instance = new SubQuery<>(this.master, this.entityClass);
+        final SubQuery<S> instance = new SubQuery<>();
+        instance.master = this.master;
+        instance.entityClass = this.entityClass;
         instance.clone(this);
         return instance;
     }

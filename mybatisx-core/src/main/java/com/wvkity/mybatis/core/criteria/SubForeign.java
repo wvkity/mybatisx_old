@@ -34,6 +34,9 @@ public class SubForeign<M, S> extends AbstractSubForeignCriteria<M, S> {
 
     private static final long serialVersionUID = -6562177253169034430L;
 
+    private SubForeign() {
+    }
+
     public SubForeign(AbstractQueryCriteria<M> master, AbstractSubCriteria<S> subQuery, Join join) {
         this(master, subQuery, join, null);
     }
@@ -45,6 +48,7 @@ public class SubForeign<M, S> extends AbstractSubForeignCriteria<M, S> {
         this.join = join;
         this.parameterSequence = master.parameterSequence;
         this.parameterValueMapping = master.parameterValueMapping;
+        this.parameterConverter = master.parameterConverter;
         this.notMatchingWithThrows = master.notMatchingWithThrows;
         this.tableAliasSequence = master.tableAliasSequence;
         this.useAlias = master.useAlias;
@@ -52,6 +56,7 @@ public class SubForeign<M, S> extends AbstractSubForeignCriteria<M, S> {
         this.defTableAlias = DEF_TABLE_ALIAS_PREFIX + this.tableAliasSequence.incrementAndGet();
         this.conditionConverter = new ConditionConverter(this);
         this.segmentManager = new StandardFragmentManager(this);
+        this.search = new ColumnSearch(this);
     }
 
     public AbstractSubCriteria<S> getSubQuery() {
@@ -60,7 +65,11 @@ public class SubForeign<M, S> extends AbstractSubForeignCriteria<M, S> {
 
     @Override
     protected SubForeign<M, S> newInstance() {
-        final SubForeign<M, S> instance = new SubForeign<>(this.master, this.subQuery, this.join);
+        final SubForeign<M, S> instance = new SubForeign<>();
+        instance.master = this.master;
+        instance.subQuery = this.subQuery;
+        instance.entityClass= this.entityClass;
+        instance.join = join;
         instance.clone(this);
         return instance;
     }

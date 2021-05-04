@@ -30,6 +30,9 @@ public class Update<T> extends AbstractUpdateCriteria<T> {
 
     private static final long serialVersionUID = -5656859888218457055L;
 
+    private Update() {
+    }
+
     public Update(final Class<T> entityClass) {
         this.entityClass = entityClass;
         this.initialize(null);
@@ -37,7 +40,8 @@ public class Update<T> extends AbstractUpdateCriteria<T> {
 
     @Override
     protected Update<T> newInstance() {
-        final Update<T> instance = new Update<>(this.entityClass);
+        final Update<T> instance = new Update<>();
+        instance.entityClass = this.entityClass;
         instance.clone(this);
         return instance;
     }

@@ -32,6 +32,9 @@ public class NestedSubQuery<R> extends AbstractNestedSubCriteria<R> {
 
     private static final long serialVersionUID = 5220695490790534834L;
 
+    private NestedSubQuery() {
+    }
+
     public NestedSubQuery(final AbstractQueryCriteria<R> root) {
         this(root, null);
     }
@@ -41,6 +44,7 @@ public class NestedSubQuery<R> extends AbstractNestedSubCriteria<R> {
         this.entityClass = root.getEntityClass();
         this.parameterSequence = root.parameterSequence;
         this.parameterValueMapping = root.parameterValueMapping;
+        this.parameterConverter = root.parameterConverter;
         this.notMatchingWithThrows = root.notMatchingWithThrows;
         this.tableAliasSequence = root.tableAliasSequence;
         this.useAlias = root.useAlias;
@@ -48,12 +52,14 @@ public class NestedSubQuery<R> extends AbstractNestedSubCriteria<R> {
         this.defTableAlias = DEF_TABLE_ALIAS_PREFIX + this.tableAliasSequence.incrementAndGet();
         this.conditionConverter = new ConditionConverter(this);
         this.segmentManager = new StandardFragmentManager(this);
+        this.search = new ColumnSearch(this);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected NestedSubQuery<R> newInstance() {
-        final NestedSubQuery<R> instance = new NestedSubQuery<>((AbstractQueryCriteria<R>) this.master);
+        final NestedSubQuery<R> instance = new NestedSubQuery<>();
+        instance.master = this.master;
+        instance.entityClass = this.entityClass;
         instance.clone(this);
         return instance;
     }

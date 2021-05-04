@@ -34,6 +34,9 @@ public class Foreign<M, S> extends AbstractForeignCriteria<M, S> {
 
     private static final long serialVersionUID = -3734792213998600471L;
 
+    private Foreign() {
+    }
+
     public Foreign(final AbstractQueryCriteria<M> master, final Class<S> entity,
                    final Join join) {
         this(master, entity, join, null);
@@ -46,6 +49,7 @@ public class Foreign<M, S> extends AbstractForeignCriteria<M, S> {
         this.join = join;
         this.parameterSequence = master.parameterSequence;
         this.parameterValueMapping = master.parameterValueMapping;
+        this.parameterConverter = master.parameterConverter;
         this.notMatchingWithThrows = master.notMatchingWithThrows;
         this.tableAliasSequence = master.tableAliasSequence;
         this.useAlias = master.useAlias;
@@ -53,11 +57,15 @@ public class Foreign<M, S> extends AbstractForeignCriteria<M, S> {
         this.defTableAlias = DEF_TABLE_ALIAS_PREFIX + this.tableAliasSequence.incrementAndGet();
         this.conditionConverter = new ConditionConverter(this);
         this.segmentManager = new StandardFragmentManager(this);
+        this.search = new ColumnSearch(this);
     }
 
     @Override
     protected Foreign<M, S> newInstance() {
-        final Foreign<M, S> instance = new Foreign<>(this.master, this.entityClass, this.join);
+        final Foreign<M, S> instance = new Foreign<>();
+        instance.master = this.master;
+        instance.entityClass = this.entityClass;
+        instance.join = this.join;
         instance.clone(this);
         return instance;
     }

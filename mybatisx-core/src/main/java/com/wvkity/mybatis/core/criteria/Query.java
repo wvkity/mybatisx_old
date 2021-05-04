@@ -30,6 +30,9 @@ public class Query<T> extends AbstractQueryCriteria<T> {
 
     private static final long serialVersionUID = -3270889922571718841L;
 
+    private Query() {
+    }
+
     public Query(final Class<T> entityClass) {
         this.entityClass = entityClass;
         this.initialize(null);
@@ -43,7 +46,8 @@ public class Query<T> extends AbstractQueryCriteria<T> {
 
     @Override
     protected Query<T> newInstance() {
-        final Query<T> instance = new Query<>(this.entityClass);
+        final Query<T> instance = new Query<>();
+        instance.entityClass = this.entityClass;
         instance.clone(this);
         return instance;
     }

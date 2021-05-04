@@ -16,7 +16,6 @@
 package com.wvkity.mybatis.core.criteria;
 
 import com.wvkity.mybatis.basic.constant.Constants;
-import com.wvkity.mybatis.basic.exception.MyBatisException;
 import com.wvkity.mybatis.basic.immutable.ImmutableLinkedMap;
 import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.metadata.Table;
@@ -59,8 +58,6 @@ import com.wvkity.mybatis.core.expr.StandardNotNull;
 import com.wvkity.mybatis.core.expr.StandardNull;
 import com.wvkity.mybatis.core.expr.StandardTemplate;
 import com.wvkity.mybatis.core.expr.TemplateMatch;
-import com.wvkity.mybatis.core.invoke.SerializedLambda;
-import com.wvkity.mybatis.core.property.PropertiesMappingCache;
 import com.wvkity.mybatis.core.property.Property;
 import com.wvkity.mybatis.support.constant.Like;
 import com.wvkity.mybatis.support.constant.Slot;
@@ -70,10 +67,7 @@ import com.wvkity.mybatis.support.helper.TableHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -81,9 +75,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * 抽象条件
@@ -154,9 +148,17 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
      */
     protected Class<T> entityClass;
     /**
+     * 参数序列
+     */
+    protected AtomicInteger parameterSequence;
+    /**
      * 参数值映射
      */
     protected Map<String, Object> parameterValueMapping;
+    /**
+     * 参数转换器
+     */
+    protected ParameterConverter parameterConverter;
     /**
      * SQL片段管理器
      */
@@ -169,10 +171,6 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
      * 条件片段
      */
     protected String whereSegment;
-    /**
-     * 参数序列
-     */
-    protected AtomicInteger parameterSequence;
     /**
      * 属性不匹配是否抛出异常(查找失败)
      */
@@ -205,6 +203,10 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
      * 条件解析器
      */
     protected ConditionConverter conditionConverter;
+    /**
+     * 字段查找工具
+     */
+    protected ColumnSearch search;
 
     // endregion
 
@@ -213,16 +215,18 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
      * @param alias 表别名
      */
     protected void initialize(final String alias) {
-        this.parameterValueMapping = new ConcurrentHashMap<>(16);
+        final boolean hasAlias = Objects.isNotBlank(alias);
         this.parameterSequence = new AtomicInteger(0);
+        this.parameterValueMapping = new ConcurrentHashMap<>(16);
+        this.parameterConverter = new ParameterConverter(this.parameterSequence, this.parameterValueMapping);
         this.notMatchingWithThrows = new AtomicBoolean(true);
         this.tableAliasSequence = new AtomicInteger(0);
-        final boolean hasAlias = Objects.isNotBlank(alias);
         this.useAlias = new AtomicBoolean(hasAlias);
         this.tableAliasRef = new AtomicReference<>(hasAlias ? alias : Constants.EMPTY);
         this.defTableAlias = DEF_TABLE_ALIAS_PREFIX + this.tableAliasSequence.incrementAndGet();
         this.conditionConverter = new ConditionConverter(this);
         this.segmentManager = new StandardFragmentManager(this);
+        this.search = new ColumnSearch(this);
     }
 
     // region Add criterion methods
@@ -233,7 +237,18 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
      * @return {@link Chain}
      */
     protected Chain add(final Expression expression) {
-        Optional.ofNullable(this.conditionConverter.convert(expression)).ifPresent(this.segmentManager::where);
+        Optional.ofNullable(expression).map(it -> {
+            it.setIfNecessary(this);
+            return this.conditionConverter.convert(expression);
+        }).ifPresent(this.segmentManager::where);
+        return this.context;
+    }
+
+    @Override
+    public Chain where(Consumer<Criteria<T>> action) {
+        if (Objects.nonNull(action)) {
+            action.accept(this);
+        }
         return this.context;
     }
 
@@ -397,7 +412,7 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     @Override
     public Chain ce(AbstractCriteria<?> otherCriteria, String otherProperty) {
         final Column id = this.getId();
-        final Column column = otherCriteria.getColumn(otherProperty);
+        final Column column = otherCriteria.findColumn(otherProperty);
         if (id != null && column != null) {
             this.add(new SpecialExpression(this, id.getColumn(), otherCriteria, column.getColumn()));
         }
@@ -495,18 +510,17 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     // region Range conditions
 
     @Override
-    @SuppressWarnings("unchecked")
     public <V> Chain in(Slot slot, Property<T, V> property, Collection<V> values) {
-        return this.add(new StandardIn(this, this.convert(property), slot, (Collection<Object>) values));
+        return this.add(new StandardIn(this, this.convert(property), slot, values));
     }
 
     @Override
-    public Chain in(Slot slot, String property, Collection<Object> values) {
+    public Chain in(Slot slot, String property, Collection<?> values) {
         return this.add(new StandardIn(this, property, slot, values));
     }
 
     @Override
-    public Chain colIn(Slot slot, String column, Collection<Object> values) {
+    public Chain colIn(Slot slot, String column, Collection<?> values) {
         return this.add(new ImmediateIn(this, column, slot, values));
     }
 
@@ -517,12 +531,12 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     }
 
     @Override
-    public Chain notIn(Slot slot, String property, Collection<Object> values) {
+    public Chain notIn(Slot slot, String property, Collection<?> values) {
         return this.add(new StandardNotIn(this, property, slot, values));
     }
 
     @Override
-    public Chain colNotIn(Slot slot, String column, Collection<Object> values) {
+    public Chain colNotIn(Slot slot, String column, Collection<?> values) {
         return this.add(new ImmediateNotIn(this, column, slot, values));
     }
 
@@ -647,7 +661,6 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
         }
         return this.context;
     }
-
 
     // endregion
 
@@ -819,13 +832,17 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     protected void clone(final Chain source, final Chain target) {
         if (target != null) {
             if (source != null) {
-                target.defTableAlias = source.defTableAlias;
+                target.parameterSequence = source.parameterSequence;
+                target.parameterValueMapping = source.parameterValueMapping;
+                target.parameterConverter = source.parameterConverter;
+                target.notMatchingWithThrows = source.notMatchingWithThrows;
                 target.tableAliasSequence = source.tableAliasSequence;
                 target.useAlias = source.useAlias;
                 target.tableAliasRef = source.tableAliasRef;
-                target.notMatchingWithThrows = source.notMatchingWithThrows;
-                target.parameterSequence = source.parameterSequence;
-                target.parameterValueMapping = source.parameterValueMapping;
+                target.defTableAlias = source.defTableAlias;
+                target.conditionConverter = new ConditionConverter(target);
+                target.segmentManager = new StandardFragmentManager(target);
+                target.search = new ColumnSearch(target);
             }
         }
     }
@@ -852,94 +869,6 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     }
 
     // region Placeholder methods
-
-    /**
-     * 默认参数值转占位符
-     * @param args 参数列表
-     * @return SQL字符串
-     */
-    protected String defPlaceholder(final Object... args) {
-        return this.placeholder(DEF_PARAMETER_PLACEHOLDER_ZERO, true, args);
-    }
-
-    /**
-     * 默认参数值转占位符
-     * @param args 参数列表
-     * @return SQL字符串
-     */
-    protected List<String> defPlaceholders(final Object... args) {
-        return this.defPlaceholders(DEF_PARAMETER_PLACEHOLDER_ZERO, args);
-    }
-
-    /**
-     * 默认参数值转占位符
-     * @param args 参数集合
-     * @return SQL字符串
-     */
-    protected List<String> defPlaceholders(final Collection<Object> args) {
-        return this.placeholder(DEF_PARAMETER_PLACEHOLDER_ZERO, args);
-    }
-
-    /**
-     * 默认参数值转占位符
-     * @param args 参数集合
-     * @return SQL字符串
-     */
-    protected Map<String, String> defPlaceHolders(final Map<String, Object> args) {
-        return this.placeholder(DEF_PARAMETER_PLACEHOLDER_ZERO, args);
-    }
-
-    /**
-     * 参数值转占位符
-     * @param template 模板
-     * @param args     参数列表
-     * @return SQL字符串
-     */
-    protected List<String> defPlaceholders(final String template, final Object... args) {
-        return this.placeholder(template, Arrays.asList(args));
-    }
-
-    protected String placeholder(String source, boolean format, Object... args) {
-        if (Objects.isBlank(source)) {
-            return null;
-        }
-        if (format && !Objects.isEmpty(args)) {
-            final int size = args.length;
-            String template = source;
-            for (int i = 0; i < size; i++) {
-                final String paramName = DEF_PARAMETER_KEY_PREFIX + this.parameterSequence.incrementAndGet();
-                template = template.replace("{" + i + "}",
-                    String.format(DEF_PARAMETER_VALUE_MAPPING, DEF_PARAMETER_ALIAS, paramName));
-                this.parameterValueMapping.put(paramName, args[i]);
-            }
-            return template;
-        }
-        return source;
-    }
-
-    protected Map<String, String> placeholder(String source, Map<String, Object> args) {
-        if (Objects.isNotBlank(source) && Objects.isNotEmpty(args)) {
-            final Map<String, String> newArgs = new HashMap<>(args.size());
-            for (Map.Entry<String, Object> entry: args.entrySet()) {
-                newArgs.put(entry.getKey(), this.defPlaceholder(source, true, entry.getValue()));
-            }
-            return newArgs;
-        }
-        return new HashMap<>(0);
-    }
-
-    protected List<String> placeholder(String source, Collection<Object> args) {
-        if (Objects.isNotBlank(source) && Objects.isNotEmpty(args)) {
-            return args.stream().map(it -> {
-                final String paramName = DEF_PARAMETER_KEY_PREFIX + this.parameterSequence.incrementAndGet();
-                final Object value = it == null ? "null" : it;
-                this.parameterValueMapping.put(paramName, value);
-                return source.replace(DEF_PARAMETER_PLACEHOLDER_ZERO,
-                    String.format(DEF_PARAMETER_VALUE_MAPPING, DEF_PARAMETER_ALIAS, paramName));
-            }).collect(Collectors.toList());
-        }
-        return null;
-    }
 
     // endregion
 
@@ -972,15 +901,48 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     }
 
     /**
+     * lambda属性转字符串属性
+     * @param property lambda属性
+     * @return 字符串属性
+     */
+    protected String convert(final Property<?, ?> property) {
+        return this.search.convert(property);
+    }
+
+    /**
      * lambda属性转成字符串属性
      * @param properties lambda属性列表
      * @return 属性列表
      */
-    protected List<String> convert(final List<Property<T, ?>> properties) {
-        if (Objects.isNotEmpty(properties)) {
-            return properties.stream().filter(Objects::nonNull).map(this::convert).collect(Collectors.toList());
-        }
-        return new ArrayList<>(0);
+    protected List<String> convert(final List<Property<?, ?>> properties) {
+        return this.search.convert(properties);
+    }
+
+    /**
+     * 根据{@link Property}查找{@link Column}对象
+     * @param property {@link Property}
+     * @return {@link Column}对象
+     */
+    protected Column findColumn(final Property<?, ?> property) {
+        return this.search.findColumn(property);
+    }
+
+    /**
+     * 根据属性查找字段信息
+     * @param property 属性
+     * @return {@link Column}
+     */
+    protected Column findColumn(final String property) {
+        return this.search.findColumn(property);
+    }
+
+    /**
+     * 根据列名获取{@link Column}对象
+     * @param column 列名
+     * @return {@link Column}
+     */
+    public Column findOrgColumn(final String column) {
+        return this.search.findOrgColumn(column);
     }
 
     public Map<String, Object> getParameterValueMapping() {
@@ -1038,114 +1000,4 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
 
     // endregion
 
-    // region other methods
-
-    /**
-     * 根据{@link Property}查找{@link Column}对象
-     * @param property {@link Property}
-     * @return {@link Column}对象
-     */
-    protected Column findColumn(final Property<?, ?> property) {
-        return getColumn(PropertiesMappingCache.parse(property));
-    }
-
-    /**
-     * 根据属性名查找{@link Column}对象
-     * @param property 属性名
-     * @return {@link Column}对象
-     */
-    protected Column findColumn(final String property) {
-        return this.getColumn(property);
-    }
-
-    /**
-     * 根据{@link SerializedLambda}获取{@link Column}对象
-     * @param property {@link SerializedLambda}
-     * @return {@link Column}对象
-     */
-    protected Column getColumn(final SerializedLambda property) {
-        return getColumn(methodToProperty(property.getImplMethodName()));
-    }
-
-    /**
-     * 根据属性获取{@link Column}对象
-     * @param property 属性
-     * @return {@link Column}对象
-     */
-    protected Column getColumn(final String property) {
-        if (Objects.isBlank(property)) {
-            return null;
-        }
-        final Column column = PropertiesMappingCache.getColumn(this.entityClass, property);
-        if (column == null) {
-            if (this.isStrict()) {
-                throw new MyBatisException("The field mapping information for the entity class(" +
-                    this.entityClass.getName() + ") cannot be found based on the `" + property + "` " +
-                    "attribute. Check to see if the attribute exists or is decorated using the @Transient " +
-                    "annotation.");
-            } else {
-                log.warn("The field mapping information for the entity class({}) cannot be found based on the `{}` " +
-                    "attribute. Check to see if the attribute exists or is decorated using the @Transient " +
-                    "annotation.", this.entityClass.getName(), property);
-            }
-        }
-        return column;
-    }
-
-    /**
-     * 根据列名获取{@link Column}对象
-     * @param column 列名
-     * @return {@link Column}
-     */
-    protected Column findOrgColumn(final String column) {
-        if (Objects.isBlank(column)) {
-            return null;
-        }
-        final Column col = TableHelper.getOrgColumn(this.entityClass, column);
-        if (col == null) {
-            if (this.isStrict()) {
-                throw new MyBatisException("The column mapping information for the entity class(" +
-                    this.entityClass.getName() + ") cannot be found based on the `" + column + "` " +
-                    ". Check to see if the column exists or if the corresponding property of the entity " +
-                    "class is decorated using the @Transient annotation.");
-            } else {
-                log.warn("The column mapping information for the entity class(" +
-                    this.entityClass.getName() + ") cannot be found based on the `" + column + "` " +
-                    ". Check to see if the column exists or if the corresponding property of the entity " +
-                    "class is decorated using the @Transient annotation.");
-            }
-        }
-        return col;
-    }
-
-    /**
-     * lambda属性转成字符串属性
-     * @param property 属性
-     * @return 属性
-     */
-    protected String convert(Property<T, ?> property) {
-        return methodToProperty(PropertiesMappingCache.parse(property).getImplMethodName());
-    }
-
-    /**
-     * 根据方法获取属性名
-     * @param property {@link Property}
-     * @param <E>      泛型类型
-     * @param <V>      属性类型
-     * @return 属性名
-     */
-    protected <E, V> String methodToProperty(final Property<E, V> property) {
-        return methodToProperty(PropertiesMappingCache.parse(property).getImplMethodName());
-    }
-
-    /**
-     * 根据方法名获取属性名
-     * @param method 方法名
-     * @return 属性名
-     */
-    protected String methodToProperty(final String method) {
-        return PropertiesMappingCache.methodToProperty(method);
-    }
-
-    // endregion
 }

@@ -140,11 +140,11 @@ public abstract class AbstractUpdateCriteria<T> extends AbstractCriteria<T> impl
             final List<String> segments = new ArrayList<>();
             if (isNotEmptyOfWrap) {
                 this.updateColumnsOfWrap.forEach((c, v) -> segments.add(Scripts.convertToConditionArg(Symbol.EQ,
-                    Slot.NONE, null, c, this.defPlaceholder(v))));
+                    Slot.NONE, null, c, this.parameterConverter.defPlaceholder(v))));
             }
             if (isNotEmptyOfOrg) {
                 this.updateColumnsOfOrg.forEach((c, v) -> segments.add(Scripts.convertToConditionArg(Symbol.EQ,
-                    Slot.NONE, null, c, this.defPlaceholder(v))));
+                    Slot.NONE, null, c, this.parameterConverter.defPlaceholder(v))));
             }
             return String.join(Constants.COMMA_SPACE, segments);
         }

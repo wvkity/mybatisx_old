@@ -105,7 +105,7 @@ public interface RangeWrapper<T, Chain extends RangeWrapper<T, Chain>> {
      * @param values   多个值
      * @return {@link Chain}
      */
-    default Chain in(final String property, final Collection<Object> values) {
+    default Chain in(final String property, final Collection<?> values) {
         return in(Slot.AND, property, values);
     }
 
@@ -116,7 +116,7 @@ public interface RangeWrapper<T, Chain extends RangeWrapper<T, Chain>> {
      * @param values   多个值
      * @return {@link Chain}
      */
-    Chain in(final Slot slot, final String property, final Collection<Object> values);
+    Chain in(final Slot slot, final String property, final Collection<?> values);
 
     /**
      * IN
@@ -145,7 +145,7 @@ public interface RangeWrapper<T, Chain extends RangeWrapper<T, Chain>> {
      * @param values 多个值
      * @return {@link Chain}
      */
-    default Chain colIn(final String column, final Collection<Object> values) {
+    default Chain colIn(final String column, final Collection<?> values) {
         return colIn(Slot.AND, column, values);
     }
 
@@ -156,7 +156,7 @@ public interface RangeWrapper<T, Chain extends RangeWrapper<T, Chain>> {
      * @param values 多个值
      * @return {@link Chain}
      */
-    Chain colIn(final Slot slot, final String column, final Collection<Object> values);
+    Chain colIn(final Slot slot, final String column, final Collection<?> values);
 
     // endregion
 
@@ -235,7 +235,7 @@ public interface RangeWrapper<T, Chain extends RangeWrapper<T, Chain>> {
      * @param values   多个值
      * @return {@link Chain}
      */
-    default Chain notIn(final String property, final Collection<Object> values) {
+    default Chain notIn(final String property, final Collection<?> values) {
         return notIn(Slot.AND, property, values);
     }
 
@@ -246,7 +246,7 @@ public interface RangeWrapper<T, Chain extends RangeWrapper<T, Chain>> {
      * @param values   多个值
      * @return {@link Chain}
      */
-    Chain notIn(final Slot slot, final String property, final Collection<Object> values);
+    Chain notIn(final Slot slot, final String property, final Collection<?> values);
 
     /**
      * NOT IN
@@ -275,7 +275,7 @@ public interface RangeWrapper<T, Chain extends RangeWrapper<T, Chain>> {
      * @param values 多个值
      * @return {@link Chain}
      */
-    default Chain colNotIn(final String column, final Collection<Object> values) {
+    default Chain colNotIn(final String column, final Collection<?> values) {
         return colNotIn(Slot.AND, column, values);
     }
 
@@ -286,7 +286,7 @@ public interface RangeWrapper<T, Chain extends RangeWrapper<T, Chain>> {
      * @param values 多个值
      * @return {@link Chain}
      */
-    Chain colNotIn(final Slot slot, final String column, final Collection<Object> values);
+    Chain colNotIn(final Slot slot, final String column, final Collection<?> values);
 
     // endregion
 

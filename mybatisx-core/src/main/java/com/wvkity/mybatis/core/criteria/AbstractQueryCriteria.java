@@ -731,7 +731,7 @@ public abstract class AbstractQueryCriteria<T> extends AbstractCriteria<T> imple
     public AbstractQueryCriteria<T> having(Slot slot, Function function, Object value) {
         if (Objects.nonNull(function)) {
             this.having(new SingleHaving(this, function, slot,
-                this.placeholder(DEF_PARAMETER_PLACEHOLDER_SAFE, true, value)));
+                this.parameterConverter.placeholder(DEF_PARAMETER_PLACEHOLDER_SAFE, true, value)));
         }
         return this;
     }
@@ -749,7 +749,7 @@ public abstract class AbstractQueryCriteria<T> extends AbstractCriteria<T> imple
     public AbstractQueryCriteria<T> having(Slot slot, Function function, SingleComparator comparator, Object value) {
         if (Objects.nonNull(function)) {
             this.having(new SingleHaving(this, function, slot, comparator,
-                this.placeholder(DEF_PARAMETER_PLACEHOLDER_SAFE, true, value)));
+                this.parameterConverter.placeholder(DEF_PARAMETER_PLACEHOLDER_SAFE, true, value)));
         }
         return this;
     }
@@ -771,8 +771,8 @@ public abstract class AbstractQueryCriteria<T> extends AbstractCriteria<T> imple
     public AbstractQueryCriteria<T> having(Slot slot, Function function, Object first, Object last) {
         if (Objects.nonNull(function)) {
             this.having(new MultiHaving(this, function, slot,
-                this.placeholder(DEF_PARAMETER_PLACEHOLDER_SAFE, true, first),
-                this.placeholder(DEF_PARAMETER_PLACEHOLDER_SAFE, true, last)));
+                this.parameterConverter.placeholder(DEF_PARAMETER_PLACEHOLDER_SAFE, true, first),
+                this.parameterConverter.placeholder(DEF_PARAMETER_PLACEHOLDER_SAFE, true, last)));
         }
         return this;
     }
@@ -792,8 +792,8 @@ public abstract class AbstractQueryCriteria<T> extends AbstractCriteria<T> imple
                                            Object first, Object last) {
         if (Objects.nonNull(function)) {
             this.having(new MultiHaving(this, function, slot, comparator,
-                this.placeholder(DEF_PARAMETER_PLACEHOLDER_SAFE, true, first),
-                this.placeholder(DEF_PARAMETER_PLACEHOLDER_SAFE, true, last)));
+                this.parameterConverter.placeholder(DEF_PARAMETER_PLACEHOLDER_SAFE, true, first),
+                this.parameterConverter.placeholder(DEF_PARAMETER_PLACEHOLDER_SAFE, true, last)));
         }
         return this;
     }
@@ -805,7 +805,8 @@ public abstract class AbstractQueryCriteria<T> extends AbstractCriteria<T> imple
     @Override
     public AbstractQueryCriteria<T> nativeHaving(String func, Object value) {
         if (Objects.isNotBlank(func)) {
-            this.having(new NativeHaving(func, this.placeholder(DEF_PARAMETER_PLACEHOLDER_SAFE, true, value)));
+            this.having(new NativeHaving(func,
+                this.parameterConverter.placeholder(DEF_PARAMETER_PLACEHOLDER_SAFE, true, value)));
         }
         return this;
     }
@@ -813,7 +814,8 @@ public abstract class AbstractQueryCriteria<T> extends AbstractCriteria<T> imple
     @Override
     public AbstractQueryCriteria<T> nativeHaving(String func, List<Object> values) {
         if (Objects.isNotBlank(func)) {
-            this.having(new NativeHaving(func, this.placeholder(DEF_PARAMETER_PLACEHOLDER_SAFE, values)));
+            this.having(new NativeHaving(func,
+                this.parameterConverter.placeholder(DEF_PARAMETER_PLACEHOLDER_SAFE, values)));
         }
         return this;
     }
@@ -821,7 +823,8 @@ public abstract class AbstractQueryCriteria<T> extends AbstractCriteria<T> imple
     @Override
     public AbstractQueryCriteria<T> nativeHaving(String func, Map<String, Object> values) {
         if (Objects.isNotBlank(func)) {
-            this.having(new NativeHaving(func, this.placeholder(DEF_PARAMETER_PLACEHOLDER_SAFE, values)));
+            this.having(new NativeHaving(func,
+                this.parameterConverter.placeholder(DEF_PARAMETER_PLACEHOLDER_SAFE, values)));
         }
         return this;
     }
