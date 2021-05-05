@@ -29,6 +29,7 @@ import com.wvkity.mybatis.core.expr.NativeExpression;
 import com.wvkity.mybatis.core.expr.SpecialExpression;
 import com.wvkity.mybatis.core.expr.StandardIdEqual;
 import com.wvkity.mybatis.core.expr.StandardNesting;
+import com.wvkity.mybatis.core.expr.SubQueryExpression;
 import com.wvkity.mybatis.core.expr.TemplateMatch;
 import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
 import com.wvkity.mybatis.core.utils.Placeholders;
@@ -187,12 +188,17 @@ public class ConditionConverter {
                 return this.nestingExprConvert((StandardNesting) expression);
             } else if (expression instanceof SpecialExpression) {
                 return this.specialExprConvert((SpecialExpression) expression);
+            } else if (expression instanceof SubQueryExpression) {
+                return this.subQueryExprConvert((SubQueryExpression) expression);
+            } else {
+                return this.otherExprConvert(expression);
             }
         }
         return null;
     }
 
     /**
+     * final Select select
      * 基本条件表达式转条件对象
      * @param basic       {@link AbstractBasicCriteria}
      * @param column      字段名
@@ -353,12 +359,32 @@ public class ConditionConverter {
     }
 
     /**
+     * 子查询条件表达式转条件对象
+     * @param query {@link SubQueryExpression}
+     * @return {@link Criterion}
+     */
+    protected Criterion subQueryExprConvert(final SubQueryExpression query) {
+        return new SubQueryCondition(query.getCriteria(), query.getAlias(), query.getTarget(), query.getSlot(),
+            query.getSymbol(), query.getQuery().getSegment());
+    }
+
+    /**
+     * 其他条件表达式转成条件对象
+     * @param expression {@link Expression}
+     * @return {@link Criterion}
+     */
+    protected Criterion otherExprConvert(final Expression expression) {
+        // Empty
+        return null;
+    }
+
+    /**
      * 解析参数值成占位符参数
      * @param arg 参数值
      * @return 占位符参数
      */
     @SuppressWarnings("unchecked")
-    private Object parseParam(final Object arg) {
+    protected Object parseParam(final Object arg) {
         if (arg == null) {
             return Constants.DEF_STR_NULL;
         }
@@ -383,7 +409,7 @@ public class ConditionConverter {
      * @param jdbcType    JDBC类型
      * @return 占位符参数列表
      */
-    private List<Object> parseParams(final Iterable<?> args, final Class<? extends TypeHandler<?>> typeHandler,
+    protected List<Object> parseParams(final Iterable<?> args, final Class<? extends TypeHandler<?>> typeHandler,
                                      final boolean useJavaType, final Class<?> javaType, final JdbcType jdbcType) {
         final Stream<?> stream = StreamSupport.stream(args.spliterator(), false);
         if (Placeholders.isPureType(args)) {
@@ -401,7 +427,7 @@ public class ConditionConverter {
      * @param args 参数列表
      * @return 占位符参数列表
      */
-    private List<Object> parseParams(final Iterable<?> args) {
+    protected List<Object> parseParams(final Iterable<?> args) {
         final Stream<?> stream = StreamSupport.stream(args.spliterator(), false);
         if (Placeholders.isPureType(args)) {
             return stream.map(it -> Scripts.safeJoining(this.defPlaceholder(it))).collect(Collectors.toList());
@@ -415,7 +441,7 @@ public class ConditionConverter {
      * @param args 参数列表
      * @return 占位符参数列表
      */
-    private Map<String, Object> parseParams(final Map<String, Object> args) {
+    protected Map<String, Object> parseParams(final Map<String, Object> args) {
         return args.entrySet().stream()
             .collect(Collectors.toMap(Map.Entry::getKey, it -> this.parseParam(it.getValue()),
                 (o, n) -> n, (Supplier<LinkedHashMap<String, Object>>) LinkedHashMap::new));

@@ -57,10 +57,12 @@ import com.wvkity.mybatis.core.expr.StandardNotLike;
 import com.wvkity.mybatis.core.expr.StandardNotNull;
 import com.wvkity.mybatis.core.expr.StandardNull;
 import com.wvkity.mybatis.core.expr.StandardTemplate;
+import com.wvkity.mybatis.core.expr.SubQueryExpression;
 import com.wvkity.mybatis.core.expr.TemplateMatch;
 import com.wvkity.mybatis.core.property.Property;
 import com.wvkity.mybatis.support.constant.Like;
 import com.wvkity.mybatis.support.constant.Slot;
+import com.wvkity.mybatis.support.constant.Symbol;
 import com.wvkity.mybatis.support.criteria.Criteria;
 import com.wvkity.mybatis.support.expr.Expression;
 import com.wvkity.mybatis.support.helper.TableHelper;
@@ -214,7 +216,7 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
      * 初始化方法
      * @param alias 表别名
      */
-    protected void initialize(final String alias) {
+    protected void initialize(final String alias, boolean query) {
         final boolean hasAlias = Objects.isNotBlank(alias);
         this.parameterSequence = new AtomicInteger(0);
         this.parameterValueMapping = new ConcurrentHashMap<>(16);
@@ -223,7 +225,8 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
         this.tableAliasSequence = new AtomicInteger(0);
         this.useAlias = new AtomicBoolean(hasAlias);
         this.tableAliasRef = new AtomicReference<>(hasAlias ? alias : Constants.EMPTY);
-        this.defTableAlias = DEF_TABLE_ALIAS_PREFIX + this.tableAliasSequence.incrementAndGet();
+        this.defTableAlias = query ? (DEF_TABLE_ALIAS_PREFIX + this.tableAliasSequence.incrementAndGet()) :
+            Constants.EMPTY;
         this.conditionConverter = new ConditionConverter(this);
         this.segmentManager = new StandardFragmentManager(this);
         this.search = new ColumnSearch(this);
@@ -253,6 +256,11 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     }
 
     @Override
+    public Chain where(Expression expression) {
+        return this.add(expression);
+    }
+
+    @Override
     public Chain where(Expression... expressions) {
         return this.where(Objects.asList(expressions));
     }
@@ -267,11 +275,43 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
         return this.context;
     }
 
-    // endregion
+    /**
+     * 添加子查询条件
+     * @param column {@link Column}
+     * @param query  {@link QueryWrapper}
+     * @param slot   {@link Slot}
+     * @param symbol {@link Symbol}
+     * @return {@link Chain}
+     */
+    protected Chain addSubCondition(final Column column, QueryWrapper<?, ?> query,
+                                    final Slot slot, final Symbol symbol) {
+        if (Objects.nonNull(column)) {
+            this.addSubCondition(column.getColumn(), query, slot, symbol);
+        }
+        return this.context;
+    }
 
+    /**
+     * 添加子查询条件
+     * @param column 字段名
+     * @param query  {@link QueryWrapper}
+     * @param slot   {@link Slot}
+     * @param symbol {@link Symbol}
+     * @return {@link Chain}
+     */
+    protected Chain addSubCondition(final String column, QueryWrapper<?, ?> query,
+                                    final Slot slot, final Symbol symbol) {
+        if (Objects.isNotBlank(column)) {
+            this.add(new SubQueryExpression(this, column, query, slot, symbol));
+        }
+        return this.context;
+    }
+
+    // endregion
     // region Conditions
 
     // region Compare conditions
+    // region Equal condition
 
     @Override
     public Chain idEq(Slot slot, Object value) {
@@ -320,6 +360,25 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     }
 
     @Override
+    public Chain eq(Slot slot, Property<T, ?> property, QueryWrapper<?, ?> query) {
+        return this.eq(slot, this.convert(property), query);
+    }
+
+    @Override
+    public Chain eq(Slot slot, String property, QueryWrapper<?, ?> query) {
+        return this.addSubCondition(this.findColumn(property), query, slot, Symbol.EQ);
+    }
+
+    @Override
+    public Chain colEq(Slot slot, String column, QueryWrapper<?, ?> query) {
+        return this.addSubCondition(column, query, slot, Symbol.EQ);
+    }
+
+    // endregion
+
+    // region Not equal condition
+
+    @Override
     public <V> Chain ne(Slot slot, Property<T, V> property, V value) {
         return this.ne(slot, this.convert(property), value);
     }
@@ -335,6 +394,25 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     }
 
     @Override
+    public Chain ne(Slot slot, Property<T, ?> property, QueryWrapper<?, ?> query) {
+        return this.ne(slot, this.convert(property), query);
+    }
+
+    @Override
+    public Chain ne(Slot slot, String property, QueryWrapper<?, ?> query) {
+        return this.addSubCondition(this.findColumn(property), query, slot, Symbol.NE);
+    }
+
+    @Override
+    public Chain colNe(Slot slot, String column, QueryWrapper<?, ?> query) {
+        return this.addSubCondition(column, query, slot, Symbol.NE);
+    }
+
+    // endregion
+
+    // region Greater than condition
+
+    @Override
     public <V> Chain gt(Slot slot, Property<T, V> property, V value) {
         return this.gt(slot, this.convert(property), value);
     }
@@ -348,6 +426,26 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     public Chain colGt(Slot slot, String column, Object value) {
         return this.add(new ImmediateGreaterThan(this, column, slot, value));
     }
+
+
+    @Override
+    public Chain gt(Slot slot, Property<T, ?> property, QueryWrapper<?, ?> query) {
+        return this.gt(slot, this.convert(property), query);
+    }
+
+    @Override
+    public Chain gt(Slot slot, String property, QueryWrapper<?, ?> query) {
+        return this.addSubCondition(this.findColumn(property), query, slot, Symbol.GT);
+    }
+
+    @Override
+    public Chain colGt(Slot slot, String column, QueryWrapper<?, ?> query) {
+        return this.addSubCondition(column, query, slot, Symbol.GT);
+    }
+
+    // endregion
+
+    // region Greater than or equal to condition
 
     @Override
     public <V> Chain ge(Slot slot, Property<T, V> property, V value) {
@@ -365,6 +463,25 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     }
 
     @Override
+    public Chain ge(Slot slot, Property<T, ?> property, QueryWrapper<?, ?> query) {
+        return this.ge(slot, this.convert(property), query);
+    }
+
+    @Override
+    public Chain ge(Slot slot, String property, QueryWrapper<?, ?> query) {
+        return this.addSubCondition(this.findColumn(property), query, slot, Symbol.GE);
+    }
+
+    @Override
+    public Chain colGe(Slot slot, String column, QueryWrapper<?, ?> query) {
+        return this.addSubCondition(column, query, slot, Symbol.GE);
+    }
+
+    // endregion
+
+    // region Less than condition
+
+    @Override
     public <V> Chain lt(Slot slot, Property<T, V> property, V value) {
         return this.lt(slot, this.convert(property), value);
     }
@@ -380,6 +497,25 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     }
 
     @Override
+    public Chain lt(Slot slot, Property<T, ?> property, QueryWrapper<?, ?> query) {
+        return this.lt(slot, this.convert(property), query);
+    }
+
+    @Override
+    public Chain lt(Slot slot, String property, QueryWrapper<?, ?> query) {
+        return this.addSubCondition(this.findColumn(property), query, slot, Symbol.LT);
+    }
+
+    @Override
+    public Chain colLt(Slot slot, String column, QueryWrapper<?, ?> query) {
+        return this.addSubCondition(column, query, slot, Symbol.LT);
+    }
+
+    // endregion
+
+    // region Less than or equal to condition
+
+    @Override
     public <V> Chain le(Slot slot, Property<T, V> property, V value) {
         return this.le(slot, this.convert(property), value);
     }
@@ -393,6 +529,25 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     public Chain colLe(Slot slot, String column, Object value) {
         return this.add(new ImmediateLessThanOrEqual(this, column, slot, value));
     }
+
+    @Override
+    public Chain le(Slot slot, Property<T, ?> property, QueryWrapper<?, ?> query) {
+        return this.le(slot, this.convert(property), query);
+    }
+
+    @Override
+    public Chain le(Slot slot, String property, QueryWrapper<?, ?> query) {
+        return this.addSubCondition(this.findColumn(property), query, slot, Symbol.LE);
+    }
+
+    @Override
+    public Chain colLe(Slot slot, String column, QueryWrapper<?, ?> query) {
+        return this.addSubCondition(column, query, slot, Symbol.LE);
+    }
+
+    // endregion
+
+    // region Column equal condition
 
     @Override
     public Chain ce(Property<T, ?> property, AbstractCriteria<?> otherCriteria) {
@@ -507,6 +662,8 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
 
     // endregion
 
+    // endregion
+
     // region Range conditions
 
     @Override
@@ -524,6 +681,22 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
         return this.add(new ImmediateIn(this, column, slot, values));
     }
 
+
+    @Override
+    public Chain in(Slot slot, Property<T, ?> property, QueryWrapper<?, ?> query) {
+        return this.in(slot, this.convert(property), query);
+    }
+
+    @Override
+    public Chain in(Slot slot, String property, QueryWrapper<?, ?> query) {
+        return this.addSubCondition(this.findColumn(property), query, slot, Symbol.IN);
+    }
+
+    @Override
+    public Chain colIn(Slot slot, String column, QueryWrapper<?, ?> query) {
+        return this.addSubCondition(column, query, slot, Symbol.IN);
+    }
+
     @Override
     public <V> Chain notIn(Slot slot, Property<T, V> property, Collection<V> values) {
         return this.add(new StandardNotIn(this, this.convert(property), slot, values));
@@ -537,6 +710,21 @@ abstract class AbstractBasicCriteria<T, Chain extends AbstractBasicCriteria<T, C
     @Override
     public Chain colNotIn(Slot slot, String column, Collection<?> values) {
         return this.add(new ImmediateNotIn(this, column, slot, values));
+    }
+
+    @Override
+    public Chain notIn(Slot slot, Property<T, ?> property, QueryWrapper<?, ?> query) {
+        return this.notIn(slot, this.convert(property), query);
+    }
+
+    @Override
+    public Chain notIn(Slot slot, String property, QueryWrapper<?, ?> query) {
+        return this.addSubCondition(this.findColumn(property), query, slot, Symbol.NOT_IN);
+    }
+
+    @Override
+    public Chain colNotIn(Slot slot, String column, QueryWrapper<?, ?> query) {
+        return this.addSubCondition(column, query, slot, Symbol.NOT_IN);
     }
 
     // endregion

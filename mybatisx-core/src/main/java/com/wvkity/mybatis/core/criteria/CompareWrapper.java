@@ -108,6 +108,63 @@ public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
      */
     Chain colEq(final Slot slot, final String column, final Object value);
 
+    /**
+     * 等于
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain eq(final Property<T, ?> property, final QueryWrapper<?, ?> query) {
+        return this.eq(Slot.AND, property, query);
+    }
+
+    /**
+     * 等于
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain eq(final Slot slot, final Property<T, ?> property, final QueryWrapper<?, ?> query);
+
+    /**
+     * 等于
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain eq(final String property, final QueryWrapper<?, ?> query) {
+        return this.eq(Slot.AND, property, query);
+    }
+
+    /**
+     * 等于
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain eq(final Slot slot, final String property, final QueryWrapper<?, ?> query);
+
+    /**
+     * 等于
+     * @param column 字段名
+     * @param query  {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain colEq(final String column, final QueryWrapper<?, ?> query) {
+        return this.colEq(Slot.AND, column, query);
+    }
+
+    /**
+     * 等于
+     * @param slot   {@link Slot}
+     * @param column 字段名
+     * @param query  {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain colEq(final Slot slot, final String column, final QueryWrapper<?, ?> query);
+
     // endregion
 
     // region Not equal to
@@ -152,7 +209,6 @@ public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
      */
     Chain ne(final Slot slot, final String property, final Object value);
 
-
     /**
      * 不等于
      * @param column 字段
@@ -171,6 +227,63 @@ public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
      * @return {@link Chain}
      */
     Chain colNe(final Slot slot, final String column, final Object value);
+
+    /**
+     * 不等于
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain ne(final Property<T, ?> property, final QueryWrapper<?, ?> query) {
+        return this.ne(Slot.AND, property, query);
+    }
+
+    /**
+     * 不等于
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain ne(final Slot slot, final Property<T, ?> property, final QueryWrapper<?, ?> query);
+
+    /**
+     * 不等于
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain ne(final String property, final QueryWrapper<?, ?> query) {
+        return this.ne(Slot.AND, property, query);
+    }
+
+    /**
+     * 不等于
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain ne(final Slot slot, final String property, final QueryWrapper<?, ?> query);
+
+    /**
+     * 不等于
+     * @param column 字段名
+     * @param query  {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain colNe(final String column, final QueryWrapper<?, ?> query) {
+        return this.colNe(Slot.AND, column, query);
+    }
+
+    /**
+     * 不等于
+     * @param slot   {@link Slot}
+     * @param column 字段名
+     * @param query  {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain colNe(final Slot slot, final String column, final QueryWrapper<?, ?> query);
 
     // endregion
 
@@ -235,6 +348,63 @@ public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
      */
     Chain colGt(final Slot slot, final String column, final Object value);
 
+    /**
+     * 大于
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain gt(final Property<T, ?> property, final QueryWrapper<?, ?> query) {
+        return this.gt(Slot.AND, property, query);
+    }
+
+    /**
+     * 大于
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain gt(final Slot slot, final Property<T, ?> property, final QueryWrapper<?, ?> query);
+
+    /**
+     * 大于
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain gt(final String property, final QueryWrapper<?, ?> query) {
+        return this.gt(Slot.AND, property, query);
+    }
+
+    /**
+     * 大于
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain gt(final Slot slot, final String property, final QueryWrapper<?, ?> query);
+
+    /**
+     * 大于
+     * @param column 字段名
+     * @param query  {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain colGt(final String column, final QueryWrapper<?, ?> query) {
+        return this.colGt(Slot.AND, column, query);
+    }
+
+    /**
+     * 大于
+     * @param slot   {@link Slot}
+     * @param column 字段名
+     * @param query  {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain colGt(final Slot slot, final String column, final QueryWrapper<?, ?> query);
+
     // endregion
 
     // region Greater than or equal to
@@ -297,6 +467,63 @@ public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
      * @return {@link Chain}
      */
     Chain colGe(final Slot slot, final String column, final Object value);
+
+    /**
+     * 大于或等于
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain ge(final Property<T, ?> property, final QueryWrapper<?, ?> query) {
+        return this.ge(Slot.AND, property, query);
+    }
+
+    /**
+     * 大于或等于
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain ge(final Slot slot, final Property<T, ?> property, final QueryWrapper<?, ?> query);
+
+    /**
+     * 大于或等于
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain ge(final String property, final QueryWrapper<?, ?> query) {
+        return this.ge(Slot.AND, property, query);
+    }
+
+    /**
+     * 大于或等于
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain ge(final Slot slot, final String property, final QueryWrapper<?, ?> query);
+
+    /**
+     * 大于或等于
+     * @param column 字段名
+     * @param query  {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain colGe(final String column, final QueryWrapper<?, ?> query) {
+        return this.colGe(Slot.AND, column, query);
+    }
+
+    /**
+     * 大于或等于
+     * @param slot   {@link Slot}
+     * @param column 字段名
+     * @param query  {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain colGe(final Slot slot, final String column, final QueryWrapper<?, ?> query);
 
     // endregion
 
@@ -361,12 +588,69 @@ public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
      */
     Chain colLt(final Slot slot, final String column, final Object value);
 
+    /**
+     * 小于
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain lt(final Property<T, ?> property, final QueryWrapper<?, ?> query) {
+        return this.lt(Slot.AND, property, query);
+    }
+
+    /**
+     * 小于
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain lt(final Slot slot, final Property<T, ?> property, final QueryWrapper<?, ?> query);
+
+    /**
+     * 小于
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain lt(final String property, final QueryWrapper<?, ?> query) {
+        return this.lt(Slot.AND, property, query);
+    }
+
+    /**
+     * 小于
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain lt(final Slot slot, final String property, final QueryWrapper<?, ?> query);
+
+    /**
+     * 小于
+     * @param column 字段名
+     * @param query  {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain colLt(final String column, final QueryWrapper<?, ?> query) {
+        return this.colLt(Slot.AND, column, query);
+    }
+
+    /**
+     * 小于
+     * @param slot   {@link Slot}
+     * @param column 字段名
+     * @param query  {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain colLt(final Slot slot, final String column, final QueryWrapper<?, ?> query);
+
     // endregion
 
     // region Less than or equal to
 
     /**
-     * 大于或等于
+     * 小于或等于
      * @param property 属性
      * @param value    值
      * @param <V>      属性类型
@@ -377,7 +661,7 @@ public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
     }
 
     /**
-     * 大于或等于
+     * 小于或等于
      * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
@@ -387,7 +671,7 @@ public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
     <V> Chain le(final Slot slot, final Property<T, V> property, final V value);
 
     /**
-     * 大于或等于
+     * 小于或等于
      * @param property 属性
      * @param value    值
      * @return {@link Chain}
@@ -397,7 +681,7 @@ public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
     }
 
     /**
-     * 大于或等于
+     * 小于或等于
      * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
@@ -406,7 +690,7 @@ public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
     Chain le(final Slot slot, final String property, final Object value);
 
     /**
-     * 大于或等于
+     * 小于或等于
      * @param column 字段
      * @param value  值
      * @return {@link Chain}
@@ -416,7 +700,7 @@ public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
     }
 
     /**
-     * 大于或等于
+     * 小于或等于
      * @param slot   {@link Slot}
      * @param column 字段
      * @param value  值
@@ -424,13 +708,70 @@ public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
      */
     Chain colLe(final Slot slot, final String column, final Object value);
 
+    /**
+     * 小于或等于
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain le(final Property<T, ?> property, final QueryWrapper<?, ?> query) {
+        return this.lt(Slot.AND, property, query);
+    }
+
+    /**
+     * 小于或等于
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain le(final Slot slot, final Property<T, ?> property, final QueryWrapper<?, ?> query);
+
+    /**
+     * 小于或等于
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain le(final String property, final QueryWrapper<?, ?> query) {
+        return this.le(Slot.AND, property, query);
+    }
+
+    /**
+     * 小于或等于
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain le(final Slot slot, final String property, final QueryWrapper<?, ?> query);
+
+    /**
+     * 小于或等于
+     * @param column 字段名
+     * @param query  {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain colLe(final String column, final QueryWrapper<?, ?> query) {
+        return this.colLe(Slot.AND, column, query);
+    }
+
+    /**
+     * 小于或等于
+     * @param slot   {@link Slot}
+     * @param column 字段名
+     * @param query  {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain colLe(final Slot slot, final String column, final QueryWrapper<?, ?> query);
+
     // endregion
 
     // region Special
 
     /**
      * 字段相等
-     * @param property 属性
+     * @param property      属性
      * @param otherCriteria {@link AbstractCriteria}
      * @return {@link Chain}
      */
@@ -438,7 +779,7 @@ public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
 
     /**
      * 字段相等
-     * @param property 属性
+     * @param property      属性
      * @param otherCriteria {@link AbstractCriteria}
      * @return {@link Chain}
      */
@@ -446,7 +787,7 @@ public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
 
     /**
      * 字段相等
-     * @param otherCriteria      {@link AbstractCriteria}
+     * @param otherCriteria {@link AbstractCriteria}
      * @param otherProperty 属性
      * @param <E>           实体类型
      * @return {@link Chain}
@@ -457,7 +798,7 @@ public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
 
     /**
      * 字段相等
-     * @param otherCriteria      {@link AbstractCriteria}
+     * @param otherCriteria {@link AbstractCriteria}
      * @param otherProperty 属性
      * @return {@link Chain}
      */
@@ -466,7 +807,7 @@ public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
     /**
      * 字段相等
      * @param property      属性
-     * @param otherCriteria      {@link AbstractCriteria}
+     * @param otherCriteria {@link AbstractCriteria}
      * @param otherProperty 其他属性
      * @param <E>           实体类型
      * @return {@link Chain}
@@ -479,7 +820,7 @@ public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
     /**
      * 字段相等
      * @param property      属性
-     * @param otherCriteria      {@link AbstractCriteria}
+     * @param otherCriteria {@link AbstractCriteria}
      * @param otherProperty 其他属性
      * @param <E>           实体类型
      * @return {@link Chain}
@@ -492,7 +833,7 @@ public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
     /**
      * 字段相等
      * @param property      属性
-     * @param otherCriteria      {@link AbstractCriteria}
+     * @param otherCriteria {@link AbstractCriteria}
      * @param otherProperty 其他属性
      * @return {@link Chain}
      */
@@ -501,7 +842,7 @@ public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
     /**
      * 字段相等
      * @param property      属性
-     * @param otherCriteria      {@link AbstractCriteria}
+     * @param otherCriteria {@link AbstractCriteria}
      * @param otherProperty 其他属性
      * @return {@link Chain}
      */
@@ -509,17 +850,17 @@ public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
 
     /**
      * 字段相等
-     * @param property    属性
-     * @param otherCriteria    {@link AbstractCriteria}
-     * @param otherColumn 其他字段
+     * @param property      属性
+     * @param otherCriteria {@link AbstractCriteria}
+     * @param otherColumn   其他字段
      * @return {@link Chain}
      */
     Chain colCe(final Property<T, ?> property, final AbstractCriteria<?> otherCriteria, final String otherColumn);
 
     /**
      * 字段相等
-     * @param otherCriteria    {@link AbstractCriteria}
-     * @param otherColumn 其他字段
+     * @param otherCriteria {@link AbstractCriteria}
+     * @param otherColumn   其他字段
      * @return {@link Chain}
      */
     Chain colCe(final AbstractCriteria<?> otherCriteria, final String otherColumn);
@@ -534,7 +875,7 @@ public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
 
     /**
      * 字段相等
-     * @param column   字段
+     * @param column        字段
      * @param otherCriteria {@link AbstractCriteria}
      * @return {@link Chain}
      */
@@ -544,8 +885,8 @@ public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
 
     /**
      * 字段相等
-     * @param alias    表别名
-     * @param column   字段
+     * @param alias         表别名
+     * @param column        字段
      * @param otherCriteria {@link AbstractCriteria}
      * @return {@link Chain}
      */
@@ -554,7 +895,7 @@ public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
     /**
      * 字段相等
      * @param column        字段
-     * @param otherCriteria      {@link AbstractCriteria}
+     * @param otherCriteria {@link AbstractCriteria}
      * @param otherProperty 其他属性
      * @return {@link Chain}
      */
@@ -566,7 +907,7 @@ public interface CompareWrapper<T, Chain extends CompareWrapper<T, Chain>> {
     /**
      * 字段相等
      * @param column        字段
-     * @param otherCriteria      {@link AbstractCriteria}
+     * @param otherCriteria {@link AbstractCriteria}
      * @param otherProperty 其他属性
      * @return {@link Chain}
      */

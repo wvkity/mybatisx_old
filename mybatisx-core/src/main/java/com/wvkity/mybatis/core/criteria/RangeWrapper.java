@@ -158,6 +158,63 @@ public interface RangeWrapper<T, Chain extends RangeWrapper<T, Chain>> {
      */
     Chain colIn(final Slot slot, final String column, final Collection<?> values);
 
+    /**
+     * IN
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain in(final Property<T, ?> property, final QueryWrapper<?, ?> query) {
+        return this.in(Slot.AND, property, query);
+    }
+
+    /**
+     * IN
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain in(final Slot slot, final Property<T, ?> property, final QueryWrapper<?, ?> query);
+
+    /**
+     * IN
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain in(final String property, final QueryWrapper<?, ?> query) {
+        return this.in(Slot.AND, property, query);
+    }
+
+    /**
+     * IN
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain in(final Slot slot, final String property, final QueryWrapper<?, ?> query);
+
+    /**
+     * IN
+     * @param column 字段名
+     * @param query  {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain colIn(final String column, final QueryWrapper<?, ?> query) {
+        return this.colIn(Slot.AND, column, query);
+    }
+
+    /**
+     * IN
+     * @param slot   {@link Slot}
+     * @param column 字段名
+     * @param query  {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain colIn(final Slot slot, final String column, final QueryWrapper<?, ?> query);
+
     // endregion
 
     // region Not in
@@ -287,6 +344,63 @@ public interface RangeWrapper<T, Chain extends RangeWrapper<T, Chain>> {
      * @return {@link Chain}
      */
     Chain colNotIn(final Slot slot, final String column, final Collection<?> values);
+
+    /**
+     * NOT IN
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain notIn(final Property<T, ?> property, final QueryWrapper<?, ?> query) {
+        return this.notIn(Slot.AND, property, query);
+    }
+
+    /**
+     * NOT IN
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain notIn(final Slot slot, final Property<T, ?> property, final QueryWrapper<?, ?> query);
+
+    /**
+     * NOT IN
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain notIn(final String property, final QueryWrapper<?, ?> query) {
+        return this.notIn(Slot.AND, property, query);
+    }
+
+    /**
+     * NOT IN
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain notIn(final Slot slot, final String property, final QueryWrapper<?, ?> query);
+
+    /**
+     * NOT IN
+     * @param column 字段名
+     * @param query  {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    default Chain colNotIn(final String column, final QueryWrapper<?, ?> query) {
+        return this.colNotIn(Slot.AND, column, query);
+    }
+
+    /**
+     * NOT IN
+     * @param slot   {@link Slot}
+     * @param column 字段名
+     * @param query  {@link QueryWrapper}
+     * @return {@link Chain}
+     */
+    Chain colNotIn(final Slot slot, final String column, final QueryWrapper<?, ?> query);
 
     // endregion
 
