@@ -117,6 +117,12 @@ public interface StandardManager<C extends Criteria<?>> extends Manager<C> {
     boolean hasSelect();
 
     /**
+     * 检查是否存在排序
+     * @return boolean
+     */
+    boolean hasOrderBy();
+
+    /**
      * 获取{@link FuncSelection}
      * @param alias 聚合函数别名
      * @return {@link FuncSelection}

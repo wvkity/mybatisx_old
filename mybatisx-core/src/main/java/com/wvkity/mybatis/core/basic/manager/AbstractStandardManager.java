@@ -140,6 +140,11 @@ public abstract class AbstractStandardManager<C extends Criteria<?>> extends Abs
     }
 
     @Override
+    public boolean hasOrderBy() {
+        return !this.orderStorage.isEmpty();
+    }
+
+    @Override
     public FuncSelection getFunc(String alias) {
         return this.selectStorage.getFunc(alias);
     }
