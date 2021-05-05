@@ -62,6 +62,13 @@ public interface Criteria<T> extends Fragment {
     Criteria<T> where(final Consumer<Criteria<T>> action);
 
     /**
+     * 添加{@link Expression}
+     * @param expression {@link Expression}
+     * @return {@link Criteria}
+     */
+    Criteria<T> where(final Expression expression);
+
+    /**
      * 添加多个{@link Expression}
      * @param expressions {@link Expression}列表
      * @return {@link Criteria}
