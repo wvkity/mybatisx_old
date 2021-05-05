@@ -15,12 +15,13 @@
  */
 package com.wvkity.mybatis.core.jsql.parser;
 
+import com.wvkity.mybatis.basic.utils.Objects;
+import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.expression.Alias;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.Function;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Column;
-import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.select.FromItem;
 import net.sf.jsqlparser.statement.select.Join;
 import net.sf.jsqlparser.statement.select.LateralSubSelect;
@@ -42,14 +43,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 总记录数SQL解析器
+ * SQL解析器
  * @author wvkity
  * @created 2021-02-08
  * @since 1.0.0
@@ -137,25 +138,39 @@ public class SqlParser {
         if (originalSql.contains(KEEP_ORDER_BY)) {
             return this.toSimpleQueryRecordSql(originalSql, colName);
         }
-        final Statement stmt;
+        final Select select;
         try {
-            stmt = CCJSqlParserUtil.parse(originalSql);
+            select = parse(originalSql);
+            this.handleTryRemoveOrderBy(select);
         } catch (Exception ignore) {
             return this.toSimpleQueryRecordSql(originalSql, colName);
-        }
-        final Select select = (Select) stmt;
-        final SelectBody selectBody = select.getSelectBody();
-        try {
-            this.handleSelectBodyTryRemoveOrderBy(selectBody);
-        } catch (Exception ignore) {
-            return this.toSimpleQueryRecordSql(originalSql, colName);
-        }
-        final List<WithItem> items;
-        if (isNotEmpty((items = select.getWithItemsList()))) {
-            items.forEach(this::handleSelectBodyTryRemoveOrderBy);
         }
         this.toQueryRecordSql(select, colName);
         return select.toString();
+    }
+
+    /**
+     * 智能移除order by排序语句
+     * @param originalSql 原SQL语句
+     * @return 处理后的SQL语句
+     */
+    public String smartRemoveOrderBy(final String originalSql) {
+        if (originalSql.contains(KEEP_ORDER_BY)) {
+            return originalSql;
+        }
+        final ParameterHandler handler = new ParameterHandler(originalSql);
+        final Select select;
+        try {
+            select = parse(handler.replace().isReplaced() ? handler.getReplaceSql() : originalSql);
+            this.handleTryRemoveOrderBy(select);
+        } catch (Exception ignore) {
+            return originalSql;
+        }
+        return handler.restore(select.toString());
+    }
+
+    protected Select parse(final String originalSql) throws JSQLParserException {
+        return (Select) CCJSqlParserUtil.parse(originalSql);
     }
 
     /**
@@ -167,31 +182,22 @@ public class SqlParser {
         if (this.isSelectOne(originalSql)) {
             return originalSql;
         }
-        final Statement stmt;
-        final StringBuilder builder = new StringBuilder(originalSql);
-        final Map<Integer, String> params = this.replaceOriginalSql(builder);
-        final boolean hasParam = params != null && !params.isEmpty();
-        final String replaceSql = hasParam ? builder.toString() : originalSql;
+        final ParameterHandler handler = new ParameterHandler(originalSql);
+        final Select select;
         try {
-            stmt = CCJSqlParserUtil.parse(replaceSql);
+            select = this.parse(handler.replace().isReplaced() ? handler.getReplaceSql() : originalSql);
         } catch (Exception ignore) {
             return this.regexExistsParse(originalSql);
         }
-        final Select select = (Select) stmt;
         if (originalSql.contains(KEEP_ORDER_BY)) {
-            return this.toSelectOneSql(select, params);
+            return this.toSelectOneSql(select, handler);
         }
-        final SelectBody selectBody = select.getSelectBody();
         try {
-            this.handleSelectBodyTryRemoveOrderBy(selectBody);
+            this.handleTryRemoveOrderBy(select);
         } catch (Exception ignore) {
-            return this.toSelectOneSql(select, params);
+            return this.toSelectOneSql(select, handler);
         }
-        final List<WithItem> items;
-        if (isNotEmpty((items = select.getWithItemsList()))) {
-            items.forEach(this::handleSelectBodyTryRemoveOrderBy);
-        }
-        return this.toSelectOneSql(select, params);
+        return this.toSelectOneSql(select, handler);
     }
 
     /**
@@ -199,13 +205,13 @@ public class SqlParser {
      * @param select {@link Select}
      * @return 新的查询语句
      */
-    public String toSelectOneSql(final Select select, final Map<Integer, String> params) {
+    public String toSelectOneSql(final Select select, final ParameterHandler handler) {
         final SelectBody body = select.getSelectBody();
         final PlainSelect psl = (PlainSelect) body;
         final List<SelectItem> selectItems = new ArrayList<>(1);
         selectItems.add(new SelectExpressionItem(new Column("1")));
         psl.setSelectItems(selectItems);
-        return this.restoreOriginalSql(select.toString(), params);
+        return handler.restore(select.toString());
     }
 
     /**
@@ -233,53 +239,16 @@ public class SqlParser {
     }
 
     /**
-     * 替换原SQL语句
-     * @param builder {@link StringBuilder}
-     * @return 占位符参数集合
+     * 移除order by
+     * @param select {@link Select}
      */
-    public Map<Integer, String> replaceOriginalSql(final StringBuilder builder) {
-        String originalSql = builder.toString();
-        final StringBuffer buffer = new StringBuffer(originalSql.length());
-        if (DEF_PATTERN_MATCHER.matcher(originalSql).matches()) {
-            Integer index = 0;
-            final Matcher matcher = DEF_PATTERN_PM.matcher(originalSql);
-            final Map<Integer, String> map = new HashMap<>();
-            while (matcher.find()) {
-                final String placeholder = matcher.group();
-                matcher.appendReplacement(buffer, "?");
-                map.put(index, placeholder);
-                index++;
-            }
-            matcher.appendTail(buffer);
-            if (!map.isEmpty()) {
-                builder.setLength(0);
-                builder.append(buffer);
-                return map;
-            }
+    public void handleTryRemoveOrderBy(final Select select) {
+        final SelectBody selectBody = select.getSelectBody();
+        this.handleSelectBodyTryRemoveOrderBy(selectBody);
+        final List<WithItem> items;
+        if (isNotEmpty((items = select.getWithItemsList()))) {
+            items.forEach(this::handleSelectBodyTryRemoveOrderBy);
         }
-        return null;
-    }
-
-    /**
-     * 还原SQL语句
-     * @param replaceSql 替换的SQL语句
-     * @param params     占位符参数列表
-     * @return SQL语句
-     */
-    public String restoreOriginalSql(final String replaceSql, final Map<Integer, String> params) {
-        if (params != null && !params.isEmpty()) {
-            final StringBuffer buffer = new StringBuffer();
-            final Matcher matcher = DEF_PATTERN_PM_RESTORE.matcher(replaceSql);
-            Integer index = 0;
-            while (matcher.find()) {
-                final String placeholder = params.get(index);
-                matcher.appendReplacement(buffer, placeholder);
-                index++;
-            }
-            matcher.appendTail(buffer);
-            return buffer.toString();
-        }
-        return replaceSql;
     }
 
     /**
@@ -437,4 +406,100 @@ public class SqlParser {
         return "SELECT COUNT(" + colName + ") RECORDS FROM (" + originalSql + ") TMP_TAB_RECORDS";
     }
 
+    /**
+     * 参数处理器
+     */
+    public static class ParameterHandler {
+
+        /**
+         * 是否已替换
+         */
+        private final AtomicBoolean replaced = new AtomicBoolean(false);
+        /**
+         * 原SQL语句
+         */
+        private final String originalSql;
+        /**
+         * 参数集合
+         */
+        private final Map<Integer, String> params;
+        /**
+         * 替换后的SQL语句
+         */
+        private String replaceSql;
+
+        public ParameterHandler(String originalSql) {
+            this.originalSql = originalSql;
+            this.params = new HashMap<>();
+        }
+
+        /**
+         * 替换原SQL语句
+         * @return {@link ParameterHandler}
+         */
+        public ParameterHandler replace() {
+            final StringBuffer buffer = new StringBuffer(this.originalSql.length());
+            if (DEF_PATTERN_MATCHER.matcher(this.originalSql).matches()) {
+                int normal = -1;
+                Integer index = normal;
+                final Matcher matcher = DEF_PATTERN_PM.matcher(this.originalSql);
+                while (matcher.find()) {
+                    final String placeholder = matcher.group();
+                    matcher.appendReplacement(buffer, "?");
+                    index++;
+                    this.params.put(index, placeholder);
+                }
+                matcher.appendTail(buffer);
+                this.replaceSql = buffer.toString();
+                this.replaced.compareAndSet(false, index > normal);
+            }
+            return this;
+        }
+
+        /**
+         * 还原SQL语句
+         * @param replacement SQL语句
+         * @return SQL语句
+         */
+        public String restore(final String replacement) {
+            if (this.hasParameter() && Objects.isNotBlank(replacement)) {
+                final StringBuffer buffer = new StringBuffer();
+                final Matcher matcher = DEF_PATTERN_PM_RESTORE.matcher(replacement);
+                Integer index = 0;
+                while (matcher.find()) {
+                    final String placeholder = params.get(index);
+                    matcher.appendReplacement(buffer, placeholder);
+                    index++;
+                }
+                matcher.appendTail(buffer);
+                return buffer.toString();
+            }
+            return replacement;
+        }
+
+        public String getOriginalSql() {
+            return originalSql;
+        }
+
+        public String getReplaceSql() {
+            return replaceSql;
+        }
+
+        /**
+         * SQL语句是否已替换成功
+         * @return boolean
+         */
+        public boolean isReplaced() {
+            return this.replaced.get();
+        }
+
+        /**
+         * 是否存在占位符参数
+         * @return boolean
+         */
+        public boolean hasParameter() {
+            return !this.params.isEmpty();
+        }
+
+    }
 }
