@@ -31,7 +31,7 @@ import java.util.Map;
  * @since 1.0.0
  */
 public interface QueryWrapper<T, Chain extends QueryWrapper<T, Chain>> extends Criteria<T>, ForeignWrapper<T, Chain>,
-    SubQueryWrapper<T, Chain>, SubForeignWrapper<T, Chain>, SelectWrapper<T, Chain>, FunctionWrapper<T, Chain>,
+    NestSubQueryWrapper<T, Chain>, SubForeignWrapper<T, Chain>, SelectWrapper<T, Chain>, FunctionWrapper<T, Chain>,
     GroupByWrapper<T, Chain>, HavingWrapper<T, Chain>, OrderByWrapper<T, Chain> {
 
     /**
@@ -122,6 +122,21 @@ public interface QueryWrapper<T, Chain extends QueryWrapper<T, Chain>> extends C
      * @return {@link Chain}
      */
     Chain usePropAlias(final boolean used);
+
+    /**
+     * 添加保持排序注释(避免优化sql时被干掉)
+     * @return {@link Chain}
+     */
+    default Chain keepOrderBy() {
+        return this.keepOrderBy(true);
+    }
+
+    /**
+     * 设置是否添加保持排序注释(避免优化sql时被干掉)
+     * @param keep 是否保存
+     * @return {@link Chain}
+     */
+    Chain keepOrderBy(boolean keep);
 
     /**
      * 设置自定义结果集

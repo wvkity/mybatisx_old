@@ -121,6 +121,10 @@ public abstract class AbstractQueryCriteria<T> extends AbstractCriteria<T> imple
      */
     protected boolean onlyFunc;
     /**
+     * 是否添加保持排序注释
+     */
+    protected boolean keepOrderBy;
+    /**
      * 联表引用属性
      */
     protected AtomicReference<String> reference = new AtomicReference<>(Constants.EMPTY);
@@ -153,18 +157,10 @@ public abstract class AbstractQueryCriteria<T> extends AbstractCriteria<T> imple
     // region Foreign criteria
 
     protected final Set<AbstractForeignCriteria<T, ?>> foreignSet = new CopyOnWriteArraySet<>();
-    protected final Set<AbstractSubCriteria<?>> subQuerySet = new CopyOnWriteArraySet<>();
 
     // endregion
 
     // region SubQuery methods
-
-    @Override
-    public <S> SubQuery<S> newQuery(Class<S> entity, String alias) {
-        final SubQuery<S> instance = new SubQuery<>(this, entity, alias);
-        this.subQueryCache(instance);
-        return instance;
-    }
 
     @Override
     public NestedSubQuery<T> nestQuery(String alias) {
@@ -178,15 +174,6 @@ public abstract class AbstractQueryCriteria<T> extends AbstractCriteria<T> imple
         instance.useAlias();
         this.subQueryCache(instance);
         return instance;
-    }
-
-    /**
-     * 缓存子查询对象
-     * @param subQuery {@link SubQuery}
-     * @param <S>      实体类型
-     */
-    private <S> void subQueryCache(final AbstractSubCriteria<S> subQuery) {
-        this.subQuerySet.add(subQuery);
     }
 
     // endregion
@@ -1095,8 +1082,8 @@ public abstract class AbstractQueryCriteria<T> extends AbstractCriteria<T> imple
     // region Other methods
 
     @Override
-    protected void initialize(String alias) {
-        super.initialize(alias);
+    protected void initialize(String alias, boolean query) {
+        super.initialize(alias, query);
     }
 
     @Override
@@ -1166,6 +1153,12 @@ public abstract class AbstractQueryCriteria<T> extends AbstractCriteria<T> imple
     @Override
     public AbstractQueryCriteria<T> useAlias(boolean used) {
         this.useAlias.compareAndSet(!used, used);
+        return this;
+    }
+
+    @Override
+    public AbstractQueryCriteria<T> keepOrderBy(boolean keep) {
+        this.keepOrderBy = keep;
         return this;
     }
 
@@ -1315,6 +1308,9 @@ public abstract class AbstractQueryCriteria<T> extends AbstractCriteria<T> imple
         final String whereStr = this.getWhereSegment();
         if (Objects.isNotBlank(whereStr)) {
             builder.append(Constants.SPACE).append(whereStr.trim());
+            if (this.segmentManager.hasOrderBy() && this.keepOrderBy) {
+                builder.append(Constants.SPACE).append("/*keep orderby*/").append(Constants.SPACE);
+            }
         }
         return builder.toString();
     }

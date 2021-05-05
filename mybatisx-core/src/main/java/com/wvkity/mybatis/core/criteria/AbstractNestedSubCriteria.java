@@ -23,16 +23,16 @@ import java.util.List;
 
 /**
  * 抽象嵌套子查询
- * @param <R> 实体类型
+ * @param <S> 实体类型
  * @author wvkity
  * @created 2021-04-20
  * @since 1.0.0
  */
 @SuppressWarnings("serial")
-public abstract class AbstractNestedSubCriteria<R> extends AbstractSubCriteria<R> {
+public abstract class AbstractNestedSubCriteria<S> extends AbstractSubCriteria<S> {
 
     @Override
-    public AbstractNestedSubCriteria<R> select() {
+    public AbstractNestedSubCriteria<S> select() {
         this.fetch = true;
         return this;
     }
@@ -56,15 +56,20 @@ public abstract class AbstractNestedSubCriteria<R> extends AbstractSubCriteria<R
         if (this.segmentManager.hasSelect()) {
             return this.segmentManager.getSelects();
         } else if (this.fetch) {
-            return this.master.getSelects();
+            return this.getMaster().getSelects();
         }
         return null;
     }
 
     @Override
     protected String getSelectString() {
-        this.loadSelectionFrom(this.master);
+        this.loadSelectionFrom(this.getMaster());
         return this.segmentManager.getSelectString();
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public <R> AbstractQueryCriteria<R> getMaster() {
+        return (AbstractQueryCriteria<R>) this.master;
+    }
 }

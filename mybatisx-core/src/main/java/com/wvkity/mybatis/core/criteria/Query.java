@@ -35,12 +35,12 @@ public class Query<T> extends AbstractQueryCriteria<T> {
 
     public Query(final Class<T> entityClass) {
         this.entityClass = entityClass;
-        this.initialize(null);
+        this.initialize(null, true);
     }
 
     public Query(final Class<T> entityClass, final String alias) {
         this.entityClass = entityClass;
-        this.initialize(alias);
+        this.initialize(alias, true);
         this.useAlias(Objects.isNotBlank(alias));
     }
 

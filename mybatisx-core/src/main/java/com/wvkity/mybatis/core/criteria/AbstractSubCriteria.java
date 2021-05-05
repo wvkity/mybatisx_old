@@ -28,11 +28,11 @@ public abstract class AbstractSubCriteria<S> extends AbstractQueryCriteria<S> {
     /**
      * 主条件对象
      */
-    protected AbstractQueryCriteria<?> master;
+    protected AbstractCriteria<?> master;
 
     @SuppressWarnings("unchecked")
-    public <R> AbstractQueryCriteria<R> getMaster() {
-        return (AbstractQueryCriteria<R>) this.master;
+    public <R> AbstractCriteria<R> getMaster() {
+        return (AbstractCriteria<R>) this.master;
     }
 
 }

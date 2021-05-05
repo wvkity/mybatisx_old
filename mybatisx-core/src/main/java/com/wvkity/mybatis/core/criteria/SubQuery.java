@@ -18,6 +18,7 @@ package com.wvkity.mybatis.core.criteria;
 import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.core.basic.manager.StandardFragmentManager;
+import com.wvkity.mybatis.support.criteria.Criteria;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -35,11 +36,11 @@ public class SubQuery<S> extends AbstractSubCriteria<S> {
     private SubQuery() {
     }
 
-    public <R> SubQuery(AbstractQueryCriteria<R> root, Class<S> entity) {
+    public <R> SubQuery(AbstractCriteria<R> root, Class<S> entity) {
         this(root, entity, null);
     }
 
-    public <R> SubQuery(AbstractQueryCriteria<R> root, Class<S> entity, String alias) {
+    public <R> SubQuery(AbstractCriteria<R> root, Class<S> entity, String alias) {
         this.master = root;
         this.entityClass = entity;
         this.parameterSequence = root.parameterSequence;

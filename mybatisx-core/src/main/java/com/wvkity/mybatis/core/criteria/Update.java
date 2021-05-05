@@ -35,7 +35,7 @@ public class Update<T> extends AbstractUpdateCriteria<T> {
 
     public Update(final Class<T> entityClass) {
         this.entityClass = entityClass;
-        this.initialize(null);
+        this.initialize(null, false);
     }
 
     @Override

@@ -15,6 +15,9 @@
  */
 package com.wvkity.mybatis.core.criteria;
 
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+
 /**
  * 抽象条件
  * @param <T> 泛型类
@@ -23,5 +26,25 @@ package com.wvkity.mybatis.core.criteria;
  * @since 1.0.0
  */
 @SuppressWarnings({"serial"})
-public abstract class AbstractCriteria<T> extends AbstractBasicCriteria<T, AbstractCriteria<T>> {
+public abstract class AbstractCriteria<T> extends AbstractBasicCriteria<T, AbstractCriteria<T>> implements
+    SubQueryWrapper<T, AbstractCriteria<T>> {
+
+    protected final Set<AbstractSubCriteria<?>> subQuerySet = new CopyOnWriteArraySet<>();
+
+    @Override
+    public <S> SubQuery<S> newQuery(Class<S> entity, String alias) {
+        final SubQuery<S> instance = new SubQuery<>(this, entity, alias);
+        this.subQueryCache(instance);
+        return instance;
+    }
+
+    /**
+     * 缓存子查询对象
+     * @param subQuery {@link SubQuery}
+     * @param <S>      实体类型
+     */
+    protected <S> void subQueryCache(final AbstractSubCriteria<S> subQuery) {
+        this.subQuerySet.add(subQuery);
+    }
+
 }
