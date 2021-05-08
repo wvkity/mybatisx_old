@@ -108,9 +108,9 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
     private boolean useConstructorMappings;
 
     // custom return value types
-    private final Class<?> embeddedResultType;
-    private final String embeddedResultMap;
-    private final Class<? extends Map> embeddedMapType;
+    private final Class<?> embedResultType;
+    private final String embedResultMap;
+    private final Class<? extends Map> embedMapType;
 
     private static class PendingRelation {
         public MetaObject metaObject;
@@ -150,29 +150,29 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
         String customResultMap = null;
         Class<?> customResultType = null;
         final String msId = this.mappedStatement.getId();
-        final Optional<EmbeddedResult> optional = this.getEmbeddedResult();
-        this.embeddedMapType = optional.map(EmbeddedResult::getMapType).orElse(null);
+        final Optional<EmbedResult> optional = this.getEmbedResult();
+        this.embedMapType = optional.map(EmbedResult::getMapType).orElse(null);
         if (EXEC_METHOD_PATTERN.matcher(msId).matches() && optional.isPresent()) {
-            final EmbeddedResult result = optional.get();
+            final EmbedResult result = optional.get();
             customResultMap = result.getResultMap();
             customResultType = result.getResultType();
         }
-        this.embeddedResultMap = Objects.isBlank(customResultMap) ? null : customResultMap;
-        this.embeddedResultType = customResultType;
+        this.embedResultMap = Objects.isBlank(customResultMap) ? null : customResultMap;
+        this.embedResultType = customResultType;
     }
 
-    private Optional<EmbeddedResult> getEmbeddedResult() {
+    private Optional<EmbedResult> getEmbedResult() {
         final Object parameter = this.parameterHandler.getParameterObject();
         if (parameter instanceof Map) {
             final Map<String, Object> paramMap = (Map<String, Object>) parameter;
             if (paramMap.containsKey(Constants.PARAM_CRITERIA)) {
                 final Object paramObject = paramMap.get(Constants.PARAM_CRITERIA);
-                if (paramObject instanceof EmbeddedResult) {
-                    return Optional.of((EmbeddedResult) paramObject);
+                if (paramObject instanceof EmbedResult) {
+                    return Optional.of((EmbedResult) paramObject);
                 }
             }
-        } else if (parameter instanceof EmbeddedResult) {
-            return Optional.of((EmbeddedResult) parameter);
+        } else if (parameter instanceof EmbedResult) {
+            return Optional.of((EmbedResult) parameter);
         }
         return Optional.empty();
     }
@@ -234,7 +234,7 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
         MyBatisResultSetWrapper rsw = getFirstResultSet(stmt);
 
         // 处理指定的结果集
-        final ResultMap customResultMap = Optional.ofNullable(this.embeddedResultMap)
+        final ResultMap customResultMap = Optional.ofNullable(this.embedResultMap)
             .map(this.configuration::getResultMap).orElse(null);
         if (Objects.nonNull(customResultMap)) {
             rsw = this.handleCustomResultSet(rsw, customResultMap, multipleResults, stmt);
@@ -709,12 +709,12 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
                                       String columnPrefix) throws SQLException {
         final Class<?> resultType;
         final Class<?> tempResultType = resultMap.getType();
-        if (this.embeddedResultType != null && !tempResultType.isArray() && tempResultType == Object.class) {
-            resultType = this.embeddedResultType;
+        if (this.embedResultType != null && !tempResultType.isArray() && tempResultType == Object.class) {
+            resultType = this.embedResultType;
         } else {
-            if (Map.class.isAssignableFrom(tempResultType) && embeddedMapType != null) {
+            if (Map.class.isAssignableFrom(tempResultType) && embedMapType != null) {
                 // 自定义Map类型覆盖默认的Map类型
-                resultType = this.embeddedMapType;
+                resultType = this.embedMapType;
             } else {
                 resultType = tempResultType;
             }
@@ -1312,8 +1312,8 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
         }
         if (resultType.isArray()) {
             return typeHandlerRegistry.hasTypeHandler(resultType.getComponentType());
-        } else if (this.embeddedResultType != null && resultType == Object.class) {
-            return typeHandlerRegistry.hasTypeHandler(this.embeddedResultType);
+        } else if (this.embedResultType != null && resultType == Object.class) {
+            return typeHandlerRegistry.hasTypeHandler(this.embedResultType);
         }
         return typeHandlerRegistry.hasTypeHandler(resultType);
     }

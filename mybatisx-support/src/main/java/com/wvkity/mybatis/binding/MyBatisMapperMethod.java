@@ -18,7 +18,7 @@ package com.wvkity.mybatis.binding;
 import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.executor.result.MyBatisDefaultMapResultHandler;
-import com.wvkity.mybatis.executor.resultset.EmbeddedResult;
+import com.wvkity.mybatis.executor.resultset.EmbedResult;
 import org.apache.ibatis.annotations.Flush;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.binding.BindingException;
@@ -123,7 +123,7 @@ public class MyBatisMapperMethod {
             if (!Objects.isEmpty(paramNames) && !Objects.isEmpty(args)) {
                 final String paramName = paramNames[0];
                 if (Constants.PARAM_CRITERIA.equals(paramName)) {
-                    return args[0] instanceof EmbeddedResult;
+                    return args[0] instanceof EmbedResult;
                 }
             }
         }
@@ -229,14 +229,14 @@ public class MyBatisMapperMethod {
                 final Map<String, Object> paramMap = (Map<String, Object>) param;
                 if (paramMap.containsKey(Constants.PARAM_CRITERIA)) {
                     final Object value = paramMap.get(Constants.PARAM_CRITERIA);
-                    if (value instanceof EmbeddedResult) {
-                        final EmbeddedResult embedded = (EmbeddedResult) value;
+                    if (value instanceof EmbedResult) {
+                        final EmbedResult embedded = (EmbedResult) value;
                         mapKey = embedded.getMapKey();
                         mapType = embedded.getMapType();
                     }
                 }
-            } else if (param instanceof EmbeddedResult) {
-                final EmbeddedResult embedded = (EmbeddedResult) param;
+            } else if (param instanceof EmbedResult) {
+                final EmbedResult embedded = (EmbedResult) param;
                 mapKey = embedded.getMapKey();
                 mapType = embedded.getMapType();
             }

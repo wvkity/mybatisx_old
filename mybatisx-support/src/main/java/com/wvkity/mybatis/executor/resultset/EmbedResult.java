@@ -23,7 +23,7 @@ import java.util.Map;
  * @created 2021-01-10
  * @since 1.0.0
  */
-public interface EmbeddedResult {
+public interface EmbedResult {
 
     /**
      * 获取XML自定义配置的ResultMap结果集
