@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.core.basic.manager;
 
-import com.wvkity.mybatis.core.criteria.Criterion;
+import com.wvkity.mybatis.core.condition.Criterion;
 import com.wvkity.mybatis.support.criteria.Criteria;
 
 import java.util.Collection;

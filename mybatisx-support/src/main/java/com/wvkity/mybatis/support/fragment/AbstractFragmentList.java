@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.support.segment;
+package com.wvkity.mybatis.support.fragment;
 
 
 import com.wvkity.mybatis.basic.immutable.ImmutableList;

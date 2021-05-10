@@ -16,9 +16,9 @@
 package com.wvkity.mybatis.core.basic.manager;
 
 import com.wvkity.mybatis.basic.utils.Objects;
-import com.wvkity.mybatis.core.criteria.Criterion;
+import com.wvkity.mybatis.core.condition.Criterion;
 import com.wvkity.mybatis.support.criteria.Criteria;
-import com.wvkity.mybatis.support.segment.Fragment;
+import com.wvkity.mybatis.support.fragment.Fragment;
 
 import java.util.Collection;
 import java.util.List;

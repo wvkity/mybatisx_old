@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.support.constant;
 
-import com.wvkity.mybatis.support.segment.Fragment;
+import com.wvkity.mybatis.support.fragment.Fragment;
 
 /**
  * Like匹配模式

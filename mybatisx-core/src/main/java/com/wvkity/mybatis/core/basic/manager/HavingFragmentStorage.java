@@ -17,7 +17,7 @@ package com.wvkity.mybatis.core.basic.manager;
 
 import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.core.basic.having.Having;
-import com.wvkity.mybatis.support.segment.AbstractFragmentList;
+import com.wvkity.mybatis.support.fragment.AbstractFragmentList;
 
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;

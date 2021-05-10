@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.core.basic.having;
 
-import com.wvkity.mybatis.support.segment.Fragment;
+import com.wvkity.mybatis.support.fragment.Fragment;
 
 /**
  * 单个值比较符号

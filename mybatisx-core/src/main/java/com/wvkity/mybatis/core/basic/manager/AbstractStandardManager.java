@@ -22,7 +22,6 @@ import com.wvkity.mybatis.core.basic.having.Having;
 import com.wvkity.mybatis.core.basic.order.Order;
 import com.wvkity.mybatis.core.basic.select.FuncSelection;
 import com.wvkity.mybatis.core.basic.select.Selection;
-import com.wvkity.mybatis.core.criteria.QueryWrapper;
 import com.wvkity.mybatis.support.criteria.Criteria;
 
 import java.util.Collection;
@@ -57,7 +56,7 @@ public abstract class AbstractStandardManager<C extends Criteria<?>> extends Abs
     protected final OrderFragmentStorage orderStorage;
 
     public AbstractStandardManager(C criteria) {
-        this(criteria, criteria instanceof QueryWrapper);
+        this(criteria, criteria instanceof CommonQueryWrapper);
     }
 
     public AbstractStandardManager(C criteria, boolean forQuery) {

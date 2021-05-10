@@ -22,11 +22,10 @@ import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.core.basic.select.FuncSelection;
 import com.wvkity.mybatis.core.basic.select.Selection;
 import com.wvkity.mybatis.core.basic.select.StandardSelection;
-import com.wvkity.mybatis.core.criteria.QueryWrapper;
 import com.wvkity.mybatis.support.basic.Matched;
 import com.wvkity.mybatis.support.criteria.Criteria;
 import com.wvkity.mybatis.support.helper.TableHelper;
-import com.wvkity.mybatis.support.segment.AbstractFragmentList;
+import com.wvkity.mybatis.support.fragment.AbstractFragmentList;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -173,8 +172,8 @@ public class SelectFragmentStorage extends AbstractFragmentList<Selection> {
 
     boolean canReadFromCache() {
         if (this.cached.get()) {
-            if (this.criteria instanceof QueryWrapper) {
-                final QueryWrapper<?, ?> query = (QueryWrapper<?, ?>) this.criteria;
+            if (this.criteria instanceof CommonQueryWrapper) {
+                final CommonQueryWrapper<?, ?> query = (CommonQueryWrapper<?, ?>) this.criteria;
                 if (this.onlyFunc == query.isOnlyFunc() && this.containsFunc == query.isContainsFunc()) {
                     return true;
                 }
@@ -210,8 +209,8 @@ public class SelectFragmentStorage extends AbstractFragmentList<Selection> {
         // 检查是否存在指定查询列
         final List<Selection> tmp;
         if (this.hasSelect()) {
-            if (this.criteria instanceof QueryWrapper) {
-                final QueryWrapper<?, ?> query = (QueryWrapper<?, ?>) this.criteria;
+            if (this.criteria instanceof CommonQueryWrapper) {
+                final CommonQueryWrapper<?, ?> query = (CommonQueryWrapper<?, ?>) this.criteria;
                 if (query.isOnlyFunc()) {
                     tmp = this.functions;
                 } else {
