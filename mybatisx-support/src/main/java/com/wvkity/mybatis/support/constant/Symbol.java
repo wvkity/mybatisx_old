@@ -28,162 +28,84 @@ public enum Symbol implements Fragment {
     /**
      * 空
      */
-    NULL {
-        @Override
-        public String getSegment() {
-            return "IS NULL";
-        }
-    },
-
+    NULL("IS NULL"),
     /**
      * 非空
      */
-    NOT_NULL {
-        @Override
-        public String getSegment() {
-            return "IS NOT NULL";
-        }
-    },
-
+    NOT_NULL("IS NOT NULL"),
     /**
      * 等于
      */
-    EQ {
-        @Override
-        public String getSegment() {
-            return "=";
-        }
-    },
-
+    EQ("="),
     /**
      * 不等于
      */
-    NE {
-        @Override
-        public String getSegment() {
-            return "<>";
-        }
-    },
-
+    NE("<>"),
     /**
      * 小于
      */
-    LT {
-        @Override
-        public String getSegment() {
-            return "<";
-        }
-    },
-
+    LT("<"),
     /**
      * 小于等于
      */
-    LE {
-        @Override
-        public String getSegment() {
-            return "<=";
-        }
-    },
-
+    LE("<="),
     /**
      * 大于
      */
-    GT {
-        @Override
-        public String getSegment() {
-            return ">";
-        }
-    },
-
+    GT(">"),
     /**
      * 大于等于
      */
-    GE {
-        @Override
-        public String getSegment() {
-            return ">=";
-        }
-    },
-
+    GE(">="),
     /**
      * IN
      */
-    IN {
-        @Override
-        public String getSegment() {
-            return "IN";
-        }
-    },
-
+    IN("IN"),
     /**
      * NOT IN
      */
-    NOT_IN {
-        @Override
-        public String getSegment() {
-            return "NOT IN";
-        }
-    },
-
+    NOT_IN("NOT IN"),
     /**
      * EXISTS
      */
-    EXISTS {
-        @Override
-        public String getSegment() {
-            return "EXISTS";
-        }
-    },
-
+    EXISTS("EXISTS"),
     /**
      * EXISTS
      */
-    NOT_EXISTS {
-        @Override
-        public String getSegment() {
-            return "NOT EXISTS";
-        }
-    },
-
+    NOT_EXISTS("NOT EXISTS"),
     /**
      * 模糊匹配
      */
-    LIKE {
-        @Override
-        public String getSegment() {
-            return "LIKE";
-        }
-    },
-
+    LIKE("LIKE"),
     /**
      * 模糊匹配
      */
-    NOT_LIKE {
-        @Override
-        public String getSegment() {
-            return "NOT LIKE";
-        }
-    },
-
+    NOT_LIKE("NOT LIKE"),
     /**
      * BETWEEN
      */
-    BETWEEN {
-        @Override
-        public String getSegment() {
-            return "BETWEEN";
-        }
-    },
-
+    BETWEEN("BETWEEN"),
     /**
      * NOT BETWEEN
      */
-    NOT_BETWEEN {
-        @Override
-        public String getSegment() {
-            return "NOT BETWEEN";
-        }
-    };
+    NOT_BETWEEN("NOT BETWEEN");
+
+
+    final String symbol;
+
+    Symbol(String symbol) {
+        this.symbol = symbol;
+    }
+
+    @Override
+    public String getSegment() {
+        return this.symbol;
+    }
+
+    @Override
+    public String toString() {
+        return this.getSegment();
+    }
 
     /**
      * 是否排除指定符号
@@ -193,4 +115,5 @@ public enum Symbol implements Fragment {
     public static boolean filter(final Symbol symbol) {
         return symbol != NULL && symbol != NOT_NULL && symbol != EXISTS && symbol != NOT_EXISTS;
     }
+
 }
