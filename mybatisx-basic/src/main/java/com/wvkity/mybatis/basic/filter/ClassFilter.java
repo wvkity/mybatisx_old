@@ -34,7 +34,7 @@ import java.util.Map;
 public class ClassFilter implements Filter<Class<?>> {
 
     @Override
-    public boolean test(Class<?> it) {
+    public boolean matches(Class<?> it) {
         return it != null && !Object.class.equals(it) && !Serializable.class.equals(it) && !Annotation.class.equals(it)
             && ((!Map.class.isAssignableFrom(it) && !Collection.class.isAssignableFrom(it)) ||
             Reflections.isAnnotationPresent(it, Entity.class, Constants.JPA_ENTITY, Reflections.METADATA_ANNOTATION_FILTER));

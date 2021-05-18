@@ -47,7 +47,7 @@ public class FieldFilter implements Filter<Field> {
     }
 
     @Override
-    public boolean test(Field it) {
+    public boolean matches(Field it) {
         return it != null && !Modifier.isStatic(it.getModifiers()) && !Modifier.isFinal(it.getModifiers())
             && !Reflections.isAnnotationPresent(it, Transient.class, Constants.JPA_TRANSIENT, Reflections.METADATA_ANNOTATION_FILTER)
             && ((this.useSimpleType && Reflections.isSimpleJavaType(it.getType()))

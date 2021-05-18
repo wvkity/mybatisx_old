@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
 public class MethodFilter implements Filter<Method> {
 
     @Override
-    public boolean test(Method it) {
+    public boolean matches(Method it) {
         return it != null && !it.isBridge();
     }
 }

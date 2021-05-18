@@ -21,12 +21,12 @@ import com.wvkity.mybatis.annotation.Entity;
 import com.wvkity.mybatis.annotation.Executing;
 import com.wvkity.mybatis.annotation.GeneratedValue;
 import com.wvkity.mybatis.annotation.GenerationType;
+import com.wvkity.mybatis.annotation.IdStrategy;
 import com.wvkity.mybatis.annotation.Identity;
 import com.wvkity.mybatis.annotation.MultiTenancy;
 import com.wvkity.mybatis.annotation.Naming;
 import com.wvkity.mybatis.annotation.NamingStrategy;
 import com.wvkity.mybatis.annotation.Option;
-import com.wvkity.mybatis.annotation.IdStrategy;
 import com.wvkity.mybatis.annotation.Priority;
 import com.wvkity.mybatis.annotation.Snowflake;
 import com.wvkity.mybatis.annotation.Version;
@@ -56,16 +56,16 @@ import com.wvkity.mybatis.core.auditable.AuditMatching;
 import com.wvkity.mybatis.core.auditable.AuditType;
 import com.wvkity.mybatis.core.auditable.AutomaticAuditableProperties;
 import com.wvkity.mybatis.core.auditable.OriginalProperty;
-import com.wvkity.mybatis.core.auditable.annotation.CreatedDate;
 import com.wvkity.mybatis.core.auditable.annotation.CreatedById;
 import com.wvkity.mybatis.core.auditable.annotation.CreatedByName;
-import com.wvkity.mybatis.core.auditable.annotation.LastModifiedDate;
-import com.wvkity.mybatis.core.auditable.annotation.LastModifiedById;
-import com.wvkity.mybatis.core.auditable.annotation.LastModifiedByName;
-import com.wvkity.mybatis.core.auditable.annotation.LogicDelete;
-import com.wvkity.mybatis.core.auditable.annotation.DeletedDate;
+import com.wvkity.mybatis.core.auditable.annotation.CreatedDate;
 import com.wvkity.mybatis.core.auditable.annotation.DeletedById;
 import com.wvkity.mybatis.core.auditable.annotation.DeletedByName;
+import com.wvkity.mybatis.core.auditable.annotation.DeletedDate;
+import com.wvkity.mybatis.core.auditable.annotation.LastModifiedById;
+import com.wvkity.mybatis.core.auditable.annotation.LastModifiedByName;
+import com.wvkity.mybatis.core.auditable.annotation.LastModifiedDate;
+import com.wvkity.mybatis.core.auditable.annotation.LogicDelete;
 import com.wvkity.mybatis.core.auditable.parser.AuditParser;
 import com.wvkity.mybatis.support.config.MyBatisGlobalConfiguration;
 import com.wvkity.mybatis.support.config.MyBatisLocalConfigurationCache;
@@ -88,7 +88,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Predicate;
 
 /**
  * 默认实体解析器
@@ -110,19 +109,19 @@ public class DefaultEntityParser implements EntityParser, Constants {
     /**
      * 默认父类过滤器
      */
-    private static final ClassFilter DEF_CLASS_FILTER = new ClassFilter();
+    private static final Filter<Class<?>> DEF_CLASS_FILTER = new ClassFilter();
     /**
      * 默认属性过滤器
      */
-    private static final FieldFilter DEF_FIELD_FILTER = FieldFilter.of(true, true);
+    private static final Filter<java.lang.reflect.Field> DEF_FIELD_FILTER = FieldFilter.of(true, true);
     /**
      * 默认get方法过滤器
      */
-    private static final GetMethodFilter DEF_GET_METHOD_FILTER = new GetMethodFilter();
+    private static final Filter<Method> DEF_GET_METHOD_FILTER = new GetMethodFilter();
     /**
      * 默认set方法过滤器
      */
-    private static final SetMethodFilter DEF_SET_METHOD_FILTER = new SetMethodFilter();
+    private static final Filter<Method> DEF_SET_METHOD_FILTER = new SetMethodFilter();
     /**
      * 默认审计属性解析器
      */
@@ -629,9 +628,9 @@ public class DefaultEntityParser implements EntityParser, Constants {
     /**
      * 获取类型过滤器
      * @param configuration 全局配置对象
-     * @return {@link Predicate}对象
+     * @return {@link Filter}对象
      */
-    private Predicate<? super Class<?>> getClassFilter(final MyBatisGlobalConfiguration configuration) {
+    private Filter<Class<?>> getClassFilter(final MyBatisGlobalConfiguration configuration) {
         return Optional.ofNullable(configuration).map(it -> {
             final Filter<Class<?>> filter = it.getClassFilter();
             if (filter == null) {
@@ -647,9 +646,9 @@ public class DefaultEntityParser implements EntityParser, Constants {
      * 获取属性过滤器
      * <p>排除static或final修饰、@Transient注解的、非简单类型、或枚举类型不转换成简单类型的属性</p>
      * @param configuration 全局配置对象
-     * @return {@link Predicate}对象
+     * @return {@link Filter}对象
      */
-    private Predicate<? super java.lang.reflect.Field> getFieldFilter(final MyBatisGlobalConfiguration configuration) {
+    private Filter<java.lang.reflect.Field> getFieldFilter(final MyBatisGlobalConfiguration configuration) {
         return Optional.ofNullable(configuration).map(it -> {
             final Filter<java.lang.reflect.Field> filter = it.getFieldFilter();
             if (filter == null) {
@@ -664,9 +663,9 @@ public class DefaultEntityParser implements EntityParser, Constants {
     /**
      * 获取get方法过滤器
      * @param configuration 全局配置对象
-     * @return {@link Predicate}对象
+     * @return {@link Filter}对象
      */
-    private Predicate<? super Method> getGetterFilter(final MyBatisGlobalConfiguration configuration) {
+    private Filter<Method> getGetterFilter(final MyBatisGlobalConfiguration configuration) {
         return Optional.ofNullable(configuration).map(it -> {
             final Filter<Method> filter = it.getGetterFilter();
             if (filter == null) {
@@ -680,9 +679,9 @@ public class DefaultEntityParser implements EntityParser, Constants {
     /**
      * 获取set方法过滤器
      * @param configuration 全局配置对象
-     * @return {@link Predicate}对象
+     * @return {@link Filter}对象
      */
-    private Predicate<? super Method> getSetterFilter(final MyBatisGlobalConfiguration configuration) {
+    private Filter<Method> getSetterFilter(final MyBatisGlobalConfiguration configuration) {
         return Optional.ofNullable(configuration).map(it -> {
             final Filter<Method> filter = it.getSetterFilter();
             if (filter == null) {

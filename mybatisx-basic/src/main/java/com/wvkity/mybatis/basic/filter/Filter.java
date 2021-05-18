@@ -19,6 +19,7 @@ import java.util.function.Predicate;
 
 /**
  * 过滤器
+ * @param <T> 泛型
  * @author wvkity
  * @created 2020-10-07
  * @since 1.0.0
@@ -27,8 +28,17 @@ import java.util.function.Predicate;
 public interface Filter<T> extends Predicate<T> {
 
     /**
+     * 检查是否匹配
+     * @param it 待检查对象
+     * @return boolean
+     */
+    boolean matches(T it);
+
+    /**
      * {@inheritDoc}
      */
     @Override
-    boolean test(T it);
+    default boolean test(T t) {
+        return this.matches(t);
+    }
 }

@@ -29,8 +29,8 @@ import java.lang.reflect.Method;
 public class GetMethodFilter extends MethodFilter {
 
     @Override
-    public boolean test(Method it) {
-        return super.test(it) && it.getParameterTypes().length == 0 && Reflections.isGetter(it.getName())
+    public boolean matches(Method it) {
+        return super.matches(it) && it.getParameterTypes().length == 0 && Reflections.isGetter(it.getName())
             && Reflections.isValidPropertyName(Reflections.methodToProperty(it.getName()));
     }
 }
