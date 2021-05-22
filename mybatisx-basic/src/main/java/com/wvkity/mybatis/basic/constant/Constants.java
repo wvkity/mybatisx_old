@@ -126,11 +126,15 @@ public interface Constants {
     /**
      * #{
      */
-    String HASH_OPEN_BRACE = "#{";
+    String HASH_BRACE_OPEN = "#{";
     /**
      * ${
      */
-    String DOLLAR_OPEN_BRACE = "${";
+    String DOLLAR_BRACE_OPEN = "${";
+    /**
+     * {
+     */
+    String BRACE_OPEN = "{";
     /**
      * }
      */
@@ -231,6 +235,14 @@ public interface Constants {
      * {@code </script>}
      */
     String SCRIPT_CLOSE = "</script>";
+    /**
+     * ?
+     */
+    String QUESTION_MARK = "?";
+    /**
+     * 单引号
+     */
+    String SINGLE_QUOTES = "'";
     /***
      * 换行符
      */
