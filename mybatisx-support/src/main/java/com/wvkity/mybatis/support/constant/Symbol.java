@@ -88,7 +88,24 @@ public enum Symbol implements Fragment {
     /**
      * NOT BETWEEN
      */
-    NOT_BETWEEN("NOT BETWEEN");
+    NOT_BETWEEN("NOT BETWEEN"),
+    //////// 扩展用 ////////
+    /**
+     * 嵌套
+     */
+    NESTING("NESTING"),
+    /**
+     * 模板
+     */
+    TPL("TEMPLATE"),
+    /**
+     * 特殊
+     */
+    SPECIAL("SPECIAL"),
+    /**
+     * 其他
+     */
+    OTHER("OTHER");
 
 
     final String symbol;
