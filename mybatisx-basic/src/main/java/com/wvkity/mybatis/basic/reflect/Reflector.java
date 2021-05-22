@@ -16,6 +16,7 @@
 package com.wvkity.mybatis.basic.reflect;
 
 import com.wvkity.mybatis.basic.exception.ReflectionException;
+import com.wvkity.mybatis.basic.filter.Filter;
 import com.wvkity.mybatis.basic.immutable.ImmutableLinkedSet;
 import com.wvkity.mybatis.basic.immutable.ImmutableMap;
 import com.wvkity.mybatis.basic.immutable.ImmutableSet;
@@ -89,21 +90,21 @@ public class Reflector implements AnnotationMetadata {
      */
     private final Map<String, Class<?>> setTypes = new HashMap<>();
     /**
-     * 过滤超类{@link Predicate}对象
+     * 过滤超类{@link Filter}对象
      */
-    private Predicate<? super Class<?>> classFilter;
+    private Filter<Class<?>> classFilter;
     /**
-     * 过滤属性{@link Predicate}
+     * 过滤属性{@link Filter}
      */
-    private Predicate<? super Field> fieldFilter;
+    private Filter<Field> fieldFilter;
     /**
-     * get方法过滤器{@link Predicate}
+     * get方法过滤器{@link Filter}
      */
-    private Predicate<? super Method> getterFilter;
+    private Filter<Method> getterFilter;
     /**
-     * set方法过滤器{@link Predicate}
+     * set方法过滤器{@link Filter}
      */
-    private Predicate<? super Method> setterFilter;
+    private Filter<Method> setterFilter;
 
     /**
      * 构造方法
@@ -115,40 +116,40 @@ public class Reflector implements AnnotationMetadata {
 
     /**
      * 设置超类过滤器
-     * @param filter {@link Predicate}对象
+     * @param filter {@link Filter}对象
      * @return {@link Reflector}
      */
-    public Reflector classFilter(final Predicate<? super Class<?>> filter) {
+    public Reflector classFilter(final Filter<Class<?>> filter) {
         this.classFilter = filter;
         return this;
     }
 
     /**
      * 属性过滤器
-     * @param filter {@link Predicate}对象
+     * @param filter {@link Filter}对象
      * @return {@link Reflector}
      */
-    public Reflector fieldFilter(final Predicate<? super Field> filter) {
+    public Reflector fieldFilter(final Filter<Field> filter) {
         this.fieldFilter = filter;
         return this;
     }
 
     /**
      * get方法过滤器
-     * @param filter {@link Predicate}对象
+     * @param filter {@link Filter}对象
      * @return {@link Reflector}
      */
-    public Reflector getterFilter(final Predicate<? super Method> filter) {
+    public Reflector getterFilter(final Filter<Method> filter) {
         this.getterFilter = filter;
         return this;
     }
 
     /**
      * set方法过滤器
-     * @param filter {@link Predicate}对象
+     * @param filter {@link Filter}对象
      * @return {@link Reflector}
      */
-    public Reflector setterFilter(final Predicate<? super Method> filter) {
+    public Reflector setterFilter(final Filter<Method> filter) {
         this.setterFilter = filter;
         return this;
     }
@@ -201,7 +202,8 @@ public class Reflector implements AnnotationMetadata {
         final Set<Method> methods = Reflections.getAllMethods(this.clazz, this.classFilter, this.getterFilter);
         if (Objects.isNotEmpty(methods)) {
             final Map<String, List<Method>> conflictingGetters = new HashMap<>();
-            methods.forEach(it -> addMethodConflict(conflictingGetters, Reflections.methodToProperty(it.getName()), it));
+            methods.forEach(it -> addMethodConflict(conflictingGetters, Reflections.methodToProperty(it.getName()),
+                it));
             resolveGetterConflicts(conflictingGetters);
         }
     }
@@ -251,7 +253,8 @@ public class Reflector implements AnnotationMetadata {
      */
     private void addGetMethod(final String property, final Method method) {
         this.getMethods.put(property, method);
-        this.getTypes.put(property, Reflections.typeToClass(TypeParameterResolver.resolveReturnType(method, this.clazz)));
+        this.getTypes.put(property, Reflections.typeToClass(TypeParameterResolver.resolveReturnType(method,
+            this.clazz)));
     }
 
     /**
@@ -261,7 +264,8 @@ public class Reflector implements AnnotationMetadata {
         final Set<Method> methods = Reflections.getAllMethods(this.clazz, this.classFilter, this.setterFilter);
         if (Objects.isNotEmpty(methods)) {
             final Map<String, List<Method>> conflictingSetters = new HashMap<>();
-            methods.forEach(it -> addMethodConflict(conflictingSetters, Reflections.methodToProperty(it.getName()), it));
+            methods.forEach(it -> addMethodConflict(conflictingSetters, Reflections.methodToProperty(it.getName()),
+                it));
             resolveSetterConflicts(conflictingSetters);
         }
     }

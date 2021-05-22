@@ -967,4 +967,24 @@ public final class Reflections {
         }
         return value;
     }
+
+    /**
+     * 检查参数列表是否不包含数组、集合
+     * @param args 参数列表
+     * @return boolean
+     */
+    public static boolean isPureType(final Iterable<?> args) {
+        Class<?> current = null;
+        for (Object v : args) {
+            final Class<?> clazz = v.getClass();
+            if (clazz.isArray() || Map.class.isAssignableFrom(clazz) || Iterable.class.isAssignableFrom(clazz)) {
+                return false;
+            }
+            if (Objects.nonNull(current) && !current.isAssignableFrom(clazz)) {
+                return false;
+            }
+            current = clazz;
+        }
+        return true;
+    }
 }
