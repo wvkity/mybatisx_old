@@ -198,7 +198,7 @@ public final class Scripts implements Constants {
      */
     public static String safeJoining(final String... args) {
         final String result = Arrays.stream(args).filter(Objects::nonNull).collect(Collectors.joining(EMPTY));
-        return Objects.isBlank(result) ? EMPTY : (HASH_OPEN_BRACE + result + BRACE_CLOSE);
+        return Objects.isBlank(result) ? EMPTY : (HASH_BRACE_OPEN + result + BRACE_CLOSE);
     }
 
     /**
@@ -213,7 +213,7 @@ public final class Scripts implements Constants {
      */
     public static String unsafeJoining(final String... args) {
         final String result = Arrays.stream(args).filter(Objects::nonNull).collect(Collectors.joining(EMPTY));
-        return Objects.isBlank(result) ? EMPTY : (DOLLAR_OPEN_BRACE + result + BRACE_CLOSE);
+        return Objects.isBlank(result) ? EMPTY : (DOLLAR_BRACE_OPEN + result + BRACE_CLOSE);
     }
 
     /**
