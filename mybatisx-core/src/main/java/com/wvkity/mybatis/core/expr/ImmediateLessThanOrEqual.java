@@ -33,7 +33,7 @@ public class ImmediateLessThanOrEqual extends AbstractBasicExpression<String> {
 
     public ImmediateLessThanOrEqual(Criteria<?> criteria, String column, Slot slot, Object value) {
         this.criteria = criteria;
-        this.target = column;
+        this.column = column;
         this.slot = slot;
         this.symbol = Symbol.LE;
         this.value = value;
@@ -41,7 +41,7 @@ public class ImmediateLessThanOrEqual extends AbstractBasicExpression<String> {
 
     public ImmediateLessThanOrEqual(String alias, String column, Slot slot, Object value) {
         this.tableAlias = alias;
-        this.target = column;
+        this.column = column;
         this.slot = slot;
         this.symbol = Symbol.LE;
         this.value = value;

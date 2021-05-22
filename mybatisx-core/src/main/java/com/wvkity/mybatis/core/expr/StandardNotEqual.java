@@ -15,12 +15,13 @@
  */
 package com.wvkity.mybatis.core.expr;
 
+import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.utils.Objects;
-import com.wvkity.mybatis.support.basic.Matched;
-import com.wvkity.mybatis.support.criteria.Criteria;
 import com.wvkity.mybatis.core.expr.builder.AbstractBasicExprBuilder;
+import com.wvkity.mybatis.support.basic.Matched;
 import com.wvkity.mybatis.support.constant.Slot;
 import com.wvkity.mybatis.support.constant.Symbol;
+import com.wvkity.mybatis.support.criteria.Criteria;
 
 /**
  * 不等于条件表达式
@@ -28,13 +29,13 @@ import com.wvkity.mybatis.support.constant.Symbol;
  * @created 2021-01-06
  * @since 1.0.0
  */
-public class StandardNotEqual extends AbstractBasicExpression<String> {
+public class StandardNotEqual extends AbstractBasicExpression<Column> {
 
     private static final long serialVersionUID = -8879802952196072736L;
 
-    public StandardNotEqual(Criteria<?> criteria, String property, Slot slot, Object value) {
+    public StandardNotEqual(Criteria<?> criteria, Column column, Slot slot, Object value) {
         this.criteria = criteria;
-        this.target = property;
+        this.column = column;
         this.slot = slot;
         this.symbol = Symbol.NE;
         this.matched = Matched.STANDARD;
@@ -45,14 +46,14 @@ public class StandardNotEqual extends AbstractBasicExpression<String> {
         return new StandardNotEqual.Builder();
     }
 
-    public static final class Builder extends AbstractBasicExprBuilder<StandardNotEqual, String> {
+    public static final class Builder extends AbstractBasicExprBuilder<StandardNotEqual, Column> {
 
         private Builder() {
         }
 
         @Override
         public StandardNotEqual build() {
-            if (Objects.isNotBlank(this.target)) {
+            if (Objects.nonNull(this.target)) {
                 return new StandardNotEqual(this.criteria, this.target, this.slot, this.value);
             }
             return null;

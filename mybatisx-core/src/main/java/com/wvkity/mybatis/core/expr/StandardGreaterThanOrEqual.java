@@ -15,6 +15,7 @@
  */
 package com.wvkity.mybatis.core.expr;
 
+import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.support.basic.Matched;
 import com.wvkity.mybatis.support.criteria.Criteria;
@@ -28,13 +29,13 @@ import com.wvkity.mybatis.support.constant.Symbol;
  * @created 2021-01-06
  * @since 1.0.0
  */
-public class StandardGreaterThanOrEqual extends AbstractBasicExpression<String> {
+public class StandardGreaterThanOrEqual extends AbstractBasicExpression<Column> {
 
     private static final long serialVersionUID = 2495458818050534028L;
 
-    public StandardGreaterThanOrEqual(Criteria<?> criteria, String property, Slot slot, Object value) {
+    public StandardGreaterThanOrEqual(Criteria<?> criteria, Column column, Slot slot, Object value) {
         this.criteria = criteria;
-        this.target = property;
+        this.column = column;
         this.slot = slot;
         this.symbol = Symbol.GE;
         this.matched = Matched.STANDARD;
@@ -45,14 +46,14 @@ public class StandardGreaterThanOrEqual extends AbstractBasicExpression<String> 
         return new StandardGreaterThanOrEqual.Builder();
     }
 
-    public static final class Builder extends AbstractBasicExprBuilder<StandardGreaterThanOrEqual, String> {
+    public static final class Builder extends AbstractBasicExprBuilder<StandardGreaterThanOrEqual, Column> {
 
         private Builder() {
         }
 
         @Override
         public StandardGreaterThanOrEqual build() {
-            if (Objects.isNotBlank(this.target)) {
+            if (Objects.nonNull(this.target)) {
                 return new StandardGreaterThanOrEqual(this.criteria, this.target, this.slot, this.value);
             }
             return null;

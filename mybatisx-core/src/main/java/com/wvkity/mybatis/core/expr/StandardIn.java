@@ -15,6 +15,7 @@
  */
 package com.wvkity.mybatis.core.expr;
 
+import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.support.basic.Matched;
 import com.wvkity.mybatis.support.criteria.Criteria;
@@ -30,13 +31,13 @@ import java.util.Collection;
  * @created 2021-01-07
  * @since 1.0.0
  */
-public class StandardIn extends AbstractRangeExpression<String> {
+public class StandardIn extends AbstractInExpression<Column> {
 
     private static final long serialVersionUID = 5462592687934802949L;
 
-    public StandardIn(Criteria<?> criteria, String property, Slot slot, Collection<?> values) {
+    public StandardIn(Criteria<?> criteria, Column column, Slot slot, Collection<?> values) {
         this.criteria = criteria;
-        this.target = property;
+        this.column = column;
         this.slot = slot;
         this.values = values;
         this.symbol = Symbol.IN;
@@ -47,14 +48,14 @@ public class StandardIn extends AbstractRangeExpression<String> {
         return new StandardIn.Builder();
     }
 
-    public static final class Builder extends AbstractRangeExprBuilder<StandardIn, String> {
+    public static final class Builder extends AbstractRangeExprBuilder<StandardIn, Column> {
 
         private Builder() {
         }
 
         @Override
         public StandardIn build() {
-            if (Objects.isNotBlank(this.target)) {
+            if (Objects.nonNull(this.target)) {
                 return new StandardIn(this.criteria, this.target, this.slot, this.values);
             }
             return null;

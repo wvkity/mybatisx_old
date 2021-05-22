@@ -34,7 +34,7 @@ public class ImmediateNull extends AbstractNullableExpression<String> {
 
     public ImmediateNull(Criteria<?> criteria, String column, Slot slot) {
         this.criteria = criteria;
-        this.target = column;
+        this.column = column;
         this.slot = slot;
         this.symbol = Symbol.NULL;
         this.matched = Matched.IMMEDIATE;
@@ -42,7 +42,7 @@ public class ImmediateNull extends AbstractNullableExpression<String> {
 
     public ImmediateNull(String alias, String column, Slot slot) {
         this.tableAlias = alias;
-        this.target = column;
+        this.column = column;
         this.slot = slot;
         this.symbol = Symbol.NULL;
         this.matched = Matched.IMMEDIATE;

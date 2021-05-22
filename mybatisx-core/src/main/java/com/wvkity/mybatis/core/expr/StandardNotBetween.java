@@ -15,12 +15,13 @@
  */
 package com.wvkity.mybatis.core.expr;
 
+import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.utils.Objects;
-import com.wvkity.mybatis.support.basic.Matched;
-import com.wvkity.mybatis.support.criteria.Criteria;
 import com.wvkity.mybatis.core.expr.builder.AbstractBetweenExprBuilder;
+import com.wvkity.mybatis.support.basic.Matched;
 import com.wvkity.mybatis.support.constant.Slot;
 import com.wvkity.mybatis.support.constant.Symbol;
+import com.wvkity.mybatis.support.criteria.Criteria;
 
 /**
  * Not between范围条件表达式
@@ -28,13 +29,13 @@ import com.wvkity.mybatis.support.constant.Symbol;
  * @created 2021-01-07
  * @since 1.0.0
  */
-public class StandardNotBetween extends AbstractBetweenExpression<String> {
+public class StandardNotBetween extends AbstractBetweenExpression<Column> {
 
     private static final long serialVersionUID = -5107081321447906415L;
 
-    public StandardNotBetween(Criteria<?> criteria, String property, Slot slot, Object begin, Object end) {
+    public StandardNotBetween(Criteria<?> criteria, Column column, Slot slot, Object begin, Object end) {
         this.criteria = criteria;
-        this.target = property;
+        this.column = column;
         this.slot = slot;
         this.symbol = Symbol.NOT_BETWEEN;
         this.matched = Matched.STANDARD;
@@ -46,14 +47,14 @@ public class StandardNotBetween extends AbstractBetweenExpression<String> {
         return new StandardNotBetween.Builder();
     }
 
-    public static final class Builder extends AbstractBetweenExprBuilder<StandardNotBetween, String> {
+    public static final class Builder extends AbstractBetweenExprBuilder<StandardNotBetween, Column> {
 
         private Builder() {
         }
 
         @Override
         public StandardNotBetween build() {
-            if (Objects.isNotBlank(this.target)) {
+            if (Objects.nonNull(this.target)) {
                 return new StandardNotBetween(this.criteria, this.target, this.slot, this.begin, this.end);
             }
             return null;

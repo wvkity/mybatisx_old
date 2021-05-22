@@ -30,13 +30,13 @@ import java.util.Collection;
  * @created 2021-01-07
  * @since 1.0.0
  */
-public class ImmediateNotIn extends AbstractRangeExpression<String> {
+public class ImmediateNotIn extends AbstractInExpression<String> {
 
     private static final long serialVersionUID = 893533913883915181L;
 
     public ImmediateNotIn(Criteria<?> criteria, String column, Slot slot, Collection<?> values) {
         this.criteria = criteria;
-        this.target = column;
+        this.column = column;
         this.slot = slot;
         this.values = values;
         this.symbol = Symbol.NOT_IN;
@@ -45,7 +45,7 @@ public class ImmediateNotIn extends AbstractRangeExpression<String> {
 
     public ImmediateNotIn(String alias, String column, Slot slot, Collection<?> values) {
         this.tableAlias = alias;
-        this.target = column;
+        this.column = column;
         this.slot = slot;
         this.values = values;
         this.symbol = Symbol.NOT_IN;

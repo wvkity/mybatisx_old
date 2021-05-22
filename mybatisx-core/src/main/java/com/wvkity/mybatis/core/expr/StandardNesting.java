@@ -17,6 +17,7 @@ package com.wvkity.mybatis.core.expr;
 
 import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.support.basic.Matched;
+import com.wvkity.mybatis.support.constant.Symbol;
 import com.wvkity.mybatis.support.criteria.Criteria;
 import com.wvkity.mybatis.core.expr.builder.ExprBuilder;
 import com.wvkity.mybatis.support.expr.Expression;
@@ -33,7 +34,7 @@ import java.util.stream.Collectors;
  * @created 2021-01-07
  * @since 1.0.0
  */
-public class StandardNesting extends AbstractExpression<Expression> {
+public class StandardNesting extends AbstractExpression<Expression<?>> {
 
     private static final long serialVersionUID = -8266095025799360421L;
     /**
@@ -43,14 +44,15 @@ public class StandardNesting extends AbstractExpression<Expression> {
     /**
      * 条件表达式集合
      */
-    private final List<Expression> conditions = new ArrayList<>();
+    private final List<Expression<?>> conditions = new ArrayList<>();
 
-    public StandardNesting(Criteria<?> criteria, boolean not, Slot slot, List<Expression> conditions) {
+    public StandardNesting(Criteria<?> criteria, boolean not, Slot slot, List<Expression<?>> conditions) {
         this.criteria = criteria;
         this.not = not;
         this.slot = slot;
         this.addAll(conditions);
         this.matched = Matched.STANDARD;
+        this.symbol = Symbol.NESTING;
     }
 
     /**
@@ -58,7 +60,7 @@ public class StandardNesting extends AbstractExpression<Expression> {
      * @param conditions 多个条件表达式
      * @return {@link StandardNesting}
      */
-    public StandardNesting addAll(final Expression... conditions) {
+    public StandardNesting addAll(final Expression<?>... conditions) {
         return this.addAll(Objects.asList(conditions));
     }
 
@@ -67,7 +69,7 @@ public class StandardNesting extends AbstractExpression<Expression> {
      * @param conditions 多个条件表达式
      * @return {@link StandardNesting}
      */
-    public StandardNesting addAll(final Collection<Expression> conditions) {
+    public StandardNesting addAll(final Collection<Expression<?>> conditions) {
         return this.addAll(null, conditions);
     }
 
@@ -77,7 +79,7 @@ public class StandardNesting extends AbstractExpression<Expression> {
      * @param conditions 多个条件表达式
      * @return {@link StandardNesting}
      */
-    public StandardNesting addAll(final Criteria<?> criteria, final Expression... conditions) {
+    public StandardNesting addAll(final Criteria<?> criteria, final Expression<?>... conditions) {
         return this.addAll(criteria, Objects.asList(conditions));
     }
 
@@ -87,7 +89,7 @@ public class StandardNesting extends AbstractExpression<Expression> {
      * @param conditions 多个条件表达式
      * @return {@link StandardNesting}
      */
-    public StandardNesting addAll(final Criteria<?> criteria, final Collection<Expression> conditions) {
+    public StandardNesting addAll(final Criteria<?> criteria, final Collection<Expression<?>> conditions) {
         if (Objects.isNotEmpty(conditions)) {
             final Criteria<?> ci = criteria == null ? this.getCriteria() : criteria;
             this.conditions.addAll(conditions.stream().filter(Objects::nonNull).map(it ->
@@ -105,7 +107,7 @@ public class StandardNesting extends AbstractExpression<Expression> {
         return not;
     }
 
-    public List<Expression> getConditions() {
+    public List<Expression<?>> getConditions() {
         return conditions;
     }
 
@@ -129,7 +131,7 @@ public class StandardNesting extends AbstractExpression<Expression> {
         /**
          * 条件集合
          */
-        private List<Expression> conditions;
+        private List<Expression<?>> conditions;
 
         private Builder() {
         }
@@ -154,7 +156,7 @@ public class StandardNesting extends AbstractExpression<Expression> {
             return this;
         }
 
-        public Builder conditions(List<Expression> conditions) {
+        public Builder conditions(List<Expression<?>> conditions) {
             this.conditions = conditions;
             return this;
         }

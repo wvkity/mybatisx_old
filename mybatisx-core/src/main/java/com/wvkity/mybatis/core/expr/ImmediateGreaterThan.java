@@ -34,7 +34,7 @@ public class ImmediateGreaterThan extends AbstractBasicExpression<String> {
 
     public ImmediateGreaterThan(Criteria<?> criteria, String column, Slot slot, Object value) {
         this.criteria = criteria;
-        this.target = column;
+        this.column = column;
         this.slot = slot;
         this.symbol = Symbol.GT;
         this.matched = Matched.IMMEDIATE;
@@ -43,7 +43,7 @@ public class ImmediateGreaterThan extends AbstractBasicExpression<String> {
 
     public ImmediateGreaterThan(String alias, String column, Slot slot, Object value) {
         this.tableAlias = alias;
-        this.target = column;
+        this.column = column;
         this.slot = slot;
         this.symbol = Symbol.GT;
         this.matched = Matched.IMMEDIATE;

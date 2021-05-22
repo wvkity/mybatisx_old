@@ -15,12 +15,13 @@
  */
 package com.wvkity.mybatis.core.expr;
 
+import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.utils.Objects;
-import com.wvkity.mybatis.support.basic.Matched;
-import com.wvkity.mybatis.support.criteria.Criteria;
 import com.wvkity.mybatis.core.expr.builder.AbstractExprBuilder;
+import com.wvkity.mybatis.support.basic.Matched;
 import com.wvkity.mybatis.support.constant.Slot;
 import com.wvkity.mybatis.support.constant.Symbol;
+import com.wvkity.mybatis.support.criteria.Criteria;
 
 /**
  * NOT NULL条件表达式
@@ -28,13 +29,13 @@ import com.wvkity.mybatis.support.constant.Symbol;
  * @created 2021-01-09
  * @since 1.0.0
  */
-public class StandardNotNull extends AbstractNullableExpression<String> {
+public class StandardNotNull extends AbstractNullableExpression<Column> {
 
     private static final long serialVersionUID = 8443593657388476364L;
 
-    public StandardNotNull(Criteria<?> criteria, String property, Slot slot) {
+    public StandardNotNull(Criteria<?> criteria, Column column, Slot slot) {
         this.criteria = criteria;
-        this.target = property;
+        this.column = column;
         this.slot = slot;
         this.symbol = Symbol.NOT_NULL;
         this.matched = Matched.STANDARD;
@@ -44,14 +45,14 @@ public class StandardNotNull extends AbstractNullableExpression<String> {
         return new StandardNotNull.Builder();
     }
 
-    public static final class Builder extends AbstractExprBuilder<StandardNotNull, String> {
+    public static final class Builder extends AbstractExprBuilder<StandardNotNull, Column> {
 
         private Builder() {
         }
 
         @Override
         public StandardNotNull build() {
-            if (Objects.isNotBlank(this.target)) {
+            if (Objects.nonNull(this.target)) {
                 return new StandardNotNull(this.criteria, this.target, this.slot);
             }
             return null;

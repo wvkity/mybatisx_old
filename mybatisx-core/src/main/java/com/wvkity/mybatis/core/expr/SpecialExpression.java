@@ -16,6 +16,7 @@
 package com.wvkity.mybatis.core.expr;
 
 import com.wvkity.mybatis.support.basic.Matched;
+import com.wvkity.mybatis.support.constant.Symbol;
 import com.wvkity.mybatis.support.criteria.Criteria;
 
 /**
@@ -70,11 +71,12 @@ public class SpecialExpression extends AbstractExpression<String> {
                              String otherTableAlias, String otherTarget) {
         this.criteria = criteria;
         this.tableAlias = tableAlias;
-        this.target = target;
+        this.column = target;
         this.otherCriteria = otherCriteria;
         this.otherTableAlias = otherTableAlias;
         this.otherTarget = otherTarget;
         this.matched = Matched.IMMEDIATE;
+        this.symbol = Symbol.SPECIAL;
     }
 
     public Criteria<?> getOtherCriteria() {

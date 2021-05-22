@@ -34,7 +34,7 @@ public class ImmediateBetween extends AbstractBetweenExpression<String> {
 
     public ImmediateBetween(Criteria<?> criteria, String column, Slot slot, Object begin, Object end) {
         this.criteria = criteria;
-        this.target = column;
+        this.column = column;
         this.slot = slot;
         this.symbol = Symbol.BETWEEN;
         this.matched = Matched.IMMEDIATE;
@@ -44,7 +44,7 @@ public class ImmediateBetween extends AbstractBetweenExpression<String> {
 
     public ImmediateBetween(String alias, String column, Slot slot, Object begin, Object end) {
         this.tableAlias = alias;
-        this.target = column;
+        this.column = column;
         this.slot = slot;
         this.symbol = Symbol.BETWEEN;
         this.matched = Matched.IMMEDIATE;

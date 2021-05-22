@@ -37,7 +37,7 @@ public class ImmediateTemplate extends AbstractTemplateExpression<String> {
     public ImmediateTemplate(Criteria<?> criteria, String column, String template, TemplateMatch match, Slot slot,
                              Object value, Collection<Object> listValues, Map<String, Object> mapValues) {
         this.criteria = criteria;
-        this.target = column;
+        this.column = column;
         this.template = template;
         this.match = match;
         this.slot = slot;

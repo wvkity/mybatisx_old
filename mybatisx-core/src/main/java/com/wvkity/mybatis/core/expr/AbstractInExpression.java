@@ -24,7 +24,7 @@ import java.util.Collection;
  * @created 2021-01-07
  * @since 1.0.0
  */
-public abstract class AbstractRangeExpression<E> extends AbstractExpression<E> {
+public abstract class AbstractInExpression<E> extends AbstractExpression<E> {
 
     private static final long serialVersionUID = 5735695407715135956L;
 

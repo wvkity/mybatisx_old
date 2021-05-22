@@ -15,6 +15,7 @@
  */
 package com.wvkity.mybatis.core.expr;
 
+import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.support.basic.Matched;
 import com.wvkity.mybatis.support.criteria.Criteria;
@@ -28,13 +29,13 @@ import com.wvkity.mybatis.support.constant.Symbol;
  * @created 2021-01-07
  * @since 1.0.0
  */
-public class StandardBetween extends AbstractBetweenExpression<String> {
+public class StandardBetween extends AbstractBetweenExpression<Column> {
 
     private static final long serialVersionUID = -5335171321951491035L;
 
-    public StandardBetween(Criteria<?> criteria, String property, Slot slot, Object begin, Object end) {
+    public StandardBetween(Criteria<?> criteria, Column column, Slot slot, Object begin, Object end) {
         this.criteria = criteria;
-        this.target = property;
+        this.column = column;
         this.slot = slot;
         this.symbol = Symbol.BETWEEN;
         this.matched = Matched.STANDARD;
@@ -46,14 +47,14 @@ public class StandardBetween extends AbstractBetweenExpression<String> {
         return new StandardBetween.Builder();
     }
 
-    public static final class Builder extends AbstractBetweenExprBuilder<StandardBetween, String> {
+    public static final class Builder extends AbstractBetweenExprBuilder<StandardBetween, Column> {
 
         private Builder() {
         }
 
         @Override
         public StandardBetween build() {
-            if (Objects.isNotBlank(this.target)) {
+            if (Objects.nonNull(this.target)) {
                 return new StandardBetween(this.criteria, this.target, this.slot, this.begin, this.end);
             }
             return null;

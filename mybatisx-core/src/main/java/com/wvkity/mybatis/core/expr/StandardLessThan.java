@@ -15,6 +15,7 @@
  */
 package com.wvkity.mybatis.core.expr;
 
+import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.support.basic.Matched;
 import com.wvkity.mybatis.support.criteria.Criteria;
@@ -28,13 +29,13 @@ import com.wvkity.mybatis.support.constant.Symbol;
  * @created 2021-01-06
  * @since 1.0.0
  */
-public class StandardLessThan extends AbstractBasicExpression<String> {
+public class StandardLessThan extends AbstractBasicExpression<Column> {
 
     private static final long serialVersionUID = -112105594246363693L;
 
-    public StandardLessThan(Criteria<?> criteria, String property, Slot slot, Object value) {
+    public StandardLessThan(Criteria<?> criteria, Column column, Slot slot, Object value) {
         this.criteria = criteria;
-        this.target = property;
+        this.column = column;
         this.slot = slot;
         this.symbol = Symbol.LT;
         this.matched = Matched.STANDARD;
@@ -45,14 +46,14 @@ public class StandardLessThan extends AbstractBasicExpression<String> {
         return new StandardLessThan.Builder();
     }
 
-    public static final class Builder extends AbstractBasicExprBuilder<StandardLessThan, String> {
+    public static final class Builder extends AbstractBasicExprBuilder<StandardLessThan, Column> {
 
         private Builder() {
         }
 
         @Override
         public StandardLessThan build() {
-            if (Objects.isNotBlank(this.target)) {
+            if (Objects.nonNull(this.target)) {
                 return new StandardLessThan(this.criteria, this.target, this.slot, this.value);
             }
             return null;

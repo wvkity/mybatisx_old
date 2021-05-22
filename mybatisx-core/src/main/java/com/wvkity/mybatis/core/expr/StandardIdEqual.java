@@ -15,6 +15,7 @@
  */
 package com.wvkity.mybatis.core.expr;
 
+import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.support.basic.Matched;
 import com.wvkity.mybatis.support.criteria.Criteria;
 import com.wvkity.mybatis.support.constant.Slot;
@@ -26,7 +27,7 @@ import com.wvkity.mybatis.support.constant.Symbol;
  * @created 2021-01-06
  * @since 1.0.0
  */
-public class StandardIdEqual extends AbstractBasicExpression<String> {
+public class StandardIdEqual extends AbstractBasicExpression<Column> {
 
     private static final long serialVersionUID = -1735853549185563L;
 

@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.core.expr;
 
-import com.wvkity.mybatis.core.criteria.QueryWrapper;
+import com.wvkity.mybatis.core.criteria.ExtCriteria;
 import com.wvkity.mybatis.support.basic.Matched;
 import com.wvkity.mybatis.support.constant.Slot;
 import com.wvkity.mybatis.support.constant.Symbol;
@@ -32,11 +32,11 @@ public class ExistsExpression extends AbstractExpression<String> {
 
     private static final long serialVersionUID = -7798546725462282249L;
 
-    public ExistsExpression(QueryWrapper<?, ?> criteria, Slot slot) {
+    public ExistsExpression(ExtCriteria<?> criteria, Slot slot) {
         this(criteria, false, slot);
     }
 
-    public ExistsExpression(QueryWrapper<?, ?> criteria, boolean not, Slot slot) {
+    public ExistsExpression(ExtCriteria<?> criteria, boolean not, Slot slot) {
         this.criteria = criteria;
         this.slot = slot;
         this.symbol = not ? Symbol.NOT_EXISTS : Symbol.EXISTS;

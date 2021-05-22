@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.core.expr;
 
-import com.wvkity.mybatis.core.criteria.QueryWrapper;
+import com.wvkity.mybatis.core.criteria.ExtCriteria;
 import com.wvkity.mybatis.support.basic.Matched;
 import com.wvkity.mybatis.support.constant.Slot;
 import com.wvkity.mybatis.support.constant.Symbol;
@@ -29,53 +29,53 @@ import com.wvkity.mybatis.support.criteria.Criteria;
  */
 public class SubQueryExpression extends AbstractExpression<String> {
 
-    private final QueryWrapper<?, ?> query;
+    private final ExtCriteria<?> query;
 
-    public SubQueryExpression(Criteria<?> criteria, String column, QueryWrapper<?, ?> query) {
+    public SubQueryExpression(Criteria<?> criteria, String column, ExtCriteria<?> query) {
         this(criteria, column, query, Slot.AND, Symbol.EQ);
     }
 
-    public SubQueryExpression(Criteria<?> criteria, String column, QueryWrapper<?, ?> query, Symbol symbol) {
+    public SubQueryExpression(Criteria<?> criteria, String column, ExtCriteria<?> query, Symbol symbol) {
         this(criteria, column, query, Slot.AND, symbol);
     }
 
-    public SubQueryExpression(Criteria<?> criteria, String column, QueryWrapper<?, ?> query, Slot slot) {
+    public SubQueryExpression(Criteria<?> criteria, String column, ExtCriteria<?> query, Slot slot) {
         this(criteria, column, query, slot, Symbol.EQ);
     }
 
-    public SubQueryExpression(Criteria<?> criteria, String column, QueryWrapper<?, ?> query,
+    public SubQueryExpression(Criteria<?> criteria, String column, ExtCriteria<?> query,
                               Slot slot, Symbol symbol) {
         this.criteria = criteria;
-        this.target = column;
+        this.column = column;
         this.query = query;
         this.slot = slot;
         this.symbol = symbol;
         this.matched = Matched.IMMEDIATE;
     }
 
-    public SubQueryExpression(String alias, String column, QueryWrapper<?, ?> query) {
+    public SubQueryExpression(String alias, String column, ExtCriteria<?> query) {
         this(alias, column, query, Slot.AND, Symbol.EQ);
     }
 
-    public SubQueryExpression(String alias, String column, QueryWrapper<?, ?> query, Symbol symbol) {
+    public SubQueryExpression(String alias, String column, ExtCriteria<?> query, Symbol symbol) {
         this(alias, column, query, Slot.AND, symbol);
     }
 
-    public SubQueryExpression(String alias, String column, QueryWrapper<?, ?> query, Slot slot) {
+    public SubQueryExpression(String alias, String column, ExtCriteria<?> query, Slot slot) {
         this(alias, column, query, slot, Symbol.EQ);
     }
 
-    public SubQueryExpression(String alias, String column, QueryWrapper<?, ?> query,
+    public SubQueryExpression(String alias, String column, ExtCriteria<?> query,
                               Slot slot, Symbol symbol) {
         this.tableAlias = alias;
-        this.target = column;
+        this.column = column;
         this.query = query;
         this.slot = slot;
         this.symbol = symbol;
         this.matched = Matched.IMMEDIATE;
     }
 
-    public QueryWrapper<?, ?> getQuery() {
+    public ExtCriteria<?> getQuery() {
         return query;
     }
 }

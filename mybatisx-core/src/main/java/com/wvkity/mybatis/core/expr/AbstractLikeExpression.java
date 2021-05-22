@@ -24,7 +24,7 @@ import com.wvkity.mybatis.support.constant.Like;
  * @created 2021-01-08
  * @since 1.0.0
  */
-public abstract class AbstractFuzzyExpression<E> extends AbstractExpression<E> {
+public abstract class AbstractLikeExpression<E> extends AbstractExpression<E> {
 
     /**
      * 匹配模式

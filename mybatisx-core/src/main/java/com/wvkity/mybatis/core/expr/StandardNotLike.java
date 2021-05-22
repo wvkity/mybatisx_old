@@ -15,6 +15,7 @@
  */
 package com.wvkity.mybatis.core.expr;
 
+import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.support.basic.Matched;
 import com.wvkity.mybatis.support.criteria.Criteria;
@@ -29,15 +30,15 @@ import com.wvkity.mybatis.support.constant.Symbol;
  * @created 2021-01-08
  * @since 1.0.0
  */
-public class StandardNotLike extends AbstractFuzzyExpression<String> {
+public class StandardNotLike extends AbstractLikeExpression<Column> {
 
     private static final long serialVersionUID = 5881853809637635749L;
 
-    public StandardNotLike(Criteria<?> criteria, String property, Like mode,
+    public StandardNotLike(Criteria<?> criteria, Column column, Like like,
                            Character escape, Slot slot, Object value) {
         this.criteria = criteria;
-        this.target = property;
-        this.like = mode;
+        this.column = column;
+        this.like = like;
         this.escape = escape;
         this.slot = slot;
         this.value = value;
@@ -49,14 +50,14 @@ public class StandardNotLike extends AbstractFuzzyExpression<String> {
         return new StandardNotLike.Builder();
     }
 
-    public static final class Builder extends AbstractFuzzyExprBuilder<StandardNotLike, String> {
+    public static final class Builder extends AbstractFuzzyExprBuilder<StandardNotLike, Column> {
 
         private Builder() {
         }
 
         @Override
         public StandardNotLike build() {
-            if (Objects.isNotBlank(this.target)) {
+            if (Objects.nonNull(this.target)) {
                 return new StandardNotLike(this.criteria, this.target, this.like, this.escape, this.slot, this.value);
             }
             return null;

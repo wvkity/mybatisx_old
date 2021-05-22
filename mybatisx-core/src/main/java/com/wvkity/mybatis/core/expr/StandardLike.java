@@ -15,13 +15,14 @@
  */
 package com.wvkity.mybatis.core.expr;
 
+import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.utils.Objects;
-import com.wvkity.mybatis.support.basic.Matched;
-import com.wvkity.mybatis.support.criteria.Criteria;
 import com.wvkity.mybatis.core.expr.builder.AbstractFuzzyExprBuilder;
+import com.wvkity.mybatis.support.basic.Matched;
 import com.wvkity.mybatis.support.constant.Like;
 import com.wvkity.mybatis.support.constant.Slot;
 import com.wvkity.mybatis.support.constant.Symbol;
+import com.wvkity.mybatis.support.criteria.Criteria;
 
 /**
  * Like模糊匹配条件表达式
@@ -29,14 +30,14 @@ import com.wvkity.mybatis.support.constant.Symbol;
  * @created 2021-01-08
  * @since 1.0.0
  */
-public class StandardLike extends AbstractFuzzyExpression<String> {
+public class StandardLike extends AbstractLikeExpression<Column> {
 
     private static final long serialVersionUID = -7938299272126062419L;
 
-    public StandardLike(Criteria<?> criteria, String property, Like mode, Character escape, Slot slot, Object value) {
+    public StandardLike(Criteria<?> criteria, Column column, Like like, Character escape, Slot slot, Object value) {
         this.criteria = criteria;
-        this.target = property;
-        this.like = mode;
+        this.column = column;
+        this.like = like;
         this.escape = escape;
         this.slot = slot;
         this.value = value;
@@ -48,14 +49,14 @@ public class StandardLike extends AbstractFuzzyExpression<String> {
         return new StandardLike.Builder();
     }
 
-    public static final class Builder extends AbstractFuzzyExprBuilder<StandardLike, String> {
+    public static final class Builder extends AbstractFuzzyExprBuilder<StandardLike, Column> {
 
         private Builder() {
         }
 
         @Override
         public StandardLike build() {
-            if (Objects.isNotBlank(this.target)) {
+            if (Objects.nonNull(this.target)) {
                 return new StandardLike(this.criteria, this.target, this.like, this.escape, this.slot, this.value);
             }
             return null;

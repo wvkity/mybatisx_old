@@ -30,13 +30,13 @@ import java.util.Collection;
  * @created 2021-01-07
  * @since 1.0.0
  */
-public class ImmediateIn extends AbstractRangeExpression<String> {
+public class ImmediateIn extends AbstractInExpression<String> {
 
     private static final long serialVersionUID = 6345569461265134215L;
 
     public ImmediateIn(Criteria<?> criteria, String column, Slot slot, Collection<?> values) {
         this.criteria = criteria;
-        this.target = column;
+        this.column = column;
         this.slot = slot;
         this.values = values;
         this.symbol = Symbol.IN;
@@ -45,7 +45,7 @@ public class ImmediateIn extends AbstractRangeExpression<String> {
 
     public ImmediateIn(String alias, String property, Slot slot, Collection<?> values) {
         this.tableAlias = alias;
-        this.target = property;
+        this.column = property;
         this.slot = slot;
         this.values = values;
         this.symbol = Symbol.IN;

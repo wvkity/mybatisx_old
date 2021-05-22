@@ -34,7 +34,7 @@ public class ImmediateEqual extends AbstractBasicExpression<String> {
 
     public ImmediateEqual(Criteria<?> criteria, String column, Slot slot, Object value) {
         this.criteria = criteria;
-        this.target = column;
+        this.column = column;
         this.slot = slot;
         this.symbol = Symbol.EQ;
         this.matched = Matched.IMMEDIATE;
@@ -43,7 +43,7 @@ public class ImmediateEqual extends AbstractBasicExpression<String> {
 
     public ImmediateEqual(String alias, String column, Slot slot, Object value) {
         this.tableAlias = alias;
-        this.target = column;
+        this.column = column;
         this.slot = slot;
         this.value = value;
         this.symbol = Symbol.EQ;

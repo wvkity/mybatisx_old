@@ -15,6 +15,7 @@
  */
 package com.wvkity.mybatis.core.expr;
 
+import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.support.basic.Matched;
 import com.wvkity.mybatis.support.criteria.Criteria;
@@ -28,13 +29,13 @@ import com.wvkity.mybatis.support.constant.Symbol;
  * @created 2021-01-09
  * @since 1.0.0
  */
-public class StandardNull extends AbstractNullableExpression<String> {
+public class StandardNull extends AbstractNullableExpression<Column> {
 
     private static final long serialVersionUID = 3125090725718103619L;
 
-    public StandardNull(Criteria<?> criteria, String property, Slot slot) {
+    public StandardNull(Criteria<?> criteria, Column column, Slot slot) {
         this.criteria = criteria;
-        this.target = property;
+        this.column = column;
         this.slot = slot;
         this.symbol = Symbol.NULL;
         this.matched = Matched.STANDARD;
@@ -44,14 +45,14 @@ public class StandardNull extends AbstractNullableExpression<String> {
         return new StandardNull.Builder();
     }
 
-    public static final class Builder extends AbstractExprBuilder<StandardNull, String> {
+    public static final class Builder extends AbstractExprBuilder<StandardNull, Column> {
 
         private Builder() {
         }
 
         @Override
         public StandardNull build() {
-            if (Objects.isNotBlank(this.target)) {
+            if (Objects.nonNull(this.target)) {
                 return new StandardNull(this.criteria, this.target, this.slot);
             }
             return null;

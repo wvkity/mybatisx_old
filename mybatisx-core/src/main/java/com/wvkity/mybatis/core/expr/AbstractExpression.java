@@ -28,16 +28,16 @@ import com.wvkity.mybatis.support.constant.Symbol;
  * @created 2021-01-06
  * @since 1.0.0
  */
-public abstract class AbstractExpression<E> implements Expression {
+public abstract class AbstractExpression<E> implements Expression<E> {
 
     /**
      * {@link Criteria}对象
      */
     protected Criteria<?> criteria;
     /**
-     * 字段/属性
+     * 字段
      */
-    protected E target;
+    protected E column;
     /**
      * 表别名
      */
@@ -61,9 +61,8 @@ public abstract class AbstractExpression<E> implements Expression {
     }
 
     @Override
-    public String getTarget() {
-        return this.target == null ? null : this.target instanceof String ?
-            (String) this.target : String.valueOf(this.target);
+    public E getColumn() {
+        return this.column;
     }
 
     @Override
@@ -94,7 +93,7 @@ public abstract class AbstractExpression<E> implements Expression {
     }
 
     @Override
-    public Matched getExprMode() {
+    public Matched getExprMatched() {
         return this.matched;
     }
 }

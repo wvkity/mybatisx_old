@@ -29,14 +29,14 @@ import com.wvkity.mybatis.support.constant.Symbol;
  * @created 2021-01-09
  * @since 1.0.0
  */
-public class ImmediateLike extends AbstractFuzzyExpression<String> {
+public class ImmediateLike extends AbstractLikeExpression<String> {
 
     private static final long serialVersionUID = 437732395610721845L;
 
     public ImmediateLike(Criteria<?> criteria, String column, Like like,
                          Character escape, Slot slot, Object value) {
         this.criteria = criteria;
-        this.target = column;
+        this.column = column;
         this.like = like;
         this.escape = escape;
         this.slot = slot;
@@ -48,7 +48,7 @@ public class ImmediateLike extends AbstractFuzzyExpression<String> {
     public ImmediateLike(String alias, String column, Like like,
                          Character escape, Slot slot, Object value) {
         this.tableAlias = alias;
-        this.target = column;
+        this.column = column;
         this.like = like;
         this.escape = escape;
         this.slot = slot;
