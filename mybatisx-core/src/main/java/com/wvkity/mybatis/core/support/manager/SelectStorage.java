@@ -13,15 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.basic.manager;
+package com.wvkity.mybatis.core.support.manager;
 
 import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.basic.immutable.ImmutableList;
 import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.utils.Objects;
-import com.wvkity.mybatis.core.basic.select.FuncSelection;
-import com.wvkity.mybatis.core.basic.select.Selection;
-import com.wvkity.mybatis.core.basic.select.StandardSelection;
+import com.wvkity.mybatis.core.criteria.query.CommonQueryWrapper;
+import com.wvkity.mybatis.core.support.select.FuncSelection;
+import com.wvkity.mybatis.core.support.select.Selection;
+import com.wvkity.mybatis.core.support.select.StandardSelection;
 import com.wvkity.mybatis.support.basic.Matched;
 import com.wvkity.mybatis.support.criteria.Criteria;
 import com.wvkity.mybatis.support.helper.TableHelper;
@@ -43,7 +44,7 @@ import java.util.stream.Collectors;
  * @created 2021-04-22
  * @since 1.0.0
  */
-public class SelectFragmentStorage extends AbstractFragmentList<Selection> {
+public class SelectStorage extends AbstractFragmentList<Selection> {
 
     private static final long serialVersionUID = -208223190434766226L;
 
@@ -88,16 +89,16 @@ public class SelectFragmentStorage extends AbstractFragmentList<Selection> {
      */
     private boolean onlyFunc;
 
-    public SelectFragmentStorage(Criteria<?> criteria) {
+    public SelectStorage(Criteria<?> criteria) {
         this.criteria = criteria;
     }
 
     /**
      * 添加{@link Selection}
      * @param selection {@link Selection}
-     * @return {@link SelectFragmentStorage}
+     * @return {@link SelectStorage}
      */
-    public SelectFragmentStorage select(final Selection selection) {
+    public SelectStorage select(final Selection selection) {
         if (selection != null) {
             this.cache(selection);
             this.cached.compareAndSet(true, false);
@@ -108,9 +109,9 @@ public class SelectFragmentStorage extends AbstractFragmentList<Selection> {
     /**
      * 添加多个{@link Selection}
      * @param selections {@link Selection}列表
-     * @return {@link SelectFragmentStorage}
+     * @return {@link SelectStorage}
      */
-    public SelectFragmentStorage select(final Collection<Selection> selections) {
+    public SelectStorage select(final Collection<Selection> selections) {
         if (Objects.isNotEmpty(selections)) {
             final List<Selection> its = selections.stream().filter(Objects::nonNull).collect(Collectors.toList());
             if (Objects.isNotEmpty(its)) {
@@ -139,12 +140,12 @@ public class SelectFragmentStorage extends AbstractFragmentList<Selection> {
     /**
      * 过滤查询列
      * @param property 属性
-     * @return {@link SelectFragmentStorage}
+     * @return {@link SelectStorage}
      */
-    public SelectFragmentStorage exclude(final String property) {
+    public SelectStorage exclude(final String property) {
         if (Objects.isNotBlank(property)) {
             this.excludeProperties.add(property);
-            this.cached.compareAndSet(true, false);
+            this.cached.set(false);
         }
         return this;
     }
@@ -152,12 +153,12 @@ public class SelectFragmentStorage extends AbstractFragmentList<Selection> {
     /**
      * 过滤查询列
      * @param column 字段
-     * @return {@link SelectFragmentStorage}
+     * @return {@link SelectStorage}
      */
-    public SelectFragmentStorage excludeCol(final String column) {
+    public SelectStorage excludeCol(final String column) {
         if (Objects.isNotBlank(column)) {
             this.excludeColumns.add(column);
-            this.cached.compareAndSet(true, false);
+            this.cached.set(false);
         }
         return this;
     }
@@ -179,7 +180,7 @@ public class SelectFragmentStorage extends AbstractFragmentList<Selection> {
                 }
                 this.onlyFunc = query.isOnlyFunc();
                 this.containsFunc = query.isContainsFunc();
-                this.cached.compareAndSet(true, false);
+                this.cached.set(false);
             }
         }
         return false;

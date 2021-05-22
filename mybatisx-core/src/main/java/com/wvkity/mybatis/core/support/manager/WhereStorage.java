@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.basic.manager;
+package com.wvkity.mybatis.core.support.manager;
 
 import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.basic.immutable.ImmutableList;
@@ -30,7 +30,7 @@ import java.util.List;
  * @created 2021-04-22
  * @since 1.0.0
  */
-public class WhereFragmentStorage extends AbstractFragmentList<Criterion> {
+public class WhereStorage extends AbstractFragmentList<Criterion> {
 
     private static final long serialVersionUID = 3445770521976104346L;
 
