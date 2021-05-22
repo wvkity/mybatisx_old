@@ -15,38 +15,25 @@
  */
 package com.wvkity.mybatis.core.jsql.parser;
 
-import com.wvkity.mybatis.basic.utils.Objects;
+import com.wvkity.mybatis.core.jsql.handler.RemoveOrderByHandler;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.expression.Alias;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.Function;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Column;
-import net.sf.jsqlparser.statement.select.FromItem;
-import net.sf.jsqlparser.statement.select.Join;
-import net.sf.jsqlparser.statement.select.LateralSubSelect;
-import net.sf.jsqlparser.statement.select.OrderByElement;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.select.SelectBody;
 import net.sf.jsqlparser.statement.select.SelectExpressionItem;
 import net.sf.jsqlparser.statement.select.SelectItem;
-import net.sf.jsqlparser.statement.select.SetOperationList;
-import net.sf.jsqlparser.statement.select.SubJoin;
 import net.sf.jsqlparser.statement.select.SubSelect;
-import net.sf.jsqlparser.statement.select.WithItem;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -57,15 +44,10 @@ import java.util.regex.Pattern;
  */
 public class SqlParser {
 
-    public static final String KEEP_ORDER_BY = "/*keep orderby*/";
     public static final String DEF_REGEX_SELECT_ONE_STR = "^(?i)(\\s*select\\s+1\\s+)(.*)$";
-    public static final Pattern DEF_PATTERN_SELECT_ONE =
-        Pattern.compile(DEF_REGEX_SELECT_ONE_STR, Pattern.CASE_INSENSITIVE);
+    public static final Pattern DEF_PATTERN_SELECT_ONE = Pattern.compile(DEF_REGEX_SELECT_ONE_STR,
+        Pattern.CASE_INSENSITIVE);
     public static final String DEF_REGEX_SELECT_STR = "^(?i)((\\s*select\\s*)(((?!select).)*)(\\s*from)(\\s*.*))$";
-    public static final String DEF_PATTERN_PM_STR = "(#\\{[^(#{)]+})";
-    public static final Pattern DEF_PATTERN_PM = Pattern.compile(DEF_PATTERN_PM_STR);
-    public static final Pattern DEF_PATTERN_MATCHER = Pattern.compile(".*#\\{((?!#\\{).)*}.*");
-    public static final Pattern DEF_PATTERN_PM_RESTORE = Pattern.compile("((?<!\\\\)(\\?))");
     private static final Alias TAB_ALIAS;
     /**
      * 忽略聚合函数
@@ -135,13 +117,10 @@ public class SqlParser {
      * @return 总记录数SQL
      */
     public String smartCountParse(final String originalSql, final String colName) {
-        if (originalSql.contains(KEEP_ORDER_BY)) {
-            return this.toSimpleQueryRecordSql(originalSql, colName);
-        }
         final Select select;
         try {
             select = parse(originalSql);
-            this.handleTryRemoveOrderBy(select);
+            new RemoveOrderByHandler(originalSql, select).handleTryRemove();
         } catch (Exception ignore) {
             return this.toSimpleQueryRecordSql(originalSql, colName);
         }
@@ -155,18 +134,15 @@ public class SqlParser {
      * @return 处理后的SQL语句
      */
     public String smartRemoveOrderBy(final String originalSql) {
-        if (originalSql.contains(KEEP_ORDER_BY)) {
-            return originalSql;
-        }
-        final ParameterHandler handler = new ParameterHandler(originalSql);
+        final ParameterParser paramParser = new ParameterParser(originalSql);
         final Select select;
         try {
-            select = parse(handler.replace().isReplaced() ? handler.getReplaceSql() : originalSql);
-            this.handleTryRemoveOrderBy(select);
+            select = parse(paramParser.replace().isReplaced() ? paramParser.getReplaceSql() : originalSql);
+            new RemoveOrderByHandler(originalSql, select).handleTryRemove();
         } catch (Exception ignore) {
             return originalSql;
         }
-        return handler.restore(select.toString());
+        return paramParser.restore(select.toString());
     }
 
     protected Select parse(final String originalSql) throws JSQLParserException {
@@ -182,22 +158,21 @@ public class SqlParser {
         if (this.isSelectOne(originalSql)) {
             return originalSql;
         }
-        final ParameterHandler handler = new ParameterHandler(originalSql);
+        final ParameterParser paramParser = new ParameterParser(originalSql);
         final Select select;
+        final RemoveOrderByHandler orderByHandler;
         try {
-            select = this.parse(handler.replace().isReplaced() ? handler.getReplaceSql() : originalSql);
+            select = this.parse(paramParser.replace().isReplaced() ? paramParser.getReplaceSql() : originalSql);
+            orderByHandler = new RemoveOrderByHandler(originalSql, select);
         } catch (Exception ignore) {
             return this.regexExistsParse(originalSql);
         }
-        if (originalSql.contains(KEEP_ORDER_BY)) {
-            return this.toSelectOneSql(select, handler);
-        }
         try {
-            this.handleTryRemoveOrderBy(select);
+            orderByHandler.handleTryRemove();
         } catch (Exception ignore) {
-            return this.toSelectOneSql(select, handler);
+            return this.toSelectOneSql(select, paramParser);
         }
-        return this.toSelectOneSql(select, handler);
+        return this.toSelectOneSql(select, paramParser);
     }
 
     /**
@@ -205,13 +180,13 @@ public class SqlParser {
      * @param select {@link Select}
      * @return 新的查询语句
      */
-    public String toSelectOneSql(final Select select, final ParameterHandler handler) {
+    public String toSelectOneSql(final Select select, final ParameterParser parser) {
         final SelectBody body = select.getSelectBody();
         final PlainSelect psl = (PlainSelect) body;
         final List<SelectItem> selectItems = new ArrayList<>(1);
         selectItems.add(new SelectExpressionItem(new Column("1")));
         psl.setSelectItems(selectItems);
-        return handler.restore(select.toString());
+        return parser.restore(select.toString());
     }
 
     /**
@@ -238,98 +213,6 @@ public class SqlParser {
         return originalSql != null && DEF_PATTERN_SELECT_ONE.matcher(originalSql).matches();
     }
 
-    /**
-     * 移除order by
-     * @param select {@link Select}
-     */
-    public void handleTryRemoveOrderBy(final Select select) {
-        final SelectBody selectBody = select.getSelectBody();
-        this.handleSelectBodyTryRemoveOrderBy(selectBody);
-        final List<WithItem> items;
-        if (isNotEmpty((items = select.getWithItemsList()))) {
-            items.forEach(this::handleSelectBodyTryRemoveOrderBy);
-        }
-    }
-
-    /**
-     * 处理{@link SelectBody}中的order by
-     * @param selectBody {@link SelectBody}
-     */
-    public void handleSelectBodyTryRemoveOrderBy(final SelectBody selectBody) {
-        if (selectBody instanceof PlainSelect) {
-            this.handlePlainSelectTryRemoveOrderBy((PlainSelect) selectBody);
-        } else if (selectBody instanceof WithItem) {
-            Optional.ofNullable(((WithItem) selectBody).getSelectBody())
-                .ifPresent(this::handleSelectBodyTryRemoveOrderBy);
-        } else {
-            final SetOperationList sol = (SetOperationList) selectBody;
-            final List<SelectBody> items;
-            if (isNotEmpty((items = sol.getSelects()))) {
-                items.forEach(this::handleSelectBodyTryRemoveOrderBy);
-            }
-            if (notHasOrderByArg(sol.getOrderByElements())) {
-                sol.setOrderByElements(null);
-            }
-        }
-    }
-
-    /**
-     * 处理{@link PlainSelect}中的order by
-     * @param select {@link PlainSelect}
-     */
-    public void handlePlainSelectTryRemoveOrderBy(final PlainSelect select) {
-        if (this.notHasOrderByArg(select.getOrderByElements())) {
-            select.setOrderByElements(null);
-        }
-        Optional.ofNullable(select.getFromItem()).ifPresent(this::handleFromItemTryRemoveOrderBy);
-        final List<Join> joins;
-        if (isNotEmpty((joins = select.getJoins()))) {
-            joins.stream().filter(Objects::nonNull).map(Join::getRightItem)
-                .forEach(this::handleFromItemTryRemoveOrderBy);
-        }
-    }
-
-    /**
-     * 处理{@link FromItem}中的order by
-     * @param fromItem {@link FromItem}
-     */
-    public void handleFromItemTryRemoveOrderBy(final FromItem fromItem) {
-        if (fromItem instanceof SubJoin) {
-            final SubJoin sj = (SubJoin) fromItem;
-            final List<Join> joins;
-            if (isNotEmpty((joins = sj.getJoinList()))) {
-                joins.stream().filter(Objects::nonNull).map(Join::getRightItem)
-                    .forEach(this::handleFromItemTryRemoveOrderBy);
-            }
-            Optional.ofNullable(sj.getLeft()).ifPresent(this::handleFromItemTryRemoveOrderBy);
-        } else if (fromItem instanceof SubSelect) {
-            Optional.ofNullable(((SubSelect) fromItem).getSelectBody())
-                .ifPresent(this::handleSelectBodyTryRemoveOrderBy);
-        } else if (fromItem instanceof LateralSubSelect) {
-            Optional.ofNullable(((LateralSubSelect) fromItem).getSubSelect())
-                .map(SubSelect::getSelectBody).ifPresent(this::handleSelectBodyTryRemoveOrderBy);
-        }
-    }
-
-    /**
-     * 检查OrderBy是否存在参数，有参数则不能去掉
-     * @param items {@link OrderByElement}列表
-     * @return boolean
-     */
-    public boolean notHasOrderByArg(final List<OrderByElement> items) {
-        if (this.isNotEmpty(items)) {
-            for (OrderByElement it : items) {
-                if (it.toString().contains("?")) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    private <E> boolean isNotEmpty(final Collection<E> items) {
-        return items != null && !items.isEmpty();
-    }
 
     /**
      * 转成查询总记录数SQL
@@ -406,100 +289,4 @@ public class SqlParser {
         return "SELECT COUNT(" + colName + ") RECORDS FROM (" + originalSql + ") TMP_TAB_RECORDS";
     }
 
-    /**
-     * 参数处理器
-     */
-    public static class ParameterHandler {
-
-        /**
-         * 是否已替换
-         */
-        private final AtomicBoolean replaced = new AtomicBoolean(false);
-        /**
-         * 原SQL语句
-         */
-        private final String originalSql;
-        /**
-         * 参数集合
-         */
-        private final Map<Integer, String> params;
-        /**
-         * 替换后的SQL语句
-         */
-        private String replaceSql;
-
-        public ParameterHandler(String originalSql) {
-            this.originalSql = originalSql;
-            this.params = new HashMap<>();
-        }
-
-        /**
-         * 替换原SQL语句
-         * @return {@link ParameterHandler}
-         */
-        public ParameterHandler replace() {
-            final StringBuffer buffer = new StringBuffer(this.originalSql.length());
-            if (DEF_PATTERN_MATCHER.matcher(this.originalSql).matches()) {
-                int normal = -1;
-                Integer index = normal;
-                final Matcher matcher = DEF_PATTERN_PM.matcher(this.originalSql);
-                while (matcher.find()) {
-                    final String placeholder = matcher.group();
-                    matcher.appendReplacement(buffer, "?");
-                    index++;
-                    this.params.put(index, placeholder);
-                }
-                matcher.appendTail(buffer);
-                this.replaceSql = buffer.toString();
-                this.replaced.compareAndSet(false, index > normal);
-            }
-            return this;
-        }
-
-        /**
-         * 还原SQL语句
-         * @param replacement SQL语句
-         * @return SQL语句
-         */
-        public String restore(final String replacement) {
-            if (this.hasParameter() && Objects.isNotBlank(replacement)) {
-                final StringBuffer buffer = new StringBuffer();
-                final Matcher matcher = DEF_PATTERN_PM_RESTORE.matcher(replacement);
-                Integer index = 0;
-                while (matcher.find()) {
-                    final String placeholder = params.get(index);
-                    matcher.appendReplacement(buffer, placeholder);
-                    index++;
-                }
-                matcher.appendTail(buffer);
-                return buffer.toString();
-            }
-            return replacement;
-        }
-
-        public String getOriginalSql() {
-            return originalSql;
-        }
-
-        public String getReplaceSql() {
-            return replaceSql;
-        }
-
-        /**
-         * SQL语句是否已替换成功
-         * @return boolean
-         */
-        public boolean isReplaced() {
-            return this.replaced.get();
-        }
-
-        /**
-         * 是否存在占位符参数
-         * @return boolean
-         */
-        public boolean hasParameter() {
-            return !this.params.isEmpty();
-        }
-
-    }
 }
