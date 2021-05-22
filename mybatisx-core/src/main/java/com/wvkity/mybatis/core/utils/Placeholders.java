@@ -16,6 +16,7 @@
 package com.wvkity.mybatis.core.utils;
 
 import com.wvkity.mybatis.basic.constant.Constants;
+import com.wvkity.mybatis.basic.reflect.Reflections;
 import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.core.expr.TemplateMatch;
 
@@ -127,7 +128,7 @@ public final class Placeholders {
      * @param args     参数集合
      * @return 新字符串
      */
-    public static String format(final String template, final List<Object> args) {
+    public static String format(final String template, final Iterable<?> args) {
         return parse(template, TemplateMatch.MULTIPLE, args);
     }
 
@@ -137,7 +138,7 @@ public final class Placeholders {
      * @param args     参数集合
      * @return 新字符串
      */
-    public static String format(final String template, final Map<String, Object> args) {
+    public static String format(final String template, final Map<String, ?> args) {
         return parse(template, TemplateMatch.MAP, args);
     }
 
@@ -161,8 +162,8 @@ public final class Placeholders {
                 args.addAll(((Map<?, ?>) arg).values());
             } else if (Objects.isArray(arg)) {
                 args.addAll(Objects.asList((Object[]) arg));
-            } else if (arg instanceof Collection) {
-                args.addAll((Collection<?>) arg);
+            } else if (arg instanceof Iterable) {
+                args.addAll(arg instanceof Collection ? ((Collection<?>) arg) : toList((Iterable<?>) arg));
             } else {
                 args.add(arg);
             }
@@ -172,10 +173,10 @@ public final class Placeholders {
             final int size = args.size() - 1;
             String target = template;
             final Matcher matcher;
-            if (!isMap) {
+            if (!isMap || isMatchesOfDigit) {
                 // 列表参数且只有一个参数占位符时
                 if (match == TemplateMatch.MULTIPLE && isOnlyOnce(target)) {
-                    final String value = isPureType(args) ? toString(args) : toString(args.get(0));
+                    final String value = Reflections.isPureType(args) ? toString(args) : toString(args.get(0));
                     target = target.replaceAll(PLACEHOLDER_REGEX_DIGIT_STR, value);
                 } else {
                     matcher = PLACEHOLDER_REGEX_DIGIT.matcher(target);
@@ -199,6 +200,10 @@ public final class Placeholders {
         return template;
     }
 
+    private static List<?> toList(final Iterable<?> arg) {
+        return StreamSupport.stream(arg.spliterator(), false).collect(Collectors.toList());
+    }
+
     /**
      * 替换字符串
      * @param matcher {@link Matcher}
@@ -209,7 +214,7 @@ public final class Placeholders {
     private static String replaceFirst(final Matcher matcher, final String target, final Object arg) {
         final String group = matcher.group();
         final String regex;
-        if (group.startsWith("?")) {
+        if (group.startsWith(Constants.QUESTION_MARK)) {
             regex = String.format("\\%s", group);
         } else {
             regex = group;
@@ -242,21 +247,6 @@ public final class Placeholders {
     }
 
     /**
-     * 检查参数列表是否不包含数组、集合
-     * @param args 参数列表
-     * @return boolean
-     */
-    public static boolean isPureType(final Iterable<?> args) {
-        for (Object v : args) {
-            final Class<?> clazz = v.getClass();
-            if (clazz.isArray() || Map.class.isAssignableFrom(clazz) || Iterable.class.isAssignableFrom(clazz)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
      * 检查数字参数占位符是否仅仅出现一次
      * @param target 字符串
      * @return boolean
@@ -268,7 +258,7 @@ public final class Placeholders {
         String history = "";
         while (matcher.find()) {
             final String replacement = String.format("\\%s", matcher.group());
-            ignore = target.replaceFirst(replacement, "?");
+            ignore = target.replaceFirst(replacement, Constants.QUESTION_MARK);
             if (!Objects.equals(history, replacement)) {
                 count++;
                 if (count > 1) {
@@ -292,7 +282,7 @@ public final class Placeholders {
         final PlaceholderMatcher pm = new PlaceholderMatcher();
         while (matcher.find()) {
             final String replacement = String.format("\\%s", matcher.group());
-            ignore = target.replaceFirst(replacement, "?");
+            ignore = target.replaceFirst(replacement, Constants.QUESTION_MARK);
             if (pm.compare(replacement)) {
                 break;
             }
