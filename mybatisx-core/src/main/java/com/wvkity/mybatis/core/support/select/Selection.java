@@ -13,10 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.basic.select;
+package com.wvkity.mybatis.core.support.select;
 
 import com.wvkity.mybatis.support.basic.Matched;
-import com.wvkity.mybatis.support.segment.Fragment;
+import com.wvkity.mybatis.support.fragment.Fragment;
 
 /**
  * 查询列接口
@@ -69,6 +69,9 @@ public interface Selection extends Fragment {
      */
     Selection as(final String alias);
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     default String getSegment() {
         return getSegment(true);
