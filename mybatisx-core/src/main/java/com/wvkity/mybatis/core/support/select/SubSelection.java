@@ -13,11 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.basic.select;
+package com.wvkity.mybatis.core.support.select;
 
 import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.basic.utils.Objects;
-import com.wvkity.mybatis.core.criteria.AbstractQueryCriteria;
+import com.wvkity.mybatis.core.criteria.query.CommonQueryCriteria;
 import com.wvkity.mybatis.support.basic.Matched;
 
 /**
@@ -30,11 +30,11 @@ public class SubSelection extends AbstractSelection<String> {
 
     private static final long serialVersionUID = 4307693761233245536L;
 
-    public SubSelection(AbstractQueryCriteria<?> criteria, final String columnAlias) {
+    /*public SubSelection(CommonQueryCriteria<?> criteria, final String columnAlias) {
         this.criteria = criteria;
         this.alias = columnAlias;
         this.matched = Matched.QUERY;
-    }
+    }*/
 
     @Override
     public String getColumn() {

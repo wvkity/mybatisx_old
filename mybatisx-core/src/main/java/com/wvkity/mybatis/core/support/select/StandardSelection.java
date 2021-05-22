@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.basic.select;
+package com.wvkity.mybatis.core.support.select;
 
 import com.wvkity.mybatis.support.basic.Matched;
 import com.wvkity.mybatis.support.criteria.Criteria;
