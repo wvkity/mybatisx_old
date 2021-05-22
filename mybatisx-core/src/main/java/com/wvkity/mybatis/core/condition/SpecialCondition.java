@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,23 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.criteria;
+package com.wvkity.mybatis.core.condition;
 
 import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.basic.utils.Objects;
-import com.wvkity.mybatis.support.criteria.Criteria;
 import com.wvkity.mybatis.support.constant.Slot;
 import com.wvkity.mybatis.support.constant.Symbol;
+import com.wvkity.mybatis.support.criteria.Criteria;
 
 /**
  * 特殊条件(字段相等)
  * @author wvkity
- * @created 2021-04-13
+ * @created 2021-05-17
  * @since 1.0.0
  */
 public class SpecialCondition implements Criterion {
 
-    private static final long serialVersionUID = -2012877193882997286L;
+    private static final long serialVersionUID = -3226684503336166627L;
     private final Criteria<?> criteria;
     private final String tableAlias;
     private final String column;
@@ -50,8 +50,7 @@ public class SpecialCondition implements Criterion {
         this.symbol = Objects.isNull(symbol) ? Symbol.EQ : symbol;
         this.slot = slot;
     }
-
-    String getAlias(final Criteria<?> criteria, final String alias) {
+    protected String getAlias(final Criteria<?> criteria, final String alias) {
         return Objects.isNotBlank(alias) ? alias : Objects.nonNull(criteria) ? criteria.as() : null;
     }
 
@@ -73,5 +72,4 @@ public class SpecialCondition implements Criterion {
         builder.append(this.otherColumn);
         return builder.toString();
     }
-
 }

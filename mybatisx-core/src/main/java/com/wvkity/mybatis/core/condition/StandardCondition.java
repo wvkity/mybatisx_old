@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,73 +13,59 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.criteria;
+package com.wvkity.mybatis.core.condition;
 
 import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.support.criteria.Criteria;
 
+import java.util.Optional;
+
 /**
  * 条件
  * @author wvkity
- * @created 2021-01-23
+ * @created 2021-05-17
  * @since 1.0.0
  */
-public class Condition implements Criterion {
+public class StandardCondition implements Criterion {
 
-    private static final long serialVersionUID = 5235217961745776908L;
-    /**
-     * 字段默认占位符
-     */
-    public static final String DEF_PLACEHOLDER_COLUMN = "(?<!\\\\):@";
-    /**
-     * 条件包装对象
-     */
+    private static final long serialVersionUID = 5051695488350975635L;
     protected final Criteria<?> criteria;
-    /**
-     * 表别名
-     */
-    protected final String tableAlias;
-    /**
-     * 字段名
-     */
+    protected final String alias;
     protected final String column;
-    /**
-     * SQL碎片
-     */
     protected final String fragment;
 
-    public Condition(Criteria<?> criteria, String tableAlias, String column, String fragment) {
+    public StandardCondition(Criteria<?> criteria, String alias, String column, String fragment) {
         this.criteria = criteria;
-        this.tableAlias = tableAlias;
+        this.alias = alias;
         this.column = column;
         this.fragment = fragment;
     }
 
-    /**
-     * 获取表别名
-     * @return 表别名
-     */
-    String getAlias() {
-        return Objects.nonNull(tableAlias) ? tableAlias : Objects.nonNull(criteria) ? criteria.as() : null;
+    protected Optional<Criteria<?>> optional() {
+        return Optional.ofNullable(this.criteria);
+    }
+
+    protected String getAlias() {
+        return Objects.nonNull(this.alias) ? this.alias : this.optional().map(Criteria::as).orElse(Constants.EMPTY);
     }
 
     @Override
     public String getSegment() {
-        final StringBuilder builder = new StringBuilder();
-        final String alias = this.getAlias();
-        if (Objects.isNotBlank(alias)) {
-            builder.append(alias).append(Constants.DOT);
+        final StringBuilder builder = new StringBuilder(30);
+        final String as = this.getAlias();
+        if (Objects.isNotBlank(as)) {
+            builder.append(as).append(Constants.DOT);
         }
         if (Objects.isNotBlank(this.column)) {
-            builder.append(column);
+            builder.append(this.column);
         }
-        final String realColumn = builder.toString();
+        final String rc = builder.toString();
         final String template = this.fragment;
         if (template.contains(Constants.DEF_STR_COLUMN_PH)) {
-            return template.replaceAll(DEF_PLACEHOLDER_COLUMN, realColumn);
+            return template.replaceAll(Constants.DEF_STR_COLUMN_PH, rc);
         } else if (template.contains(Constants.DEF_STR_PH)) {
-            return String.format(template, realColumn);
+            return String.format(template, rc);
         }
         return template;
     }
