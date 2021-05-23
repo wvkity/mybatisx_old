@@ -22,11 +22,12 @@ import com.wvkity.mybatis.support.constant.Symbol;
 
 /**
  * 条件表达式
+ * @param <E> 字段类型
  * @author wvkity
  * @created 2021-01-03
  * @since 1.0.0
  */
-public interface Expression {
+public interface Expression<E> {
 
     /**
      * 获取{@link Criteria}对象
@@ -35,10 +36,10 @@ public interface Expression {
     Criteria<?> getCriteria();
 
     /**
-     * 获取字段/属性
-     * @return 字段/属性
+     * 获取字段
+     * @return 字段
      */
-    String getTarget();
+    E getColumn();
 
     /**
      * 获取{@link Slot}对象
@@ -63,27 +64,27 @@ public interface Expression {
      * @param alias 别名
      * @return {@link Expression}
      */
-    Expression alias(final String alias);
+    Expression<E> alias(final String alias);
 
     /**
-     * 获取模式
+     * 获取匹配模式
      * @return {@link Matched}
      */
-    Matched getExprMode();
+    Matched getExprMatched();
 
     /**
      * 设置{@link Criteria}对象
      * @param criteria {@link Criteria}
      * @return {@link Expression}
      */
-    Expression criteria(final Criteria<?> criteria);
+    Expression<E> criteria(final Criteria<?> criteria);
 
     /**
      * 设置{@link Criteria}对象
      * @param criteria {@link Criteria}
      * @return {@link Expression}
      */
-    default Expression setIfNecessary(final Criteria<?> criteria) {
+    default Expression<E> setIfNecessary(final Criteria<?> criteria) {
         if (getCriteria() == null) {
             criteria(criteria);
         }

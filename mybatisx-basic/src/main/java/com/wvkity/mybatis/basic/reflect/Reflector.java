@@ -201,7 +201,7 @@ public class Reflector implements AnnotationMetadata {
     private void addGetMethods() {
         final Set<Method> methods = Reflections.getAllMethods(this.clazz, this.classFilter, this.getterFilter);
         if (Objects.isNotEmpty(methods)) {
-            final Map<String, List<Method>> conflictingGetters = new HashMap<>();
+            final Map<String, List<Method>> conflictingGetters = new HashMap<>(16);
             methods.forEach(it -> addMethodConflict(conflictingGetters, Reflections.methodToProperty(it.getName()),
                 it));
             resolveGetterConflicts(conflictingGetters);

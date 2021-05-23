@@ -18,8 +18,8 @@ package com.wvkity.mybatis.ext.service;
 import com.wvkity.mybatis.basic.reflect.Reflections;
 import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.core.batch.BatchDataWrapper;
-import com.wvkity.mybatis.core.criteria.QueryWrapper;
-import com.wvkity.mybatis.executor.resultset.EmbeddedResult;
+import com.wvkity.mybatis.core.criteria.query.QueryWrapper;
+import com.wvkity.mybatis.executor.resultset.EmbedResult;
 import com.wvkity.mybatis.support.criteria.Criteria;
 import com.wvkity.mybatis.support.mapper.BaseMapper;
 import com.wvkity.paging.Pageable;
@@ -296,7 +296,7 @@ public abstract class AbstractBaseService<M extends BaseMapper<T, U, ID>, T, U, 
      */
     protected AbstractBaseService<M, T, U, ID> invokeEmbeddedResult(final Criteria<T> criteria,
                                                                     final Class<?> resultType) {
-        if (criteria instanceof EmbeddedResult) {
+        if (criteria instanceof EmbedResult) {
             if (criteria instanceof QueryWrapper) {
                 ((QueryWrapper<?, ?>) criteria).resultType(resultType);
             } else {
@@ -330,8 +330,8 @@ public abstract class AbstractBaseService<M extends BaseMapper<T, U, ID>, T, U, 
      * @return {@link AbstractBaseService}
      */
     protected AbstractBaseService<M, T, U, ID> requireMapKey(final Criteria<T> criteria) {
-        if (criteria instanceof EmbeddedResult) {
-            final String mapKey = ((EmbeddedResult) criteria).getMapKey();
+        if (criteria instanceof EmbedResult) {
+            final String mapKey = ((EmbedResult) criteria).getMapKey();
             if (Objects.isBlank(mapKey)) {
                 throw new IllegalArgumentException("The mapKey attribute value cannot be null.");
             }

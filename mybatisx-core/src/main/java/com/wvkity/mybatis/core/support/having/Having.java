@@ -13,38 +13,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.support.basic;
+package com.wvkity.mybatis.core.support.having;
+
+import com.wvkity.mybatis.core.support.func.Function;
+import com.wvkity.mybatis.support.constant.Slot;
+import com.wvkity.mybatis.support.fragment.Fragment;
+
 
 /**
- * 字段匹配模式
+ * 分组筛选条件
  * @author wvkity
- * @created 2021-01-20
+ * @created 2021-04-29
  * @since 1.0.0
  */
-public enum Matched {
+public interface Having extends Fragment {
 
     /**
-     * 标准
+     * 获取{@link Function}
+     * @return {@link Function}
      */
-    STANDARD,
+    Function getFunc();
+
     /**
-     * 直接指定
+     * 获取{@link Slot}
+     * @return {@link Slot}
      */
-    IMMEDIATE,
-    /**
-     * 查询
-     */
-    QUERY,
-    /**
-     * 聚合函数
-     */
-    FUNCTION,
-    /**
-     * EXISTS语句
-     */
-    EXISTS,
-    /**
-     * 其他
-     */
-    OTHER
+    Slot getSlot();
 }

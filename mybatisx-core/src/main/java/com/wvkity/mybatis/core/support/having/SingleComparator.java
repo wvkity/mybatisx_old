@@ -13,38 +13,35 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.support.basic;
+package com.wvkity.mybatis.core.support.having;
+
+import com.wvkity.mybatis.support.fragment.Fragment;
 
 /**
- * 字段匹配模式
+ * 单个值比较符号
  * @author wvkity
- * @created 2021-01-20
+ * @created 2021-04-29
  * @since 1.0.0
  */
-public enum Matched {
+public enum SingleComparator implements Fragment {
+    EQ("="), NE("<>"), LT("<"), LE("<="), GT(">"), GE(">=");
+
+    private final String symbol;
+
+    SingleComparator(String symbol) {
+        this.symbol = symbol;
+    }
+
+    @Override
+    public String getSegment() {
+        return this.symbol;
+    }
 
     /**
-     * 标准
+     * 是否为多个值
+     * @return boolean
      */
-    STANDARD,
-    /**
-     * 直接指定
-     */
-    IMMEDIATE,
-    /**
-     * 查询
-     */
-    QUERY,
-    /**
-     * 聚合函数
-     */
-    FUNCTION,
-    /**
-     * EXISTS语句
-     */
-    EXISTS,
-    /**
-     * 其他
-     */
-    OTHER
+    public boolean isMulti() {
+        return this.symbol.contains(":@");
+    }
 }

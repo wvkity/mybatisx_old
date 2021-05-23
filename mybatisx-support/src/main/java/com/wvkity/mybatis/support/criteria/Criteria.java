@@ -15,14 +15,10 @@
  */
 package com.wvkity.mybatis.support.criteria;
 
-import com.wvkity.mybatis.support.expr.Expression;
-import com.wvkity.mybatis.support.segment.Fragment;
-
-import java.util.Collection;
-import java.util.function.Consumer;
+import com.wvkity.mybatis.support.fragment.Fragment;
 
 /**
- * 条件
+ * 条件包装接口
  * @author wvkity
  * @created 2021-01-04
  * @since 1.0.0
@@ -54,34 +50,6 @@ public interface Criteria<T> extends Fragment {
      */
     boolean isStrict();
 
-    /**
-     * 添加{@link Expression}
-     * @param action {@link Consumer}
-     * @return {@link Criteria}
-     */
-    Criteria<T> where(final Consumer<Criteria<T>> action);
-
-    /**
-     * 添加{@link Expression}
-     * @param expression {@link Expression}
-     * @return {@link Criteria}
-     */
-    Criteria<T> where(final Expression expression);
-
-    /**
-     * 添加多个{@link Expression}
-     * @param expressions {@link Expression}列表
-     * @return {@link Criteria}
-     */
-    Criteria<T> where(final Expression... expressions);
-
-    /**
-     * 添加多个{@link Expression}
-     * @param expressions {@link Expression}集合
-     * @return {@link Criteria}
-     */
-    Criteria<T> where(final Collection<Expression> expressions);
-
     // region Default methods
 
     /**
@@ -101,12 +69,21 @@ public interface Criteria<T> extends Fragment {
     }
 
     /**
+     * 是否存在where子句(包含where/group by/having/order by)
+     * @return boolean
+     */
+    default boolean isHasCondition() {
+        return false;
+    }
+
+    /**
      * 完整SQL语句
      * @return SQL语句
      */
     default String completeString() {
         return null;
     }
+
     // endregion
 
 }
