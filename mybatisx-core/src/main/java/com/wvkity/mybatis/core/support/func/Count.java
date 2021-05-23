@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.basic.func;
+package com.wvkity.mybatis.core.support.func;
 
-import com.wvkity.mybatis.core.criteria.AbstractQueryCriteria;
+import com.wvkity.mybatis.support.criteria.Criteria;
 
 /**
  * {@link AggFunc#COUNT}聚合函数
@@ -27,7 +27,7 @@ public class Count extends AbstractFunction {
 
     private static final long serialVersionUID = -4201871015277809690L;
 
-    public Count(AbstractQueryCriteria<?> criteria, String column, String alias, boolean distinct) {
+    public Count(Criteria<?> criteria, String column, String alias, boolean distinct) {
         this.criteria = criteria;
         this.column = column;
         this.alias = alias;

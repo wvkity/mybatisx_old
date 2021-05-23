@@ -13,64 +13,64 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.basic.func;
+package com.wvkity.mybatis.core.support.func;
 
 import com.wvkity.mybatis.support.criteria.Criteria;
 
 /**
- * {@link AggFunc#AVG}聚合函数
+ * {@link AggFunc#SUM}聚合函数
  * @author wvkity
  * @created 2021-04-30
  * @since 1.0.0
  */
-public class Avg extends AbstractFunction {
+public class Sum extends AbstractFunction {
 
     private static final long serialVersionUID = -5495106757200906114L;
 
-    public Avg(Criteria<?> criteria, String column, String alias) {
+    public Sum(Criteria<?> criteria, String column, String alias) {
         this.criteria = criteria;
         this.column = column;
         this.alias = alias;
     }
 
-    public Avg(Criteria<?> criteria, String column, String alias, boolean distinct) {
+    public Sum(Criteria<?> criteria, String column, String alias, boolean distinct) {
         this(criteria, column, alias, null, distinct);
     }
 
-    public Avg(Criteria<?> criteria, String column, String alias, Integer scale) {
+    public Sum(Criteria<?> criteria, String column, String alias, Integer scale) {
         this(criteria, column, alias, scale, false);
     }
 
-    public Avg(Criteria<?> criteria, String column, String alias, Integer scale, boolean distinct) {
+    public Sum(Criteria<?> criteria, String column, String alias, Integer scale, boolean distinct) {
         this.criteria = criteria;
         this.column = column;
         this.alias = alias;
         this.scale = scale;
         this.distinct = distinct;
-        this.func = AggFunc.AVG;
+        this.func = AggFunc.SUM;
     }
 
-    public Avg(String tableAlias, String column, String alias) {
+    public Sum(String tableAlias, String column, String alias) {
         this.tableAlias = tableAlias;
         this.column = column;
         this.alias = alias;
-        this.func = AggFunc.AVG;
+        this.func = AggFunc.SUM;
     }
 
-    public Avg(String tableAlias, String column, String alias, boolean distinct) {
+    public Sum(String tableAlias, String column, String alias, boolean distinct) {
         this(tableAlias, column, alias, null, distinct);
     }
 
-    public Avg(String tableAlias, String column, String alias, Integer scale) {
+    public Sum(String tableAlias, String column, String alias, Integer scale) {
         this(tableAlias, column, alias, scale, false);
     }
 
-    public Avg(String tableAlias, String column, String alias, Integer scale, boolean distinct) {
+    public Sum(String tableAlias, String column, String alias, Integer scale, boolean distinct) {
         this.tableAlias = tableAlias;
         this.column = column;
         this.alias = alias;
         this.scale = scale;
         this.distinct = distinct;
-        this.func = AggFunc.AVG;
+        this.func = AggFunc.SUM;
     }
 }
