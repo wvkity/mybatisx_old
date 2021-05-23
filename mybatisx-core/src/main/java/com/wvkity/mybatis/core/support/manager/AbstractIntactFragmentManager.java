@@ -13,15 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.basic.manager;
+package com.wvkity.mybatis.core.support.manager;
 
 import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.basic.utils.Objects;
-import com.wvkity.mybatis.core.basic.group.Group;
-import com.wvkity.mybatis.core.basic.having.Having;
-import com.wvkity.mybatis.core.basic.order.Order;
-import com.wvkity.mybatis.core.basic.select.FuncSelection;
-import com.wvkity.mybatis.core.basic.select.Selection;
+import com.wvkity.mybatis.core.criteria.query.CommonQueryWrapper;
+import com.wvkity.mybatis.core.support.group.Group;
+import com.wvkity.mybatis.core.support.having.Having;
+import com.wvkity.mybatis.core.support.order.Order;
+import com.wvkity.mybatis.core.support.select.FuncSelection;
+import com.wvkity.mybatis.core.support.select.Selection;
 import com.wvkity.mybatis.support.criteria.Criteria;
 
 import java.util.Collection;
@@ -35,59 +36,59 @@ import java.util.List;
  * @since 1.0.0
  */
 @SuppressWarnings("serial")
-public abstract class AbstractStandardManager<C extends Criteria<?>> extends AbstractManager<C>
-    implements StandardManager<C> {
+public abstract class AbstractIntactFragmentManager<C extends Criteria<?>> extends AbstractFragmentManager<C>
+    implements IntactFragmentManager<C> {
 
     /**
      * 查询字段存储
      */
-    protected final SelectFragmentStorage selectStorage;
+    protected final SelectStorage selectStorage;
     /**
      * 分组片段存储
      */
-    protected final GroupFragmentStorage groupStorage;
+    protected final GroupStorage groupStorage;
     /**
      * 分组筛选片段存储
      */
-    protected final HavingFragmentStorage havingStorage;
+    protected final HavingStorage havingStorage;
     /**
      * 排序片段存储
      */
-    protected final OrderFragmentStorage orderStorage;
+    protected final OrderStorage orderStorage;
 
-    public AbstractStandardManager(C criteria) {
+    public AbstractIntactFragmentManager(C criteria) {
         this(criteria, criteria instanceof CommonQueryWrapper);
     }
 
-    public AbstractStandardManager(C criteria, boolean forQuery) {
+    public AbstractIntactFragmentManager(C criteria, boolean forQuery) {
         super(criteria);
-        this.selectStorage = new SelectFragmentStorage(criteria);
-        this.groupStorage = new GroupFragmentStorage();
-        this.havingStorage = new HavingFragmentStorage();
-        this.orderStorage = new OrderFragmentStorage();
+        this.selectStorage = new SelectStorage(criteria);
+        this.groupStorage = new GroupStorage();
+        this.havingStorage = new HavingStorage();
+        this.orderStorage = new OrderStorage();
         this.forQuery = forQuery;
     }
 
     @Override
-    public AbstractStandardManager<C> select(Selection selection) {
+    public AbstractIntactFragmentManager<C> select(Selection selection) {
         this.selectStorage.add(selection);
         return this;
     }
 
     @Override
-    public AbstractStandardManager<C> select(Collection<Selection> selections) {
+    public AbstractIntactFragmentManager<C> select(Collection<Selection> selections) {
         this.selectStorage.addAll(selections);
         return this;
     }
 
     @Override
-    public AbstractStandardManager<C> exclude(String property) {
+    public AbstractIntactFragmentManager<C> exclude(String property) {
         this.selectStorage.exclude(property);
         return this;
     }
 
     @Override
-    public AbstractStandardManager<C> excludeCol(String column) {
+    public AbstractIntactFragmentManager<C> colExclude(String column) {
         this.selectStorage.excludeCol(column);
         return this;
     }
@@ -98,37 +99,37 @@ public abstract class AbstractStandardManager<C extends Criteria<?>> extends Abs
     }
 
     @Override
-    public AbstractStandardManager<C> groupBy(Group group) {
+    public AbstractIntactFragmentManager<C> groupBy(Group group) {
         this.groupStorage.add(group);
         return this;
     }
 
     @Override
-    public AbstractStandardManager<C> groupBy(Collection<Group> groups) {
+    public AbstractIntactFragmentManager<C> groupBy(Collection<Group> groups) {
         this.groupStorage.addAll(groups);
         return this;
     }
 
     @Override
-    public AbstractStandardManager<C> having(Having having) {
+    public AbstractIntactFragmentManager<C> having(Having having) {
         this.havingStorage.add(having);
         return this;
     }
 
     @Override
-    public AbstractStandardManager<C> having(Collection<Having> havingList) {
+    public AbstractIntactFragmentManager<C> having(Collection<Having> havingList) {
         this.havingStorage.addAll(havingList);
         return this;
     }
 
     @Override
-    public AbstractStandardManager<C> orderBy(Order order) {
+    public AbstractIntactFragmentManager<C> orderBy(Order order) {
         this.orderStorage.add(order);
         return this;
     }
 
     @Override
-    public AbstractStandardManager<C> orderBy(List<Order> orders) {
+    public AbstractIntactFragmentManager<C> orderBy(List<Order> orders) {
         this.orderStorage.addAll(orders);
         return this;
     }

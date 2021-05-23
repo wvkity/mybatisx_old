@@ -13,29 +13,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.basic.manager;
+package com.wvkity.mybatis.core.support.manager;
 
 import com.wvkity.mybatis.basic.constant.Constants;
-import com.wvkity.mybatis.core.basic.order.Order;
+import com.wvkity.mybatis.core.support.group.Group;
 import com.wvkity.mybatis.support.fragment.AbstractFragmentList;
 import com.wvkity.mybatis.support.fragment.Fragment;
 
 import java.util.stream.Collectors;
 
 /**
- * 排序片段存储器
+ * 分组片段存储器
  * @author wvkity
  * @created 2021-04-22
  * @since 1.0.0
  */
-public class OrderFragmentStorage extends AbstractFragmentList<Order> {
+public class GroupStorage extends AbstractFragmentList<Group> {
 
-    private static final long serialVersionUID = -8026075210336059490L;
+    private static final long serialVersionUID = 6060283847559352754L;
 
     @Override
     public String getSegment() {
-        if (!isEmpty()) {
-            return " ORDER BY " + this.fragments.stream().map(Fragment::getSegment)
+        if (!this.isEmpty()) {
+            return " GROUP BY " + this.fragments.stream().map(Fragment::getSegment)
                 .collect(Collectors.joining(Constants.COMMA_SPACE));
         }
         return Constants.EMPTY;

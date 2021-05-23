@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.basic.manager;
+package com.wvkity.mybatis.core.support.manager;
 
 import com.wvkity.mybatis.core.condition.Criterion;
 import com.wvkity.mybatis.support.criteria.Criteria;
@@ -29,7 +29,7 @@ import java.util.List;
  * @since 1.0.0
  */
 @SuppressWarnings("serial")
-public abstract class AbstractManager<C extends Criteria<?>> implements Manager<C> {
+public abstract class AbstractFragmentManager<C extends Criteria<?>> implements FragmentManager<C> {
 
     /**
      * 条件包装器
@@ -42,21 +42,21 @@ public abstract class AbstractManager<C extends Criteria<?>> implements Manager<
     /**
      * 条件片段存储
      */
-    protected final WhereFragmentStorage whereStorage;
+    protected final WhereStorage whereStorage;
 
-    public AbstractManager(C criteria) {
+    public AbstractFragmentManager(C criteria) {
         this.criteria = criteria;
-        this.whereStorage = new WhereFragmentStorage();
+        this.whereStorage = new WhereStorage();
     }
 
     @Override
-    public AbstractManager<C> where(Criterion condition) {
+    public AbstractFragmentManager<C> where(Criterion condition) {
         this.whereStorage.add(condition);
         return this;
     }
 
     @Override
-    public AbstractManager<C> where(Collection<Criterion> conditions) {
+    public AbstractFragmentManager<C> where(Collection<Criterion> conditions) {
         this.whereStorage.addAll(conditions);
         return this;
     }

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.basic.manager;
+package com.wvkity.mybatis.core.support.manager;
 
 import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.core.condition.Criterion;
@@ -30,30 +30,30 @@ import java.util.List;
  * @created 2021-04-22
  * @since 1.0.0
  */
-public interface Manager<C extends Criteria<?>> extends Fragment {
+public interface FragmentManager<C extends Criteria<?>> extends Fragment {
 
     /**
      * 添加条件
      * @param condition 条件
-     * @return {@link Manager}
+     * @return {@link FragmentManager}
      */
-    Manager<C> where(final Criterion condition);
+    FragmentManager<C> where(final Criterion condition);
 
     /**
      * 添加多个条件
      * @param conditions 条件列表
-     * @return {@link Manager}
+     * @return {@link FragmentManager}
      */
-    default Manager<C> where(final Criterion... conditions) {
+    default FragmentManager<C> where(final Criterion... conditions) {
         return this.where(Objects.asList(conditions));
     }
 
     /**
      * 添加多个条件
      * @param conditions 条件列表
-     * @return {@link Manager}
+     * @return {@link FragmentManager}
      */
-    Manager<C> where(final Collection<Criterion> conditions);
+    FragmentManager<C> where(final Collection<Criterion> conditions);
 
     /**
      * 获取所有条件

@@ -13,13 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.basic.manager;
+package com.wvkity.mybatis.core.support.manager;
 
-import com.wvkity.mybatis.core.basic.group.Group;
-import com.wvkity.mybatis.core.basic.having.Having;
-import com.wvkity.mybatis.core.basic.order.Order;
-import com.wvkity.mybatis.core.basic.select.FuncSelection;
-import com.wvkity.mybatis.core.basic.select.Selection;
+import com.wvkity.mybatis.core.support.group.Group;
+import com.wvkity.mybatis.core.support.having.Having;
+import com.wvkity.mybatis.core.support.order.Order;
+import com.wvkity.mybatis.core.support.select.FuncSelection;
+import com.wvkity.mybatis.core.support.select.Selection;
 import com.wvkity.mybatis.support.criteria.Criteria;
 
 import java.util.Collection;
@@ -32,35 +32,35 @@ import java.util.List;
  * @created 2021-04-22
  * @since 1.0.0
  */
-public interface StandardManager<C extends Criteria<?>> extends Manager<C> {
+public interface IntactFragmentManager<C extends Criteria<?>> extends FragmentManager<C> {
 
     /**
      * 添加{@link Selection}
      * @param selection {@link Selection}
-     * @return {@link StandardManager}
+     * @return {@link IntactFragmentManager}
      */
-    StandardManager<C> select(final Selection selection);
+    IntactFragmentManager<C> select(final Selection selection);
 
     /**
      * 添加多个{@link Selection}
      * @param selections {@link Selection}列表
-     * @return {@link StandardManager}
+     * @return {@link IntactFragmentManager}
      */
-    StandardManager<C> select(final Collection<Selection> selections);
+    IntactFragmentManager<C> select(final Collection<Selection> selections);
 
     /**
      * 过滤查询列
      * @param property 属性
-     * @return {@link StandardManager}
+     * @return {@link IntactFragmentManager}
      */
-    StandardManager<C> exclude(final String property);
+    IntactFragmentManager<C> exclude(final String property);
 
     /**
      * 过滤查询列
      * @param column 字段
-     * @return {@link StandardManager}
+     * @return {@link IntactFragmentManager}
      */
-    StandardManager<C> excludeCol(final String column);
+    IntactFragmentManager<C> colExclude(final String column);
 
     /**
      * 获取所有查询字段
@@ -71,44 +71,44 @@ public interface StandardManager<C extends Criteria<?>> extends Manager<C> {
     /**
      * 添加{@link Group}
      * @param group {@link Group}
-     * @return {@link StandardManager}
+     * @return {@link IntactFragmentManager}
      */
-    StandardManager<C> groupBy(final Group group);
+    IntactFragmentManager<C> groupBy(final Group group);
 
     /**
      * 添加多个{@link Group}对象
      * @param groups {@link Group}列表
-     * @return {@link StandardManager}
+     * @return {@link IntactFragmentManager}
      */
-    StandardManager<C> groupBy(final Collection<Group> groups);
+    IntactFragmentManager<C> groupBy(final Collection<Group> groups);
 
     /**
      * 添加{@link Having}
      * @param having {@link Having}
-     * @return {@link StandardManager}
+     * @return {@link IntactFragmentManager}
      */
-    StandardManager<C> having(final Having having);
+    IntactFragmentManager<C> having(final Having having);
 
     /**
      * 添加多个{@link Having}对象
      * @param havingList {@link Having}列表
-     * @return {@link StandardManager}
+     * @return {@link IntactFragmentManager}
      */
-    StandardManager<C> having(final Collection<Having> havingList);
+    IntactFragmentManager<C> having(final Collection<Having> havingList);
 
     /**
      * 添加{@link Order}对象
      * @param order {@link Order}对象
-     * @return {@link StandardManager}
+     * @return {@link IntactFragmentManager}
      */
-    StandardManager<C> orderBy(final Order order);
+    IntactFragmentManager<C> orderBy(final Order order);
 
     /**
      * 添加多选{@link Order}对象
      * @param orders {@link Order}对象列表
-     * @return {@link StandardManager}
+     * @return {@link IntactFragmentManager}
      */
-    StandardManager<C> orderBy(final List<Order> orders);
+    IntactFragmentManager<C> orderBy(final List<Order> orders);
 
     /**
      * 检查是否存在查询字段

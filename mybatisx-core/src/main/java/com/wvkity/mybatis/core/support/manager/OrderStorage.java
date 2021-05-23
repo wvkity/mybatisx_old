@@ -13,37 +13,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.basic.manager;
+package com.wvkity.mybatis.core.support.manager;
 
 import com.wvkity.mybatis.basic.constant.Constants;
-import com.wvkity.mybatis.core.basic.having.Having;
+import com.wvkity.mybatis.core.support.order.Order;
 import com.wvkity.mybatis.support.fragment.AbstractFragmentList;
+import com.wvkity.mybatis.support.fragment.Fragment;
 
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * 分组筛选片段存储器
+ * 排序片段存储器
  * @author wvkity
  * @created 2021-04-22
  * @since 1.0.0
  */
-public class HavingFragmentStorage extends AbstractFragmentList<Having> {
+public class OrderStorage extends AbstractFragmentList<Order> {
 
-    private static final long serialVersionUID = 7993405736198850559L;
-
-    private static final String DEF_REGEX_AND_OR_STR = "^(?i)(\\s*and\\s+|\\s*or\\s+)(.*)";
-    private static final Pattern DEF_PATTERN_AND_OR = Pattern.compile(DEF_REGEX_AND_OR_STR, Pattern.CASE_INSENSITIVE);
+    private static final long serialVersionUID = -8026075210336059490L;
 
     @Override
     public String getSegment() {
-        if (!this.isEmpty()) {
-            String segment = this.fragments.stream().map(Having::getSegment)
-                .collect(Collectors.joining(Constants.SPACE)).trim();
-            if (DEF_PATTERN_AND_OR.matcher(segment).matches()) {
-                return " HAVING " + segment.replaceFirst(DEF_REGEX_AND_OR_STR, "$2");
-            }
-            return " HAVING " + segment;
+        if (!isEmpty()) {
+            return " ORDER BY " + this.fragments.stream().map(Fragment::getSegment)
+                .collect(Collectors.joining(Constants.COMMA_SPACE));
         }
         return Constants.EMPTY;
     }

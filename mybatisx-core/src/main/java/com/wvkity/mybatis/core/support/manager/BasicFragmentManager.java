@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.basic.manager;
+package com.wvkity.mybatis.core.support.manager;
 
 import com.wvkity.mybatis.support.criteria.Criteria;
 
@@ -23,7 +23,7 @@ import com.wvkity.mybatis.support.criteria.Criteria;
  * @created 2021-04-22
  * @since 1.0.0
  */
-public class BasicFragmentManager extends AbstractManager<Criteria<?>> {
+public class BasicFragmentManager extends AbstractFragmentManager<Criteria<?>> {
 
     private static final long serialVersionUID = 4525817214325144343L;
 
