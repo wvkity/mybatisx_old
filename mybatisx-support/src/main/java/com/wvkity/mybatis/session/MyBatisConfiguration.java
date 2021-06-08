@@ -17,12 +17,13 @@ package com.wvkity.mybatis.session;
 
 import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.binding.MyBatisMapperRegistry;
+import com.wvkity.mybatis.reflection.wrapper.MyBatisMapWrapperFactory;
 import com.wvkity.mybatis.support.config.MyBatisGlobalConfiguration;
 import com.wvkity.mybatis.support.config.MyBatisLocalConfigurationCache;
 import com.wvkity.mybatis.support.inject.mapping.sql.Supplier;
 import com.wvkity.mybatis.support.inject.mapping.sql.SupplierRegistry;
 import com.wvkity.mybatis.executor.resultset.MyBatisDefaultResultSetHandler;
-import com.wvkity.mybatis.reflection.factory.MyBatisDefaultObjectFactory;
+import com.wvkity.mybatis.reflection.factory.MyBatisObjectFactory;
 import com.wvkity.mybatis.scripting.xmltags.MyBatisXMLLanguageDriver;
 import com.wvkity.mybatis.type.CalendarTypeHandler;
 import org.apache.ibatis.cache.Cache;
@@ -93,7 +94,8 @@ public class MyBatisConfiguration extends Configuration {
         this.setMapUnderscoreToCamelCase(true);
         this.setGlobalConfiguration(Optional.ofNullable(globalConfiguration)
             .orElse(MyBatisLocalConfigurationCache.newInstance()));
-        this.objectFactory = new MyBatisDefaultObjectFactory(this.globalConfigurationRef);
+        this.objectFactory = new MyBatisObjectFactory(this.globalConfigurationRef);
+        this.objectWrapperFactory = new MyBatisMapWrapperFactory();
         super.setObjectFactory(this.objectFactory);
         this.getTypeHandlerRegistry().register(Calendar.class, CalendarTypeHandler.class);
     }

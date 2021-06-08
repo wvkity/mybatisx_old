@@ -42,13 +42,13 @@ import java.util.stream.Collectors;
  * @created 2021-02-07
  * @since 1.0.0
  */
-public class MyBatisDefaultObjectFactory implements ObjectFactory, Serializable {
+public class MyBatisObjectFactory implements ObjectFactory, Serializable {
 
     private static final long serialVersionUID = -5955832900935599830L;
 
     private final AtomicReference<MyBatisGlobalConfiguration> globalConfigurationRef;
 
-    public MyBatisDefaultObjectFactory(AtomicReference<MyBatisGlobalConfiguration> globalConfigurationRef) {
+    public MyBatisObjectFactory(AtomicReference<MyBatisGlobalConfiguration> globalConfigurationRef) {
         this.globalConfigurationRef = globalConfigurationRef;
     }
 
@@ -114,7 +114,8 @@ public class MyBatisDefaultObjectFactory implements ObjectFactory, Serializable 
             } else {
                 classToCreate = HashMap.class;
             }
-        } else if (type == SortedSet.class) { // issue #510 Collections Support
+        } else if (type == SortedSet.class) {
+            // issue #510 Collections Support
             classToCreate = TreeSet.class;
         } else if (type == Set.class) {
             classToCreate = HashSet.class;

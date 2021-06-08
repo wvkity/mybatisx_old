@@ -6,7 +6,12 @@ import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 
 import java.util.Map;
 
-public class MyBatisObjectWrapperFactory implements ObjectWrapperFactory {
+/**
+ * 下划线转驼峰包装工厂
+ * @author wvkity
+ */
+public class MyBatisMapWrapperFactory implements ObjectWrapperFactory {
+
     @Override
     public boolean hasWrapperFor(Object object) {
         return object instanceof Map;

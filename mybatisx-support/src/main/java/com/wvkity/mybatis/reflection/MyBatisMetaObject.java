@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.reflection;
 
-import com.wvkity.mybatis.reflection.wrapper.MyBatisObjectWrapperFactory;
+import com.wvkity.mybatis.reflection.wrapper.MyBatisMapWrapperFactory;
 import org.apache.ibatis.reflection.DefaultReflectorFactory;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.ReflectorFactory;
@@ -34,7 +34,7 @@ public final class MyBatisMetaObject {
     private MyBatisMetaObject(){}
 
     public static final ObjectFactory DEFAULT_OBJECT_FACTORY = new DefaultObjectFactory();
-    public static final ObjectWrapperFactory DEFAULT_OBJECT_WRAPPER_FACTORY = new MyBatisObjectWrapperFactory();
+    public static final ObjectWrapperFactory DEFAULT_OBJECT_WRAPPER_FACTORY = new MyBatisMapWrapperFactory();
     public static final ReflectorFactory DEFAULT_REFLECTOR_FACTORY = new DefaultReflectorFactory();
 
     public static MetaObject forObject(final Object object) {
