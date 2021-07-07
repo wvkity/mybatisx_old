@@ -14,7 +14,7 @@ import com.github.mybatisx.core.criteria.CriteriaWrapper;
  * @since 1.0.0
  */
 public interface CommonCriteriaWrapper<T, C extends CommonCriteriaWrapper<T, C>> extends CriteriaWrapper<T, C>,
-    CommonCompare<T, C>, CommonRange<T, C>, CommonLike<T, C>, CommonTemplate<T, C>, QueryCriteriaWrapper<T, C> {
+    CommonCompare<T, C>, CommonRange<T, C>, CommonLike<T, C>, CommonTemplate<T, C>, QueryCriteriaBuilder<T, C> {
 
     /**
      * IS NULL

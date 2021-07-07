@@ -14,7 +14,7 @@ import java.util.Collection;
  * @created 2021-05-14
  * @since 1.0.0
  */
-interface LambdaRange<T, C extends LambdaRange<T, C>> {
+interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
 
     // region In condition
 
@@ -27,7 +27,7 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> {
      */
     @SuppressWarnings({"unchecked"})
     default <V> C in(final Property<T, V> property, final V... values) {
-        return in(Slot.AND, property, values);
+        return in(this.getSlot(), property, values);
     }
 
     /**
@@ -51,7 +51,7 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> {
      * @return {@code this}
      */
     default <V> C in(final Property<T, V> property, final Collection<V> values) {
-        return in(Slot.AND, property, values);
+        return in(this.getSlot(), property, values);
     }
 
     /**
@@ -71,7 +71,7 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> {
      * @return {@code this}
      */
     default C in(final String property, final Object... values) {
-        return in(Slot.AND, property, values);
+        return in(this.getSlot(), property, values);
     }
 
     /**
@@ -92,7 +92,7 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> {
      * @return {@code this}
      */
     default C in(final String property, final Collection<?> values) {
-        return in(Slot.AND, property, values);
+        return in(this.getSlot(), property, values);
     }
 
     /**
@@ -117,7 +117,7 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> {
      */
     @SuppressWarnings({"unchecked"})
     default <V> C notIn(final Property<T, V> property, final V... values) {
-        return notIn(Slot.AND, property, values);
+        return notIn(this.getSlot(), property, values);
     }
 
     /**
@@ -141,7 +141,7 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> {
      * @return {@code this}
      */
     default <V> C notIn(final Property<T, V> property, final Collection<V> values) {
-        return notIn(Slot.AND, property, values);
+        return notIn(this.getSlot(), property, values);
     }
 
     /**
@@ -161,7 +161,7 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> {
      * @return {@code this}
      */
     default C notIn(final String property, final Object... values) {
-        return notIn(Slot.AND, property, values);
+        return notIn(this.getSlot(), property, values);
     }
 
     /**
@@ -182,7 +182,7 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> {
      * @return {@code this}
      */
     default C notIn(final String property, final Collection<?> values) {
-        return notIn(Slot.AND, property, values);
+        return notIn(this.getSlot(), property, values);
     }
 
     /**
@@ -207,7 +207,7 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> {
      * @return {@code this}
      */
     default <V> C between(final Property<T, V> property, final V begin, final V end) {
-        return this.between(Slot.AND, property, begin, end);
+        return this.between(this.getSlot(), property, begin, end);
     }
 
     /**
@@ -229,7 +229,7 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> {
      * @return {@code this}
      */
     default C between(final String property, final Object begin, final Object end) {
-        return this.between(Slot.AND, property, begin, end);
+        return this.between(this.getSlot(), property, begin, end);
     }
 
     /**
@@ -255,7 +255,7 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> {
      * @return {@code this}
      */
     default <V> C notBetween(final Property<T, V> property, final V begin, final V end) {
-        return this.notBetween(Slot.AND, property, begin, end);
+        return this.notBetween(this.getSlot(), property, begin, end);
     }
 
     /**
@@ -277,7 +277,7 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> {
      * @return {@code this}
      */
     default C notBetween(final String property, final Object begin, final Object end) {
-        return this.notBetween(Slot.AND, property, begin, end);
+        return this.notBetween(this.getSlot(), property, begin, end);
     }
 
     /**

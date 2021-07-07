@@ -14,7 +14,7 @@ import java.util.Map;
  * @created 2021-05-10
  * @since 1.0.0
  */
-interface CommonCompare<T, C extends CommonCompare<T, C>> {
+interface CommonCompare<T, C extends CommonCompare<T, C>> extends SlotSymbol<T, C> {
 
     // region Equal to condition
 
@@ -25,7 +25,7 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> {
      * @return {@code this}
      */
     default C colEq(final String column, final Object value) {
-        return this.colEq(Slot.AND, column, value);
+        return this.colEq(this.getSlot(), column, value);
     }
 
     /**
@@ -46,7 +46,7 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> {
      * @return {@link C}
      */
     default C colEq(final String c1, final Object v1, final String c2, final Object v2) {
-        return this.colEq(Slot.AND, c1, v1, c2, v2);
+        return this.colEq(this.getSlot(), c1, v1, c2, v2);
     }
 
     /**
@@ -74,7 +74,7 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> {
      */
     default C colEq(final String c1, final Object v1, final String c2,
                     final Object v2, final String c3, final Object v3) {
-        return this.colEq(Slot.AND, c1, v1, c2, v2, c3, v3);
+        return this.colEq(this.getSlot(), c1, v1, c2, v2, c3, v3);
     }
 
     /**
@@ -99,7 +99,7 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> {
      * @return {@link C}
      */
     default C colEq(final Map<String, Object> columns) {
-        return colEq(Slot.AND, columns);
+        return colEq(this.getSlot(), columns);
     }
 
     /**
@@ -121,7 +121,7 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> {
      * @return {@code this}
      */
     default C colNe(final String column, final Object value) {
-        return colNe(Slot.AND, column, value);
+        return colNe(this.getSlot(), column, value);
     }
 
     /**
@@ -144,7 +144,7 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> {
      * @return {@code this}
      */
     default C colGt(final String column, final Object value) {
-        return colGt(Slot.AND, column, value);
+        return colGt(this.getSlot(), column, value);
     }
 
     /**
@@ -167,7 +167,7 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> {
      * @return {@code this}
      */
     default C colGe(final String column, final Object value) {
-        return colGe(Slot.AND, column, value);
+        return colGe(this.getSlot(), column, value);
     }
 
     /**
@@ -190,7 +190,7 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> {
      * @return {@code this}
      */
     default C colLt(final String column, final Object value) {
-        return colLt(Slot.AND, column, value);
+        return colLt(this.getSlot(), column, value);
     }
 
     /**
@@ -213,7 +213,7 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> {
      * @return {@code this}
      */
     default C colLe(final String column, final Object value) {
-        return colLe(Slot.AND, column, value);
+        return colLe(this.getSlot(), column, value);
     }
 
     /**

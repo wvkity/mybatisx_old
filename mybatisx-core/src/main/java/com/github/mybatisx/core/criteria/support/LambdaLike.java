@@ -12,7 +12,7 @@ import com.github.mybatisx.support.constant.Slot;
  * @created 2021-05-14
  * @since 1.0.0
  */
-interface LambdaLike<T, C extends LambdaLike<T, C>> {
+interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
 
     // region Like condition
 
@@ -24,7 +24,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default <V> C likeLeft(final Property<T, V> property, final V value) {
-        return this.like(Slot.AND, property, value, Like.END, null);
+        return this.like(this.getSlot(), property, value, Like.END, null);
     }
 
     /**
@@ -48,7 +48,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default <V> C likeLeft(final Property<T, V> property, final V value, final Character escape) {
-        return this.like(Slot.AND, property, value, Like.END, escape);
+        return this.like(this.getSlot(), property, value, Like.END, escape);
     }
 
     /**
@@ -71,7 +71,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default C likeLeft(final String property, final Object value) {
-        return this.like(Slot.AND, property, value, Like.END, null);
+        return this.like(this.getSlot(), property, value, Like.END, null);
     }
 
     /**
@@ -93,7 +93,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default C likeLeft(final String property, final Object value, final Character escape) {
-        return this.like(Slot.AND, property, value, Like.END, escape);
+        return this.like(this.getSlot(), property, value, Like.END, escape);
     }
 
     /**
@@ -116,7 +116,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default <V> C likeRight(final Property<T, V> property, final V value) {
-        return this.like(Slot.AND, property, value, Like.START, null);
+        return this.like(this.getSlot(), property, value, Like.START, null);
     }
 
     /**
@@ -140,7 +140,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default <V> C likeRight(final Property<T, V> property, final V value, final Character escape) {
-        return this.like(Slot.AND, property, value, Like.START, escape);
+        return this.like(this.getSlot(), property, value, Like.START, escape);
     }
 
     /**
@@ -163,7 +163,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default C likeRight(final String property, final Object value) {
-        return this.like(Slot.AND, property, value, Like.START, null);
+        return this.like(this.getSlot(), property, value, Like.START, null);
     }
 
     /**
@@ -185,7 +185,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default C likeRight(final String property, final Object value, final Character escape) {
-        return this.like(Slot.AND, property, value, Like.START, escape);
+        return this.like(this.getSlot(), property, value, Like.START, escape);
     }
 
     /**
@@ -208,7 +208,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default <V> C likeAny(final Property<T, V> property, final V value) {
-        return this.like(Slot.AND, property, value, Like.ANYWHERE, null);
+        return this.like(this.getSlot(), property, value, Like.ANYWHERE, null);
     }
 
     /**
@@ -232,7 +232,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default <V> C likeAny(final Property<T, V> property, final V value, final Character escape) {
-        return this.like(Slot.AND, property, value, Like.ANYWHERE, escape);
+        return this.like(this.getSlot(), property, value, Like.ANYWHERE, escape);
     }
 
     /**
@@ -255,7 +255,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default C likeAny(final String property, final Object value) {
-        return this.like(Slot.AND, property, value, Like.ANYWHERE, null);
+        return this.like(this.getSlot(), property, value, Like.ANYWHERE, null);
     }
 
     /**
@@ -277,7 +277,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default C likeAny(final String property, final Object value, final Character escape) {
-        return this.like(Slot.AND, property, value, Like.ANYWHERE, escape);
+        return this.like(this.getSlot(), property, value, Like.ANYWHERE, escape);
     }
 
     /**
@@ -301,7 +301,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default <V> C like(final Property<T, V> property, final V value, final Like like) {
-        return this.like(Slot.AND, property, value, like, null);
+        return this.like(this.getSlot(), property, value, like, null);
     }
 
     /**
@@ -327,7 +327,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default <V> C like(final Property<T, V> property, final V value, final Like like, final Character escape) {
-        return this.like(Slot.AND, property, value, like, escape);
+        return this.like(this.getSlot(), property, value, like, escape);
     }
 
     /**
@@ -341,7 +341,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     <V> C like(final Slot slot, final Property<T, V> property, final V value, final Like like,
-                       final Character escape);
+               final Character escape);
 
     /**
      * like模糊匹配
@@ -351,7 +351,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default C like(final String property, final Object value, final Like like) {
-        return this.like(Slot.AND, property, value, like, null);
+        return this.like(this.getSlot(), property, value, like, null);
     }
 
     /**
@@ -376,7 +376,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      */
     default C like(final String property, final Object value, final Like like,
                    final Character escape) {
-        return this.like(Slot.AND, property, value, like, escape);
+        return this.like(this.getSlot(), property, value, like, escape);
     }
 
     /**
@@ -403,7 +403,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default <V> C notLikeLeft(final Property<T, V> property, final V value) {
-        return this.notLike(Slot.AND, property, value, Like.END, null);
+        return this.notLike(this.getSlot(), property, value, Like.END, null);
     }
 
     /**
@@ -427,7 +427,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default <V> C notLikeLeft(final Property<T, V> property, final V value, final Character escape) {
-        return this.notLike(Slot.AND, property, value, Like.END, escape);
+        return this.notLike(this.getSlot(), property, value, Like.END, escape);
     }
 
     /**
@@ -451,7 +451,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default C notLikeLeft(final String property, final Object value) {
-        return this.notLike(Slot.AND, property, value, Like.END, null);
+        return this.notLike(this.getSlot(), property, value, Like.END, null);
     }
 
     /**
@@ -473,7 +473,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default C notLikeLeft(final String property, final Object value, final Character escape) {
-        return this.notLike(Slot.AND, property, value, Like.END, escape);
+        return this.notLike(this.getSlot(), property, value, Like.END, escape);
     }
 
     /**
@@ -496,7 +496,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default <V> C notLikeRight(final Property<T, V> property, final V value) {
-        return this.notLike(Slot.AND, property, value, Like.START, null);
+        return this.notLike(this.getSlot(), property, value, Like.START, null);
     }
 
     /**
@@ -520,7 +520,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default <V> C notLikeRight(final Property<T, V> property, final V value, final Character escape) {
-        return this.notLike(Slot.AND, property, value, Like.START, escape);
+        return this.notLike(this.getSlot(), property, value, Like.START, escape);
     }
 
     /**
@@ -544,7 +544,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default C notLikeRight(final String property, final Object value) {
-        return this.notLike(Slot.AND, property, value, Like.START, null);
+        return this.notLike(this.getSlot(), property, value, Like.START, null);
     }
 
     /**
@@ -566,7 +566,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default C notLikeRight(final String property, final Object value, final Character escape) {
-        return this.notLike(Slot.AND, property, value, Like.START, escape);
+        return this.notLike(this.getSlot(), property, value, Like.START, escape);
     }
 
     /**
@@ -589,7 +589,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default <V> C notLikeAny(final Property<T, V> property, final V value) {
-        return this.notLike(Slot.AND, property, value, Like.ANYWHERE, null);
+        return this.notLike(this.getSlot(), property, value, Like.ANYWHERE, null);
     }
 
     /**
@@ -613,7 +613,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default <V> C notLikeAny(final Property<T, V> property, final V value, final Character escape) {
-        return this.notLike(Slot.AND, property, value, Like.ANYWHERE, escape);
+        return this.notLike(this.getSlot(), property, value, Like.ANYWHERE, escape);
     }
 
     /**
@@ -637,7 +637,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default C notLikeAny(final String property, final Object value) {
-        return this.notLike(Slot.AND, property, value, Like.ANYWHERE, null);
+        return this.notLike(this.getSlot(), property, value, Like.ANYWHERE, null);
     }
 
     /**
@@ -659,7 +659,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default C notLikeAny(final String property, final Object value, final Character escape) {
-        return this.notLike(Slot.AND, property, value, Like.ANYWHERE, escape);
+        return this.notLike(this.getSlot(), property, value, Like.ANYWHERE, escape);
     }
 
     /**
@@ -683,7 +683,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default <V> C notLike(final Property<T, V> property, final V value, final Like like) {
-        return this.notLike(Slot.AND, property, value, like, null);
+        return this.notLike(this.getSlot(), property, value, like, null);
     }
 
     /**
@@ -710,7 +710,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      */
     default <V> C notLike(final Property<T, V> property, final V value, final Like like,
                           final Character escape) {
-        return this.notLike(Slot.AND, property, value, like, escape);
+        return this.notLike(this.getSlot(), property, value, like, escape);
     }
 
     /**
@@ -724,7 +724,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     <V> C notLike(final Slot slot, final Property<T, V> property, final V value, final Like like,
-                          final Character escape);
+                  final Character escape);
 
     /**
      * not like模糊匹配
@@ -734,7 +734,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default C notLike(final String property, final Object value, final Like like) {
-        return this.notLike(Slot.AND, property, value, like, null);
+        return this.notLike(this.getSlot(), property, value, like, null);
     }
 
     /**
@@ -758,7 +758,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> {
      * @return {@code this}
      */
     default C notLike(final String property, final Object value, final Like like, final Character escape) {
-        return this.notLike(Slot.AND, property, value, like, escape);
+        return this.notLike(this.getSlot(), property, value, like, escape);
     }
 
     /**

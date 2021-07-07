@@ -13,7 +13,7 @@ import java.util.Collection;
  * @created 2021-05-14
  * @since 1.0.0
  */
-interface CommonRange<T, C extends CommonRange<T, C>> {
+interface CommonRange<T, C extends CommonRange<T, C>> extends SlotSymbol<T, C> {
 
     // region In condition
 
@@ -24,7 +24,7 @@ interface CommonRange<T, C extends CommonRange<T, C>> {
      * @return {@code this}
      */
     default C colIn(final String column, final Object... values) {
-        return colIn(Slot.AND, column, values);
+        return colIn(this.getSlot(), column, values);
     }
 
     /**
@@ -45,7 +45,7 @@ interface CommonRange<T, C extends CommonRange<T, C>> {
      * @return {@code this}
      */
     default C colIn(final String column, final Collection<?> values) {
-        return colIn(Slot.AND, column, values);
+        return colIn(this.getSlot(), column, values);
     }
 
     /**
@@ -68,7 +68,7 @@ interface CommonRange<T, C extends CommonRange<T, C>> {
      * @return {@code this}
      */
     default C colNotIn(final String column, final Object... values) {
-        return colNotIn(Slot.AND, column, values);
+        return colNotIn(this.getSlot(), column, values);
     }
 
     /**
@@ -89,7 +89,7 @@ interface CommonRange<T, C extends CommonRange<T, C>> {
      * @return {@code this}
      */
     default C colNotIn(final String column, final Collection<?> values) {
-        return colNotIn(Slot.AND, column, values);
+        return colNotIn(this.getSlot(), column, values);
     }
 
     /**
@@ -113,7 +113,7 @@ interface CommonRange<T, C extends CommonRange<T, C>> {
      * @return {@code this}
      */
     default C colBetween(final String column, final Object begin, final Object end) {
-        return colBetween(Slot.AND, column, begin, end);
+        return colBetween(this.getSlot(), column, begin, end);
     }
 
     /**
@@ -138,7 +138,7 @@ interface CommonRange<T, C extends CommonRange<T, C>> {
      * @return {@code this}
      */
     default C colNotBetween(final String column, final Object begin, final Object end) {
-        return colNotBetween(Slot.AND, column, begin, end);
+        return colNotBetween(this.getSlot(), column, begin, end);
     }
 
     /**

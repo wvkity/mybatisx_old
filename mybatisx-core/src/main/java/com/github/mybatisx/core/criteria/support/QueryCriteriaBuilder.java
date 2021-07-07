@@ -17,7 +17,7 @@ import java.util.function.Consumer;
  * @created 2021-05-19
  * @since 1.0.0
  */
-public interface QueryCriteriaWrapper<T, C extends QueryCriteriaWrapper<T, C>> extends ExtCriteria<T> {
+public interface QueryCriteriaBuilder<T, C extends QueryCriteriaBuilder<T, C>> extends ExtCriteria<T> {
 
     // region Common sub query
 

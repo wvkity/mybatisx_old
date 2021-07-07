@@ -16,7 +16,7 @@ import java.util.Map;
  * @created 2021-05-14
  * @since 1.0.0
  */
-interface CommonTemplate<T, C extends CommonTemplate<T, C>> {
+interface CommonTemplate<T, C extends CommonTemplate<T, C>> extends SlotSymbol<T, C> {
 
     /**
      * 模板条件
@@ -25,7 +25,7 @@ interface CommonTemplate<T, C extends CommonTemplate<T, C>> {
      * @return {@code this}
      */
     default C tpl(final String template, final Object value) {
-        return this.tpl(Slot.NONE, template, null, TemplateMatch.SINGLE, value, null, null);
+        return this.tpl(this.getSlot(), template, null, TemplateMatch.SINGLE, value, null, null);
     }
 
     /**
@@ -47,7 +47,7 @@ interface CommonTemplate<T, C extends CommonTemplate<T, C>> {
      * @return {@code this}
      */
     default C colTpl(final String template, final String column, final Object value) {
-        return colTpl(Slot.NONE, template, column, value);
+        return colTpl(this.getSlot(), template, column, value);
     }
 
     /**
@@ -79,7 +79,7 @@ interface CommonTemplate<T, C extends CommonTemplate<T, C>> {
      * @return {@code this}
      */
     default C tpl(final String template, final Collection<Object> values) {
-        return this.tpl(Slot.NONE, template, null, null, null, values, null);
+        return this.tpl(this.getSlot(), template, null, null, null, values, null);
     }
 
     /**
@@ -112,7 +112,7 @@ interface CommonTemplate<T, C extends CommonTemplate<T, C>> {
      * @return {@code this}
      */
     default C colTpl(final String template, final String column, final Object... values) {
-        return colTpl(Slot.NONE, template, column, Objects.asList(values));
+        return colTpl(this.getSlot(), template, column, Objects.asList(values));
     }
 
     /**
@@ -135,7 +135,7 @@ interface CommonTemplate<T, C extends CommonTemplate<T, C>> {
      * @return {@code this}
      */
     default C colTpl(final String template, final String column, final Collection<Object> values) {
-        return colTpl(Slot.NONE, template, column, values);
+        return colTpl(this.getSlot(), template, column, values);
     }
 
     /**
@@ -186,7 +186,7 @@ interface CommonTemplate<T, C extends CommonTemplate<T, C>> {
      * @return {@code this}
      */
     default C tpl(final String template, final Map<String, Object> values) {
-        return this.tpl(Slot.NONE, template, values);
+        return this.tpl(this.getSlot(), template, values);
     }
 
     /**
@@ -244,7 +244,7 @@ interface CommonTemplate<T, C extends CommonTemplate<T, C>> {
      */
     default C colTpl(final String template, final String column, final String k1, final Object v1,
                      final String k2, final Object v2) {
-        return colTpl(Slot.NONE, template, column, ImmutableLinkedMap.of(k1, v1, k2, v2));
+        return colTpl(this.getSlot(), template, column, ImmutableLinkedMap.of(k1, v1, k2, v2));
     }
 
     /**
@@ -277,7 +277,7 @@ interface CommonTemplate<T, C extends CommonTemplate<T, C>> {
      */
     default C colTpl(final String template, final String column, final String k1, final Object v1,
                      final String k2, final Object v2, final String k3, final Object v3) {
-        return colTpl(Slot.NONE, template, column, ImmutableLinkedMap.of(k1, v1, k2, v2, k3, v3));
+        return colTpl(this.getSlot(), template, column, ImmutableLinkedMap.of(k1, v1, k2, v2, k3, v3));
     }
 
     /**
@@ -306,7 +306,7 @@ interface CommonTemplate<T, C extends CommonTemplate<T, C>> {
      * @return {@code this}
      */
     default C colTpl(final String template, final String column, final Map<String, Object> values) {
-        return colTpl(Slot.NONE, template, column, values);
+        return colTpl(this.getSlot(), template, column, values);
     }
 
     /**

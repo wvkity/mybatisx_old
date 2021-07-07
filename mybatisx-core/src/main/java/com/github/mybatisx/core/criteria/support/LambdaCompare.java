@@ -1,8 +1,8 @@
 package com.github.mybatisx.core.criteria.support;
 
-import com.github.mybatisx.support.constant.Slot;
 import com.github.mybatisx.core.criteria.ExtCriteria;
 import com.github.mybatisx.core.property.Property;
+import com.github.mybatisx.support.constant.Slot;
 
 import java.util.Map;
 
@@ -14,7 +14,7 @@ import java.util.Map;
  * @created 2021-05-10
  * @since 1.0.0
  */
-interface LambdaCompare<T, C extends LambdaCompare<T, C>> {
+interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, C> {
 
     // region Equal to condition
 
@@ -24,7 +24,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> {
      * @return {@code this}
      */
     default C idEq(final Object value) {
-        return this.idEq(Slot.AND, value);
+        return this.idEq(this.getSlot(), value);
     }
 
     /**
@@ -43,7 +43,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> {
      * @return {@code this}
      */
     default <V> C eq(final Property<T, V> property, final V value) {
-        return this.eq(Slot.AND, property, value);
+        return this.eq(this.getSlot(), property, value);
     }
 
     /**
@@ -63,7 +63,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> {
      * @return {@code this}
      */
     default C eq(final String property, final Object value) {
-        return this.eq(Slot.AND, property, value);
+        return this.eq(this.getSlot(), property, value);
     }
 
     /**
@@ -86,7 +86,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> {
      * @return {@code this}
      */
     default <V1, V2> C eq(final Property<T, V1> p1, final V1 v1, final Property<T, V2> p2, final V2 v2) {
-        return eq(Slot.AND, p1, v1, p2, v2);
+        return eq(this.getSlot(), p1, v1, p2, v2);
     }
 
     /**
@@ -120,7 +120,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> {
      */
     default <V1, V2, V3> C eq(final Property<T, V1> p1, final V1 v1, final Property<T, V2> p2, final V2 v2,
                               final Property<T, V3> p3, final V3 v3) {
-        return eq(Slot.AND, p1, v1, p2, v2, p3, v3);
+        return eq(this.getSlot(), p1, v1, p2, v2, p3, v3);
     }
 
     /**
@@ -151,7 +151,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> {
      * @return {@code this}
      */
     default C eq(final String p1, final Object v1, final String p2, final Object v2) {
-        return eq(Slot.AND, p1, v1, p2, v2);
+        return eq(this.getSlot(), p1, v1, p2, v2);
     }
 
     /**
@@ -179,7 +179,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> {
      */
     default C eq(final String p1, final Object v1, final String p2, final Object v2,
                  final String p3, final Object v3) {
-        return eq(Slot.AND, p1, v1, p2, v2, p3, v3);
+        return eq(this.getSlot(), p1, v1, p2, v2, p3, v3);
     }
 
     /**
@@ -204,7 +204,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> {
      * @return {@code this}
      */
     default C eq(final Map<String, Object> properties) {
-        return eq(Slot.AND, properties);
+        return eq(this.getSlot(), properties);
     }
 
     /**
@@ -227,7 +227,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> {
      * @return {@code this}
      */
     default <V> C ne(final Property<T, V> property, final V value) {
-        return ne(Slot.AND, property, value);
+        return ne(this.getSlot(), property, value);
     }
 
     /**
@@ -247,7 +247,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> {
      * @return {@code this}
      */
     default C ne(final String property, final Object value) {
-        return ne(Slot.AND, property, value);
+        return ne(this.getSlot(), property, value);
     }
 
     /**
@@ -271,7 +271,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> {
      * @return {@code this}
      */
     default <V> C gt(final Property<T, V> property, final V value) {
-        return gt(Slot.AND, property, value);
+        return gt(this.getSlot(), property, value);
     }
 
     /**
@@ -291,7 +291,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> {
      * @return {@code this}
      */
     default C gt(final String property, final Object value) {
-        return gt(Slot.AND, property, value);
+        return gt(this.getSlot(), property, value);
     }
 
     /**
@@ -315,7 +315,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> {
      * @return {@code this}
      */
     default <V> C ge(final Property<T, V> property, final V value) {
-        return ge(Slot.AND, property, value);
+        return ge(this.getSlot(), property, value);
     }
 
     /**
@@ -335,7 +335,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> {
      * @return {@code this}
      */
     default C ge(final String property, final Object value) {
-        return ge(Slot.AND, property, value);
+        return ge(this.getSlot(), property, value);
     }
 
     /**
@@ -359,7 +359,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> {
      * @return {@code this}
      */
     default <V> C lt(final Property<T, V> property, final V value) {
-        return lt(Slot.AND, property, value);
+        return lt(this.getSlot(), property, value);
     }
 
     /**
@@ -379,7 +379,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> {
      * @return {@code this}
      */
     default C lt(final String property, final Object value) {
-        return lt(Slot.AND, property, value);
+        return lt(this.getSlot(), property, value);
     }
 
     /**
@@ -403,7 +403,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> {
      * @return {@code this}
      */
     default <V> C le(final Property<T, V> property, final V value) {
-        return le(Slot.AND, property, value);
+        return le(this.getSlot(), property, value);
     }
 
     /**
@@ -423,7 +423,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> {
      * @return {@code this}
      */
     default C le(final String property, final Object value) {
-        return le(Slot.AND, property, value);
+        return le(this.getSlot(), property, value);
     }
 
     /**

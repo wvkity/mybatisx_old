@@ -59,6 +59,24 @@ public abstract class AbstractCriteria<T, C extends CriteriaWrapper<T, C>> exten
         return this.context;
     }
 
+    /**
+     * {@code Slot.AND}
+     * @return {@code this}
+     */
+    public C and() {
+        this.refSlot.set(Slot.AND);
+        return this.self();
+    }
+
+    /**
+     * {@code Slot.OR}
+     * @return {@code this}
+     */
+    public C or() {
+        this.refSlot.set(Slot.OR);
+        return this.self();
+    }
+
     @Override
     public C strict(boolean throwing) {
         this.notMatchingWithThrows.set(throwing);

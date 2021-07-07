@@ -28,7 +28,7 @@ interface LambdaSelect<T, C extends LambdaSelect<T, C>> extends Criteria<T> {
      * @return {@code this}
      */
     default C select() {
-        return this.filtrate(__ -> true);
+        return this.filtrate(ignore -> true);
     }
 
     /**

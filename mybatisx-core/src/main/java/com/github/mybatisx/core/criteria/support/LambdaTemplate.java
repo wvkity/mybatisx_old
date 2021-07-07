@@ -16,7 +16,7 @@ import java.util.Map;
  * @created 2021-05-14
  * @since 1.0.0
  */
-interface LambdaTemplate<T, C extends LambdaTemplate<T, C>> {
+interface LambdaTemplate<T, C extends LambdaTemplate<T, C>> extends SlotSymbol<T, C> {
 
     /**
      * 模板条件
@@ -26,7 +26,7 @@ interface LambdaTemplate<T, C extends LambdaTemplate<T, C>> {
      * @return {@code this}
      */
     default C tpl(final String template, final Property<T, ?> property, final Object value) {
-        return tpl(Slot.NONE, template, property, value);
+        return tpl(this.getSlot(), template, property, value);
     }
 
     /**
@@ -47,7 +47,7 @@ interface LambdaTemplate<T, C extends LambdaTemplate<T, C>> {
      * @return {@code this}
      */
     default C tpl(final String template, final String property, final Object value) {
-        return tpl(Slot.NONE, template, property, value);
+        return tpl(this.getSlot(), template, property, value);
     }
 
     /**
@@ -68,7 +68,7 @@ interface LambdaTemplate<T, C extends LambdaTemplate<T, C>> {
      * @return {@code this}
      */
     default C tpl(final String template, final Property<T, ?> property, final Object... values) {
-        return tpl(Slot.NONE, template, property, Objects.asList(values));
+        return tpl(this.getSlot(), template, property, Objects.asList(values));
     }
 
     /**
@@ -92,7 +92,7 @@ interface LambdaTemplate<T, C extends LambdaTemplate<T, C>> {
      * @return {@code this}
      */
     default C tpl(final String template, final Property<T, ?> property, final Collection<Object> values) {
-        return tpl(Slot.NONE, template, property, values);
+        return tpl(this.getSlot(), template, property, values);
     }
 
     /**
@@ -114,7 +114,7 @@ interface LambdaTemplate<T, C extends LambdaTemplate<T, C>> {
      * @return {@code this}
      */
     default C tpl(final String template, final String property, final Object... values) {
-        return tpl(Slot.NONE, template, property, Objects.asList(values));
+        return tpl(this.getSlot(), template, property, Objects.asList(values));
     }
 
     /**
@@ -137,7 +137,7 @@ interface LambdaTemplate<T, C extends LambdaTemplate<T, C>> {
      * @return {@code this}
      */
     default C tpl(final String template, final String property, final Collection<Object> values) {
-        return tpl(Slot.NONE, template, property, values);
+        return tpl(this.getSlot(), template, property, values);
     }
 
     /**
@@ -162,7 +162,7 @@ interface LambdaTemplate<T, C extends LambdaTemplate<T, C>> {
      */
     default C tpl(final String template, final Property<T, ?> property, final String k1, final Object v1,
                   final String k2, final Object v2) {
-        return tpl(Slot.NONE, template, property, ImmutableLinkedMap.of(k1, v1, k2, v2));
+        return tpl(this.getSlot(), template, property, ImmutableLinkedMap.of(k1, v1, k2, v2));
     }
 
     /**
@@ -195,7 +195,7 @@ interface LambdaTemplate<T, C extends LambdaTemplate<T, C>> {
      */
     default C tpl(final String template, final Property<T, ?> property, final String k1, final Object v1,
                   final String k2, final Object v2, final String k3, final Object v3) {
-        return tpl(Slot.NONE, template, property, ImmutableLinkedMap.of(k1, v1, k2, v2, k3, v3));
+        return tpl(this.getSlot(), template, property, ImmutableLinkedMap.of(k1, v1, k2, v2, k3, v3));
     }
 
     /**
@@ -224,7 +224,7 @@ interface LambdaTemplate<T, C extends LambdaTemplate<T, C>> {
      * @return {@code this}
      */
     default C tpl(final String template, final Property<T, ?> property, final Map<String, Object> values) {
-        return tpl(Slot.NONE, template, property, values);
+        return tpl(this.getSlot(), template, property, values);
     }
 
     /**
@@ -250,7 +250,7 @@ interface LambdaTemplate<T, C extends LambdaTemplate<T, C>> {
      */
     default C tpl(final String template, final String property, final String k1, final Object v1,
                   final String k2, final Object v2) {
-        return tpl(Slot.NONE, template, property, ImmutableLinkedMap.of(k1, v1, k2, v2));
+        return tpl(this.getSlot(), template, property, ImmutableLinkedMap.of(k1, v1, k2, v2));
     }
 
     /**
@@ -283,7 +283,7 @@ interface LambdaTemplate<T, C extends LambdaTemplate<T, C>> {
      */
     default C tpl(final String template, final String property, final String k1, final Object v1,
                   final String k2, final Object v2, final String k3, final Object v3) {
-        return tpl(Slot.NONE, template, property, ImmutableLinkedMap.of(k1, v1, k2, v2, k3, v3));
+        return tpl(this.getSlot(), template, property, ImmutableLinkedMap.of(k1, v1, k2, v2, k3, v3));
     }
 
     /**
@@ -312,7 +312,7 @@ interface LambdaTemplate<T, C extends LambdaTemplate<T, C>> {
      * @return {@code this}
      */
     default C tpl(final String template, final String property, final Map<String, Object> values) {
-        return tpl(Slot.NONE, template, property, values);
+        return tpl(this.getSlot(), template, property, values);
     }
 
     /**

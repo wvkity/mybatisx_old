@@ -11,7 +11,7 @@ import com.github.mybatisx.support.constant.Slot;
  * @created 2021-05-14
  * @since 1.0.0
  */
-interface CommonLike<T, C extends CommonLike<T, C>> {
+interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
 
     // region Like condition
 
@@ -24,7 +24,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> {
      * @return {@code this}
      */
     default C colLikeLeft(final String column, final Object value) {
-        return this.colLike(Slot.AND, column, value, Like.END, null);
+        return this.colLike(this.getSlot(), column, value, Like.END, null);
     }
 
     /**
@@ -46,7 +46,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> {
      * @return {@code this}
      */
     default C colLikeLeft(final String column, final Object value, final Character escape) {
-        return this.colLike(Slot.AND, column, value, Like.END, escape);
+        return this.colLike(this.getSlot(), column, value, Like.END, escape);
     }
 
     /**
@@ -72,7 +72,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> {
      * @return {@code this}
      */
     default C colLikeRight(final String column, final Object value) {
-        return this.colLike(Slot.AND, column, value, Like.START, null);
+        return this.colLike(this.getSlot(), column, value, Like.START, null);
     }
 
     /**
@@ -94,7 +94,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> {
      * @return {@code this}
      */
     default C colLikeRight(final String column, final Object value, final Character escape) {
-        return this.colLike(Slot.AND, column, value, Like.START, escape);
+        return this.colLike(this.getSlot(), column, value, Like.START, escape);
     }
 
     /**
@@ -120,7 +120,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> {
      * @return {@code this}
      */
     default C colLikeAny(final String column, final Object value) {
-        return this.colLike(Slot.AND, column, value, Like.ANYWHERE, null);
+        return this.colLike(this.getSlot(), column, value, Like.ANYWHERE, null);
     }
 
     /**
@@ -142,7 +142,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> {
      * @return {@code this}
      */
     default C colLikeAny(final String column, final Object value, final Character escape) {
-        return this.colLike(Slot.AND, column, value, Like.ANYWHERE, escape);
+        return this.colLike(this.getSlot(), column, value, Like.ANYWHERE, escape);
     }
 
     /**
@@ -169,7 +169,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> {
      * @return {@code this}
      */
     default C colLike(final String column, final Object value, final Like like) {
-        return this.colLike(Slot.AND, column, value, like, null);
+        return this.colLike(this.getSlot(), column, value, like, null);
     }
 
     /**
@@ -194,7 +194,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> {
      */
     default C colLike(final String column, final Object value, final Like like,
                       final Character escape) {
-        return this.colLike(Slot.AND, column, value, like, escape);
+        return this.colLike(this.getSlot(), column, value, like, escape);
     }
 
     /**
@@ -224,7 +224,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> {
      * @return {@code this}
      */
     default C colNotLikeLeft(final String column, final Object value) {
-        return this.colNotLike(Slot.AND, column, value, Like.END, null);
+        return this.colNotLike(this.getSlot(), column, value, Like.END, null);
     }
 
     /**
@@ -246,7 +246,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> {
      * @return {@code this}
      */
     default C colNotLikeLeft(final String column, final Object value, final Character escape) {
-        return this.colNotLike(Slot.AND, column, value, Like.END, escape);
+        return this.colNotLike(this.getSlot(), column, value, Like.END, escape);
     }
 
     /**
@@ -272,7 +272,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> {
      * @return {@code this}
      */
     default C colNotLikeRight(final String column, final Object value) {
-        return this.colNotLike(Slot.AND, column, value, Like.START, null);
+        return this.colNotLike(this.getSlot(), column, value, Like.START, null);
     }
 
     /**
@@ -294,7 +294,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> {
      * @return {@code this}
      */
     default C colNotLikeRight(final String column, final Object value, final Character escape) {
-        return this.colNotLike(Slot.AND, column, value, Like.START, escape);
+        return this.colNotLike(this.getSlot(), column, value, Like.START, escape);
     }
 
     /**
@@ -320,7 +320,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> {
      * @return {@code this}
      */
     default C colNotLikeAny(final String column, final Object value) {
-        return this.colNotLike(Slot.AND, column, value, Like.ANYWHERE, null);
+        return this.colNotLike(this.getSlot(), column, value, Like.ANYWHERE, null);
     }
 
     /**
@@ -342,7 +342,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> {
      * @return {@code this}
      */
     default C colNotLikeAny(final String column, final Object value, final Character escape) {
-        return this.colNotLike(Slot.AND, column, value, Like.ANYWHERE, escape);
+        return this.colNotLike(this.getSlot(), column, value, Like.ANYWHERE, escape);
     }
 
     /**
@@ -369,7 +369,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> {
      * @return {@code this}
      */
     default C colNotLike(final String column, final Object value, final Like like) {
-        return this.colNotLike(Slot.AND, column, value, like, null);
+        return this.colNotLike(this.getSlot(), column, value, like, null);
     }
 
     /**
@@ -393,7 +393,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> {
      * @return {@code this}
      */
     default C colNotLike(final String column, final Object value, final Like like, final Character escape) {
-        return this.colNotLike(Slot.AND, column, value, like, escape);
+        return this.colNotLike(this.getSlot(), column, value, like, escape);
     }
 
     /**

@@ -34,6 +34,7 @@ import com.github.mybatisx.core.support.manager.StandardFragmentManager;
 import com.github.mybatisx.core.support.select.Selection;
 import com.github.mybatisx.core.support.select.StandardSelection;
 import com.github.mybatisx.support.basic.Matched;
+import com.github.mybatisx.support.constant.Slot;
 import com.github.mybatisx.support.criteria.Criteria;
 import com.github.mybatisx.support.expr.Expression;
 import com.github.mybatisx.support.helper.TableHelper;
@@ -93,6 +94,10 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
      * 参数占位正则
      */
     protected static final Pattern DEF_PATTERN_PM = Pattern.compile(DEF_PATTERN_PM_STR);
+    /**
+     * AND/OR运算符
+     */
+    protected AtomicReference<Slot> refSlot = new AtomicReference<>(Slot.AND);
     /**
      * 实体类型
      */
@@ -527,6 +532,14 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
     @Override
     public boolean isGroupAll() {
         return this.groupAll;
+    }
+
+    /**
+     * 获取{@link Slot}
+     * @return {@link Slot}
+     */
+    public Slot getSlot() {
+        return this.refSlot.get();
     }
 
     /**
