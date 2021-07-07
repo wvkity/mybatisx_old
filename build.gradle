@@ -85,7 +85,7 @@ ext {
 }
 
 allprojects {
-    group 'com.wvkity'
+    group 'com.github.mybatisx'
     version '1.0.0-SNAPSHOT'
     apply from: rootDir.canonicalPath + '/.gradle/publish.gradle'
 }
