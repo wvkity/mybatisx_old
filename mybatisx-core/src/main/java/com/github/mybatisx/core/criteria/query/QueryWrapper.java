@@ -1,10 +1,10 @@
 package com.github.mybatisx.core.criteria.query;
 
 import com.github.mybatisx.basic.utils.Objects;
-import com.github.mybatisx.plugin.paging.RangeFetch;
 import com.github.mybatisx.core.criteria.CriteriaWrapper;
 import com.github.mybatisx.core.criteria.ExtCriteria;
 import com.github.mybatisx.executor.resultset.EmbedResult;
+import com.github.mybatisx.plugin.paging.RangeFetch;
 import com.github.mybatisx.support.constant.Join;
 
 import java.util.Map;

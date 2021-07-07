@@ -1,7 +1,7 @@
 package com.github.mybatisx.core.criteria.update;
 
-import com.github.mybatisx.core.property.Property;
 import com.github.mybatisx.core.criteria.support.LambdaCriteriaWrapper;
+import com.github.mybatisx.core.property.Property;
 
 /**
  * 基础条件/更新接口(支持lambda语法)

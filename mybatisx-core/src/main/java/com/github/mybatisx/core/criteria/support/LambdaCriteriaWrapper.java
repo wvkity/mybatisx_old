@@ -15,9 +15,9 @@
  */
 package com.github.mybatisx.core.criteria.support;
 
+import com.github.mybatisx.core.criteria.CriteriaWrapper;
 import com.github.mybatisx.core.property.Property;
 import com.github.mybatisx.support.constant.Slot;
-import com.github.mybatisx.core.criteria.CriteriaWrapper;
 
 /**
  * 基础条件接口(支持lambda语法)

@@ -21,7 +21,7 @@ import com.github.mybatisx.core.convert.DefaultConditionConverter;
 import com.github.mybatisx.core.convert.DefaultParameterConverter;
 import com.github.mybatisx.core.criteria.Category;
 import com.github.mybatisx.core.criteria.ExtCriteria;
-import com.github.mybatisx.core.criteria.sql.DefaultQuerySqlManager;
+import com.github.mybatisx.core.sql.DefaultQuerySqlManager;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;

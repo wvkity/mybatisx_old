@@ -18,13 +18,13 @@ package com.github.mybatisx.core.criteria;
 import com.github.mybatisx.basic.metadata.Column;
 import com.github.mybatisx.basic.metadata.Table;
 import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.core.condition.Criterion;
 import com.github.mybatisx.core.condition.NestedCondition;
 import com.github.mybatisx.core.expr.StandardNesting;
 import com.github.mybatisx.support.constant.Slot;
 import com.github.mybatisx.support.criteria.Criteria;
 import com.github.mybatisx.support.expr.Expression;
 import com.github.mybatisx.support.helper.TableHelper;
-import com.github.mybatisx.core.condition.Criterion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,8 +1,8 @@
 package com.github.mybatisx.core.criteria.support;
 
-import com.github.mybatisx.support.constant.Slot;
 import com.github.mybatisx.core.criteria.ExtCriteria;
 import com.github.mybatisx.core.property.Property;
+import com.github.mybatisx.support.constant.Slot;
 
 import java.util.Map;
 

@@ -17,6 +17,8 @@ package com.github.mybatisx.core.criteria.support;
 
 import com.github.mybatisx.basic.metadata.Column;
 import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.core.criteria.AbstractCriteria;
+import com.github.mybatisx.core.criteria.ExtCriteria;
 import com.github.mybatisx.core.expr.SpecialExpression;
 import com.github.mybatisx.core.expr.StandardBetween;
 import com.github.mybatisx.core.expr.StandardEqual;
@@ -38,8 +40,6 @@ import com.github.mybatisx.core.property.Property;
 import com.github.mybatisx.support.constant.Like;
 import com.github.mybatisx.support.constant.Slot;
 import com.github.mybatisx.support.helper.TableHelper;
-import com.github.mybatisx.core.criteria.AbstractCriteria;
-import com.github.mybatisx.core.criteria.ExtCriteria;
 
 import java.util.Collection;
 import java.util.Map;

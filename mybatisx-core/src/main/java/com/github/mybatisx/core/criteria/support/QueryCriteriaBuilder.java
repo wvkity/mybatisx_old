@@ -1,10 +1,10 @@
 package com.github.mybatisx.core.criteria.support;
 
 import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.core.criteria.ExtCriteria;
 import com.github.mybatisx.core.criteria.query.GenericQuery;
 import com.github.mybatisx.core.criteria.query.LambdaQuery;
 import com.github.mybatisx.core.criteria.query.Query;
-import com.github.mybatisx.core.criteria.ExtCriteria;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.github.mybatisx.core.criteria.sql;
+package com.github.mybatisx.core.sql;
 
 import com.github.mybatisx.core.support.manager.StandardFragmentManager;
 import com.github.mybatisx.support.criteria.Criteria;

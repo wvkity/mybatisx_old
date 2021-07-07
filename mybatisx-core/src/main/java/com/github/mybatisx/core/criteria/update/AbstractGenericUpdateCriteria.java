@@ -16,8 +16,8 @@
 package com.github.mybatisx.core.criteria.update;
 
 import com.github.mybatisx.basic.utils.Objects;
-import com.github.mybatisx.core.property.Property;
 import com.github.mybatisx.core.criteria.support.AbstractGenericCriteria;
+import com.github.mybatisx.core.property.Property;
 
 import java.util.Locale;
 

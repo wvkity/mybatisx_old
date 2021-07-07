@@ -16,7 +16,7 @@
 package com.github.mybatisx.core.criteria.update;
 
 import com.github.mybatisx.core.criteria.Category;
-import com.github.mybatisx.core.criteria.sql.DefaultUpdateSqlManager;
+import com.github.mybatisx.core.sql.DefaultUpdateSqlManager;
 
 import java.util.Objects;
 import java.util.function.Consumer;

@@ -15,8 +15,8 @@
  */
 package com.github.mybatisx.core.criteria.query;
 
-import com.github.mybatisx.support.constant.Join;
 import com.github.mybatisx.core.criteria.ExtCriteria;
+import com.github.mybatisx.support.constant.Join;
 
 /**
  * 抽象联表查询条件容器
@@ -45,11 +45,6 @@ public abstract class AbstractCommonForeignQueryCriteria<T, C extends CommonFore
         this.fetch = fetch;
         return this.self();
     }
-
-    /*@Override
-    public String getWhereSegment() {
-        return this.whereSegmentForForeign(this.join);
-    }*/
 
     @Override
     public ExtCriteria<?> getMaster() {

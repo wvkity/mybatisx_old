@@ -2,8 +2,8 @@ package com.github.mybatisx.core.criteria.support;
 
 import com.github.mybatisx.basic.immutable.ImmutableLinkedMap;
 import com.github.mybatisx.basic.utils.Objects;
-import com.github.mybatisx.support.constant.Slot;
 import com.github.mybatisx.core.expr.TemplateMatch;
+import com.github.mybatisx.support.constant.Slot;
 
 import java.util.Collection;
 import java.util.Map;

@@ -55,6 +55,9 @@ public interface Function extends Fragment {
      */
     Integer getScale();
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     default String getSegment() {
         return this.getSegment(true);
