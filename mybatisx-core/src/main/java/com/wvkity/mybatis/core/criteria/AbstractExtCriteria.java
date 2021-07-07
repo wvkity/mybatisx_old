@@ -485,7 +485,7 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
     /**
      * 获取表名
      * @param segment 完整SQL语句
-     * @param joinAs 是否拼接`AS`关键字
+     * @param joinAs  是否拼接`AS`关键字
      * @return 表名
      */
     protected String getTableName(final String segment, final boolean joinAs) {
@@ -700,9 +700,11 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
         }
         if (Objects.isNotEmpty(this.foreignSet)) {
             for (ExtCriteria<?> ec : this.foreignSet) {
-                final List<Selection> fss;
-                if ((ec.hasSelect() || ec.isFetch()) && Objects.isNotEmpty((fss = ec.fetchSelects()))) {
-                    it.addAll(fss);
+                if (ec.hasSelect() || ec.isFetch()) {
+                    final List<Selection> fss = ec.fetchSelects();
+                    if (Objects.isNotEmpty(fss)) {
+                        it.addAll(fss);
+                    }
                 }
             }
         }
