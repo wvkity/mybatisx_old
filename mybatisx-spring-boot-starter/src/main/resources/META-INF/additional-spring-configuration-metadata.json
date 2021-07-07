@@ -1,21 +1,21 @@
 {
   "groups": [
     {
-      "sourceType": "com.wvkity.mybatis.spring.boot.autoconfigure.MyBatisProperties",
+      "sourceType": "com.github.mybatisx.spring.boot.autoconfigure.MyBatisProperties",
       "name": "wvkity.mybatis",
-      "type": "com.wvkity.mybatis.spring.boot.autoconfigure.MyBatisProperties"
+      "type": "com.github.mybatisx.spring.boot.autoconfigure.MyBatisProperties"
     },
     {
-      "sourceType": "com.wvkity.mybatis.spring.boot.autoconfigure.MyBatisProperties",
+      "sourceType": "com.github.mybatisx.spring.boot.autoconfigure.MyBatisProperties",
       "name": "wvkity.mybatis.configuration",
       "sourceMethod": "getConfiguration()",
-      "type": "com.wvkity.mybatis.session.MyBatisConfiguration"
+      "type": "com.github.mybatisx.session.MyBatisConfiguration"
     },
     {
-      "sourceType": "com.wvkity.mybatis.spring.boot.autoconfigure.MyBatisProperties",
+      "sourceType": "com.github.mybatisx.spring.boot.autoconfigure.MyBatisProperties",
       "name": "wvkity.mybatis.globalConfiguration",
       "sourceMethod": "getGlobalConfiguration()",
-      "type": "com.wvkity.mybatis.basic.config.MyBatisGlobalConfiguration"
+      "type": "com.github.mybatisx.support.config.MyBatisGlobalConfiguration"
     }
   ]
 }

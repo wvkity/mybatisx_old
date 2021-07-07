@@ -14,7 +14,7 @@
  * the License.
  */
 
-import com.wvkity.mybatis.annotation.NamingStrategy;
+import com.github.mybatisx.annotation.NamingStrategy;
 import org.junit.jupiter.api.Test;
 
 /**

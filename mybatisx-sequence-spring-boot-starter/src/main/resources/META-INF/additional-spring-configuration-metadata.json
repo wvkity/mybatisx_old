@@ -1,9 +1,9 @@
 {
     "groups": [
         {
-            "sourceType": "com.wvkity.mybatis.spring.boot.sequence.config.SnowflakeSequenceProperties",
+            "sourceType": "com.github.mybatisx.spring.boot.sequence.config.SnowflakeSequenceProperties",
             "name": "wvkity.mybatis.plugin.pageable",
-            "type": "com.wvkity.mybatis.spring.boot.sequence.config.SnowflakeSequenceProperties"
+            "type": "com.github.mybatisx.spring.boot.sequence.config.SnowflakeSequenceProperties"
         }
     ]
 }
