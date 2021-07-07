@@ -682,6 +682,10 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
         final boolean hasRef = Objects.nonNull(this.refQuery);
         final List<Selection> it = new ArrayList<>();
         if (hasRef) {
+            // 是否已加载过
+            if (this.hasSelect()) {
+                return this.fragmentManager.getSelects();
+            }
             final List<Selection> selections = this.refQuery.fetchSelects();
             if (Objects.isNotEmpty(selections)) {
                 it.addAll(selections);

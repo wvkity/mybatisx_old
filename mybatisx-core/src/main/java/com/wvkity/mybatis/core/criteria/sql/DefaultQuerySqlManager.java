@@ -50,11 +50,11 @@ public class DefaultQuerySqlManager extends AbstractSqlManager {
 
     @Override
     public String getSelectSegment(boolean self) {
-        if (!self) {
-            // 加载查询字段
-            if (Objects.nonNull(this.refQuery) && !this.criteria.hasSelect()) {
-                this.criteria.fetchSelects();
-            }
+        final boolean hasRef = Objects.nonNull(this.refQuery);
+        final boolean notHasSel = !this.criteria.hasSelect();
+        final boolean isLoadAndReturn = (hasRef && notHasSel) || !self;
+        if (isLoadAndReturn) {
+            this.criteria.fetchSelects();
             return this.getSelectString();
         }
         final String ss = this.getSelectString();
