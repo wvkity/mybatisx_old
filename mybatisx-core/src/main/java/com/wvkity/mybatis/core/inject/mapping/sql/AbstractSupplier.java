@@ -20,8 +20,8 @@ import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.metadata.Table;
 import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
-import com.wvkity.mybatis.support.criteria.Criteria;
 import com.wvkity.mybatis.support.config.MyBatisGlobalConfiguration;
+import com.wvkity.mybatis.support.criteria.Criteria;
 import com.wvkity.mybatis.support.inject.mapping.sql.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,7 +120,7 @@ public abstract class AbstractSupplier implements Supplier, Constants {
      * @return 完整查询SQL语句
      */
     public String criteriaSelect() {
-        return "${" + Constants.PARAM_CRITERIA + ".segment}";
+        return "${" + PARAM_CRITERIA + ".segment}";
     }
 
     /**

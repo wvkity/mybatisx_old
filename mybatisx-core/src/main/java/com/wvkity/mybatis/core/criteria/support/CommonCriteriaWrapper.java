@@ -12,7 +12,7 @@ import com.wvkity.mybatis.support.constant.Slot;
  * @since 1.0.0
  */
 public interface CommonCriteriaWrapper<T, C extends CommonCriteriaWrapper<T, C>> extends CriteriaWrapper<T, C>,
-    CommonCompare<T, C>, CommonRange<T, C>, CommonLike<T, C>, CommonTemplate<T, C>, SubCriteriaWrapper<T, C> {
+    CommonCompare<T, C>, CommonRange<T, C>, CommonLike<T, C>, CommonTemplate<T, C>, QueryCriteriaWrapper<T, C> {
 
     /**
      * IS NULL

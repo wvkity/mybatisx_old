@@ -20,6 +20,7 @@ import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.core.convert.DefaultConditionConverter;
 import com.wvkity.mybatis.core.convert.DefaultParameterConverter;
 import com.wvkity.mybatis.core.criteria.ExtCriteria;
+import com.wvkity.mybatis.core.criteria.sql.DefaultQuerySqlManager;
 import com.wvkity.mybatis.support.constant.Join;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -49,9 +50,10 @@ public class GenericForeign<T> extends AbstractGenericForeignQueryCriteria<T, Ge
         this.join = join;
         this.clone(master.transfer());
         this.tableAliasRef = new AtomicReference<>(Objects.isBlank(alias) ? Constants.EMPTY : alias);
-        this.defTableAlias = DEF_TABLE_ALIAS_PREFIX + this.tableAliasSequence.incrementAndGet();
+        this.defTableAlias = this.genDefTabAlias();
         this.parameterConverter = new DefaultParameterConverter(this.parameterSequence, this.parameterValueMapping);
         this.conditionConverter = new DefaultConditionConverter(this, this.parameterConverter);
+        this.sqlManager = new DefaultQuerySqlManager(this, this.refQuery, this.foreignSet, this.fragmentManager);
     }
 
     @Override

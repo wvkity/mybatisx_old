@@ -16,7 +16,9 @@
 package com.wvkity.mybatis.core.criteria;
 
 import com.wvkity.mybatis.basic.constant.Constants;
+import com.wvkity.mybatis.basic.exception.MyBatisException;
 import com.wvkity.mybatis.basic.immutable.ImmutableLinkedMap;
+import com.wvkity.mybatis.basic.immutable.ImmutableList;
 import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.metadata.Table;
 import com.wvkity.mybatis.basic.utils.Objects;
@@ -27,12 +29,14 @@ import com.wvkity.mybatis.core.convert.DefaultParameterConverter;
 import com.wvkity.mybatis.core.convert.DefaultPropertyConverter;
 import com.wvkity.mybatis.core.convert.ParameterConverter;
 import com.wvkity.mybatis.core.convert.PropertyConverter;
-import com.wvkity.mybatis.core.inject.mapping.utils.Scripts;
+import com.wvkity.mybatis.core.criteria.sql.SqlManager;
+import com.wvkity.mybatis.core.plugin.paging.RangeMode;
 import com.wvkity.mybatis.core.property.Property;
-import com.wvkity.mybatis.core.support.manager.IntactFragmentManager;
+import com.wvkity.mybatis.core.support.manager.DefaultStandardFragmentManager;
 import com.wvkity.mybatis.core.support.manager.StandardFragmentManager;
-import com.wvkity.mybatis.support.constant.Slot;
-import com.wvkity.mybatis.support.constant.Symbol;
+import com.wvkity.mybatis.core.support.select.Selection;
+import com.wvkity.mybatis.core.support.select.StandardSelection;
+import com.wvkity.mybatis.support.basic.Matched;
 import com.wvkity.mybatis.support.criteria.Criteria;
 import com.wvkity.mybatis.support.expr.Expression;
 import com.wvkity.mybatis.support.helper.TableHelper;
@@ -42,6 +46,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -65,14 +70,6 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
     // region Basic fields
 
     /**
-     * AND、OR运算符正则字符串
-     */
-    protected static final String DEF_REGEX_AND_OR_STR = "^(?i)(\\s*and\\s+|\\s*or\\s+)(.*)";
-    /**
-     * AND、OR运算符正则
-     */
-    protected static final Pattern DEF_PATTERN_AND_OR = Pattern.compile(DEF_REGEX_AND_OR_STR, Pattern.CASE_INSENSITIVE);
-    /**
      * 参数前缀
      */
     protected static final String DEF_PARAMETER_KEY_PREFIX = "_v_idx_";
@@ -80,18 +77,6 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
      * 参数值映射
      */
     protected static final String DEF_PARAMETER_VALUE_MAPPING = "%s.parameterValueMapping.%s";
-    /**
-     * 参数占位符
-     */
-    protected static final String DEF_PARAMETER_PLACEHOLDER = "{%s}";
-    /**
-     * 默认模板
-     */
-    protected static final String DEF_PARAMETER_PLACEHOLDER_ZERO = "{0}";
-    /**
-     * #{}参数模板
-     */
-    protected static final String DEF_PARAMETER_PLACEHOLDER_SAFE = "#{{0}}";
     /**
      * {@link Criteria}默认参数名
      */
@@ -123,11 +108,11 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
     /**
      * 参数转换器
      */
-    protected ParameterConverter parameterConverter;
+    protected transient ParameterConverter parameterConverter;
     /**
      * 条件解析器
      */
-    protected Converter<Expression<?>, Criterion> conditionConverter;
+    protected transient Converter<Expression<?>, Criterion> conditionConverter;
     /**
      * 属性不匹配是否抛出异常(查找失败)
      */
@@ -151,7 +136,7 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
     /**
      * SQL片段管理器
      */
-    protected IntactFragmentManager<? extends Criteria<?>> fragmentManager;
+    protected transient StandardFragmentManager<? extends Criteria<?>> fragmentManager;
     /**
      * 是否存在条件(where/group/order/having)
      */
@@ -159,20 +144,31 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
     /**
      * SQL片段
      */
-    protected String segment;
+    protected transient String segment;
     /**
      * 条件片段
      */
-    protected String whereSegment;
+    protected transient String whereSegment;
     /**
      * 属性转换器
      */
-    protected PropertyConverter propertyConverter;
-
+    protected transient PropertyConverter converter;
+    /**
+     * SQL管理器
+     */
+    protected transient SqlManager sqlManager;
     // endregion
 
     // region Query fields
 
+    /**
+     * SQL优化禁止去除order by子句注释
+     */
+    protected static final String KEEP_ORDER_BY_COMMENT = "/*keep orderby*/";
+    /**
+     * 引用{@link ExtCriteria}(嵌套/子外联表条件用)
+     */
+    protected ExtCriteria<?> refQuery;
     /**
      * 是否使用属性名作为别名
      */
@@ -250,7 +246,10 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
      * 联表引用属性
      */
     protected AtomicReference<String> reference = new AtomicReference<>(Constants.EMPTY);
-    // protected final Set<AbstractForeignCriteria<T, ?>> foreignSet = new CopyOnWriteArraySet<>();
+    /**
+     * 联表查询对象
+     */
+    protected Set<ExtCriteria<?>> foreignSet = new CopyOnWriteArraySet<>();
     // endregion
 
     // region Update fields
@@ -262,7 +261,7 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
      */
     protected Map<String, String> updateProperties;
     protected Set<String> updateColumns;
-    protected String updateSegment;
+    protected transient String updateSegment;
 
     // endregion
 
@@ -274,7 +273,7 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
      * @return {@link Column}对象
      */
     protected Column toColumn(final Property<?, ?> property) {
-        return this.propertyConverter.convert(property);
+        return this.converter.convert(property);
     }
 
     /**
@@ -283,7 +282,7 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
      * @return {@link Column}对象
      */
     protected Column toColumn(final String property) {
-        return this.propertyConverter.convert(property);
+        return this.converter.convert(property);
     }
 
     /**
@@ -292,7 +291,7 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
      * @return {@link Column}
      */
     protected Column toColumnOfOrg(final String column) {
-        return this.propertyConverter.convertOfOrg(column);
+        return this.converter.convertOfOrg(column);
     }
 
     /**
@@ -301,7 +300,7 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
      * @return 属性
      */
     protected String toProperty(Property<?, ?> property) {
-        return this.propertyConverter.toProperty(property);
+        return this.converter.toProperty(property);
     }
 
     // endregion
@@ -321,17 +320,24 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
         this.tableAliasSequence = new AtomicInteger(0);
         this.useAlias = new AtomicBoolean(hasAlias);
         this.tableAliasRef = new AtomicReference<>(hasAlias ? alias : Constants.EMPTY);
-        this.defTableAlias = category == Category.UPDATE ? Constants.EMPTY :
-            (DEF_TABLE_ALIAS_PREFIX + this.tableAliasSequence.incrementAndGet());
+        this.defTableAlias = category == Category.UPDATE ? Constants.EMPTY : this.genDefTabAlias();
         this.conditionConverter = new DefaultConditionConverter(this, this.parameterConverter);
-        this.fragmentManager = new StandardFragmentManager(this);
-        this.propertyConverter = new DefaultPropertyConverter(this);
+        this.fragmentManager = new DefaultStandardFragmentManager(this);
+        this.converter = new DefaultPropertyConverter(this);
         if (category == Category.UPDATE) {
             this.updateProperties = new ConcurrentHashMap<>(8);
             this.updateColumnsOfOrg = new ConcurrentHashMap<>(8);
             this.updateColumnsOfWrap = new ConcurrentHashMap<>(8);
             this.updateColumns = new CopyOnWriteArraySet<>();
         }
+    }
+
+    /**
+     * 生成默认表别名
+     * @return 默认表别名
+     */
+    protected String genDefTabAlias() {
+        return DEF_TABLE_ALIAS_PREFIX + this.tableAliasSequence.incrementAndGet() + Constants.UNDER_LINE;
     }
 
     /**
@@ -354,8 +360,8 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
             target.notMatchingWithThrows = source.notMatchingWithThrows;
             target.tableAliasSequence = source.tableAliasSequence;
             target.useAlias = source.useAlias;
-            target.fragmentManager = new StandardFragmentManager(target);
-            target.propertyConverter = new DefaultPropertyConverter(target);
+            target.fragmentManager = new DefaultStandardFragmentManager(target);
+            target.converter = new DefaultPropertyConverter(target);
         }
     }
 
@@ -384,7 +390,16 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
             target.tableAliasRef = source.tableAliasRef;
             target.defTableAlias = source.defTableAlias;
             target.conditionConverter = source.conditionConverter;
+            target.sqlManager = source.sqlManager;
         }
+    }
+
+    /**
+     * 获取主键
+     * @return 主键
+     */
+    protected Column id() {
+        return Optional.ofNullable(this.entityClass).map(TableHelper::getId).orElse(null);
     }
 
     /**
@@ -395,14 +410,24 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
         return this;
     }
 
+    /**
+     * 添加联表查询条件对象
+     * @param query 查询对象
+     */
+    protected void addForeign(final ExtCriteria<?> query) {
+        if (Objects.nonNull(query)) {
+            this.foreignSet.add(query);
+        }
+    }
+
     @Override
     public AbstractExtCriteria<T> transfer() {
         return this;
     }
 
     @Override
-    public PropertyConverter getConvert() {
-        return this.propertyConverter;
+    public PropertyConverter getConverter() {
+        return this.converter;
     }
 
     @Override
@@ -446,11 +471,36 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
      * @param joinAs 是否拼接`AS`关键字
      * @return 表名
      */
-    protected String getTableName(boolean joinAs) {
-        final Table table = TableHelper.getTable(this.entityClass);
-        final String tabName = table.getFullName();
+    public String getTableName(final boolean joinAs) {
         final String as = this.as();
-        return Objects.isBlank(as) ? tabName : joinAs ? (tabName + " AS " + as) : (tabName + Constants.SPACE + as);
+        final boolean notHasAlias = Objects.isBlank(as);
+        if (Objects.nonNull(this.entityClass)) {
+            final Table table = TableHelper.getTable(this.entityClass);
+            final String tabName = table.getFullName();
+            return notHasAlias ? tabName : joinAs ? (tabName + " AS " + as) : (tabName + Constants.SPACE + as);
+        }
+        return notHasAlias ? Constants.EMPTY : as;
+    }
+
+    /**
+     * 获取表名
+     * @param segment 完整SQL语句
+     * @param joinAs 是否拼接`AS`关键字
+     * @return 表名
+     */
+    protected String getTableName(final String segment, final boolean joinAs) {
+        final StringBuilder it = new StringBuilder(120);
+        it.append(Constants.BRACKET_OPEN);
+        it.append(segment);
+        it.append(Constants.BRACKET_CLOSE);
+        final String as = this.as();
+        if (Objects.isNotBlank(as)) {
+            if (joinAs) {
+                it.append(" AS ");
+            }
+            it.append(as);
+        }
+        return it.toString();
     }
 
     /**
@@ -462,6 +512,21 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
             return ImmutableLinkedMap.of(this.parameterValueMapping);
         }
         return ImmutableLinkedMap.of();
+    }
+
+    @Override
+    public boolean isKeepOrderBy() {
+        return this.keepOrderBy;
+    }
+
+    @Override
+    public boolean isDistinct() {
+        return this.distinct;
+    }
+
+    @Override
+    public boolean isGroupAll() {
+        return this.groupAll;
     }
 
     /**
@@ -497,9 +562,87 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
         return this.mapType;
     }
 
+    /**
+     * 起始位置
+     * @return 起始位置
+     */
+    public long getRowStart() {
+        return this.rowStart;
+    }
+
+    /**
+     * 结束位置
+     * @return 结束位置
+     */
+    public long getRowEnd() {
+        return this.rowEnd;
+    }
+
+    /**
+     * 获取起始页码
+     * @return 起始页码
+     */
+    public long getPageStart() {
+        return this.pageStart;
+    }
+
+    /**
+     * 获取结束页码
+     * @return 结束页码
+     */
+    public long getPageEnd() {
+        return this.pageEnd;
+    }
+
+    /**
+     * 获取每页数目
+     * @return 每页数目
+     */
+    public long getPageSize() {
+        return this.pageSize <= 0 ? 20L : this.pageSize;
+    }
+
+    /**
+     * 是否执行范围查询
+     * @return boolean
+     */
+    public boolean isRange() {
+        return this.getMode() != RangeMode.NONE;
+    }
+
+    /**
+     * 获取范围分页模式
+     * @return {@link RangeMode}
+     */
+    public RangeMode getMode() {
+        if (this.rowStart >= 0 && this.rowEnd > 0) {
+            return RangeMode.SCOPE;
+        } else if (this.pageStart > 0 && this.pageEnd > 0) {
+            return RangeMode.PAGEABLE;
+        }
+        return RangeMode.NONE;
+    }
+
+    @Override
+    public boolean isPropAsAlias() {
+        return this.propAsAlias;
+    }
+
+    @Override
+    public String getReference() {
+        return this.reference.get();
+    }
+
     @Override
     public boolean isHasCondition() {
         return this.fragmentManager.hasSegment();
+    }
+
+    /**
+     * 禁止调用方法
+     */
+    protected void invokeThrow() {
+        throw new MyBatisException("The current instance object cannot call this method.");
     }
 
     @Override
@@ -516,50 +659,93 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
      * @return SQL语句
      */
     protected String intactString() {
-        return this.getWhereSegment();
+        return this.sqlManager.intactString();
+    }
+
+    @Override
+    public String getSelectSegment() {
+        return this.sqlManager.getSelectSegment();
+    }
+
+    @Override
+    public String getSelectSegment(boolean self) {
+        return this.sqlManager.getSelectSegment(self);
+    }
+
+    @Override
+    public String getGroupSegment() {
+        return this.sqlManager.getGroupSegment();
+    }
+
+    @Override
+    public List<Selection> fetchSelects() {
+        final boolean hasRef = Objects.nonNull(this.refQuery);
+        final List<Selection> it = new ArrayList<>();
+        if (hasRef) {
+            final List<Selection> selections = this.refQuery.fetchSelects();
+            if (Objects.isNotEmpty(selections)) {
+                it.addAll(selections);
+            }
+        } else {
+            if (this.hasSelect() || this.isFetch()) {
+                final List<Selection> selections = this.fragmentManager.getSelects();
+                if (Objects.isNotEmpty(selections)) {
+                    it.addAll(selections);
+                }
+            }
+        }
+        if (Objects.isNotEmpty(this.foreignSet)) {
+            for (ExtCriteria<?> ec : this.foreignSet) {
+                final List<Selection> fss;
+                if ((ec.hasSelect() || ec.isFetch()) && Objects.isNotEmpty((fss = ec.fetchSelects()))) {
+                    it.addAll(fss);
+                }
+            }
+        }
+        if (hasRef) {
+            return this.selectTransform(this, it);
+        }
+        return Objects.isNotEmpty(it) ? ImmutableList.of(it) : ImmutableList.of();
     }
 
     /**
-     * 获取条件片段
-     * @return 条件语句
+     * 查询列转换
+     * @param toCriteria {@link ExtCriteria}
+     * @param selections 查询列集合
+     * @return 新的查询列集合
      */
+    protected List<Selection> selectTransform(final ExtCriteria<?> toCriteria, List<Selection> selections) {
+        final List<Selection> newSelections = new ArrayList<>(selections.size());
+        for (Selection it : selections) {
+            final String as = it.as();
+            final String column = it.getColumn();
+            final Selection selection;
+            if (this.propInherit && Objects.isBlank(as)) {
+                selection = new StandardSelection(toCriteria, column, it.getProperty(), Matched.IMMEDIATE);
+            } else {
+                final String realColumn = Objects.isNotBlank(as) ? as : column;
+                selection = new StandardSelection(toCriteria, realColumn, null, Matched.IMMEDIATE);
+            }
+            toCriteria.transfer().fragmentManager.select(selection);
+            newSelections.add(selection);
+        }
+        return ImmutableList.of(newSelections);
+    }
+
+    @Override
     public String getWhereSegment() {
-        return this.getWhereSegment(Constants.NULL);
+        return this.sqlManager.getWhereSegment();
     }
 
     /**
      * 获取条件片段
+     * @param self               是否自身
+     * @param appendWhere        是否拼接where
      * @param groupByReplacement 分组替换语句
      * @return 条件语句
      */
-    public String getWhereSegment(final String groupByReplacement) {
-        final String condition = this.fragmentManager.getWhereString();
-        if (Objects.isNotBlank(condition)) {
-            if (DEF_PATTERN_AND_OR.matcher(condition).matches()) {
-                return "WHERE " + condition.replaceFirst(DEF_REGEX_AND_OR_STR, "$2");
-            }
-            return "WHERE " + condition;
-        }
-        return Constants.EMPTY;
-    }
-
-    /**
-     * 完整where子句(where/group/having/order)
-     * @param groupByReplacement group替换语句
-     * @return where子句
-     */
-    protected String intactWhereString(final String groupByReplacement) {
-        if (this.isHasCondition()) {
-            final String condition = this.fragmentManager.getSegment(groupByReplacement);
-            if (this.fragmentManager.hasCondition()) {
-                if (DEF_PATTERN_AND_OR.matcher(condition).matches()) {
-                    return "WHERE " + condition.replaceFirst(DEF_REGEX_AND_OR_STR, "$2");
-                }
-                return "WHERE " + condition;
-            }
-            return condition;
-        }
-        return Constants.EMPTY;
+    public String getWhereSegment(final boolean self, final boolean appendWhere, final String groupByReplacement) {
+        return this.sqlManager.getWhereSegment(self, appendWhere, groupByReplacement);
     }
 
     /**
@@ -567,21 +753,7 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
      * @return 完整更新字段语句
      */
     protected String intactUpdateString() {
-        final boolean isNotEmptyOfWrap = Objects.isNotEmpty(this.updateColumnsOfWrap);
-        final boolean isNotEmptyOfOrg = Objects.isNotEmpty(this.updateColumnsOfOrg);
-        if (isNotEmptyOfOrg || isNotEmptyOfWrap) {
-            final List<String> segments = new ArrayList<>();
-            if (isNotEmptyOfWrap) {
-                this.updateColumnsOfWrap.forEach((c, v) -> segments.add(Scripts.convertToConditionArg(Symbol.EQ,
-                    Slot.NONE, null, c, this.parameterConverter.convert(v))));
-            }
-            if (isNotEmptyOfOrg) {
-                this.updateColumnsOfOrg.forEach((c, v) -> segments.add(Scripts.convertToConditionArg(Symbol.EQ,
-                    Slot.NONE, null, c, this.parameterConverter.convert(v))));
-            }
-            return String.join(Constants.COMMA_SPACE, segments);
-        }
-        return Constants.EMPTY;
+        return this.sqlManager.getUpdateSegment();
     }
 
     @Override

@@ -74,7 +74,7 @@ import java.util.regex.Pattern;
  * @since 1.0.0
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
+public class MyBatisResultSetHandler extends DefaultResultSetHandler {
 
     private static final Object DEFERRED = new Object();
     private static final Pattern EXEC_METHOD_PATTERN =
@@ -132,9 +132,9 @@ public class MyBatisDefaultResultSetHandler extends DefaultResultSetHandler {
         }
     }
 
-    public MyBatisDefaultResultSetHandler(Executor executor, MappedStatement mappedStatement,
-                                          ParameterHandler parameterHandler, ResultHandler<?> resultHandler,
-                                          BoundSql boundSql, RowBounds rowBounds) {
+    public MyBatisResultSetHandler(Executor executor, MappedStatement mappedStatement,
+                                   ParameterHandler parameterHandler, ResultHandler<?> resultHandler,
+                                   BoundSql boundSql, RowBounds rowBounds) {
         super(executor, mappedStatement, parameterHandler, resultHandler, boundSql, rowBounds);
         this.executor = executor;
         this.configuration = mappedStatement.getConfiguration();

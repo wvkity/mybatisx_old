@@ -38,6 +38,7 @@ import java.util.stream.StreamSupport;
  */
 public class DefaultPlaceholderConverter implements PlaceholderConverter {
 
+    private static final long serialVersionUID = -4114554043645301235L;
     private final ParameterConverter converter;
 
     public DefaultPlaceholderConverter(ParameterConverter parameterConverter) {
@@ -90,4 +91,9 @@ public class DefaultPlaceholderConverter implements PlaceholderConverter {
         return args.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey,
             it -> this.convert(it.getValue()), (o, n) -> n, LinkedHashMap::new));
     }
+
+    public ParameterConverter getConverter() {
+        return converter;
+    }
+
 }

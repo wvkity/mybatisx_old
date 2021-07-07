@@ -58,9 +58,9 @@ public class RangePageableAdapter implements Dialect {
     }
 
     @Override
-    public String makeQueryRecordSQL(MappedStatement ms, BoundSql bs, Object parameter,
+    public String makeQueryRecordSql(MappedStatement ms, BoundSql bs, Object parameter,
                                      RowBounds rb, CacheKey cacheKey) {
-        return this.getDelegate().makeQueryRecordSQL(ms, bs, parameter, rb, cacheKey);
+        return this.getDelegate().makeQueryRecordSql(ms, bs, parameter, rb, cacheKey);
     }
 
     @Override
@@ -69,9 +69,9 @@ public class RangePageableAdapter implements Dialect {
     }
 
     @Override
-    public String makeQueryListSQL(MappedStatement ms, BoundSql bs, Object parameter,
+    public String makeQueryListSql(MappedStatement ms, BoundSql bs, Object parameter,
                                    RowBounds rb, CacheKey cacheKey) {
-        return this.getDelegate().makeQueryListSQL(ms, bs, parameter, rb, cacheKey);
+        return this.getDelegate().makeQueryListSql(ms, bs, parameter, rb, cacheKey);
     }
 
     @Override

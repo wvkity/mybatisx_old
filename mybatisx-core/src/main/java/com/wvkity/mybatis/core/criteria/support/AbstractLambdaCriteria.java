@@ -18,6 +18,8 @@ package com.wvkity.mybatis.core.criteria.support;
 import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.core.criteria.AbstractCriteria;
+import com.wvkity.mybatis.core.criteria.ExtCriteria;
+import com.wvkity.mybatis.core.expr.SpecialExpression;
 import com.wvkity.mybatis.core.expr.StandardBetween;
 import com.wvkity.mybatis.core.expr.StandardEqual;
 import com.wvkity.mybatis.core.expr.StandardGreaterThan;
@@ -37,6 +39,7 @@ import com.wvkity.mybatis.core.expr.TemplateMatch;
 import com.wvkity.mybatis.core.property.Property;
 import com.wvkity.mybatis.support.constant.Like;
 import com.wvkity.mybatis.support.constant.Slot;
+import com.wvkity.mybatis.support.helper.TableHelper;
 
 import java.util.Collection;
 import java.util.Map;
@@ -54,6 +57,12 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
     AbstractCriteria<T, C> implements LambdaCriteriaWrapper<T, C> {
 
     // region Compare conditions
+
+    @Override
+    public C idEq(Slot slot, Object value) {
+        return this.where(new StandardEqual(this, this.id(), slot, value));
+    }
+
     @Override
     public <V> C eq(Slot slot, Property<T, V> property, V value) {
         return this.eq(slot, this.toProperty(property), value);
@@ -317,6 +326,65 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
         final Column column;
         if (Objects.nonNull((column = this.toColumn(property)))) {
             this.where(new StandardNotNull(this, column, slot));
+        }
+        return this.self();
+    }
+
+    // endregion
+
+    // region Column equal to condition
+
+    @Override
+    public C ce(ExtCriteria<?> otherCriteria, String otherProperty) {
+        return this.ce(this.id(), otherCriteria, otherCriteria.getConverter().convert(otherProperty));
+    }
+
+    @Override
+    public C ce(Property<T, ?> property, ExtCriteria<?> otherCriteria) {
+        return this.ce(this.toProperty(property), otherCriteria);
+    }
+
+    @Override
+    public C ce(String property, ExtCriteria<?> otherCriteria) {
+        return this.ce(this.toColumn(property), otherCriteria, TableHelper.getId(otherCriteria.getEntityClass()));
+    }
+
+    @Override
+    public C ce(Property<T, ?> property, ExtCriteria<?> otherCriteria, String otherProperty) {
+        return this.ce(this.toProperty(property), otherCriteria, otherProperty);
+    }
+
+    @Override
+    public C ce(String property, ExtCriteria<?> otherCriteria, String otherProperty) {
+        return this.ce(this.toColumn(property), otherCriteria, otherCriteria.getConverter().convert(property));
+    }
+
+    @Override
+    public C ceWith(ExtCriteria<?> otherCriteria, String otherColumn) {
+        final Column id = this.id();
+        if (Objects.nonNull(id) && Objects.isNotBlank(otherColumn)) {
+            this.where(new SpecialExpression(this, id.getColumn(), otherCriteria, otherColumn));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C ceWith(Property<T, ?> property, ExtCriteria<?> otherCriteria, String otherColumn) {
+        return this.ceWith(this.toProperty(property), otherCriteria, otherColumn);
+    }
+
+    @Override
+    public C ceWith(String property, ExtCriteria<?> otherCriteria, String otherColumn) {
+        final Column cc = this.toColumn(property);
+        if (cc != null && Objects.isNotBlank(otherColumn)) {
+            this.where(new SpecialExpression(this, cc.getColumn(), otherCriteria, otherColumn));
+        }
+        return this.self();
+    }
+
+    protected C ce(final Column cc, final ExtCriteria<?> otherCriteria, final Column oc) {
+        if (Objects.nonNull(cc) && Objects.nonNull(oc)) {
+            this.where(new SpecialExpression(this, cc.getColumn(), otherCriteria, oc.getColumn()));
         }
         return this.self();
     }

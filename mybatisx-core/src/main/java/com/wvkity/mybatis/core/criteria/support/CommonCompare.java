@@ -1,5 +1,7 @@
 package com.wvkity.mybatis.core.criteria.support;
 
+import com.wvkity.mybatis.core.criteria.ExtCriteria;
+import com.wvkity.mybatis.core.property.Property;
 import com.wvkity.mybatis.support.constant.Slot;
 
 import java.util.Map;
@@ -224,4 +226,50 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> {
     C colLe(final Slot slot, final String column, final Object value);
 
     // endregion
+
+    // region Column equal to condition
+
+    /**
+     * 字段相等
+     * @param column        字段名
+     * @param otherCriteria {@link ExtCriteria}
+     * @param otherColumn   字段名
+     * @return {@code this}
+     */
+    C colCe(final String column, final ExtCriteria<?> otherCriteria, final String otherColumn);
+
+    /**
+     * 字段相等
+     * @param column        字段名
+     * @param otherCriteria {@link ExtCriteria}
+     * @return {@code this}
+     */
+    C colCeWith(final String column, final ExtCriteria<?> otherCriteria);
+
+    /**
+     * 字段相等
+     * @param column        字段名
+     * @param otherCriteria {@link ExtCriteria}
+     * @param otherProperty {@link Property}
+     * @param <E>           实体类型
+     * @return {@code this}
+     */
+    default <E> C colCeWith(final String column, final ExtCriteria<E> otherCriteria,
+                            final Property<E, ?> otherProperty) {
+        return this.colCeWith(column, otherCriteria, otherCriteria.getConverter().toProperty(otherProperty));
+    }
+
+    /**
+     * 字段相等
+     * @param column        字段名
+     * @param otherCriteria {@link ExtCriteria}
+     * @param otherProperty 属性
+     * @return {@code this}
+     */
+    default C colCeWith(final String column, final ExtCriteria<?> otherCriteria, final String otherProperty) {
+        return this.colCe(column, otherCriteria, otherCriteria.getConverter().convert(otherProperty).getColumn());
+    }
+
+    // endregion
+
 }

@@ -135,8 +135,8 @@ public abstract class AbstractPageableHandler extends AbstractSelectHandler {
                                              final CacheKey cacheKey, final BoundSql bs) throws Exception {
         if (this.dialect.canExecutePaging(ms, parameter, rb)) {
             parameter = this.dialect.handleParameter(ms, bs, parameter, cacheKey);
-            final String pageableSQL = this.dialect.makeQueryListSQL(ms, bs, parameter, rb, cacheKey);
-            final BoundSql newBs = new BoundSql(ms.getConfiguration(), pageableSQL, bs.getParameterMappings(), parameter);
+            final String pageableSql = this.dialect.makeQueryListSql(ms, bs, parameter, rb, cacheKey);
+            final BoundSql newBs = new BoundSql(ms.getConfiguration(), pageableSql, bs.getParameterMappings(), parameter);
             return executor.query(ms, parameter, RowBounds.DEFAULT, rh, cacheKey, newBs);
         } else {
             return executor.query(ms, parameter, rb, rh, cacheKey, bs);

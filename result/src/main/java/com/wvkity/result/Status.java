@@ -23,13 +23,37 @@ package com.wvkity.result;
  */
 public enum Status {
 
+    /**
+     * OK
+     */
     OK(200, "正常"),
+    /**
+     * FAILURE
+     */
     ERR_FAILURE(100000, "失败"),
+    /**
+     * UNAUTHORIZED
+     */
     ERR_UNAUTHORIZED(400401, "未授权"),
+    /**
+     * INVALID TOKEN
+     */
     ERR_INVALID_TOKEN(400402, "无效token"),
+    /**
+     * FORBIDDEN
+     */
     ERR_FORBIDDEN(400403, "无效请求"),
+    /**
+     * NOT FOUND(
+     */
     ERR_NOT_FOUND(400404, "未找到资源"),
+    /**
+     * TIMEOUT
+     */
     ERR_TIMEOUT(400405, "请求超时"),
+    /**
+     * SERVER ERROR
+     */
     ERR_SERVER(500500, "服务器发生异常");
 
     /**

@@ -33,4 +33,15 @@ public abstract class AbstractCommonSubQueryCriteria<T, C extends CommonSubQuery
      * 引用条件接口
      */
     protected ExtCriteria<?> refCriteria;
+
+    @SuppressWarnings("unchecked")
+    public ExtCriteria<T> refQuery() {
+        return (ExtCriteria<T>) this.refQuery;
+    }
+
+    @Override
+    public String getTableName(final boolean joinAs) {
+        return this.getTableName(this.refQuery.getSegment(), joinAs);
+    }
+
 }

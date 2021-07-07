@@ -71,6 +71,11 @@ public abstract class AbstractCriteria<T, C extends CriteriaWrapper<T, C>> exten
     }
 
     @Override
+    public boolean hasSelect() {
+        return this.fragmentManager.hasSelect();
+    }
+
+    @Override
     public boolean isContainsFunc() {
         return this.containsFunc;
     }

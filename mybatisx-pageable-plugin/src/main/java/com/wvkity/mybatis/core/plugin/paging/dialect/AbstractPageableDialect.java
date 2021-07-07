@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.core.plugin.paging.dialect;
 
-import com.wvkity.mybatis.core.cache.CacheFactory;
+import com.wvkity.mybatis.core.cache.LocalCacheFactory;
 import com.wvkity.mybatis.core.cache.LocalCache;
 import com.wvkity.mybatis.core.plugin.paging.config.StandardPageableThreadLocalCache;
 import com.wvkity.mybatis.core.plugin.utils.PluginUtil;
@@ -80,7 +80,7 @@ public abstract class AbstractPageableDialect extends AbstractDialect implements
         final MappedStatement rms = getQueryRecordMappedStatement(ms, msId);
         final Map<String, Object> apMap = PluginUtil.getAdditionalParameter(bs);
         final CacheKey cacheKey = executor.createCacheKey(ms, parameter, RowBounds.DEFAULT, bs);
-        final String recordSql = this.makeQueryRecordSQL(ms, bs, parameter, rb, cacheKey);
+        final String recordSql = this.makeQueryRecordSql(ms, bs, parameter, rb, cacheKey);
         final BoundSql rbs = new BoundSql(ms.getConfiguration(), recordSql, bs.getParameterMappings(), parameter);
         for (Map.Entry<String, Object> entry : apMap.entrySet()) {
             rbs.setAdditionalParameter(entry.getKey(), entry.getValue());
@@ -162,7 +162,7 @@ public abstract class AbstractPageableDialect extends AbstractDialect implements
     @Override
     public void setProperties(Properties properties) {
         super.setProperties(properties);
-        this.recordMsCache = CacheFactory.create(properties.getProperty(PROP_KEY_RECORD_MS_CACHE_CLASS), properties,
+        this.recordMsCache = LocalCacheFactory.create(properties.getProperty(PROP_KEY_RECORD_MS_CACHE_CLASS), properties,
             properties.getProperty(PROP_KEY_RECORD_MS_CFG_PREFIX));
     }
 }

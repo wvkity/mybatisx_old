@@ -16,7 +16,7 @@
 package com.wvkity.mybatis.basic.constant;
 
 /**
- * 常量接口
+ * 常量
  * @author wvkity
  * @created 2020-10-07
  * @since 1.0.0
@@ -243,6 +243,10 @@ public interface Constants {
      * 单引号
      */
     String SINGLE_QUOTES = "'";
+    /**
+     * 反单引号
+     */
+    String REV_SINGLE_QUOTES = "`";
     /***
      * 换行符
      */

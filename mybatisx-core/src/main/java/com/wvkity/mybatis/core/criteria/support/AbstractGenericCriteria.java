@@ -15,7 +15,9 @@
  */
 package com.wvkity.mybatis.core.criteria.support;
 
+import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.utils.Objects;
+import com.wvkity.mybatis.core.criteria.ExtCriteria;
 import com.wvkity.mybatis.core.expr.ImmediateBetween;
 import com.wvkity.mybatis.core.expr.ImmediateEqual;
 import com.wvkity.mybatis.core.expr.ImmediateGreaterThan;
@@ -32,9 +34,11 @@ import com.wvkity.mybatis.core.expr.ImmediateNotNull;
 import com.wvkity.mybatis.core.expr.ImmediateNull;
 import com.wvkity.mybatis.core.expr.ImmediateTemplate;
 import com.wvkity.mybatis.core.expr.NativeExpression;
+import com.wvkity.mybatis.core.expr.SpecialExpression;
 import com.wvkity.mybatis.core.expr.TemplateMatch;
 import com.wvkity.mybatis.support.constant.Like;
 import com.wvkity.mybatis.support.constant.Slot;
+import com.wvkity.mybatis.support.helper.TableHelper;
 
 import java.util.Collection;
 import java.util.Map;
@@ -203,7 +207,30 @@ public abstract class AbstractGenericCriteria<T, C extends GenericCriteriaWrappe
 
     // endregion
 
-   // region Other condition
+    // region Column equal to condition
+
+    @Override
+    public C colCe(String column, ExtCriteria<?> otherCriteria, String otherColumn) {
+        if (Objects.isNotBlank(column) && Objects.isNotBlank(otherColumn)) {
+            this.where(new SpecialExpression(this, column, otherCriteria, otherColumn));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C colCeWith(String column, ExtCriteria<?> otherCriteria) {
+        if (Objects.isNotBlank(column)) {
+            final Column oid = TableHelper.getId(otherCriteria.getEntityClass());
+            if (Objects.nonNull(oid)) {
+                this.where(new SpecialExpression(this, column, otherCriteria, oid.getColumn()));
+            }
+        }
+        return this.self();
+    }
+
+    // endregion
+
+    // region Other condition
 
     @Override
     public C nativeCondition(String condition) {

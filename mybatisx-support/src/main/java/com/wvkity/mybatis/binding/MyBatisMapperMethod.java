@@ -17,7 +17,7 @@ package com.wvkity.mybatis.binding;
 
 import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.basic.utils.Objects;
-import com.wvkity.mybatis.executor.result.MyBatisDefaultMapResultHandler;
+import com.wvkity.mybatis.executor.result.MyBatisMapResultHandler;
 import com.wvkity.mybatis.executor.resultset.EmbedResult;
 import org.apache.ibatis.annotations.Flush;
 import org.apache.ibatis.annotations.MapKey;
@@ -89,7 +89,6 @@ public class MyBatisMapperMethod {
                     result = null;
                 } else if (method.returnsMany()) {
                     result = executeForMany(sqlSession, args);
-                    // TODO 分页处理
                 } else if (method.returnsMap() || isReturnsMap(args)) {
                     result = executeForMap(sqlSession, args);
                 } else if (method.returnsCursor()) {
@@ -260,7 +259,7 @@ public class MyBatisMapperMethod {
         final RowBounds rowBounds = this.method.hasRowBounds() ? this.method.extractRowBounds(args) : RowBounds.DEFAULT;
         final List<? extends V> list = sqlSession.selectList(this.command.getName(), parameter, rowBounds);
         final Configuration cfg = sqlSession.getConfiguration();
-        final DefaultMapResultHandler<K, V> mapResultHandler = new MyBatisDefaultMapResultHandler<>(mapKey, mapType,
+        final DefaultMapResultHandler<K, V> mapResultHandler = new MyBatisMapResultHandler<>(mapKey, mapType,
             cfg.getObjectFactory(), cfg.getObjectWrapperFactory(), cfg.getReflectorFactory());
         final DefaultResultContext<V> context = new DefaultResultContext<>();
         for (V o : list) {

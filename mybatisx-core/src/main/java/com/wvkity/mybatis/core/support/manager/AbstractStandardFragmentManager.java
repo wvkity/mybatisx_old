@@ -36,8 +36,8 @@ import java.util.List;
  * @since 1.0.0
  */
 @SuppressWarnings("serial")
-public abstract class AbstractIntactFragmentManager<C extends Criteria<?>> extends AbstractFragmentManager<C>
-    implements IntactFragmentManager<C> {
+public abstract class AbstractStandardFragmentManager<C extends Criteria<?>> extends AbstractFragmentManager<C>
+    implements StandardFragmentManager<C> {
 
     /**
      * 查询字段存储
@@ -56,11 +56,11 @@ public abstract class AbstractIntactFragmentManager<C extends Criteria<?>> exten
      */
     protected final OrderStorage orderStorage;
 
-    public AbstractIntactFragmentManager(C criteria) {
+    public AbstractStandardFragmentManager(C criteria) {
         this(criteria, criteria instanceof CommonQueryWrapper);
     }
 
-    public AbstractIntactFragmentManager(C criteria, boolean forQuery) {
+    public AbstractStandardFragmentManager(C criteria, boolean forQuery) {
         super(criteria);
         this.selectStorage = new SelectStorage(criteria);
         this.groupStorage = new GroupStorage();
@@ -70,25 +70,25 @@ public abstract class AbstractIntactFragmentManager<C extends Criteria<?>> exten
     }
 
     @Override
-    public AbstractIntactFragmentManager<C> select(Selection selection) {
+    public AbstractStandardFragmentManager<C> select(Selection selection) {
         this.selectStorage.add(selection);
         return this;
     }
 
     @Override
-    public AbstractIntactFragmentManager<C> select(Collection<Selection> selections) {
+    public AbstractStandardFragmentManager<C> select(Collection<Selection> selections) {
         this.selectStorage.addAll(selections);
         return this;
     }
 
     @Override
-    public AbstractIntactFragmentManager<C> exclude(String property) {
+    public AbstractStandardFragmentManager<C> exclude(String property) {
         this.selectStorage.exclude(property);
         return this;
     }
 
     @Override
-    public AbstractIntactFragmentManager<C> colExclude(String column) {
+    public AbstractStandardFragmentManager<C> colExclude(String column) {
         this.selectStorage.excludeCol(column);
         return this;
     }
@@ -99,37 +99,37 @@ public abstract class AbstractIntactFragmentManager<C extends Criteria<?>> exten
     }
 
     @Override
-    public AbstractIntactFragmentManager<C> groupBy(Group group) {
+    public AbstractStandardFragmentManager<C> groupBy(Group group) {
         this.groupStorage.add(group);
         return this;
     }
 
     @Override
-    public AbstractIntactFragmentManager<C> groupBy(Collection<Group> groups) {
+    public AbstractStandardFragmentManager<C> groupBy(Collection<Group> groups) {
         this.groupStorage.addAll(groups);
         return this;
     }
 
     @Override
-    public AbstractIntactFragmentManager<C> having(Having having) {
+    public AbstractStandardFragmentManager<C> having(Having having) {
         this.havingStorage.add(having);
         return this;
     }
 
     @Override
-    public AbstractIntactFragmentManager<C> having(Collection<Having> havingList) {
+    public AbstractStandardFragmentManager<C> having(Collection<Having> havingList) {
         this.havingStorage.addAll(havingList);
         return this;
     }
 
     @Override
-    public AbstractIntactFragmentManager<C> orderBy(Order order) {
+    public AbstractStandardFragmentManager<C> orderBy(Order order) {
         this.orderStorage.add(order);
         return this;
     }
 
     @Override
-    public AbstractIntactFragmentManager<C> orderBy(List<Order> orders) {
+    public AbstractStandardFragmentManager<C> orderBy(List<Order> orders) {
         this.orderStorage.addAll(orders);
         return this;
     }

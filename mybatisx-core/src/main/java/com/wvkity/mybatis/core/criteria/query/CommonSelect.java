@@ -1,9 +1,16 @@
 package com.wvkity.mybatis.core.criteria.query;
 
+import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.core.support.select.Selection;
+import com.wvkity.mybatis.core.support.select.StandardSelection;
+import com.wvkity.mybatis.support.basic.Matched;
+import com.wvkity.mybatis.support.criteria.Criteria;
+import com.wvkity.mybatis.support.helper.TableHelper;
 
+import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * 查询字段接口
@@ -13,7 +20,15 @@ import java.util.Map;
  * @created 2021-05-15
  * @since 1.0.0
  */
-interface CommonSelect<T, C extends CommonSelect<T, C>> {
+interface CommonSelect<T, C extends CommonSelect<T, C>> extends Criteria<T> {
+
+    /**
+     * 查询所有字段
+     * @return {@code this}
+     */
+    default C colSelect() {
+        return this.colFiltrate(__ -> true);
+    }
 
     /**
      * 查询字段
@@ -55,6 +70,27 @@ interface CommonSelect<T, C extends CommonSelect<T, C>> {
      * @return {@code this}
      */
     C select(final Selection selection);
+
+    /**
+     * 筛选字段
+     * @param accept {@link Predicate}
+     * @return {@code this}
+     */
+    @SuppressWarnings("unchecked")
+    default C colFiltrate(final Predicate<String> accept) {
+        if (Objects.nonNull(accept)) {
+            final List<Column> columns;
+            if (Objects.isNotEmpty((columns = TableHelper.getColumns(this.getEntityClass(), null)))) {
+                for (Column it : columns) {
+                    final String column;
+                    if (accept.test((column = it.getColumn()))) {
+                        this.select(new StandardSelection(this, column, null, Matched.IMMEDIATE));
+                    }
+                }
+            }
+        }
+        return (C) this;
+    }
 
     /**
      * 查询字段

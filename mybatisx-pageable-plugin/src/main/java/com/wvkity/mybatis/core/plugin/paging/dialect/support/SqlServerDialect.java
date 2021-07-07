@@ -15,7 +15,7 @@
  */
 package com.wvkity.mybatis.core.plugin.paging.dialect.support;
 
-import com.wvkity.mybatis.core.cache.CacheFactory;
+import com.wvkity.mybatis.core.cache.LocalCacheFactory;
 import com.wvkity.mybatis.core.cache.LocalCache;
 import com.wvkity.mybatis.core.plugin.exception.MyBatisPluginException;
 import com.wvkity.mybatis.core.plugin.paging.dialect.AbstractPageableDialect;
@@ -51,7 +51,7 @@ public class SqlServerDialect extends AbstractPageableDialect {
     protected LocalCache<String, String> withNoLockCacheOfPs;
 
     @Override
-    public String makeQueryRecordSQL(MappedStatement ms, BoundSql bs, Object parameter,
+    public String makeQueryRecordSql(MappedStatement ms, BoundSql bs, Object parameter,
                                      RowBounds rb, CacheKey cacheKey) {
         final String originalSql = bs.getSql();
         final String cache = this.withNoLockCacheOfRs.get(originalSql);
@@ -103,8 +103,8 @@ public class SqlServerDialect extends AbstractPageableDialect {
         final String cacheClass = properties.getProperty(PROP_KEY_WITH_NO_LOCK_CACHE_CLASS);
         final String recordCfgPrefix = properties.getProperty(PROP_KEY_WITH_NO_LOCK_RECORD_CFG_PREFIX);
         final String pageableCfgPrefix = properties.getProperty(PROP_KEY_WITH_NO_LOCK_PAGEABLE_CFG_PREFIX);
-        this.withNoLockCacheOfRs = CacheFactory.create(cacheClass, properties, recordCfgPrefix);
-        this.withNoLockCacheOfPs = CacheFactory.create(cacheClass, properties, pageableCfgPrefix);
+        this.withNoLockCacheOfRs = LocalCacheFactory.create(cacheClass, properties, recordCfgPrefix);
+        this.withNoLockCacheOfPs = LocalCacheFactory.create(cacheClass, properties, pageableCfgPrefix);
     }
 
     private Replacer newInstance(final String replacerClass) {

@@ -39,4 +39,26 @@ public abstract class AbstractCommonForeignQueryCriteria<T, C extends CommonFore
      * 联表方式
      */
     protected Join join;
+
+    @Override
+    public C fetch(boolean fetch) {
+        this.fetch = fetch;
+        return this.self();
+    }
+
+    /*@Override
+    public String getWhereSegment() {
+        return this.whereSegmentForForeign(this.join);
+    }*/
+
+    @Override
+    public ExtCriteria<?> getMaster() {
+        return this.master;
+    }
+
+    @Override
+    public Join getJoin() {
+        return this.join;
+    }
+
 }

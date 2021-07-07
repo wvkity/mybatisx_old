@@ -31,14 +31,14 @@ import java.util.function.Consumer;
  * @created 2021-02-11
  * @since 1.0.0
  */
-public class MyBatisCache<K, V> implements LocalCache<K, V> {
+public class MyBatisLocalCache<K, V> implements LocalCache<K, V> {
 
     private final Properties properties;
     private final String prefix;
     private final Cache cache;
 
     @SuppressWarnings("unchecked")
-    public MyBatisCache(Properties properties, String prefix, String cacheId) {
+    public MyBatisLocalCache(Properties properties, String prefix, String cacheId) {
         this.properties = properties;
         this.prefix = prefix;
         final CacheBuilder it = new CacheBuilder(cacheId);

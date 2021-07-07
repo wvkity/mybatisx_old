@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,24 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.criteria.query;
+package com.wvkity.mybatis.core.support.manager;
 
-import com.wvkity.mybatis.core.criteria.ExtCriteria;
+import com.wvkity.mybatis.support.criteria.Criteria;
 
 /**
- * 抽象子查询容器(支持lambda表达式)
- * @param <T> 实体类型
- * @param <C> 子类型
+ * 标准片段管理器
  * @author wvkity
- * @created 2021-05-19
+ * @created 2021-04-22
  * @since 1.0.0
  */
-@SuppressWarnings("serial")
-public abstract class AbstractLambdaSubQueryCriteria<T, C extends LambdaSubQueryCriteria<T, C>> extends
-    AbstractLambdaQueryCriteria<T, C> implements LambdaSubQueryCriteria<T, C> {
-    /**
-     * 引用条件接口
-     */
-    protected ExtCriteria<?> refCriteria;
+public class DefaultStandardFragmentManager extends AbstractStandardFragmentManager<Criteria<?>> {
 
+    private static final long serialVersionUID = -1495527581698544576L;
+
+    public DefaultStandardFragmentManager(Criteria<?> criteria) {
+        super(criteria);
+    }
+
+    public DefaultStandardFragmentManager(Criteria<?> criteria, boolean forQuery) {
+        super(criteria, forQuery);
+    }
 }

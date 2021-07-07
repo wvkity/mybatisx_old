@@ -1,5 +1,6 @@
 package com.wvkity.mybatis.core.criteria.support;
 
+import com.wvkity.mybatis.core.criteria.ExtCriteria;
 import com.wvkity.mybatis.core.property.Property;
 import com.wvkity.mybatis.support.constant.Slot;
 
@@ -16,6 +17,23 @@ import java.util.Map;
 interface LambdaCompare<T, C extends LambdaCompare<T, C>> {
 
     // region Equal to condition
+
+    /**
+     * 主键等于
+     * @param value 值
+     * @return {@code this}
+     */
+    default C idEq(final Object value) {
+        return this.idEq(Slot.AND, value);
+    }
+
+    /**
+     * 主键等于
+     * @param slot  {@link Slot}
+     * @param value 值
+     * @return {@code this}
+     */
+    C idEq(final Slot slot, final Object value);
 
     /**
      * 等于
@@ -418,4 +436,113 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> {
     C le(final Slot slot, final String property, final Object value);
 
     // endregion
+
+    // region Column equal to condition
+
+    /**
+     * 字段相等
+     * @param otherCriteria {@link ExtCriteria}
+     * @param otherProperty {@link Property}
+     * @param <E>           实体类型
+     * @return {@code this}
+     */
+    default <E> C ce(final ExtCriteria<E> otherCriteria, final Property<E, ?> otherProperty) {
+        return this.ce(otherCriteria, otherCriteria.getConverter().toProperty(otherProperty));
+    }
+
+    /**
+     * 字段相等
+     * @param otherCriteria {@link ExtCriteria}
+     * @param otherProperty 属性
+     * @return {@code this}
+     */
+    C ce(final ExtCriteria<?> otherCriteria, final String otherProperty);
+
+    /**
+     * 字段相等
+     * @param property      属性
+     * @param otherCriteria {@link ExtCriteria}
+     * @return {@code this}
+     */
+    C ce(final Property<T, ?> property, final ExtCriteria<?> otherCriteria);
+
+    /**
+     * 字段相等
+     * @param property      属性
+     * @param otherCriteria {@link ExtCriteria}
+     * @return {@code this}
+     */
+    C ce(final String property, final ExtCriteria<?> otherCriteria);
+
+    /**
+     * 字段相等
+     * @param property      {@link Property}
+     * @param otherCriteria {@link ExtCriteria}
+     * @param otherProperty {@link Property}
+     * @param <E>           实体类型
+     * @return {@code this}
+     */
+    default <E> C ce(final Property<T, ?> property, final ExtCriteria<E> otherCriteria,
+                     final Property<E, ?> otherProperty) {
+        return this.ce(property, otherCriteria, otherCriteria.getConverter().toProperty(otherProperty));
+    }
+
+    /**
+     * 字段相等
+     * @param property      {@link Property}
+     * @param otherCriteria {@link ExtCriteria}
+     * @param otherProperty 属性
+     * @return {@code this}
+     */
+    C ce(final Property<T, ?> property, final ExtCriteria<?> otherCriteria, final String otherProperty);
+
+    /**
+     * 字段相等
+     * @param property      属性
+     * @param otherCriteria {@link ExtCriteria}
+     * @param otherProperty {@link Property}
+     * @param <E>           实体类型
+     * @return {@code this}
+     */
+    default <E> C ce(final String property, final ExtCriteria<E> otherCriteria, final Property<E, ?> otherProperty) {
+        return this.ce(property, otherCriteria, otherCriteria.getConverter().toProperty(otherProperty));
+    }
+
+    /**
+     * 字段相等
+     * @param property      属性
+     * @param otherCriteria {@link ExtCriteria}
+     * @param otherProperty 属性
+     * @return {@code this}
+     */
+    C ce(final String property, final ExtCriteria<?> otherCriteria, final String otherProperty);
+
+    /**
+     * 字段相等
+     * @param otherCriteria {@link ExtCriteria}
+     * @param otherColumn   字段名
+     * @return {@code this}
+     */
+    C ceWith(final ExtCriteria<?> otherCriteria, final String otherColumn);
+
+    /**
+     * 字段相等
+     * @param property      {@link Property}
+     * @param otherCriteria {@link ExtCriteria}
+     * @param otherColumn   字段名
+     * @return {@code this}
+     */
+    C ceWith(final Property<T, ?> property, final ExtCriteria<?> otherCriteria, final String otherColumn);
+
+    /**
+     * 字段相等
+     * @param property      属性
+     * @param otherCriteria {@link ExtCriteria}
+     * @param otherColumn   字段名
+     * @return {@code this}
+     */
+    C ceWith(final String property, final ExtCriteria<?> otherCriteria, final String otherColumn);
+
+    // endregion
+
 }

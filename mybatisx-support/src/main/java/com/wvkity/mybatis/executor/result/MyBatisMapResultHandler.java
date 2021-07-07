@@ -30,7 +30,7 @@ import java.util.Map;
  * @created 2021-04-01
  * @since 1.0.0
  */
-public class MyBatisDefaultMapResultHandler<K, V> extends DefaultMapResultHandler<K, V> {
+public class MyBatisMapResultHandler<K, V> extends DefaultMapResultHandler<K, V> {
 
     private final Map<K, V> mappedResults;
     private final String mapKey;
@@ -39,9 +39,9 @@ public class MyBatisDefaultMapResultHandler<K, V> extends DefaultMapResultHandle
     private final ReflectorFactory reflectorFactory;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public MyBatisDefaultMapResultHandler(String mapKey, Class<? extends Map> mapType, ObjectFactory objectFactory,
-                                          ObjectWrapperFactory objectWrapperFactory,
-                                          ReflectorFactory reflectorFactory) {
+    public MyBatisMapResultHandler(String mapKey, Class<? extends Map> mapType, ObjectFactory objectFactory,
+                                   ObjectWrapperFactory objectWrapperFactory,
+                                   ReflectorFactory reflectorFactory) {
         super(mapKey, objectFactory, objectWrapperFactory, reflectorFactory);
         this.objectFactory = objectFactory;
         this.objectWrapperFactory = objectWrapperFactory;

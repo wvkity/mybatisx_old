@@ -13,24 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.wvkity.mybatis.core.criteria.query;
+package com.wvkity.mybatis.core.criteria.sql;
 
 import com.wvkity.mybatis.core.criteria.ExtCriteria;
+import com.wvkity.mybatis.core.support.manager.StandardFragmentManager;
+import com.wvkity.mybatis.support.criteria.Criteria;
 
 /**
- * 抽象通用子查询条件容器
- * @param <T> 实体类型
- * @param <C> 子类型
+ * 默认SQL管理器
  * @author wvkity
- * @created 2021-05-20
+ * @created 2021-06-21
  * @since 1.0.0
  */
-@SuppressWarnings("serial")
-public abstract class AbstractGenericSubQueryCriteria<T, C extends GenericSubQueryCriteria<T, C>> extends
-    AbstractGenericQueryCriteria<T, C> implements GenericSubQueryCriteria<T, C> {
+public class DefaultSqlManager extends AbstractSqlManager {
 
-    /**
-     * 引用条件对象
-     */
-    protected ExtCriteria<?> refCriteria;
+    public DefaultSqlManager(ExtCriteria<?> criteria, StandardFragmentManager<? extends Criteria<?>> fragmentManager) {
+        super(criteria, fragmentManager);
+    }
 }

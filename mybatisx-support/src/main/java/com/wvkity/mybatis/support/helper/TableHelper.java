@@ -212,14 +212,17 @@ public final class TableHelper {
      * @return {@link Column}集合
      */
     public static List<Column> getColumns(final Class<?> clazz, final Predicate<Column> filter) {
-        if (Objects.nonNull(clazz) && Objects.nonNull(filter)) {
+        if (Objects.nonNull(clazz)) {
             final Table table = TableHelper.getTable(clazz);
             final Set<Column> columns;
             if (Objects.nonNull(table) && Objects.isNotEmpty((columns = table.columns()))) {
-                final List<Column> it = columns.stream().filter(filter).collect(Collectors.toList());
-                if (Objects.isNotEmpty(it)) {
-                    return ImmutableList.of(it);
+                if (Objects.nonNull(filter)) {
+                    final List<Column> it = columns.stream().filter(filter).collect(Collectors.toList());
+                    if (Objects.isNotEmpty(it)) {
+                        return ImmutableList.of(it);
+                    }
                 }
+                return ImmutableList.of(columns);
             }
         }
         return ImmutableList.of();

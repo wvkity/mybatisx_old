@@ -49,4 +49,35 @@ public interface EmbedResult {
      */
     @SuppressWarnings("rawtypes")
     Class<? extends Map> getMapType();
+
+    /**
+     * 设置自定义结果集
+     * @param resultMap 结果集
+     * @return {@code this}
+     */
+    EmbedResult resultMap(final String resultMap);
+
+    /**
+     * 设置返回值类型
+     * @param resultType 返回值类型
+     * @return {@code this}
+     */
+    EmbedResult resultType(final Class<?> resultType);
+
+    /**
+     * 设置map结果中的key值
+     * <p>{@code @MapKey("key")}</p>
+     * @param mapKey key
+     * @return {@code this}
+     */
+    EmbedResult mapKey(final String mapKey);
+
+    /**
+     * 设置{@link Map}实现类
+     * @param mapImplClass {@link Map}实现类
+     * @return {@code this}
+     */
+    @SuppressWarnings("rawtypes")
+    EmbedResult mapType(final Class<? extends Map> mapImplClass);
+
 }

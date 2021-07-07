@@ -50,7 +50,29 @@ public interface Criteria<T> extends Fragment {
      */
     boolean isStrict();
 
+    /**
+     * 获取条件SQL语句
+     * @return 条件语句
+     */
+    String getWhereSegment();
+
     // region Default methods
+
+    /**
+     * 获取查询字段语句
+     * @return 查询字段语句
+     */
+    default String getSelectSegment() {
+        return null;
+    }
+
+    /**
+     * 获取分组SQL语句
+     * @return 分组语句
+     */
+    default String getGroupSegment() {
+        return null;
+    }
 
     /**
      * 是否使用属性名只作为别名

@@ -18,14 +18,6 @@ import java.util.function.Function;
 public interface CriteriaWrapper<T, C extends CriteriaWrapper<T, C>> extends ExtCriteria<T> {
 
     /**
-     * 是否抓取联表查询字段
-     * @return boolean
-     */
-    default boolean isFetch() {
-        return false;
-    }
-
-    /**
      * 查询是否包含聚合函数
      * @return boolean
      */

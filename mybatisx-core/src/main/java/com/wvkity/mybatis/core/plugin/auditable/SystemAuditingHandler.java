@@ -25,7 +25,7 @@ import com.wvkity.mybatis.core.auditable.OriginalProperty;
 import com.wvkity.mybatis.core.auditable.alter.AuditedAlterData;
 import com.wvkity.mybatis.core.auditable.alter.DefaultAuditedAlterData;
 import com.wvkity.mybatis.core.auditable.event.AuditedEventPublisher;
-import com.wvkity.mybatis.core.cache.CacheFactory;
+import com.wvkity.mybatis.core.cache.LocalCacheFactory;
 import com.wvkity.mybatis.core.plugin.auditable.cache.CacheData;
 import com.wvkity.mybatis.core.plugin.auditable.cache.DefaultCacheData;
 import com.wvkity.mybatis.core.utils.Columns;
@@ -167,7 +167,7 @@ public class SystemAuditingHandler extends AbstractAuditingHandler<OriginalPrope
     @Override
     public void setProperties(Properties properties) {
         super.setProperties(properties);
-        this.localCache = CacheFactory.create(properties.getProperty(PROP_KEY_SA_CACHE_CLASS), properties,
+        this.localCache = LocalCacheFactory.create(properties.getProperty(PROP_KEY_SA_CACHE_CLASS), properties,
             properties.getProperty(PROP_KEY_SA_CACHE_CFG_PREFIX));
     }
 }

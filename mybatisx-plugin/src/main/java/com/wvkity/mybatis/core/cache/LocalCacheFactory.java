@@ -26,16 +26,16 @@ import java.util.Optional;
 import java.util.Properties;
 
 /**
- * 缓存工厂
+ * 本地缓存工厂
  * @author wvkity
  * @created 2021-02-12
  * @since 1.0.0
  */
-public final class CacheFactory {
+public final class LocalCacheFactory {
 
     static final String DEF_CACHE_TYPE = "caffeine";
 
-    private CacheFactory() {
+    private LocalCacheFactory() {
     }
 
     /**
@@ -54,12 +54,12 @@ public final class CacheFactory {
             || DEF_CACHE_TYPE.equalsIgnoreCase(cacheImplClass)) {
             try {
                 Class.forName("com.github.benmanes.caffeine.cache.Cache");
-                return new CaffeineCache<>(properties, prefix);
+                return new CaffeineLocalCache<>(properties, prefix);
             } catch (Exception ignore) {
                 final String cacheId =
                     Optional.ofNullable(properties.getProperty(prefix + LocalCache.PROP_KEY_CACHE_ID))
                         .filter(Objects::isNotBlank).orElse("Ms_Record_Sql_Cache");
-                return new MyBatisCache<>(properties, prefix, cacheId);
+                return new MyBatisLocalCache<>(properties, prefix, cacheId);
             }
         } else {
             try {

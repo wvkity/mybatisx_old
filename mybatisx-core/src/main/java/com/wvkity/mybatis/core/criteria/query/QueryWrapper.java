@@ -1,8 +1,11 @@
 package com.wvkity.mybatis.core.criteria.query;
 
+import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.core.criteria.CriteriaWrapper;
 import com.wvkity.mybatis.core.criteria.ExtCriteria;
+import com.wvkity.mybatis.core.plugin.paging.RangeFetch;
 import com.wvkity.mybatis.executor.resultset.EmbedResult;
+import com.wvkity.mybatis.support.constant.Join;
 
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -16,7 +19,8 @@ import java.util.function.Consumer;
  * @created 2021-05-11
  * @since 1.0.0
  */
-public interface QueryWrapper<T, C extends QueryWrapper<T, C>> extends CriteriaWrapper<T, C>, EmbedResult {
+public interface QueryWrapper<T, C extends QueryWrapper<T, C>> extends CriteriaWrapper<T, C>,
+    EmbedResult, RangeFetch {
 
     // region Extension methods
 
@@ -57,7 +61,22 @@ public interface QueryWrapper<T, C extends QueryWrapper<T, C>> extends CriteriaW
     C onlyFunc(final boolean only);
 
     /**
-     * 使用属性名作为别名
+     * 设置使用表别名
+     * @return {@code this}
+     */
+    default C useTabAlias() {
+        return this.useTabAlias(true);
+    }
+
+    /**
+     * 设置是否使用表别名
+     * @param using 是否使用
+     * @return {@code this}
+     */
+    C useTabAlias(boolean using);
+
+    /**
+     * 使用属性名作为字段别名
      * @return {@code this}
      */
     default C usePropAlias() {
@@ -65,7 +84,7 @@ public interface QueryWrapper<T, C extends QueryWrapper<T, C>> extends CriteriaW
     }
 
     /**
-     * 设置是否使用属性名作为别名
+     * 设置是否使用属性名作为字段别名
      * @param used 是否使用
      * @return {@code this}
      */
@@ -87,17 +106,15 @@ public interface QueryWrapper<T, C extends QueryWrapper<T, C>> extends CriteriaW
     C keepOrderBy(boolean keep);
 
     /**
-     * 设置自定义结果集
-     * @param resultMap 结果集
-     * @return {@code this}
+     * {@inheritDoc}
      */
+    @Override
     C resultMap(final String resultMap);
 
     /**
-     * 设置返回值类型
-     * @param resultType 返回值类型
-     * @return {@code this}
+     * {@inheritDoc}
      */
+    @Override
     C resultType(final Class<?> resultType);
 
     /**
@@ -107,162 +124,1015 @@ public interface QueryWrapper<T, C extends QueryWrapper<T, C>> extends CriteriaW
     C mapKey();
 
     /**
-     * 设置map结果中的key值
-     * <p>{@code @MapKey("key")}</p>
-     * @param mapKey key
-     * @return {@code this}
+     * {@inheritDoc}
      */
+    @Override
     C mapKey(final String mapKey);
 
     /**
-     * 设置{@link Map}实现类
-     * @param mapImplClass {@link Map}实现类
-     * @return {@code this}
+     * {@inheritDoc}
      */
+    @Override
     @SuppressWarnings("rawtypes")
     C mapType(final Class<? extends Map> mapImplClass);
 
     /**
      * 指定查询范围
-     * @param end 结束位置
+     * @param rowEnd 结束位置
      * @return {@code this}
      */
-    default C range(final long end) {
-        return this.range(1L, end);
+    default C rangeWithRow(final long rowEnd) {
+        return this.rangeWithRow(1L, rowEnd);
     }
 
     /**
      * 指定查询范围
-     * @param start 起始位置
-     * @param end   结束位置
+     * @param rowStart 起始位置
+     * @param rowEnd   结束位置
      * @return {@code this}
      */
-    C range(final long start, final long end);
+    C rangeWithRow(final long rowStart, final long rowEnd);
 
     /**
      * 指定查询范围
-     * @param start 起始页码
-     * @param end   结束页码
-     * @param size  每页数目
+     * @param pageEnd 结束页码
      * @return {@code this}
      */
-    C range(final long start, final long end, final long size);
+    default C rangeWithPage(final long pageEnd) {
+        return this.rangeWithPage(1L, pageEnd, 20L);
+    }
+
+    /**
+     * 指定查询范围
+     * @param pageStart 起始页码
+     * @param pageEnd   结束页码
+     * @return {@code this}
+     */
+    default C rangeWithPage(final long pageStart, final long pageEnd) {
+        return this.rangeWithPage(pageStart, pageEnd, 20L);
+    }
+
+    /**
+     * 指定查询范围
+     * @param pageStart 起始页码
+     * @param pageEnd   结束页码
+     * @param pageSize  每页数目
+     * @return {@code this}
+     */
+    C rangeWithPage(final long pageStart, final long pageEnd, final long pageSize);
 
     // endregion
 
     // region Nested sub query methods
 
     /**
-     * 创建{@link NestedSubQuery}对象
-     * @return {@link NestedSubQuery}
+     * 创建{@link SubQuery}对象
+     * @return {@link SubQuery}
      */
-    default NestedSubQuery<T> nestedQuery() {
-        return this.nestedQuery(this);
+    default SubQuery<T> newSubQuery() {
+        return this.newSubQuery(this);
     }
 
     /**
-     * 创建{@link NestedSubQuery}对象
+     * 创建{@link SubQuery}对象
      * @param action {@link Consumer}
-     * @return {@link NestedSubQuery}
+     * @return {@link SubQuery}
      */
-    default NestedSubQuery<T> nestedQuery(final Consumer<NestedSubQuery<T>> action) {
-        return this.nestedQuery(this, action);
+    default SubQuery<T> newSubQuery(final Consumer<SubQuery<T>> action) {
+        return this.newSubQuery(this, action);
     }
 
     /**
-     * 创建{@link NestedSubQuery}对象
+     * 创建{@link SubQuery}对象
      * @param alias 别名
-     * @return {@link NestedSubQuery}
+     * @return {@link SubQuery}
      */
-    default NestedSubQuery<T> nestedQuery(final String alias) {
-        return this.nestedQuery(this, alias);
+    default SubQuery<T> newSubQuery(final String alias) {
+        return this.newSubQuery(this, alias);
     }
 
     /**
-     * 创建{@link NestedSubQuery}对象
+     * 创建{@link SubQuery}对象
      * @param alias  别名
      * @param action {@link Consumer}
-     * @return {@link NestedSubQuery}
+     * @return {@link SubQuery}
      */
-    default NestedSubQuery<T> nestedQuery(final String alias, final Consumer<NestedSubQuery<T>> action) {
-        return this.nestedQuery(this, alias, action);
+    default SubQuery<T> newSubQuery(final String alias, final Consumer<SubQuery<T>> action) {
+        return this.newSubQuery(this, alias, action);
     }
 
     /**
-     * 创建{@link NestedSubQuery}对象
+     * 创建{@link SubQuery}对象
      * @param query {@link ExtCriteria}
      * @param <S>   实体类型
-     * @return {@link NestedSubQuery}
+     * @return {@link SubQuery}
      */
-    default <S> NestedSubQuery<S> nestedQuery(final ExtCriteria<S> query) {
-        return this.nestedQuery(query, (String) null);
+    default <S> SubQuery<S> newSubQuery(final ExtCriteria<S> query) {
+        return this.newSubQuery(query, (String) null);
     }
 
     /**
-     * 创建{@link NestedSubQuery}对象
+     * 创建{@link SubQuery}对象
      * @param query  {@link ExtCriteria}
      * @param action {@link Consumer}
      * @param <S>    实体类型
-     * @return {@link NestedSubQuery}
+     * @return {@link SubQuery}
      */
-    default <S> NestedSubQuery<S> nestedQuery(final ExtCriteria<S> query,
-                                              final Consumer<NestedSubQuery<S>> action) {
-        return this.nestedQuery(query, null, action);
+    default <S> SubQuery<S> newSubQuery(final ExtCriteria<S> query,
+                                        final Consumer<SubQuery<S>> action) {
+        return this.newSubQuery(query, null, action);
     }
 
     /**
-     * 创建{@link NestedSubQuery}对象
+     * 创建{@link SubQuery}对象
      * @param query  {@link ExtCriteria}
      * @param action {@link Consumer}
      * @param <S>    实体类型
-     * @return {@link NestedSubQuery}
+     * @return {@link SubQuery}
      */
-    default <S> NestedSubQuery<S> nestedQuery(final ExtCriteria<S> query,
-                                              final BiConsumer<C, NestedSubQuery<S>> action) {
-        return this.nestedQuery(query, null, action);
+    default <S> SubQuery<S> newSubQuery(final ExtCriteria<S> query,
+                                        final BiConsumer<C, SubQuery<S>> action) {
+        return this.newSubQuery(query, null, action);
     }
 
     /**
-     * 创建{@link NestedSubQuery}对象
+     * 创建{@link SubQuery}对象
      * @param query {@link ExtCriteria}
      * @param alias 别名
      * @param <S>   实体类型
-     * @return {@link NestedSubQuery}
+     * @return {@link SubQuery}
      */
-    default <S> NestedSubQuery<S> nestedQuery(final ExtCriteria<S> query, final String alias) {
-        return NestedSubQuery.from(query, alias);
+    default <S> SubQuery<S> newSubQuery(final ExtCriteria<S> query, final String alias) {
+        return SubQuery.from(query, alias);
     }
 
     /**
-     * 创建{@link NestedSubQuery}对象
+     * 创建{@link SubQuery}对象
      * @param query  {@link ExtCriteria}
      * @param alias  别名
      * @param action {@link Consumer}
      * @param <S>    实体类型
-     * @return {@link NestedSubQuery}
+     * @return {@link SubQuery}
      */
-    default <S> NestedSubQuery<S> nestedQuery(final ExtCriteria<S> query, final String alias,
-                                              final Consumer<NestedSubQuery<S>> action) {
-        return NestedSubQuery.from(query, alias, action);
+    default <S> SubQuery<S> newSubQuery(final ExtCriteria<S> query, final String alias,
+                                        final Consumer<SubQuery<S>> action) {
+        return SubQuery.from(query, alias, action);
     }
 
     /**
-     * 创建{@link NestedSubQuery}对象
+     * 创建{@link SubQuery}对象
      * @param query  {@link ExtCriteria}
      * @param alias  别名
      * @param action {@link Consumer}
      * @param <S>    实体类型
-     * @return {@link NestedSubQuery}
+     * @return {@link SubQuery}
      */
     @SuppressWarnings("unchecked")
-    default <S> NestedSubQuery<S> nestedQuery(final ExtCriteria<S> query, final String alias,
-                                              final BiConsumer<C, NestedSubQuery<S>> action) {
-        final NestedSubQuery<S> it = this.nestedQuery(query, alias);
+    default <S> SubQuery<S> newSubQuery(final ExtCriteria<S> query, final String alias,
+                                        final BiConsumer<C, SubQuery<S>> action) {
+        final SubQuery<S> it = this.newSubQuery(query, alias);
         if (action != null) {
             action.accept((C) this, it);
         }
         return it;
     }
+
+    // endregion
+
+    // region Foreign methods
+
+    // region Common foreign methods
+
+    /**
+     * 创建{@link Foreign}对象
+     * @param entity 实体类
+     * @param <S>    实体类型
+     * @return {@link Foreign}
+     */
+    default <S> Foreign<S> join(final Class<S> entity) {
+        return this.join(entity, Join.INNER);
+    }
+
+    /**
+     * 创建{@link Foreign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param <S>    实体类型
+     * @return {@link Foreign}
+     */
+    default <S> Foreign<S> join(final Class<S> entity, final String alias) {
+        return this.join(entity, alias, Join.INNER);
+    }
+
+    /**
+     * 创建{@link Foreign}对象
+     * @param entity 实体类
+     * @param action {@link Consumer}
+     * @param <S>    实体类型
+     * @return {@link Foreign}
+     */
+    default <S> Foreign<S> join(final Class<S> entity, final Consumer<Foreign<S>> action) {
+        return this.join(entity, null, Join.INNER, action);
+    }
+
+    /**
+     * 创建{@link Foreign}对象
+     * @param entity 实体类
+     * @param action {@link BiConsumer}
+     * @param <S>    实体类型
+     * @return {@link Foreign}
+     */
+    default <S> Foreign<S> join(final Class<S> entity, final BiConsumer<C, Foreign<S>> action) {
+        return this.join(entity, null, Join.INNER, action);
+    }
+
+    /**
+     * 创建{@link Foreign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param action {@link Consumer}
+     * @param <S>    实体类型
+     * @return {@link Foreign}
+     */
+    default <S> Foreign<S> join(final Class<S> entity, final String alias,
+                                final Consumer<Foreign<S>> action) {
+        return this.join(entity, alias, Join.INNER, action);
+    }
+
+    /**
+     * 创建{@link Foreign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param action {@link BiConsumer}
+     * @param <S>    实体类型
+     * @return {@link Foreign}
+     */
+    default <S> Foreign<S> join(final Class<S> entity, final String alias,
+                                final BiConsumer<C, Foreign<S>> action) {
+        return this.join(entity, alias, Join.INNER, action);
+    }
+
+    /**
+     * 创建{@link Foreign}对象
+     * @param entity 实体类
+     * @param <S>    实体类型
+     * @return {@link Foreign}
+     */
+    default <S> Foreign<S> leftJoin(final Class<S> entity) {
+        return this.join(entity, Join.LEFT);
+    }
+
+    /**
+     * 创建{@link Foreign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param <S>    实体类型
+     * @return {@link Foreign}
+     */
+    default <S> Foreign<S> leftJoin(final Class<S> entity, final String alias) {
+        return this.join(entity, alias, Join.LEFT);
+    }
+
+    /**
+     * 创建{@link Foreign}对象
+     * @param entity 实体类
+     * @param action {@link Consumer}
+     * @param <S>    实体类型
+     * @return {@link Foreign}
+     */
+    default <S> Foreign<S> leftJoin(final Class<S> entity, final Consumer<Foreign<S>> action) {
+        return this.join(entity, null, Join.LEFT, action);
+    }
+
+    /**
+     * 创建{@link Foreign}对象
+     * @param entity 实体类
+     * @param action {@link BiConsumer}
+     * @param <S>    实体类型
+     * @return {@link Foreign}
+     */
+    default <S> Foreign<S> leftJoin(final Class<S> entity, final BiConsumer<C, Foreign<S>> action) {
+        return this.join(entity, null, Join.LEFT, action);
+    }
+
+    /**
+     * 创建{@link Foreign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param action {@link Consumer}
+     * @param <S>    实体类型
+     * @return {@link Foreign}
+     */
+    default <S> Foreign<S> leftJoin(final Class<S> entity, final String alias,
+                                    final Consumer<Foreign<S>> action) {
+        return this.join(entity, alias, Join.LEFT, action);
+    }
+
+    /**
+     * 创建{@link Foreign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param action {@link BiConsumer}
+     * @param <S>    实体类型
+     * @return {@link Foreign}
+     */
+    default <S> Foreign<S> leftJoin(final Class<S> entity, final String alias,
+                                    final BiConsumer<C, Foreign<S>> action) {
+        return this.join(entity, alias, Join.LEFT, action);
+    }
+
+    /**
+     * 创建{@link Foreign}对象
+     * @param entity 实体类
+     * @param join   {@link Join}
+     * @param <S>    实体类型
+     * @return {@link Foreign}
+     */
+    default <S> Foreign<S> join(final Class<S> entity, final Join join) {
+        final Foreign<S> it = Foreign.from(this, entity, join);
+        this.foreign(it);
+        return it;
+    }
+
+    /**
+     * 创建{@link Foreign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param join   {@link Join}
+     * @param <S>    实体类型
+     * @return {@link Foreign}
+     */
+    default <S> Foreign<S> join(final Class<S> entity, final String alias, final Join join) {
+        final Foreign<S> it = Foreign.from(this, entity, alias, join);
+        this.foreign(it);
+        return it;
+    }
+
+    /**
+     * 创建{@link Foreign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param join   {@link Join}
+     * @param action {@link Consumer}
+     * @param <S>    实体类型
+     * @return {@link Foreign}
+     */
+    default <S> Foreign<S> join(final Class<S> entity, final String alias, final Join join,
+                                final Consumer<Foreign<S>> action) {
+        final Foreign<S> it = Foreign.from(this, entity, alias, join, action);
+        this.foreign(it);
+        return it;
+    }
+
+    /**
+     * 创建{@link Foreign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param join   {@link Join}
+     * @param action {@link BiConsumer}
+     * @param <S>    实体类型
+     * @return {@link Foreign}
+     */
+    @SuppressWarnings("unchecked")
+    default <S> Foreign<S> join(final Class<S> entity, final String alias, final Join join,
+                                final BiConsumer<C, Foreign<S>> action) {
+        final Foreign<S> it = Foreign.from(this, entity, alias, join);
+        if (Objects.nonNull(action)) {
+            action.accept((C) this, it);
+        }
+        this.foreign(it);
+        return it;
+    }
+
+    // endregion
+
+    // region Lambda foreign methods
+
+    /**
+     * 创建{@link LambdaForeign}对象
+     * @param entity 实体类
+     * @param <S>    实体类型
+     * @return {@link LambdaForeign}
+     */
+    default <S> LambdaForeign<S> joinWithLambda(final Class<S> entity) {
+        return this.joinWithLambda(entity, Join.INNER);
+    }
+
+    /**
+     * 创建{@link LambdaForeign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param <S>    实体类型
+     * @return {@link LambdaForeign}
+     */
+    default <S> LambdaForeign<S> joinWithLambda(final Class<S> entity, final String alias) {
+        return this.joinWithLambda(entity, alias, Join.INNER);
+    }
+
+    /**
+     * 创建{@link LambdaForeign}对象
+     * @param entity 实体类
+     * @param action {@link Consumer}
+     * @param <S>    实体类型
+     * @return {@link LambdaForeign}
+     */
+    default <S> LambdaForeign<S> joinWithLambda(final Class<S> entity,
+                                                final Consumer<LambdaForeign<S>> action) {
+        return this.joinWithLambda(entity, null, action);
+    }
+
+    /**
+     * 创建{@link LambdaForeign}对象
+     * @param entity 实体类
+     * @param action {@link BiConsumer}
+     * @param <S>    实体类型
+     * @return {@link LambdaForeign}
+     */
+    default <S> LambdaForeign<S> joinWithLambda(final Class<S> entity,
+                                                final BiConsumer<C, LambdaForeign<S>> action) {
+        return this.joinWithLambda(entity, null, action);
+    }
+
+    /**
+     * 创建{@link LambdaForeign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param action {@link Consumer}
+     * @param <S>    实体类型
+     * @return {@link LambdaForeign}
+     */
+    default <S> LambdaForeign<S> joinWithLambda(final Class<S> entity, final String alias,
+                                                final Consumer<LambdaForeign<S>> action) {
+        return this.joinWithLambda(entity, alias, Join.INNER, action);
+    }
+
+    /**
+     * 创建{@link LambdaForeign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param action {@link BiConsumer}
+     * @param <S>    实体类型
+     * @return {@link LambdaForeign}
+     */
+    default <S> LambdaForeign<S> joinWithLambda(final Class<S> entity, final String alias,
+                                                final BiConsumer<C, LambdaForeign<S>> action) {
+        return this.joinWithLambda(entity, alias, Join.INNER, action);
+    }
+
+    /**
+     * 创建{@link LambdaForeign}对象
+     * @param entity 实体类
+     * @param <S>    实体类型
+     * @return {@link LambdaForeign}
+     */
+    default <S> LambdaForeign<S> leftJoinWithLambda(final Class<S> entity) {
+        return this.joinWithLambda(entity, Join.LEFT);
+    }
+
+    /**
+     * 创建{@link LambdaForeign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param <S>    实体类型
+     * @return {@link LambdaForeign}
+     */
+    default <S> LambdaForeign<S> leftJoinWithLambda(final Class<S> entity, final String alias) {
+        return this.joinWithLambda(entity, alias, Join.LEFT);
+    }
+
+    /**
+     * 创建{@link LambdaForeign}对象
+     * @param entity 实体类
+     * @param action {@link Consumer}
+     * @param <S>    实体类型
+     * @return {@link LambdaForeign}
+     */
+    default <S> LambdaForeign<S> leftJoinWithLambda(final Class<S> entity,
+                                                    final Consumer<LambdaForeign<S>> action) {
+        return this.joinWithLambda(entity, null, Join.LEFT, action);
+    }
+
+    /**
+     * 创建{@link LambdaForeign}对象
+     * @param entity 实体类
+     * @param action {@link BiConsumer}
+     * @param <S>    实体类型
+     * @return {@link LambdaForeign}
+     */
+    default <S> LambdaForeign<S> leftJoinWithLambda(final Class<S> entity,
+                                                    final BiConsumer<C, LambdaForeign<S>> action) {
+        return this.joinWithLambda(entity, null, Join.LEFT, action);
+    }
+
+    /**
+     * 创建{@link LambdaForeign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param action {@link Consumer}
+     * @param <S>    实体类型
+     * @return {@link LambdaForeign}
+     */
+    default <S> LambdaForeign<S> leftJoinWithLambda(final Class<S> entity, final String alias,
+                                                    final Consumer<LambdaForeign<S>> action) {
+        return this.joinWithLambda(entity, alias, Join.LEFT, action);
+    }
+
+    /**
+     * 创建{@link LambdaForeign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param action {@link BiConsumer}
+     * @param <S>    实体类型
+     * @return {@link LambdaForeign}
+     */
+    default <S> LambdaForeign<S> leftJoinWithLambda(final Class<S> entity, final String alias,
+                                                    final BiConsumer<C, LambdaForeign<S>> action) {
+        return this.joinWithLambda(entity, alias, Join.LEFT, action);
+    }
+
+    /**
+     * 创建{@link LambdaForeign}对象
+     * @param entity 实体类
+     * @param join   {@link Join}
+     * @param <S>    实体类型
+     * @return {@link LambdaForeign}
+     */
+    default <S> LambdaForeign<S> joinWithLambda(final Class<S> entity, final Join join) {
+        final LambdaForeign<S> it = LambdaForeign.from(this, entity, join);
+        this.foreign(it);
+        return it;
+    }
+
+    /**
+     * 创建{@link LambdaForeign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param join   {@link Join}
+     * @param <S>    实体类型
+     * @return {@link LambdaForeign}
+     */
+    default <S> LambdaForeign<S> joinWithLambda(final Class<S> entity, final String alias, final Join join) {
+        final LambdaForeign<S> it = LambdaForeign.from(this, entity, alias, join);
+        this.foreign(it);
+        return it;
+    }
+
+    /**
+     * 创建{@link LambdaForeign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param join   {@link Join}
+     * @param action {@link Consumer}
+     * @param <S>    实体类型
+     * @return {@link LambdaForeign}
+     */
+    default <S> LambdaForeign<S> joinWithLambda(final Class<S> entity, final String alias, final Join join,
+                                                final Consumer<LambdaForeign<S>> action) {
+        final LambdaForeign<S> it = LambdaForeign.from(this, entity, alias, join, action);
+        this.foreign(it);
+        return it;
+    }
+
+    /**
+     * 创建{@link LambdaForeign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param join   {@link Join}
+     * @param action {@link BiConsumer}
+     * @param <S>    实体类型
+     * @return {@link LambdaForeign}
+     */
+    @SuppressWarnings("unchecked")
+    default <S> LambdaForeign<S> joinWithLambda(final Class<S> entity, final String alias, final Join join,
+                                                final BiConsumer<C, LambdaForeign<S>> action) {
+        final LambdaForeign<S> it = LambdaForeign.from(this, entity, alias, join);
+        if (Objects.nonNull(action)) {
+            action.accept((C) this, it);
+        }
+        this.foreign(it);
+        return it;
+    }
+
+    // endregion
+
+    // region Generic foreign methods
+
+    /**
+     * 创建{@link GenericForeign}对象
+     * @param entity 实体类
+     * @param <S>    实体类型
+     * @return {@link GenericForeign}
+     */
+    default <S> GenericForeign<S> joinWithGeneric(final Class<S> entity) {
+        return this.joinWithGeneric(entity, Join.INNER);
+    }
+
+    /**
+     * 创建{@link GenericForeign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param <S>    实体类型
+     * @return {@link GenericForeign}
+     */
+    default <S> GenericForeign<S> joinWithGeneric(final Class<S> entity, final String alias) {
+        return this.joinWithGeneric(entity, alias, Join.INNER);
+    }
+
+    /**
+     * 创建{@link GenericForeign}对象
+     * @param entity 实体类
+     * @param action {@link Consumer}
+     * @param <S>    实体类型
+     * @return {@link GenericForeign}
+     */
+    default <S> GenericForeign<S> joinWithGeneric(final Class<S> entity,
+                                                  final Consumer<GenericForeign<S>> action) {
+        return this.joinWithGeneric(entity, null, Join.INNER, action);
+    }
+
+    /**
+     * 创建{@link GenericForeign}对象
+     * @param entity 实体类
+     * @param action {@link BiConsumer}
+     * @param <S>    实体类型
+     * @return {@link GenericForeign}
+     */
+    default <S> GenericForeign<S> joinWithGeneric(final Class<S> entity,
+                                                  final BiConsumer<C, GenericForeign<S>> action) {
+        return this.joinWithGeneric(entity, null, Join.INNER, action);
+    }
+
+    /**
+     * 创建{@link GenericForeign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param action {@link Consumer}
+     * @param <S>    实体类型
+     * @return {@link GenericForeign}
+     */
+    default <S> GenericForeign<S> joinWithGeneric(final Class<S> entity, final String alias,
+                                                  final Consumer<GenericForeign<S>> action) {
+        return this.joinWithGeneric(entity, alias, Join.INNER, action);
+    }
+
+    /**
+     * 创建{@link GenericForeign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param action {@link BiConsumer}
+     * @param <S>    实体类型
+     * @return {@link GenericForeign}
+     */
+    default <S> GenericForeign<S> joinWithGeneric(final Class<S> entity, final String alias,
+                                                  final BiConsumer<C, GenericForeign<S>> action) {
+        return this.joinWithGeneric(entity, alias, Join.INNER, action);
+    }
+
+    /**
+     * 创建{@link GenericForeign}对象
+     * @param entity 实体类
+     * @param <S>    实体类型
+     * @return {@link GenericForeign}
+     */
+    default <S> GenericForeign<S> leftJoinWithGeneric(final Class<S> entity) {
+        return this.joinWithGeneric(entity, Join.LEFT);
+    }
+
+    /**
+     * 创建{@link GenericForeign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param <S>    实体类型
+     * @return {@link GenericForeign}
+     */
+    default <S> GenericForeign<S> leftJoinWithGeneric(final Class<S> entity, final String alias) {
+        return this.joinWithGeneric(entity, alias, Join.LEFT);
+    }
+
+    /**
+     * 创建{@link GenericForeign}对象
+     * @param entity 实体类
+     * @param action {@link Consumer}
+     * @param <S>    实体类型
+     * @return {@link GenericForeign}
+     */
+    default <S> GenericForeign<S> leftJoinWithGeneric(final Class<S> entity,
+                                                      final Consumer<GenericForeign<S>> action) {
+        return this.joinWithGeneric(entity, null, Join.LEFT, action);
+    }
+
+    /**
+     * 创建{@link GenericForeign}对象
+     * @param entity 实体类
+     * @param action {@link BiConsumer}
+     * @param <S>    实体类型
+     * @return {@link GenericForeign}
+     */
+    default <S> GenericForeign<S> leftJoinWithGeneric(final Class<S> entity,
+                                                      final BiConsumer<C, GenericForeign<S>> action) {
+        return this.joinWithGeneric(entity, null, Join.LEFT, action);
+    }
+
+    /**
+     * 创建{@link GenericForeign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param action {@link Consumer}
+     * @param <S>    实体类型
+     * @return {@link GenericForeign}
+     */
+    default <S> GenericForeign<S> leftJoinWithGeneric(final Class<S> entity, final String alias,
+                                                      final Consumer<GenericForeign<S>> action) {
+        return this.joinWithGeneric(entity, alias, Join.LEFT, action);
+    }
+
+    /**
+     * 创建{@link GenericForeign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param action {@link BiConsumer}
+     * @param <S>    实体类型
+     * @return {@link GenericForeign}
+     */
+    default <S> GenericForeign<S> leftJoinWithGeneric(final Class<S> entity, final String alias,
+                                                      final BiConsumer<C, GenericForeign<S>> action) {
+        return this.joinWithGeneric(entity, alias, Join.LEFT, action);
+    }
+
+    /**
+     * 创建{@link GenericForeign}对象
+     * @param entity 实体类
+     * @param join   {@link Join}
+     * @param <S>    实体类型
+     * @return {@link GenericForeign}
+     */
+    default <S> GenericForeign<S> joinWithGeneric(final Class<S> entity, final Join join) {
+        final GenericForeign<S> it = GenericForeign.from(this, entity, join);
+        this.foreign(it);
+        return it;
+    }
+
+    /**
+     * 创建{@link GenericForeign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param join   {@link Join}
+     * @param <S>    实体类型
+     * @return {@link GenericForeign}
+     */
+    default <S> GenericForeign<S> joinWithGeneric(final Class<S> entity, final String alias, final Join join) {
+        final GenericForeign<S> it = GenericForeign.from(this, entity, alias, join);
+        this.foreign(it);
+        return it;
+    }
+
+    /**
+     * 创建{@link GenericForeign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param join   {@link Join}
+     * @param action {@link Consumer}
+     * @param <S>    实体类型
+     * @return {@link GenericForeign}
+     */
+    default <S> GenericForeign<S> joinWithGeneric(final Class<S> entity, final String alias, final Join join,
+                                                  final Consumer<GenericForeign<S>> action) {
+        final GenericForeign<S> it = GenericForeign.from(this, entity, alias, join, action);
+        this.foreign(it);
+        return it;
+    }
+
+    /**
+     * 创建{@link GenericForeign}对象
+     * @param entity 实体类
+     * @param alias  别名
+     * @param join   {@link Join}
+     * @param action {@link BiConsumer}
+     * @param <S>    实体类型
+     * @return {@link GenericForeign}
+     */
+    @SuppressWarnings("unchecked")
+    default <S> GenericForeign<S> joinWithGeneric(final Class<S> entity, final String alias, final Join join,
+                                                  final BiConsumer<C, GenericForeign<S>> action) {
+        final GenericForeign<S> it = GenericForeign.from(this, entity, alias, join);
+        if (Objects.nonNull(action)) {
+            action.accept((C) this, it);
+        }
+        this.foreign(it);
+        return it;
+    }
+
+    // endregion
+
+    // region Sub foreign methods
+
+    /**
+     * 创建{@link SubForeign}对象
+     * @param query {@link ExtCriteria}
+     * @param <S>   实体类型
+     * @return {@link SubForeign}
+     */
+    default <S> SubForeign<S> join(final ExtCriteria<S> query) {
+        return this.join(query, Join.INNER);
+    }
+
+    /**
+     * 创建{@link SubForeign}对象
+     * @param query {@link ExtCriteria}
+     * @param alias 别名
+     * @param <S>   实体类型
+     * @return {@link SubForeign}
+     */
+    default <S> SubForeign<S> join(final ExtCriteria<S> query, final String alias) {
+        return this.join(query, alias, Join.INNER);
+    }
+
+    /**
+     * 创建{@link SubForeign}对象
+     * @param query  {@link ExtCriteria}
+     * @param action {@link Consumer}
+     * @param <S>    实体类型
+     * @return {@link SubForeign}
+     */
+    default <S> SubForeign<S> join(final ExtCriteria<S> query, final Consumer<SubForeign<S>> action) {
+        return this.join(query, null, Join.INNER, action);
+    }
+
+    /**
+     * 创建{@link SubForeign}对象
+     * @param query  {@link ExtCriteria}
+     * @param action {@link BiConsumer}
+     * @param <S>    实体类型
+     * @return {@link SubForeign}
+     */
+    default <S> SubForeign<S> join(final ExtCriteria<S> query, final BiConsumer<C, SubForeign<S>> action) {
+        return this.join(query, null, Join.INNER, action);
+    }
+
+    /**
+     * 创建{@link SubForeign}对象
+     * @param query  {@link ExtCriteria}
+     * @param alias  别名
+     * @param action {@link Consumer}
+     * @param <S>    实体类型
+     * @return {@link SubForeign}
+     */
+    default <S> SubForeign<S> join(final ExtCriteria<S> query, final String alias,
+                                   final Consumer<SubForeign<S>> action) {
+        return this.join(query, alias, Join.INNER, action);
+    }
+
+    /**
+     * 创建{@link SubForeign}对象
+     * @param query  {@link ExtCriteria}
+     * @param alias  别名
+     * @param action {@link BiConsumer}
+     * @param <S>    实体类型
+     * @return {@link SubForeign}
+     */
+    default <S> SubForeign<S> join(final ExtCriteria<S> query, final String alias,
+                                   final BiConsumer<C, SubForeign<S>> action) {
+        return this.join(query, alias, Join.INNER, action);
+    }
+
+    /**
+     * 创建{@link SubForeign}对象
+     * @param query {@link ExtCriteria}
+     * @param <S>   实体类型
+     * @return {@link SubForeign}
+     */
+    default <S> SubForeign<S> leftJoin(final ExtCriteria<S> query) {
+        return this.join(query, Join.LEFT);
+    }
+
+    /**
+     * 创建{@link SubForeign}对象
+     * @param query {@link ExtCriteria}
+     * @param alias 别名
+     * @param <S>   实体类型
+     * @return {@link SubForeign}
+     */
+    default <S> SubForeign<S> leftJoin(final ExtCriteria<S> query, final String alias) {
+        return this.join(query, alias, Join.LEFT);
+    }
+
+    /**
+     * 创建{@link SubForeign}对象
+     * @param query  {@link ExtCriteria}
+     * @param action {@link Consumer}
+     * @param <S>    实体类型
+     * @return {@link SubForeign}
+     */
+    default <S> SubForeign<S> leftJoin(final ExtCriteria<S> query, final Consumer<SubForeign<S>> action) {
+        return this.join(query, null, Join.LEFT, action);
+    }
+
+    /**
+     * 创建{@link SubForeign}对象
+     * @param query  {@link ExtCriteria}
+     * @param action {@link BiConsumer}
+     * @param <S>    实体类型
+     * @return {@link SubForeign}
+     */
+    default <S> SubForeign<S> leftJoin(final ExtCriteria<S> query, final BiConsumer<C, SubForeign<S>> action) {
+        return this.join(query, null, Join.LEFT, action);
+    }
+
+    /**
+     * 创建{@link SubForeign}对象
+     * @param query  {@link ExtCriteria}
+     * @param alias  别名
+     * @param action {@link Consumer}
+     * @param <S>    实体类型
+     * @return {@link SubForeign}
+     */
+    default <S> SubForeign<S> leftJoin(final ExtCriteria<S> query, final String alias,
+                                       final Consumer<SubForeign<S>> action) {
+        return this.join(query, alias, Join.LEFT, action);
+    }
+
+    /**
+     * 创建{@link SubForeign}对象
+     * @param query  {@link ExtCriteria}
+     * @param alias  别名
+     * @param action {@link BiConsumer}
+     * @param <S>    实体类型
+     * @return {@link SubForeign}
+     */
+    default <S> SubForeign<S> leftJoin(final ExtCriteria<S> query, final String alias,
+                                       final BiConsumer<C, SubForeign<S>> action) {
+        return this.join(query, alias, Join.LEFT, action);
+    }
+
+    /**
+     * 创建{@link SubForeign}对象
+     * @param query {@link ExtCriteria}
+     * @param join  {@link Join}
+     * @param <S>   实体类型
+     * @return {@link SubForeign}
+     */
+    default <S> SubForeign<S> join(final ExtCriteria<S> query, final Join join) {
+        return this.join(query, null, join);
+    }
+
+    /**
+     * 创建{@link SubForeign}对象
+     * @param query {@link ExtCriteria}
+     * @param alias 别名
+     * @param join  {@link Join}
+     * @param <S>   实体类型
+     * @return {@link SubForeign}
+     */
+    default <S> SubForeign<S> join(final ExtCriteria<S> query, final String alias, final Join join) {
+        final SubForeign<S> it = SubForeign.from(this, query, alias, join);
+        this.foreign(it);
+        return it;
+    }
+
+    /**
+     * 创建{@link SubForeign}对象
+     * @param query  {@link ExtCriteria}
+     * @param alias  别名
+     * @param join   {@link Join}
+     * @param action {@link Consumer}
+     * @param <S>    实体类型
+     * @return {@link SubForeign}
+     */
+    default <S> SubForeign<S> join(final ExtCriteria<S> query, final String alias, final Join join,
+                                   final Consumer<SubForeign<S>> action) {
+        final SubForeign<S> it = SubForeign.from(this, query, alias, join, action);
+        this.foreign(it);
+        return it;
+    }
+
+    /**
+     * 创建{@link SubForeign}对象
+     * @param query  {@link ExtCriteria}
+     * @param alias  别名
+     * @param join   {@link Join}
+     * @param action {@link BiConsumer}
+     * @param <S>    实体类型
+     * @return {@link SubForeign}
+     */
+    @SuppressWarnings("unchecked")
+    default <S> SubForeign<S> join(final ExtCriteria<S> query, final String alias, final Join join,
+                                   final BiConsumer<C, SubForeign<S>> action) {
+        final SubForeign<S> it = SubForeign.from(this, query, alias, join);
+        if (Objects.nonNull(action)) {
+            action.accept((C) this, it);
+        }
+        this.foreign(it);
+        return it;
+    }
+
+    // endregion
+
+    /**
+     * 添加联表查询条件对象
+     * @param query {@link ExtCriteria}
+     * @return {@code this}
+     */
+    C foreign(final ExtCriteria<?> query);
 
     // endregion
 

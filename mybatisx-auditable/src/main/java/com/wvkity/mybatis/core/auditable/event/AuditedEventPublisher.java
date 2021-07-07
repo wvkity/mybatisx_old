@@ -24,6 +24,9 @@ package com.wvkity.mybatis.core.auditable.event;
  */
 public interface AuditedEventPublisher<T> extends EventPublisher<AuditedEvent<T>> {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     void publishEvent(final AuditedEvent<T> event);
 }

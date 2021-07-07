@@ -100,13 +100,23 @@ public abstract class AbstractSelection<E> implements Selection {
     public String as() {
         final String reference = this.getRefProp();
         final boolean refNotEmpty = Objects.isNotBlank(reference);
-        if (Objects.isNotBlank(this.alias)) {
-            return (refNotEmpty ? (reference + Constants.DOT) : "") + this.alias;
+        final boolean hasAlias = Objects.isNotBlank(this.alias);
+        final boolean isUsed = this.optional().map(Criteria::isPropAsAlias).orElse(false);
+        final boolean hasProp = Objects.isNotBlank(this.property);
+        if (refNotEmpty) {
+            final String realAlias;
+            if (hasAlias) {
+                realAlias = this.alias.trim();
+            } else {
+                if (isUsed && hasProp) {
+                    realAlias = this.property;
+                } else {
+                    realAlias = this.getColumn();
+                }
+            }
+            return reference + Constants.DOT + realAlias;
         } else {
-            final boolean isUsed = this.optional().map(Criteria::isPropAsAlias)
-                .orElse(false);
-            return isUsed && Objects.isNotBlank(this.property) ? (refNotEmpty ?
-                (reference + Constants.DOT + this.property) : this.property) : "";
+            return hasAlias ? this.alias.trim() : isUsed && hasProp ? this.property : Constants.EMPTY;
         }
     }
 

@@ -28,7 +28,7 @@ import com.wvkity.mybatis.support.constant.Slot;
  * @since 1.0.0
  */
 public interface LambdaCriteriaWrapper<T, C extends LambdaCriteriaWrapper<T, C>> extends CriteriaWrapper<T, C>,
-    LambdaCompare<T, C>, LambdaRange<T, C>, LambdaLike<T, C>, LambdaTemplate<T, C>, SubCriteriaWrapper<T, C> {
+    LambdaCompare<T, C>, LambdaRange<T, C>, LambdaLike<T, C>, LambdaTemplate<T, C>, QueryCriteriaWrapper<T, C> {
 
     /**
      * IS NULL

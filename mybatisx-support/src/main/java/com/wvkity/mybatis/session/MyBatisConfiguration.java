@@ -22,7 +22,7 @@ import com.wvkity.mybatis.support.config.MyBatisGlobalConfiguration;
 import com.wvkity.mybatis.support.config.MyBatisLocalConfigurationCache;
 import com.wvkity.mybatis.support.inject.mapping.sql.Supplier;
 import com.wvkity.mybatis.support.inject.mapping.sql.SupplierRegistry;
-import com.wvkity.mybatis.executor.resultset.MyBatisDefaultResultSetHandler;
+import com.wvkity.mybatis.executor.resultset.MyBatisResultSetHandler;
 import com.wvkity.mybatis.reflection.factory.MyBatisObjectFactory;
 import com.wvkity.mybatis.scripting.xmltags.MyBatisXMLLanguageDriver;
 import com.wvkity.mybatis.type.CalendarTypeHandler;
@@ -45,6 +45,8 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.transaction.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 import java.util.Collection;
@@ -62,6 +64,7 @@ import java.util.function.BiFunction;
  */
 public class MyBatisConfiguration extends Configuration {
 
+    private static final Logger log = LoggerFactory.getLogger(MyBatisConfiguration.class);
     protected ObjectFactory objectFactory;
     /**
      * 全局配置
@@ -169,7 +172,7 @@ public class MyBatisConfiguration extends Configuration {
     public ResultSetHandler newResultSetHandler(Executor executor, MappedStatement mappedStatement,
                                                 RowBounds rowBounds, ParameterHandler parameterHandler,
                                                 ResultHandler resultHandler, BoundSql boundSql) {
-        final ResultSetHandler resultSetHandler = new MyBatisDefaultResultSetHandler(executor, mappedStatement,
+        final ResultSetHandler resultSetHandler = new MyBatisResultSetHandler(executor, mappedStatement,
             parameterHandler, resultHandler, boundSql, rowBounds);
         return (ResultSetHandler) interceptorChain.pluginAll(resultSetHandler);
     }
@@ -273,10 +276,13 @@ public class MyBatisConfiguration extends Configuration {
 
     @Override
     public void addMappedStatement(MappedStatement ms) {
-        if (this.mappedStatements.containsKey(ms.getId())) {
+        final String msId = ms.getId();
+        if (this.mappedStatements.containsKey(msId)) {
+            log.warn("The mapping method ["+ msId +"] has been loaded from the XML file and is automatically ignored " +
+                "by the system");
             return;
         }
-        this.mappedStatements.put(ms.getId(), ms);
+        this.mappedStatements.put(msId, ms);
     }
 
     @Override

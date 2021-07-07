@@ -18,6 +18,7 @@ package com.wvkity.mybatis.core.criteria.query;
 import com.wvkity.mybatis.basic.constant.Constants;
 import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.utils.Objects;
+import com.wvkity.mybatis.core.criteria.ExtCriteria;
 import com.wvkity.mybatis.core.criteria.support.AbstractLambdaCriteria;
 import com.wvkity.mybatis.core.property.Property;
 import com.wvkity.mybatis.core.support.select.Selection;
@@ -61,6 +62,12 @@ public abstract class AbstractLambdaQueryCriteria<T, C extends LambdaQueryCriter
     @Override
     public C onlyFunc(final boolean only) {
         this.onlyFunc = only;
+        return this.self();
+    }
+
+    @Override
+    public C useTabAlias(boolean using) {
+        this.useAlias.set(using);
         return this.self();
     }
 
@@ -128,17 +135,23 @@ public abstract class AbstractLambdaQueryCriteria<T, C extends LambdaQueryCriter
     }
 
     @Override
-    public C range(final long start, final long end) {
-        this.rowStart = start;
-        this.rowEnd = end;
+    public C rangeWithRow(final long rowStart, final long rowEnd) {
+        this.rowStart = rowStart;
+        this.rowEnd = rowEnd;
         return this.self();
     }
 
     @Override
-    public C range(final long start, final long end, final long size) {
-        this.pageStart = start;
-        this.pageEnd = end;
-        this.pageSize = size;
+    public C rangeWithPage(final long pageStart, final long pageEnd, final long pageSize) {
+        this.pageStart = pageStart;
+        this.pageEnd = pageEnd;
+        this.pageSize = pageSize;
+        return this.self();
+    }
+
+    @Override
+    public C foreign(ExtCriteria<?> query) {
+        this.addForeign(query);
         return this.self();
     }
 
@@ -180,9 +193,27 @@ public abstract class AbstractLambdaQueryCriteria<T, C extends LambdaQueryCriter
 
     // endregion
 
+    // region Override methods
+
+    /*@Override
+    public String getSelectSegment() {
+        return this.intactSelectString(true);
+    }*/
+
+    /*@Override
+    public String getWhereSegment() {
+        return this.whereSegmentForQuery();
+    }
+
     @Override
     public String getWhereSegment(String groupByReplacement) {
         return this.intactWhereString(groupByReplacement);
-    }
+    }*/
 
+    /*@Override
+    protected String intactString() {
+        return this.intactStringForQuery();
+    }*/
+
+    // endregion
 }

@@ -34,10 +34,8 @@ import java.util.stream.StreamSupport;
  */
 public class DefaultParameterConverter implements ParameterConverter {
 
+    private static final long serialVersionUID = -7817996589266807074L;
     public static final String DEF_PARAMETER_KEY_PREFIX = "_v_idx_";
-    /**
-     * {@link com.wvkity.mybatis.support.criteria.Criteria Criteria}默认参数名
-     */
     public static final String DEF_PARAMETER_ALIAS = Constants.PARAM_CRITERIA;
     public static final String DEF_PARAMETER_VALUE_MAPPING = DEF_PARAMETER_ALIAS + ".parameterValueMapping.%s";
     public static final String DEF_PARAMETER_PLACEHOLDER = "{%s}";

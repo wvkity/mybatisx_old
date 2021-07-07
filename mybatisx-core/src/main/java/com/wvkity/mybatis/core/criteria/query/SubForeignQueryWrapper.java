@@ -8,5 +8,6 @@ package com.wvkity.mybatis.core.criteria.query;
  * @created 2021-05-21
  * @since 1.0.0
  */
-public interface SubForeignQueryWrapper<T, C extends SubForeignQueryWrapper<T, C>> extends CommonForeignQueryCriteria<T, C> {
+public interface SubForeignQueryWrapper<T, C extends SubForeignQueryWrapper<T, C>> extends
+    CommonForeignQueryCriteria<T, C> {
 }

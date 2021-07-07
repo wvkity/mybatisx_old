@@ -28,7 +28,7 @@ interface LambdaSelect<T, C extends LambdaSelect<T, C>> extends Criteria<T> {
      * @return {@code this}
      */
     default C select() {
-        return this.select(it -> true);
+        return this.filtrate(__ -> true);
     }
 
     /**
@@ -98,21 +98,6 @@ interface LambdaSelect<T, C extends LambdaSelect<T, C>> extends Criteria<T> {
         if (Objects.isNotEmpty(properties)) {
             for (Map.Entry<String, String> it : properties.entrySet()) {
                 this.select(it.getValue(), it.getKey());
-            }
-        }
-        return (C) this;
-    }
-
-    /**
-     * 查询字段
-     * @param properties 属性列表
-     * @return {@code this}
-     */
-    @SuppressWarnings("unchecked")
-    default C selects(final Property<T, ?>... properties) {
-        if (!Objects.isEmpty(properties)) {
-            for (Property<T, ?> it : properties) {
-                this.select(it, null);
             }
         }
         return (C) this;
@@ -200,21 +185,6 @@ interface LambdaSelect<T, C extends LambdaSelect<T, C>> extends Criteria<T> {
      * @return {@code this}
      */
     C ignore(final String property);
-
-    /**
-     * 忽略查询字段
-     * @param properties 属性
-     * @return {@code this}
-     */
-    @SuppressWarnings("unchecked")
-    default C ignores(final Property<T, ?>... properties) {
-        if (!Objects.isEmpty(properties)) {
-            for (Property<T, ?> it : properties) {
-                this.ignore(it);
-            }
-        }
-        return (C) this;
-    }
 
     /**
      * 忽略查询字段

@@ -16,6 +16,7 @@
 package com.wvkity.mybatis.core.criteria.support;
 
 import com.wvkity.mybatis.core.criteria.Category;
+import com.wvkity.mybatis.core.criteria.sql.DefaultSqlManager;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -37,6 +38,7 @@ public class CriteriaImpl<T> extends AbstractCommonCriteria<T, CriteriaImpl<T>> 
     public CriteriaImpl(final Class<T> entity) {
         this.entityClass = entity;
         this.initialize(null, Category.BASIC);
+        this.sqlManager = new DefaultSqlManager(this, this.fragmentManager);
     }
 
     @Override

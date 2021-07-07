@@ -39,4 +39,25 @@ public abstract class AbstractGenericForeignQueryCriteria<T, C extends GenericFo
      */
     protected Join join;
 
+    @Override
+    public C fetch(boolean fetch) {
+        this.fetch = fetch;
+        return this.self();
+    }
+
+    /*@Override
+    public String getWhereSegment() {
+        return this.whereSegmentForForeign(this.join);
+    }*/
+
+    @Override
+    public ExtCriteria<?> getMaster() {
+        return this.master;
+    }
+
+    @Override
+    public Join getJoin() {
+        return this.join;
+    }
+
 }

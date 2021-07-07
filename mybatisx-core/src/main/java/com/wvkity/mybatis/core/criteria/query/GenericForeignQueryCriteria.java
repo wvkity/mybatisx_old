@@ -1,7 +1,5 @@
 package com.wvkity.mybatis.core.criteria.query;
 
-import com.wvkity.mybatis.core.criteria.ExtCriteria;
-
 /**
  * 通用联表查询条件接口
  * @param <T> 实体类型

@@ -16,6 +16,7 @@
 package com.wvkity.mybatis.core.criteria.update;
 
 import com.wvkity.mybatis.core.criteria.Category;
+import com.wvkity.mybatis.core.criteria.sql.DefaultUpdateSqlManager;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -37,6 +38,8 @@ public class CommonUpdate<T> extends AbstractCommonUpdateCriteria<T, CommonUpdat
     public CommonUpdate(Class<T> entity) {
         this.entityClass = entity;
         this.initialize(null, Category.UPDATE);
+        this.sqlManager = new DefaultUpdateSqlManager(this, this.parameterConverter, this.updateColumnsOfWrap,
+            this.updateColumnsOfOrg, this.fragmentManager);
     }
 
     @Override

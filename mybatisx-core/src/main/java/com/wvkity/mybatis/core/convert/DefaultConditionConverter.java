@@ -58,6 +58,7 @@ import java.util.stream.Collectors;
  */
 public class DefaultConditionConverter implements Converter<Expression<?>, Criterion> {
 
+    private static final long serialVersionUID = 5410096049163817413L;
     protected final Criteria<?> criteria;
     protected final ParameterConverter parameterConverter;
     protected final PlaceholderConverter placeholderConverter;
@@ -372,4 +373,11 @@ public class DefaultConditionConverter implements Converter<Expression<?>, Crite
         return criteria;
     }
 
+    public ParameterConverter getParameterConverter() {
+        return parameterConverter;
+    }
+
+    public PlaceholderConverter getPlaceholderConverter() {
+        return placeholderConverter;
+    }
 }

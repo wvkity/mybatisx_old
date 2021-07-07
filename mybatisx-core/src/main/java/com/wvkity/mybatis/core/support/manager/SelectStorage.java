@@ -225,7 +225,7 @@ public class SelectStorage extends AbstractFragmentList<Selection> {
             }
         } else {
             // 查询所有字段
-            final List<Column> list = TableHelper.getColumns(this.criteria.getEntityClass(), __ -> true);
+            final List<Column> list = TableHelper.getColumns(this.criteria.getEntityClass(), ignore -> true);
             if (Objects.isNotEmpty(list)) {
                 tmp = list.stream().filter(it -> this.accept(this.excludeProperties, it.getProperty(), false)
                     && this.accept(this.excludeColumns, it.getColumn(), true)).map(it ->

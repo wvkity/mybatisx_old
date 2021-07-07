@@ -193,6 +193,7 @@ public interface QueryService<T, U, ID> {
     /**
      * 根据{@link Criteria}对象分页查询记录
      * @param criteria {@link Criteria}对象
+     * @param pageable 分页对象
      * @return 多条记录
      */
     List<Object[]> selectListWithArray(final Criteria<T> criteria, final Pageable pageable);
@@ -232,7 +233,8 @@ public interface QueryService<T, U, ID> {
      * @param <E>        自定返回值泛型
      * @return 多条记录
      */
-    <E> Map<Object, E> selectMapWithEmbed(final Criteria<T> criteria, final Class<E> resultType, final Pageable pageable);
+    <E> Map<Object, E> selectMapWithEmbed(final Criteria<T> criteria, final Class<E> resultType,
+                                          final Pageable pageable);
 
     /**
      * 根据{@link Criteria}对象分页查询记录

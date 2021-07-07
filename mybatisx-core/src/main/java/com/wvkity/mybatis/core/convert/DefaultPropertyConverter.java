@@ -18,7 +18,6 @@ package com.wvkity.mybatis.core.convert;
 import com.wvkity.mybatis.basic.exception.MyBatisException;
 import com.wvkity.mybatis.basic.metadata.Column;
 import com.wvkity.mybatis.basic.utils.Objects;
-import com.wvkity.mybatis.core.invoke.SerializedLambda;
 import com.wvkity.mybatis.core.property.PropertiesMappingCache;
 import com.wvkity.mybatis.core.property.Property;
 import com.wvkity.mybatis.support.criteria.Criteria;
@@ -34,6 +33,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DefaultPropertyConverter implements PropertyConverter {
 
+    private static final long serialVersionUID = 1794162178922854011L;
     private static final Logger log = LoggerFactory.getLogger(DefaultPropertyConverter.class);
     protected final Class<?> entity;
     protected final Criteria<?> criteria;
@@ -67,7 +67,7 @@ public class DefaultPropertyConverter implements PropertyConverter {
 
     @Override
     public String toProperty(Property<?, ?> property) {
-        return this.toProperty(PropertiesMappingCache.parse(property).getImplMethodName());
+        return PropertiesMappingCache.lambdaToProperty(property);
     }
 
     @Override
@@ -113,4 +113,9 @@ public class DefaultPropertyConverter implements PropertyConverter {
         }
         return null;
     }
+
+    public Class<?> getEntity() {
+        return entity;
+    }
+
 }

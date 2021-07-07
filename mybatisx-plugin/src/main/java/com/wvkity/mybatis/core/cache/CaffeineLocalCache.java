@@ -31,13 +31,13 @@ import java.util.function.Consumer;
  * @created 2021-02-11
  * @since 1.0.0
  */
-public class CaffeineCache<K, V> implements LocalCache<K, V> {
+public class CaffeineLocalCache<K, V> implements LocalCache<K, V> {
 
     private final Cache<K, V> cache;
     private final String prefix;
     private final Properties properties;
 
-    public CaffeineCache(final Properties properties, final String prefix) {
+    public CaffeineLocalCache(final Properties properties, final String prefix) {
         this.prefix = prefix;
         this.properties = properties;
         final Caffeine<Object, Object> it = Caffeine.newBuilder();

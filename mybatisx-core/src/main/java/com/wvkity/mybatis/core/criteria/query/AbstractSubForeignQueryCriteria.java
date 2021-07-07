@@ -15,8 +15,6 @@
  */
 package com.wvkity.mybatis.core.criteria.query;
 
-import com.wvkity.mybatis.core.criteria.ExtCriteria;
-
 /**
  * 抽象子外联表查询条件容器
  * @param <T> 实体类型
@@ -29,9 +27,14 @@ import com.wvkity.mybatis.core.criteria.ExtCriteria;
 public abstract class AbstractSubForeignQueryCriteria<T, C extends SubForeignQueryWrapper<T, C>> extends
     AbstractCommonForeignQueryCriteria<T, C> implements SubForeignQueryWrapper<T, C> {
 
-    /**
-     * 查询对象
-     */
-    protected ExtCriteria<T> query;
+    @Override
+    public C colSelect() {
+        return this.fetch();
+    }
+
+    @Override
+    public String getTableName(final boolean joinAs) {
+        return this.getTableName(this.refQuery.getSegment(), joinAs);
+    }
 
 }

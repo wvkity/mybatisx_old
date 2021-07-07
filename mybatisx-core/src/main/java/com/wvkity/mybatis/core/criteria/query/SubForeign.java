@@ -20,9 +20,12 @@ import com.wvkity.mybatis.basic.utils.Objects;
 import com.wvkity.mybatis.core.convert.DefaultConditionConverter;
 import com.wvkity.mybatis.core.convert.DefaultParameterConverter;
 import com.wvkity.mybatis.core.criteria.ExtCriteria;
+import com.wvkity.mybatis.core.criteria.sql.DefaultQuerySqlManager;
 import com.wvkity.mybatis.support.constant.Join;
 
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * 子外联表查询条件容器
@@ -40,13 +43,14 @@ public class SubForeign<T> extends AbstractSubForeignQueryCriteria<T, SubForeign
 
     public SubForeign(ExtCriteria<?> master, ExtCriteria<T> query, String alias, Join join) {
         this.master = master;
-        this.query = query;
+        this.refQuery = query;
         this.join = join;
         this.clone(master.transfer());
         this.tableAliasRef = new AtomicReference<>(Objects.isBlank(alias) ? Constants.EMPTY : alias);
-        this.defTableAlias = DEF_TABLE_ALIAS_PREFIX + this.tableAliasSequence.incrementAndGet();
+        this.defTableAlias = this.genDefTabAlias();
         this.parameterConverter = new DefaultParameterConverter(this.parameterSequence, this.parameterValueMapping);
         this.conditionConverter = new DefaultConditionConverter(this, this.parameterConverter);
+        this.sqlManager = new DefaultQuerySqlManager(this, this.refQuery, this.foreignSet, this.fragmentManager);
     }
 
     @Override
@@ -54,8 +58,120 @@ public class SubForeign<T> extends AbstractSubForeignQueryCriteria<T, SubForeign
         final SubForeign<T> it = new SubForeign<>();
         it.join = join;
         it.master = master;
-        it.query = query;
+        it.refQuery = refQuery;
         it.depClone(this);
         return it;
     }
+
+    /**
+     * 创建{@link SubForeign}对象
+     * @param master {@link ExtCriteria}
+     * @param query  {@link ExtCriteria}
+     * @param join   {@link Join}
+     * @param <T>    实体类型
+     * @param <M>    主查询条件对象
+     * @return {@link SubForeign}
+     */
+    public static <T, M extends ExtCriteria<?>> SubForeign<T> from(final M master, final ExtCriteria<T> query,
+                                                                   final Join join) {
+        return SubForeign.from(master, query, null, join);
+    }
+
+    /**
+     * 创建{@link SubForeign}对象
+     * @param master {@link ExtCriteria}
+     * @param query  {@link ExtCriteria}
+     * @param join   {@link Join}
+     * @param action {@link Consumer}
+     * @param <T>    实体类型
+     * @param <M>    主查询条件对象
+     * @return {@link SubForeign}
+     */
+    public static <T, M extends ExtCriteria<?>> SubForeign<T> from(final M master, final ExtCriteria<T> query,
+                                                                   final Join join,
+                                                                   final Consumer<SubForeign<T>> action) {
+        final SubForeign<T> it = SubForeign.from(master, query, join);
+        if (Objects.nonNull(action)) {
+            action.accept(it);
+        }
+        return it;
+    }
+
+    /**
+     * 创建{@link SubForeign}对象
+     * @param master {@link ExtCriteria}
+     * @param query  {@link ExtCriteria}
+     * @param join   {@link Join}
+     * @param action {@link BiConsumer}
+     * @param <T>    实体类型
+     * @param <M>    主查询条件对象
+     * @return {@link SubForeign}
+     */
+    public static <T, M extends ExtCriteria<?>> SubForeign<T> from(final M master, final ExtCriteria<T> query,
+                                                                   final Join join,
+                                                                   final BiConsumer<M, SubForeign<T>> action) {
+        final SubForeign<T> it = SubForeign.from(master, query, join);
+        if (Objects.nonNull(action)) {
+            action.accept(master, it);
+        }
+        return it;
+    }
+
+    /**
+     * 创建{@link SubForeign}对象
+     * @param master {@link ExtCriteria}
+     * @param query  {@link ExtCriteria}
+     * @param alias  别名
+     * @param join   {@link Join}
+     * @param <T>    实体类型
+     * @param <M>    主查询条件对象
+     * @return {@link SubForeign}
+     */
+    public static <T, M extends ExtCriteria<?>> SubForeign<T> from(final M master, final ExtCriteria<T> query,
+                                                                   final String alias, final Join join) {
+        return new SubForeign<>(master, query, alias, join);
+    }
+
+    /**
+     * 创建{@link SubForeign}对象
+     * @param master {@link ExtCriteria}
+     * @param query  {@link ExtCriteria}
+     * @param alias  别名
+     * @param join   {@link Join}
+     * @param action {@link Consumer}
+     * @param <T>    实体类型
+     * @param <M>    主查询条件对象
+     * @return {@link SubForeign}
+     */
+    public static <T, M extends ExtCriteria<?>> SubForeign<T> from(final M master, final ExtCriteria<T> query,
+                                                                   final String alias, final Join join,
+                                                                   final Consumer<SubForeign<T>> action) {
+        final SubForeign<T> it = SubForeign.from(master, query, alias, join);
+        if (Objects.nonNull(action)) {
+            action.accept(it);
+        }
+        return it;
+    }
+
+    /**
+     * 创建{@link SubForeign}对象
+     * @param master {@link ExtCriteria}
+     * @param query  {@link ExtCriteria}
+     * @param alias  别名
+     * @param join   {@link Join}
+     * @param action {@link BiConsumer}
+     * @param <T>    实体类型
+     * @param <M>    主查询条件对象
+     * @return {@link SubForeign}
+     */
+    public static <T, M extends ExtCriteria<?>> SubForeign<T> from(final M master, final ExtCriteria<T> query,
+                                                                   final String alias, final Join join,
+                                                                   final BiConsumer<M, SubForeign<T>> action) {
+        final SubForeign<T> it = SubForeign.from(master, query, alias, join);
+        if (Objects.nonNull(action)) {
+            action.accept(master, it);
+        }
+        return it;
+    }
+
 }

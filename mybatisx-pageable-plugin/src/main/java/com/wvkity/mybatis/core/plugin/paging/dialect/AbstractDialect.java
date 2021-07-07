@@ -65,7 +65,7 @@ public abstract class AbstractDialect implements Dialect {
     }
 
     @Override
-    public String makeQueryRecordSQL(MappedStatement ms, BoundSql bs, Object parameter,
+    public String makeQueryRecordSql(MappedStatement ms, BoundSql bs, Object parameter,
                                      RowBounds rb, CacheKey cacheKey) {
         return this.sqlParser.smartCountParse(bs.getSql());
     }
@@ -149,7 +149,7 @@ public abstract class AbstractDialect implements Dialect {
     }
 
     @Override
-    public String makeQueryListSQL(MappedStatement ms, BoundSql bs, Object parameter,
+    public String makeQueryListSql(MappedStatement ms, BoundSql bs, Object parameter,
                                    RowBounds rb, CacheKey cacheKey) {
         if (this.isRange()) {
             final RangePageable pageable = RangePageableThreadLocalCache.getPageable();

@@ -35,7 +35,6 @@ public interface Dialect {
     String DEF_PAGEABLE_SUFFIX = "pageable";
     String DEF_PAGEABLE_START = DEF_PAGEABLE_SUFFIX + "_start";
     String DEF_PAGEABLE_OFFSET = DEF_PAGEABLE_SUFFIX + "_offset";
-    // properties keys
     String PROP_KEY_DIALECT = "dialect";
     String PROP_KEY_AUTO_RUNTIME_PARSING_JDBC = "autoRuntimeParsingJdbc";
     String PROP_KEY_AUTO_RELEASE_CONNECT = "autoReleaseConnect";
@@ -66,7 +65,7 @@ public interface Dialect {
      * @param cacheKey  {@link CacheKey}
      * @return SQL语句
      */
-    String makeQueryRecordSQL(final MappedStatement ms, final BoundSql bs, final Object parameter,
+    String makeQueryRecordSql(final MappedStatement ms, final BoundSql bs, final Object parameter,
                               final RowBounds rb, final CacheKey cacheKey);
 
     /**
@@ -89,7 +88,7 @@ public interface Dialect {
      * @param cacheKey  {@link CacheKey}
      * @return SQL语句
      */
-    String makeQueryListSQL(final MappedStatement ms, final BoundSql bs, final Object parameter,
+    String makeQueryListSql(final MappedStatement ms, final BoundSql bs, final Object parameter,
                             final RowBounds rb, final CacheKey cacheKey);
 
     /**

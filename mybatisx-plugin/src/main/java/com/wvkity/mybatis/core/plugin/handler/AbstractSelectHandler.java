@@ -49,8 +49,8 @@ public abstract class AbstractSelectHandler extends AbstractHandler {
             cacheKey = (CacheKey) args[4];
             boundSql = (BoundSql) args[5];
         }
-        if (filter(ms, parameter)) {
-            return handle(invocation, executor, ms, parameter, rowBounds, resultHandler, cacheKey, boundSql);
+        if (this.filter(ms, parameter)) {
+            return this.handle(invocation, executor, ms, parameter, rowBounds, resultHandler, cacheKey, boundSql);
         } else {
             if (size == ARG_SIZE_OF_FOUR) {
                 return executor.query(ms, parameter, rowBounds, resultHandler);
