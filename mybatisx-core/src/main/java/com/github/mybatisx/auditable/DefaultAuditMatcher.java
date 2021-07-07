@@ -15,10 +15,9 @@
  */
 package com.github.mybatisx.auditable;
 
-import com.github.mybatisx.basic.metadata.Auditor;
 import com.github.mybatisx.basic.metadata.Column;
-import com.github.mybatisx.basic.metadata.Descriptor;
 import com.github.mybatisx.basic.metadata.Table;
+import com.github.mybatisx.core.utils.Columns;
 import com.github.mybatisx.plugin.auditable.support.AuditMatcher;
 import org.apache.ibatis.mapping.MappedStatement;
 
@@ -61,12 +60,7 @@ public class DefaultAuditMatcher implements AuditMatcher {
     }
 
     protected OriginalProperty convert(final Column column) {
-        final Descriptor desc = column.getDescriptor();
-        final Auditor auditor = column.getAuditor();
-        return new OriginalProperty(column.getEntity(), desc.getField(), desc.getName(),
-            desc.getJavaType(), column.isUnique(), desc.getGetter(), desc.getSetter(),
-            auditor.matchingId() ? AuditType.ID : auditor.matchingName()
-                ? AuditType.NAME : auditor.matchingDate() ? AuditType.DATE : AuditType.OTHER, null, null);
+        return Columns.toProperty(column);
     }
 
 }

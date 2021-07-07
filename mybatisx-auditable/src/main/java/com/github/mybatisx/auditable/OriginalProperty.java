@@ -113,15 +113,15 @@ public class OriginalProperty {
         }
     }
 
-    public Object invoke(final Object target, final Object... args) {
+    public Object invoke(final Object target, final Object arg) {
         if (target != null) {
             try {
-                return this.setter.invoke(target, args);
+                return this.setter.invoke(target, arg);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 if (e instanceof IllegalAccessException) {
                     this.setter.setAccessible(true);
                     try {
-                        return this.setter.invoke(target, args);
+                        return this.setter.invoke(target, arg);
                     } catch (IllegalAccessException | InvocationTargetException e2) {
                         throw new AuditingException("Failed to inject value into '" + this.name + "' property", e2);
                     }
