@@ -111,6 +111,12 @@ public interface StandardFragmentManager<C extends Criteria<?>> extends Fragment
     StandardFragmentManager<C> orderBy(final List<Order> orders);
 
     /**
+     * 检查查询列是否已缓存
+     * @return boolean
+     */
+    boolean isCached();
+
+    /**
      * 检查是否存在查询字段
      * @return boolean
      */

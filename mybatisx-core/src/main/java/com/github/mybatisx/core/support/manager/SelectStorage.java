@@ -314,4 +314,7 @@ public class SelectStorage extends AbstractFragmentList<Selection> {
         return this.segment;
     }
 
+    public boolean isCached() {
+        return cached.get();
+    }
 }

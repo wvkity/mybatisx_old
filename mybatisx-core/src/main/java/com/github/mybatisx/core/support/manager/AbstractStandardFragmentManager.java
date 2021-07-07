@@ -135,6 +135,11 @@ public abstract class AbstractStandardFragmentManager<C extends Criteria<?>> ext
     }
 
     @Override
+    public boolean isCached() {
+        return this.selectStorage.isCached();
+    }
+
+    @Override
     public boolean hasSelect() {
         return this.selectStorage.hasSelect();
     }
