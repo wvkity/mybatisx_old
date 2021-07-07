@@ -102,7 +102,7 @@ subprojects {
 
     repositories {
         mavenLocal()
-        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'https://maven.aliyun.com/repository/public/' }
         maven { url 'https://plugins.gradle.org/m2/' }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         jcenter()
@@ -201,15 +201,15 @@ subprojects {
                 artifact sourcesJar
                 artifact javadocJar
                 pom {
-                    name = 'mybatis'
+                    name = 'mybatisx'
                     packaging 'jar'
                     description = 'Mybatis extension kit.'
-                    url = 'https://github.com/wvkity/mybatis'
+                    url = 'https://github.com/wvkity/mybatisx'
 
                     scm {
-                        connection = 'scm:git@github.com:https://github.com/wvkity/mybatis.git'
-                        developerConnection = 'scm:git@github.com:https://github.com/wvkity/mybatis.git'
-                        url = 'https://github.com/wvkity/mybatis'
+                        connection = 'scm:git@github.com:https://github.com/wvkity/mybatisx.git'
+                        developerConnection = 'scm:git@github.com:https://github.com/wvkity/mybatisx.git'
+                        url = 'https://github.com/wvkity/mybatisx'
                     }
 
                     licenses {
