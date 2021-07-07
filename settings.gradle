@@ -3,7 +3,7 @@ pluginManagement {
         mavenLocal()
         gradlePluginPortal()
         maven { url 'https://plugins.gradle.org/m2/' }
-        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url "https://repo.spring.io/plugins-release" }
         maven { url 'https://maven.aliyun.com/repository/central' }
         jcenter()
@@ -19,7 +19,7 @@ gradleEnterprise {
         termsOfServiceAgree = 'no'
     }
 }
-rootProject.name = 'mybatis'
+rootProject.name = 'mybatisx'
 include 'result'
 include 'mybatisx-annotation'
 include 'mybatisx-basic'

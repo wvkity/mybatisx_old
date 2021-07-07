@@ -193,27 +193,4 @@ public abstract class AbstractLambdaQueryCriteria<T, C extends LambdaQueryCriter
 
     // endregion
 
-    // region Override methods
-
-    /*@Override
-    public String getSelectSegment() {
-        return this.intactSelectString(true);
-    }*/
-
-    /*@Override
-    public String getWhereSegment() {
-        return this.whereSegmentForQuery();
-    }
-
-    @Override
-    public String getWhereSegment(String groupByReplacement) {
-        return this.intactWhereString(groupByReplacement);
-    }*/
-
-    /*@Override
-    protected String intactString() {
-        return this.intactStringForQuery();
-    }*/
-
-    // endregion
 }

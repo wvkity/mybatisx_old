@@ -19,13 +19,13 @@ import com.github.mybatisx.annotation.Executing;
 import com.github.mybatisx.basic.builder.Builder;
 import com.github.mybatisx.basic.invoker.Invoker;
 import com.github.mybatisx.basic.keyword.ReservedWordRegistry;
-import com.github.mybatisx.basic.utils.Objects;
-import com.github.mybatisx.basic.utils.Strings;
 import com.github.mybatisx.basic.metadata.Auditor;
 import com.github.mybatisx.basic.metadata.Column;
 import com.github.mybatisx.basic.metadata.Descriptor;
 import com.github.mybatisx.basic.metadata.Field;
 import com.github.mybatisx.basic.metadata.PrimaryKey;
+import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.basic.utils.Strings;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.UnknownTypeHandler;
@@ -628,20 +628,4 @@ public class ColumnBuilder extends AbstractBuilder implements Builder<Column> {
         return this;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof ColumnBuilder)) {
-            return false;
-        }
-        ColumnBuilder that = (ColumnBuilder) o;
-        return java.util.Objects.equals(entity, that.entity) && java.util.Objects.equals(column, that.column);
-    }
-
-    @Override
-    public int hashCode() {
-        return java.util.Objects.hash(entity, column);
-    }
 }
