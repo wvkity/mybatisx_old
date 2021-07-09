@@ -49,6 +49,18 @@ public class FuncOrder extends AbstractOrder<Function> {
 
     /**
      * 升序
+     * @param function 聚合函数
+     * @return {@link FuncOrder}
+     */
+    public static FuncOrder asc(final Function function) {
+        if (Objects.isNull(function)) {
+            return null;
+        }
+        return sort(true, function);
+    }
+
+    /**
+     * 升序
      * @param functions 聚合函数列表
      * @return {@link FuncOrder}
      */
@@ -63,6 +75,18 @@ public class FuncOrder extends AbstractOrder<Function> {
      */
     public static FuncOrder asc(final List<Function> functions) {
         return sort(true, functions);
+    }
+
+    /**
+     * 降序
+     * @param function 聚合函数列表
+     * @return {@link FuncOrder}
+     */
+    public static FuncOrder desc(final Function function) {
+        if (Objects.isNull(function)) {
+            return null;
+        }
+        return sort(false, function);
     }
 
     /**
@@ -93,7 +117,7 @@ public class FuncOrder extends AbstractOrder<Function> {
         if (Objects.isEmpty(functions)) {
             return null;
         }
-        return sort(ascending, Objects.asList(functions));
+        return sort(ascending, Objects.asNotNullList(functions));
     }
 
     /**
@@ -103,7 +127,7 @@ public class FuncOrder extends AbstractOrder<Function> {
      * @return {@link FuncOrder}
      */
     public static FuncOrder sort(final boolean ascending, final List<Function> functions) {
-        if (Objects.isEmpty(functions)) {
+        if (Objects.isNullElement(functions)) {
             return null;
         }
         return new FuncOrder(ascending, functions);
