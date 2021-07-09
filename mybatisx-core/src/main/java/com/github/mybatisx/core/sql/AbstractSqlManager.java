@@ -59,10 +59,13 @@ public abstract class AbstractSqlManager implements SqlManager {
     public String getWhereSegment(boolean self, boolean appendWhere, String groupByReplacement) {
         final String condition = this.fragmentManager.getSegment(groupByReplacement);
         if (Objects.isNotBlank(condition)) {
-            if (DEF_PATTERN_AND_OR.matcher(condition).matches()) {
-                return (appendWhere ? "WHERE " : Constants.EMPTY) + condition.replaceFirst(DEF_REGEX_AND_OR_STR, "$2");
+            if (this.fragmentManager.hasCondition()) {
+                if (DEF_PATTERN_AND_OR.matcher(condition).matches()) {
+                    return (appendWhere ? "WHERE " : Constants.EMPTY) + condition.replaceFirst(DEF_REGEX_AND_OR_STR, "$2");
+                }
+                return (appendWhere ? "WHERE " : Constants.EMPTY) + condition;
             }
-            return (appendWhere ? "WHERE " : Constants.EMPTY) + condition;
+            return condition;
         }
         return Constants.EMPTY;
     }
