@@ -15,10 +15,11 @@
  */
 package com.github.mybatisx.core.support.func;
 
+import com.github.mybatisx.basic.utils.Objects;
 import com.github.mybatisx.support.criteria.Criteria;
 
 /**
- * {@link AggFunc#MIN}聚合函数
+ * {@link Func#MIN}聚合函数
  * @author wvkity
  * @created 2021-05-01
  * @since 1.0.0
@@ -36,7 +37,7 @@ public class Min extends AbstractFunction {
         this.column = column;
         this.alias = alias;
         this.scale = scale;
-        this.func = AggFunc.MIN;
+        this.func = Func.MIN;
     }
 
     public Min(String tableAlias, String column, String alias) {
@@ -48,6 +49,54 @@ public class Min extends AbstractFunction {
         this.column = column;
         this.alias = alias;
         this.scale = scale;
-        this.func = AggFunc.MIN;
+        this.func = Func.MIN;
     }
+
+    public static final class Builder {
+        private Criteria<?> criteria;
+        private String column;
+        private String alias;
+        private Integer scale;
+        private String tableAlias;
+
+        private Builder() {
+        }
+
+        public Builder criteria(Criteria<?> criteria) {
+            this.criteria = criteria;
+            return this;
+        }
+
+        public Builder column(String column) {
+            this.column = column;
+            return this;
+        }
+
+        public Builder alias(String alias) {
+            this.alias = alias;
+            return this;
+        }
+
+        public Builder scale(Integer scale) {
+            this.scale = scale;
+            return this;
+        }
+
+        public Builder tableAlias(String tableAlias) {
+            this.tableAlias = tableAlias;
+            return this;
+        }
+
+        public Min build() {
+            if (Objects.isNotBlank(tableAlias)) {
+                return new Min(tableAlias, column, alias, scale);
+            }
+            return new Min(criteria, column, alias, scale);
+        }
+
+        public static Builder create() {
+            return new Builder();
+        }
+    }
+
 }

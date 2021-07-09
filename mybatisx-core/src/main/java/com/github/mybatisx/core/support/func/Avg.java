@@ -15,10 +15,11 @@
  */
 package com.github.mybatisx.core.support.func;
 
+import com.github.mybatisx.basic.utils.Objects;
 import com.github.mybatisx.support.criteria.Criteria;
 
 /**
- * {@link AggFunc#AVG}聚合函数
+ * {@link Func#AVG}聚合函数
  * @author wvkity
  * @created 2021-04-30
  * @since 1.0.0
@@ -47,14 +48,14 @@ public class Avg extends AbstractFunction {
         this.alias = alias;
         this.scale = scale;
         this.distinct = distinct;
-        this.func = AggFunc.AVG;
+        this.func = Func.AVG;
     }
 
     public Avg(String tableAlias, String column, String alias) {
         this.tableAlias = tableAlias;
         this.column = column;
         this.alias = alias;
-        this.func = AggFunc.AVG;
+        this.func = Func.AVG;
     }
 
     public Avg(String tableAlias, String column, String alias, boolean distinct) {
@@ -71,6 +72,60 @@ public class Avg extends AbstractFunction {
         this.alias = alias;
         this.scale = scale;
         this.distinct = distinct;
-        this.func = AggFunc.AVG;
+        this.func = Func.AVG;
     }
+
+    public static final class Builder {
+        private Criteria<?> criteria;
+        private String column;
+        private String alias;
+        private Integer scale;
+        private boolean distinct;
+        private String tableAlias;
+
+        private Builder() {
+        }
+
+        public Builder criteria(Criteria<?> criteria) {
+            this.criteria = criteria;
+            return this;
+        }
+
+        public Builder column(String column) {
+            this.column = column;
+            return this;
+        }
+
+        public Builder alias(String alias) {
+            this.alias = alias;
+            return this;
+        }
+
+        public Builder scale(Integer scale) {
+            this.scale = scale;
+            return this;
+        }
+
+        public Builder distinct(boolean distinct) {
+            this.distinct = distinct;
+            return this;
+        }
+
+        public Builder tableAlias(String tableAlias) {
+            this.tableAlias = tableAlias;
+            return this;
+        }
+
+        public Avg build() {
+            if (Objects.isNotBlank(tableAlias)) {
+                return new Avg(tableAlias, column, alias, scale, distinct);
+            }
+            return new Avg(criteria, column, alias, scale, distinct);
+        }
+
+        public static Builder create() {
+            return new Builder();
+        }
+    }
+
 }

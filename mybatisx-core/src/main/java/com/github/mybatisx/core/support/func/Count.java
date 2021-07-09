@@ -15,10 +15,11 @@
  */
 package com.github.mybatisx.core.support.func;
 
+import com.github.mybatisx.basic.utils.Objects;
 import com.github.mybatisx.support.criteria.Criteria;
 
 /**
- * {@link AggFunc#COUNT}聚合函数
+ * {@link Func#COUNT}聚合函数
  * @author wvkity
  * @created 2021-04-28
  * @since 1.0.0
@@ -32,7 +33,7 @@ public class Count extends AbstractFunction {
         this.column = column;
         this.alias = alias;
         this.distinct = distinct;
-        this.func = AggFunc.COUNT;
+        this.func = Func.COUNT;
     }
 
     public Count(String tableAlias, String column, String alias, boolean distinct) {
@@ -40,7 +41,53 @@ public class Count extends AbstractFunction {
         this.column = column;
         this.alias = alias;
         this.distinct = distinct;
-        this.func = AggFunc.COUNT;
+        this.func = Func.COUNT;
     }
 
+    public static final class Builder {
+        private Criteria<?> criteria;
+        private String column;
+        private String alias;
+        private boolean distinct;
+        private String tableAlias;
+
+        private Builder() {
+        }
+
+        public Builder criteria(Criteria<?> criteria) {
+            this.criteria = criteria;
+            return this;
+        }
+
+        public Builder column(String column) {
+            this.column = column;
+            return this;
+        }
+
+        public Builder alias(String alias) {
+            this.alias = alias;
+            return this;
+        }
+
+        public Builder distinct(boolean distinct) {
+            this.distinct = distinct;
+            return this;
+        }
+
+        public Builder tableAlias(String tableAlias) {
+            this.tableAlias = tableAlias;
+            return this;
+        }
+
+        public Count build() {
+            if (Objects.isNotBlank(tableAlias)) {
+                return new Count(tableAlias, column, alias, distinct);
+            }
+            return new Count(criteria, column, alias, distinct);
+        }
+
+        public static Builder create() {
+            return new Builder();
+        }
+    }
 }
