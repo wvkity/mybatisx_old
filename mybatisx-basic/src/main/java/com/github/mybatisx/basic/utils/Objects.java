@@ -93,6 +93,24 @@ public final class Objects {
     }
 
     /**
+     * 检查集合元素值是否都为null值
+     * @param collection 集合
+     * @return boolean
+     */
+    public static boolean isNullElement(final Collection<?> collection) {
+        return Objects.isEmpty(collection) || collection.stream().allMatch(Objects::isNull);
+    }
+
+    /**
+     * 检查集合元素值是否不为null值
+     * @param collection 集合
+     * @return boolean
+     */
+    public static boolean isNotNullElement(final Collection<?> collection) {
+        return Objects.isNotEmpty(collection) && collection.stream().anyMatch(Objects::nonNull);
+    }
+
+    /**
      * 检查集合是否为空
      * @param map 待检查集合
      * @return boolean
@@ -120,6 +138,19 @@ public final class Objects {
     public static <T> List<T> asList(final T... args) {
         return Optional.ofNullable(args).map(it ->
             it.length == 0 ? new ArrayList<T>(0) : new ArrayList<>(Arrays.asList(args))).orElse(new ArrayList<>(0));
+    }
+
+    /**
+     * 数组转集合(排除null值)
+     * @param args 数组元素
+     * @param <T>  泛型类型
+     * @return {@link List}
+     */
+    @SafeVarargs
+    public static <T> List<T> asNotNullList(final T... args) {
+        return Optional.ofNullable(args).map(it ->
+            it.length == 0 ? new ArrayList<T>(0) :
+                Arrays.stream(args).filter(Objects::nonNull).collect(Collectors.toList())).orElse(new ArrayList<>(0));
     }
 
     /**
