@@ -23,10 +23,36 @@ import com.github.mybatisx.support.fragment.Fragment;
  * @created 2021-04-28
  * @since 1.0.0
  */
-public enum AggFunc implements Fragment {
+public enum Func implements Fragment {
 
-    COUNT, SUM, AVG, MIN, MAX;
+    /**
+     * COUNT
+     */
+    COUNT,
+    /**
+     * SUM
+     */
+    SUM,
+    /**
+     * AVG
+     */
+    AVG,
+    /**
+     * MIN
+     */
+    MIN,
+    /**
+     * MAX
+     */
+    MAX,
+    /**
+     * NATIVE
+     */
+    NATIVE;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getSegment() {
         return this.name();
