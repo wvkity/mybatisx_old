@@ -35,6 +35,22 @@ public interface ExtCriteria<T> extends Criteria<T> {
     }
 
     /**
+     * 是否只查询聚合函数
+     * @return boolean
+     */
+    default boolean isOnlyFunc() {
+        return false;
+    }
+
+    /**
+     * 查询是否包含聚合函数
+     * @return boolean
+     */
+    default boolean isContainsFunc() {
+        return true;
+    }
+
+    /**
      * 是否拼接keep orderby注释
      * @return boolean
      */

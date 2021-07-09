@@ -20,12 +20,26 @@ import com.github.mybatisx.basic.metadata.Column;
 import com.github.mybatisx.basic.utils.Objects;
 import com.github.mybatisx.core.criteria.ExtCriteria;
 import com.github.mybatisx.core.criteria.support.AbstractCommonCriteria;
+import com.github.mybatisx.core.support.func.Avg;
+import com.github.mybatisx.core.support.func.Count;
+import com.github.mybatisx.core.support.func.Function;
+import com.github.mybatisx.core.support.func.Max;
+import com.github.mybatisx.core.support.func.Min;
+import com.github.mybatisx.core.support.func.NativeFunction;
+import com.github.mybatisx.core.support.func.Sum;
+import com.github.mybatisx.core.support.group.Group;
+import com.github.mybatisx.core.support.order.FuncOrder;
+import com.github.mybatisx.core.support.order.NativeOrder;
+import com.github.mybatisx.core.support.order.Order;
+import com.github.mybatisx.core.support.select.FuncSelection;
 import com.github.mybatisx.core.support.select.NativeSelection;
 import com.github.mybatisx.core.support.select.Selection;
 import com.github.mybatisx.core.support.select.StandardSelection;
 import com.github.mybatisx.support.basic.Matched;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 抽象基本条件/查询容器
@@ -175,6 +189,177 @@ public abstract class AbstractCommonQueryCriteria<T, C extends CommonQueryCriter
     @Override
     public C colIgnore(String column) {
         this.fragmentManager.colExclude(column);
+        return this.self();
+    }
+
+    // endregion
+
+    // region Aggregation function methods
+
+    @Override
+    public C count(String alias) {
+        return this.function(new Count(this, "*", alias, false));
+    }
+
+    @Override
+    public C colCount(String column, String alias, boolean distinct) {
+        if (Objects.isNotBlank(column)) {
+            this.function(new Count(this, column, alias, distinct));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C colCount(String tabAlias, String column, String alias, boolean distinct) {
+        if (Objects.isNotBlank(column)) {
+            this.function(new Count(tabAlias, column, alias, distinct));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C colSum(String column, String alias, Integer scale, boolean distinct) {
+        if (Objects.isNotBlank(column)) {
+            this.function(new Sum(this, column, alias, scale, distinct));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C colSum(String tabAlias, String column, String alias, Integer scale, boolean distinct) {
+        if (Objects.isNotBlank(column)) {
+            this.function(new Sum(tabAlias, column, alias, scale, distinct));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C colAvg(String column, String alias, Integer scale, boolean distinct) {
+        if (Objects.isNotBlank(column)) {
+            this.function(new Avg(this, column, alias, scale, distinct));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C colAvg(String tabAlias, String column, String alias, Integer scale, boolean distinct) {
+        if (Objects.isNotBlank(column)) {
+            this.function(new Avg(tabAlias, column, alias, scale, distinct));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C colMin(String column, String alias, Integer scale) {
+        if (Objects.isNotBlank(column)) {
+            this.function(new Min(this, column, alias, scale));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C colMin(String tabAlias, String column, String alias, Integer scale) {
+        if (Objects.isNotBlank(column)) {
+            this.function(new Min(tabAlias, column, alias, scale));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C colMax(String column, String alias, Integer scale) {
+        if (Objects.isNotBlank(column)) {
+            this.function(new Max(this, column, alias, scale));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C colMax(String tabAlias, String column, String alias, Integer scale) {
+        if (Objects.isNotBlank(column)) {
+            this.function(new Max(tabAlias, column, alias, scale));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C colFunc(String column, String aliasPrefix, Integer scale, boolean distinct) {
+        Optional.ofNullable(column).ifPresent(it ->
+            this.genFunctions(this, null, it, aliasPrefix, scale, distinct).stream()
+                .filter(Objects::nonNull).forEach(this::function));
+        return this.self();
+    }
+
+    @Override
+    public C colFunc(String tabAlias, String column, String aliasPrefix, Integer scale, boolean distinct) {
+        Optional.ofNullable(column).ifPresent(it ->
+            this.genFunctions(null, tabAlias, it, aliasPrefix, scale, distinct).stream()
+                .filter(Objects::nonNull).forEach(this::function));
+        return this.self();
+    }
+
+    @Override
+    public C nativeFunc(String funcBody, String alias) {
+        if (Objects.isNotBlank(funcBody)) {
+            this.function(new NativeFunction(this, funcBody, alias));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C function(Function function) {
+        if (Objects.nonNull(function)) {
+            this.select(new FuncSelection(function));
+        }
+        return this.self();
+    }
+
+    // endregion
+
+    // region Group by methods
+
+    @Override
+    public C group(boolean all) {
+        this.groupAll = all;
+        return this.self();
+    }
+
+    @Override
+    public C group(Group group) {
+        this.fragmentManager.groupBy(group);
+        return this.self();
+    }
+
+    // endregion
+
+    // region Order by methods
+
+    @Override
+    public C funcAsc(List<String> funcAliases) {
+        return this.order(FuncOrder.asc(this.genFunctions(funcAliases)));
+    }
+
+    @Override
+    public C funcDesc(List<String> funcAliases) {
+        return this.order(FuncOrder.desc(this.genFunctions(funcAliases)));
+    }
+
+    @Override
+    public C nativeOrder(String orderBy) {
+        if (Objects.isNotBlank(orderBy)) {
+            this.order(new NativeOrder(orderBy));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C order(Order order) {
+        this.fragmentManager.orderBy(order);
+        return this.self();
+    }
+
+    @Override
+    public C order(List<Order> orders) {
+        this.fragmentManager.orderBy(orders);
         return this.self();
     }
 

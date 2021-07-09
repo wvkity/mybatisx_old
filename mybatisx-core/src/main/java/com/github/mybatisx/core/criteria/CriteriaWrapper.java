@@ -17,22 +17,6 @@ import java.util.function.Function;
  */
 public interface CriteriaWrapper<T, C extends CriteriaWrapper<T, C>> extends ExtCriteria<T> {
 
-    /**
-     * 查询是否包含聚合函数
-     * @return boolean
-     */
-    default boolean isContainsFunc() {
-        return true;
-    }
-
-    /**
-     * 是否仅仅查询聚合函数
-     * @return boolean
-     */
-    default boolean isOnlyFunc() {
-        return false;
-    }
-
     // region Nesting condition
 
     /**

@@ -52,7 +52,7 @@ public class StandardGroup extends AbstractGroup<String> implements Group {
      * @return {@link StandardGroup}
      */
     public static StandardGroup group(final String... columns) {
-        return group(Objects.asList(columns));
+        return group(Objects.asNotNullList(columns));
     }
 
     /**
@@ -61,7 +61,7 @@ public class StandardGroup extends AbstractGroup<String> implements Group {
      * @return {@link StandardGroup}
      */
     public static StandardGroup group(final Collection<String> columns) {
-        if (Objects.isNotEmpty(columns)) {
+        if (Objects.isNotNullElement(columns)) {
             return new StandardGroup(columns);
         }
         return null;
@@ -74,7 +74,7 @@ public class StandardGroup extends AbstractGroup<String> implements Group {
      * @return {@link StandardGroup}
      */
     public static StandardGroup group(final String alias, final String... columns) {
-        return groupWithAlias(alias, Objects.asList(columns));
+        return groupWithAlias(alias, Objects.asNotNullList(columns));
     }
 
     /**
@@ -84,7 +84,7 @@ public class StandardGroup extends AbstractGroup<String> implements Group {
      * @return {@link StandardGroup}
      */
     public static StandardGroup groupWithAlias(final String alias, final Collection<String> columns) {
-        if (Objects.isNotEmpty(columns)) {
+        if (Objects.isNotNullElement(columns)) {
             return new StandardGroup(alias, columns);
         }
         return null;
@@ -97,7 +97,7 @@ public class StandardGroup extends AbstractGroup<String> implements Group {
      * @return {@link StandardGroup}
      */
     public static StandardGroup group(final Criteria<?> criteria, final String... columns) {
-        return group(criteria, Objects.asList(columns));
+        return group(criteria, Objects.asNotNullList(columns));
     }
 
     /**
@@ -107,7 +107,7 @@ public class StandardGroup extends AbstractGroup<String> implements Group {
      * @return {@link StandardGroup}
      */
     public static StandardGroup group(final Criteria<?> criteria, final Collection<String> columns) {
-        if (Objects.isNotEmpty(columns)) {
+        if (Objects.isNotNullElement(columns)) {
             return new StandardGroup(criteria, columns);
         }
         return null;

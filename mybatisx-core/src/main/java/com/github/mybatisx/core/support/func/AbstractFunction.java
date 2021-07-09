@@ -31,7 +31,7 @@ public abstract class AbstractFunction extends AbstractBasicFunction {
     /**
      * 类型
      */
-    protected AggFunc func;
+    protected Func func;
     /**
      * 表别名
      */
@@ -55,7 +55,7 @@ public abstract class AbstractFunction extends AbstractBasicFunction {
     }
 
     @Override
-    public AggFunc getFuncType() {
+    public Func getFuncType() {
         return this.func;
     }
 
@@ -81,14 +81,15 @@ public abstract class AbstractFunction extends AbstractBasicFunction {
     public String getFuncBody() {
         final StringBuilder builder = new StringBuilder(60);
         final String tabAs = this.getTableAlias();
-        final boolean notIsCount = this.func != AggFunc.COUNT;
+        final boolean notIsCount = this.func != Func.COUNT;
         final boolean isScale = this.hasScale() && notIsCount;
+        final boolean isDistinct = notIsCount || (!Constants.STAR.equals(this.column)
+            && !Constants.DEF_STR_ONE.equals(this.column) && !Constants.DEF_STR_ZERO.equals(this.column));
         if (isScale) {
             builder.append("CAST(");
         }
         builder.append(this.func.getSegment()).append(Constants.BRACKET_OPEN);
-        if (notIsCount || (!Constants.STAR.equals(this.column) && !Constants.DEF_STR_ONE.equals(this.column)
-            && !Constants.DEF_STR_ZERO.equals(this.column))) {
+        if (isDistinct) {
             if (this.distinct) {
                 builder.append("DISTINCT ");
             }

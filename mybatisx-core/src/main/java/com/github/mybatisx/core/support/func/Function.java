@@ -39,9 +39,9 @@ public interface Function extends Fragment {
 
     /**
      * 获取聚合函数类别
-     * @return {@link AggFunc}
+     * @return {@link Func}
      */
-    AggFunc getFuncType();
+    Func getFuncType();
 
     /**
      * 是否去重

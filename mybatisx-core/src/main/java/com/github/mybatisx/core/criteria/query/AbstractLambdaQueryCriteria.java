@@ -21,11 +21,28 @@ import com.github.mybatisx.basic.utils.Objects;
 import com.github.mybatisx.core.criteria.ExtCriteria;
 import com.github.mybatisx.core.criteria.support.AbstractLambdaCriteria;
 import com.github.mybatisx.core.property.Property;
+import com.github.mybatisx.core.support.func.Avg;
+import com.github.mybatisx.core.support.func.Count;
+import com.github.mybatisx.core.support.func.Function;
+import com.github.mybatisx.core.support.func.Max;
+import com.github.mybatisx.core.support.func.Min;
+import com.github.mybatisx.core.support.func.NativeFunction;
+import com.github.mybatisx.core.support.func.Sum;
+import com.github.mybatisx.core.support.group.Group;
+import com.github.mybatisx.core.support.group.StandardGroup;
+import com.github.mybatisx.core.support.order.FuncOrder;
+import com.github.mybatisx.core.support.order.NativeOrder;
+import com.github.mybatisx.core.support.order.Order;
+import com.github.mybatisx.core.support.order.StandardOrder;
+import com.github.mybatisx.core.support.select.FuncSelection;
 import com.github.mybatisx.core.support.select.Selection;
 import com.github.mybatisx.core.support.select.StandardSelection;
 import com.github.mybatisx.support.basic.Matched;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 抽象基础条件/查询容器
@@ -188,6 +205,221 @@ public abstract class AbstractLambdaQueryCriteria<T, C extends LambdaQueryCriter
     @Override
     public C ignore(String property) {
         this.fragmentManager.exclude(property);
+        return this.self();
+    }
+
+    // endregion
+
+    // region Aggregation function methods
+
+    @Override
+    public C count(String alias) {
+        return this.function(new Count(this, "*", alias, false));
+    }
+
+    @Override
+    public C count(Property<T, ?> property, String alias, boolean distinct) {
+        return this.count(this.toProperty(property), alias, distinct);
+    }
+
+    @Override
+    public C count(String property, String alias, boolean distinct) {
+        final Column column = this.toColumn(property);
+        if (Objects.nonNull(column)) {
+            this.function(new Count(this, column.getColumn(), alias, distinct));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C sum(Property<T, ?> property, String alias, Integer scale, boolean distinct) {
+        return this.sum(this.toProperty(property), alias, scale, distinct);
+    }
+
+    @Override
+    public C sum(String property, String alias, Integer scale, boolean distinct) {
+        final Column column = this.toColumn(property);
+        if (Objects.nonNull(column)) {
+            this.function(new Sum(this, column.getColumn(), alias, scale, distinct));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C avg(Property<T, ?> property, String alias, Integer scale, boolean distinct) {
+        return this.avg(this.toProperty(property), alias, scale, distinct);
+    }
+
+    @Override
+    public C avg(String property, String alias, Integer scale, boolean distinct) {
+        final Column column = this.toColumn(property);
+        if (Objects.nonNull(column)) {
+            this.function(new Avg(this, column.getColumn(), alias, scale, distinct));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C min(Property<T, ?> property, String alias, Integer scale) {
+        return this.min(this.toProperty(property), alias, scale);
+    }
+
+    @Override
+    public C min(String property, String alias, Integer scale) {
+        final Column column = this.toColumn(property);
+        if (Objects.nonNull(column)) {
+            this.function(new Min(this, column.getColumn(), alias, scale));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C max(Property<T, ?> property, String alias, Integer scale) {
+        return this.max(this.toProperty(property), alias, scale);
+    }
+
+    @Override
+    public C max(String property, String alias, Integer scale) {
+        final Column column = this.toColumn(property);
+        if (Objects.nonNull(column)) {
+            this.function(new Max(this, column.getColumn(), alias, scale));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C func(Property<T, ?> property, String aliasPrefix, Integer scale, boolean distinct) {
+        return this.func(this.toProperty(property), aliasPrefix, scale, distinct);
+    }
+
+    @Override
+    public C func(String property, String aliasPrefix, Integer scale, boolean distinct) {
+        Optional.ofNullable(this.toColumn(property)).ifPresent(it ->
+            this.genFunctions(this, null, it.getColumn(), aliasPrefix, scale, distinct).stream()
+                .filter(Objects::nonNull).forEach(this::function));
+        return this.self();
+    }
+
+    @Override
+    public C nativeFunc(String funcBody, String alias) {
+        if (Objects.isNotBlank(funcBody)) {
+            this.function(new NativeFunction(this, funcBody, alias));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C function(Function function) {
+        if (Objects.nonNull(function)) {
+            this.select(new FuncSelection(function));
+        }
+        return this.self();
+    }
+
+    // endregion
+
+    // region Group by methods
+
+    @Override
+    public C group(Property<T, ?> property) {
+        return this.group(this.toProperty(property));
+    }
+
+    @Override
+    public C group(String property) {
+        final Column column = this.toColumn(property);
+        if (Objects.nonNull(column)) {
+            this.group(StandardGroup.group(this, column.getColumn()));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C group(Collection<String> properties) {
+        return this.group(StandardGroup.group(this, this.toColumnList(properties)));
+    }
+
+    @Override
+    public C group(boolean all) {
+        this.groupAll = all;
+        return this.self();
+    }
+
+    @Override
+    public C group(Group group) {
+        this.fragmentManager.groupBy(group);
+        return this.self();
+    }
+
+    // endregion
+
+    // region Order by methods
+
+    @Override
+    public C asc(Property<T, ?> property) {
+        return this.asc(this.toProperty(property));
+    }
+
+    @Override
+    public C asc(String property) {
+        final Column column = this.toColumn(property);
+        if (Objects.nonNull(column)) {
+            this.order(StandardOrder.asc(this, column.getColumn()));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C asc(List<String> properties) {
+        return this.order(StandardOrder.asc(this, this.toColumnList(properties)));
+    }
+
+    @Override
+    public C funcAsc(List<String> funcAliases) {
+        return this.order(FuncOrder.asc(this.genFunctions(funcAliases)));
+    }
+
+    @Override
+    public C desc(Property<T, ?> property) {
+        return this.desc(this.toProperty(property));
+    }
+
+    @Override
+    public C desc(String property) {
+        final Column column = this.toColumn(property);
+        if (Objects.nonNull(column)) {
+            this.order(StandardOrder.desc(this, column.getColumn()));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C desc(List<String> properties) {
+        return this.order(StandardOrder.desc(this, this.toColumnList(properties)));
+    }
+
+    @Override
+    public C funcDesc(List<String> funcAliases) {
+        return this.order(FuncOrder.desc(this.genFunctions(funcAliases)));
+    }
+
+    @Override
+    public C nativeOrder(String orderBy) {
+        if (Objects.isNotBlank(orderBy)) {
+            this.order(new NativeOrder(orderBy));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C order(Order order) {
+        this.fragmentManager.orderBy(order);
+        return this.self();
+    }
+
+    @Override
+    public C order(List<Order> orders) {
+        this.fragmentManager.orderBy(orders);
         return this.self();
     }
 

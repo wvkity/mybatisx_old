@@ -42,8 +42,8 @@ public class NativeFunction extends AbstractBasicFunction {
     }
 
     @Override
-    public AggFunc getFuncType() {
-        return null;
+    public Func getFuncType() {
+        return Func.NATIVE;
     }
 
     @Override

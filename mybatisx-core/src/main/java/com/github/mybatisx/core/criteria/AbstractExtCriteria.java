@@ -31,8 +31,16 @@ import com.github.mybatisx.core.convert.ParameterConverter;
 import com.github.mybatisx.core.convert.PropertyConverter;
 import com.github.mybatisx.core.property.Property;
 import com.github.mybatisx.core.sql.SqlManager;
+import com.github.mybatisx.core.support.func.Avg;
+import com.github.mybatisx.core.support.func.Count;
+import com.github.mybatisx.core.support.func.Func;
+import com.github.mybatisx.core.support.func.Function;
+import com.github.mybatisx.core.support.func.Max;
+import com.github.mybatisx.core.support.func.Min;
+import com.github.mybatisx.core.support.func.Sum;
 import com.github.mybatisx.core.support.manager.DefaultStandardFragmentManager;
 import com.github.mybatisx.core.support.manager.StandardFragmentManager;
+import com.github.mybatisx.core.support.select.FuncSelection;
 import com.github.mybatisx.core.support.select.Selection;
 import com.github.mybatisx.core.support.select.StandardSelection;
 import com.github.mybatisx.plugin.paging.RangeMode;
@@ -45,6 +53,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -55,6 +64,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * 基础条件/
@@ -222,7 +232,7 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
     /**
      * 是否仅仅查询聚合函数
      */
-    protected boolean onlyFunc;
+    protected boolean onlyFunc = false;
     /**
      * 是否添加保持排序注释
      */
@@ -306,6 +316,19 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
      */
     protected String toProperty(Property<?, ?> property) {
         return this.converter.toProperty(property);
+    }
+
+    /**
+     * 属性列表转字段名列表
+     * @param properties 属性列表
+     * @return 字段名列表
+     */
+    protected List<String> toColumnList(final Collection<String> properties) {
+        if (Objects.isNotEmpty(properties)) {
+            return properties.stream().map(this::toColumn).filter(Objects::nonNull).map(Column::getColumn)
+                .collect(Collectors.toList());
+        }
+        return new ArrayList<>(0);
     }
 
     // endregion
@@ -425,6 +448,61 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
         }
     }
 
+    /**
+     * 生成聚合函数别名
+     * @param func        {@link Func}
+     * @param column      字段名称
+     * @param aliasPrefix 别名前缀
+     * @return 别名
+     */
+    protected String genFuncAlias(final Func func, final String column, final String aliasPrefix) {
+        final String funcName = func.getSegment();
+        String alias;
+        if (Objects.isNotBlank(aliasPrefix)) {
+            alias = aliasPrefix;
+        } else {
+            alias = column;
+        }
+        if (alias.contains(Constants.DOT)) {
+            if (alias.endsWith(Constants.DOT) || alias.endsWith(Constants.UNDER_LINE)) {
+                return alias + funcName;
+            }
+            return alias + Constants.DOT + funcName;
+        } else if (alias.endsWith(Constants.UNDER_LINE)) {
+            return alias + funcName;
+        }
+        return alias + Constants.UNDER_LINE + funcName;
+    }
+
+    /**
+     * 生成聚合函数列表
+     * @param criteria    {@link Criteria}
+     * @param tabAlias    表别名
+     * @param column      字段名
+     * @param aliasPrefix 聚合函数别名前缀
+     * @param scale       保留小数位数
+     * @param distinct    是否去重
+     * @return 聚合函数列表
+     */
+    protected List<Function> genFunctions(final Criteria<?> criteria, final String tabAlias, final String column,
+                                          String aliasPrefix, Integer scale, boolean distinct) {
+        if (Objects.isNotBlank(column)) {
+            final List<Function> it = new ArrayList<>(5);
+            it.add(Count.Builder.create().criteria(criteria).tableAlias(tabAlias).column(column)
+                .alias(this.genFuncAlias(Func.COUNT, column, aliasPrefix)).distinct(distinct).build());
+            it.add(Sum.Builder.create().criteria(criteria).tableAlias(tabAlias).column(column)
+                .alias(this.genFuncAlias(Func.SUM, column, aliasPrefix)).scale(scale).distinct(distinct).build());
+            it.add(Avg.Builder.create().criteria(criteria).tableAlias(tabAlias).column(column)
+                .alias(this.genFuncAlias(Func.AVG, column, aliasPrefix)).scale(scale).distinct(distinct).build());
+            it.add(Min.Builder.create().criteria(criteria).tableAlias(tabAlias).column(column)
+                .alias(this.genFuncAlias(Func.MIN, column, aliasPrefix)).scale(scale).build());
+            it.add(Max.Builder.create().criteria(criteria).tableAlias(tabAlias).column(column)
+                .alias(this.genFuncAlias(Func.MAX, column, aliasPrefix)).scale(scale).build());
+            return it;
+        }
+        return new ArrayList<>(0);
+    }
+
     @Override
     public AbstractExtCriteria<T> transfer() {
         return this;
@@ -534,6 +612,16 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
         return this.groupAll;
     }
 
+    @Override
+    public boolean isContainsFunc() {
+        return this.containsFunc;
+    }
+
+    @Override
+    public boolean isOnlyFunc() {
+        return this.onlyFunc;
+    }
+
     /**
      * 获取{@link Slot}
      * @return {@link Slot}
@@ -634,6 +722,33 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
             return RangeMode.PAGEABLE;
         }
         return RangeMode.NONE;
+    }
+
+    /**
+     * 获取聚合函数
+     * @param alias 聚合函数别名
+     * @return {@link Function}
+     */
+    public Function getFunction(final String alias) {
+        if (Objects.isNotBlank(alias)) {
+            final FuncSelection fs = this.fragmentManager.getFunc(alias);
+            if (Objects.nonNull(fs)) {
+                return fs.getFunction();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取聚合函数列表
+     * @param funcAliases 聚合函数别名列表
+     * @return 聚合函数列表
+     */
+    protected List<Function> genFunctions(final Collection<String> funcAliases) {
+        if (Objects.isNotEmpty(funcAliases)) {
+            return funcAliases.stream().map(this::getFunction).filter(Objects::nonNull).collect(Collectors.toList());
+        }
+        return new ArrayList<>(0);
     }
 
     @Override

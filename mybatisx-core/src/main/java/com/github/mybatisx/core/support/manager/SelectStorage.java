@@ -19,14 +19,14 @@ import com.github.mybatisx.basic.constant.Constants;
 import com.github.mybatisx.basic.immutable.ImmutableList;
 import com.github.mybatisx.basic.metadata.Column;
 import com.github.mybatisx.basic.utils.Objects;
-import com.github.mybatisx.core.criteria.query.CommonQueryWrapper;
+import com.github.mybatisx.core.criteria.ExtCriteria;
 import com.github.mybatisx.core.support.select.FuncSelection;
 import com.github.mybatisx.core.support.select.Selection;
 import com.github.mybatisx.core.support.select.StandardSelection;
 import com.github.mybatisx.support.basic.Matched;
 import com.github.mybatisx.support.criteria.Criteria;
-import com.github.mybatisx.support.helper.TableHelper;
 import com.github.mybatisx.support.fragment.AbstractFragmentList;
+import com.github.mybatisx.support.helper.TableHelper;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -173,8 +173,8 @@ public class SelectStorage extends AbstractFragmentList<Selection> {
 
     boolean canReadFromCache() {
         if (this.cached.get()) {
-            if (this.criteria instanceof CommonQueryWrapper) {
-                final CommonQueryWrapper<?, ?> query = (CommonQueryWrapper<?, ?>) this.criteria;
+            if (this.criteria instanceof ExtCriteria) {
+                final ExtCriteria<?> query = (ExtCriteria<?>) this.criteria;
                 if (this.onlyFunc == query.isOnlyFunc() && this.containsFunc == query.isContainsFunc()) {
                     return true;
                 }
@@ -210,8 +210,8 @@ public class SelectStorage extends AbstractFragmentList<Selection> {
         // 检查是否存在指定查询列
         final List<Selection> tmp;
         if (this.hasSelect()) {
-            if (this.criteria instanceof CommonQueryWrapper) {
-                final CommonQueryWrapper<?, ?> query = (CommonQueryWrapper<?, ?>) this.criteria;
+            if (this.criteria instanceof ExtCriteria) {
+                final ExtCriteria<?> query = (ExtCriteria<?>) this.criteria;
                 if (query.isOnlyFunc()) {
                     tmp = this.functions;
                 } else {

@@ -3,6 +3,7 @@ package com.github.mybatisx.core.criteria.query;
 import com.github.mybatisx.basic.utils.Objects;
 import com.github.mybatisx.core.criteria.CriteriaWrapper;
 import com.github.mybatisx.core.criteria.ExtCriteria;
+import com.github.mybatisx.core.support.func.Function;
 import com.github.mybatisx.executor.resultset.EmbedResult;
 import com.github.mybatisx.plugin.paging.RangeFetch;
 import com.github.mybatisx.support.constant.Join;
@@ -59,6 +60,13 @@ public interface QueryWrapper<T, C extends QueryWrapper<T, C>> extends CriteriaW
      * @return {@code this}
      */
     C onlyFunc(final boolean only);
+
+    /**
+     * 获取聚合函数
+     * @param alias 聚合函数别名
+     * @return {@link Function}
+     */
+    Function getFunction(final String alias);
 
     /**
      * 设置使用表别名
