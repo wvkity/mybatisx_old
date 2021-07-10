@@ -25,13 +25,37 @@ import com.github.mybatisx.support.fragment.Fragment;
  */
 public enum MultiComparator implements Fragment {
 
+    /**
+     * 小于或大于
+     */
     LT_OR_GT(":@ < ?0 OR :@ > ?1"),
+    /**
+     * 小于等于或大于
+     */
     LE_OR_GT(":@ <= ?0 OR :@ > ?1"),
+    /**
+     * 小于或大于等于
+     */
     LT_OR_GE(":@ < ?0 OR :@ >= ?1"),
+    /**
+     * 小于等于或大于等于
+     */
     LE_OR_GE(":@ <= ? OR :@ >= ?1"),
+    /**
+     * 大于且小于
+     */
     GT_AND_LT(":@ > ?0 AND :@ < ?1"),
+    /**
+     * 大于且小于等于
+     */
     GT_AND_LE(":@ > ?0 AND :@ <= ?1"),
+    /**
+     * 大于等于且小于
+     */
     GE_AND_LT(":@ >= ?0 AND :@ < ?1"),
+    /**
+     * 大于等于且小于等于
+     */
     GE_AND_LE(":@ >= ?0 AND :@ <= ?1");
 
     private final String symbol;

@@ -56,6 +56,16 @@ public interface ParameterConverter extends Converter<Object, String> {
      * @param args     参数列表
      * @return 占位符参数列表
      */
+    default List<String> converts(final String template, final Object... args) {
+        return this.converts(template, Objects.asList(args));
+    }
+
+    /**
+     * 参数值转占位符参数
+     * @param template 模板
+     * @param args     参数列表
+     * @return 占位符参数列表
+     */
     List<String> converts(final String template, final Iterable<?> args);
 
     /**

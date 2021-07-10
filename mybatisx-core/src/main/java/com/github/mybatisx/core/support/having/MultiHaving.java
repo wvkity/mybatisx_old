@@ -36,27 +36,27 @@ public class MultiHaving extends AbstractHaving {
     /**
      * 参数1
      */
-    private final String first;
+    private final Object first;
     /**
      * 参数2
      */
-    private final String last;
+    private final Object last;
 
-    public MultiHaving(Function function, String first, String last) {
+    public MultiHaving(Function function, Object first, Object last) {
         this.function = function;
         this.first = first;
         this.last = last;
     }
 
-    public MultiHaving(Function function, Slot slot, String first, String last) {
+    public MultiHaving(Function function, Slot slot, Object first, Object last) {
         this(null, function, slot, first, last);
     }
 
-    public MultiHaving(Function function, Slot slot, MultiComparator comparator, String first, String last) {
+    public MultiHaving(Function function, Slot slot, MultiComparator comparator, Object first, Object last) {
         this(null, function, slot, comparator, first, last);
     }
 
-    public MultiHaving(Criteria<?> criteria, Function function, Slot slot, String first, String last) {
+    public MultiHaving(Criteria<?> criteria, Function function, Slot slot, Object first, Object last) {
         this.criteria = criteria;
         this.function = function;
         this.slot = slot;
@@ -65,7 +65,7 @@ public class MultiHaving extends AbstractHaving {
     }
 
     public MultiHaving(Criteria<?> criteria, Function function, Slot slot,
-                       MultiComparator comparator, String first, String last) {
+                       MultiComparator comparator, Object first, Object last) {
         this.criteria = criteria;
         this.function = function;
         this.slot = slot;

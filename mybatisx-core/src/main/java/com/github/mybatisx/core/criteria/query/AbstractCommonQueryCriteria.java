@@ -28,6 +28,12 @@ import com.github.mybatisx.core.support.func.Min;
 import com.github.mybatisx.core.support.func.NativeFunction;
 import com.github.mybatisx.core.support.func.Sum;
 import com.github.mybatisx.core.support.group.Group;
+import com.github.mybatisx.core.support.having.Having;
+import com.github.mybatisx.core.support.having.MultiComparator;
+import com.github.mybatisx.core.support.having.MultiHaving;
+import com.github.mybatisx.core.support.having.NativeHaving;
+import com.github.mybatisx.core.support.having.SingleComparator;
+import com.github.mybatisx.core.support.having.SingleHaving;
 import com.github.mybatisx.core.support.order.FuncOrder;
 import com.github.mybatisx.core.support.order.NativeOrder;
 import com.github.mybatisx.core.support.order.Order;
@@ -36,7 +42,9 @@ import com.github.mybatisx.core.support.select.NativeSelection;
 import com.github.mybatisx.core.support.select.Selection;
 import com.github.mybatisx.core.support.select.StandardSelection;
 import com.github.mybatisx.support.basic.Matched;
+import com.github.mybatisx.support.constant.Slot;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -334,8 +342,18 @@ public abstract class AbstractCommonQueryCriteria<T, C extends CommonQueryCriter
     // region Order by methods
 
     @Override
+    public C funcAsc(String funcAlias) {
+        return this.order(FuncOrder.asc(this.getFunction(funcAlias)));
+    }
+
+    @Override
     public C funcAsc(List<String> funcAliases) {
         return this.order(FuncOrder.asc(this.genFunctions(funcAliases)));
+    }
+
+    @Override
+    public C funcDesc(String funcAlias) {
+        return this.order(FuncOrder.desc(this.getFunction(funcAlias)));
     }
 
     @Override
@@ -360,6 +378,86 @@ public abstract class AbstractCommonQueryCriteria<T, C extends CommonQueryCriter
     @Override
     public C order(List<Order> orders) {
         this.fragmentManager.orderBy(orders);
+        return this.self();
+    }
+
+    // endregion
+
+    // region Having methods
+
+    @Override
+    public C having(Slot slot, String funcAlias, SingleComparator comparator, Object value) {
+        return this.having(slot, this.getFunction(funcAlias), comparator, value);
+    }
+
+    @Override
+    public C having(Slot slot, Function function, SingleComparator comparator, Object value) {
+        if (Objects.nonNull(function)) {
+            this.having(new SingleHaving(this, function, slot, comparator,
+                this.parameterConverter.convert(DEF_PARAMETER_PLACEHOLDER_SAFE, value)));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C having(Slot slot, String funcAlias, MultiComparator comparator, Object first, Object last) {
+        return this.having(slot, this.getFunction(funcAlias), comparator, first, last);
+    }
+
+    @Override
+    public C having(Slot slot, Function function, MultiComparator comparator, Object first, Object last) {
+        if (Objects.nonNull(function)) {
+            this.having(new MultiHaving(this, function, slot, comparator,
+                this.parameterConverter.convert(DEF_PARAMETER_PLACEHOLDER_SAFE, first),
+                this.parameterConverter.convert(DEF_PARAMETER_PLACEHOLDER_SAFE, last)));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C nativeHaving(String havingBody) {
+        if (Objects.isNotBlank(havingBody)) {
+            this.having(new NativeHaving(havingBody));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C nativeHaving(String havingBody, Object value) {
+        if (Objects.isNotBlank(havingBody)) {
+            this.having(new NativeHaving(havingBody, this.parameterConverter.convert(DEF_PARAMETER_PLACEHOLDER_SAFE,
+                value)));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C nativeHaving(String havingBody, List<Object> args) {
+        if (Objects.isNotBlank(havingBody)) {
+            this.having(new NativeHaving(havingBody, this.parameterConverter.converts(DEF_PARAMETER_PLACEHOLDER_SAFE,
+                args)));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C nativeHaving(String havingBody, Map<String, Object> args) {
+        if (Objects.isNotBlank(havingBody)) {
+            this.having(new NativeHaving(havingBody, this.parameterConverter.converts(DEF_PARAMETER_PLACEHOLDER_SAFE,
+                args)));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C having(Having having) {
+        this.fragmentManager.having(having);
+        return this.self();
+    }
+
+    @Override
+    public C having(Collection<Having> havingList) {
+        this.fragmentManager.having(havingList);
         return this.self();
     }
 

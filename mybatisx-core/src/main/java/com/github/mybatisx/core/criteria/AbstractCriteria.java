@@ -60,6 +60,33 @@ public abstract class AbstractCriteria<T, C extends CriteriaWrapper<T, C>> exten
     }
 
     /**
+     * 并行
+     * <pre>{@code
+     *     // Example:
+     *     final LambdaQuery<Exam> query = LambdaQuery.from(Exam.class)
+     *          .select()
+     *          .group("studentId", "period", "subjectId", "grade");
+     *     query.having(new Sum(query, "SCORE", null), SingleComparator.GT, 1008);
+     *
+     *     // Parallel example:
+     *     final LambdaQuery<Exam> query = LambdaQuery.from(Exam.class)
+     *          .select()
+     *          .group("studentId", "period", "subjectId", "grade")
+     *          .parallel(it -> it.having(new Sum(it, "SCORE", null), SingleComparator.GT, 1008));
+     *
+     *     }
+     * </pre>
+     * @param action {@link Consumer}
+     * @return {@code this}
+     */
+    public C parallel(final Consumer<C> action) {
+        if (Objects.nonNull(action)) {
+            action.accept(this.context);
+        }
+        return this.self();
+    }
+
+    /**
      * {@code Slot.AND}
      * @return {@code this}
      */
@@ -105,14 +132,6 @@ public abstract class AbstractCriteria<T, C extends CriteriaWrapper<T, C>> exten
     // endregion
 
     // region Add condition methods
-
-    @Override
-    public C where(Consumer<Criteria<T>> action) {
-        if (Objects.nonNull(action)) {
-            action.accept(this);
-        }
-        return this.self();
-    }
 
     @Override
     public C where(Expression<?> expression) {

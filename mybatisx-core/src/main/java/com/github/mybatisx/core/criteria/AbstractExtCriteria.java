@@ -89,6 +89,10 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
      */
     protected static final String DEF_PARAMETER_VALUE_MAPPING = "%s.parameterValueMapping.%s";
     /**
+     * #{}参数模板
+     */
+    protected static final String DEF_PARAMETER_PLACEHOLDER_SAFE = "#{{0}}";
+    /**
      * {@link Criteria}默认参数名
      */
     protected static final String DEF_PARAMETER_ALIAS = Constants.PARAM_CRITERIA;

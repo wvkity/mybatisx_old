@@ -1,11 +1,7 @@
 package com.github.mybatisx.core.criteria.query;
 
 import com.github.mybatisx.basic.utils.Objects;
-import com.github.mybatisx.core.support.func.Function;
-import com.github.mybatisx.core.support.group.Group;
 import com.github.mybatisx.core.support.group.StandardGroup;
-import com.github.mybatisx.core.support.order.FuncOrder;
-import com.github.mybatisx.core.support.order.Order;
 import com.github.mybatisx.core.support.order.StandardOrder;
 
 import java.util.Collection;
@@ -20,7 +16,7 @@ import java.util.List;
  * @since 1.0.0
  */
 public interface CommonQueryWrapper<T, C extends CommonQueryWrapper<T, C>> extends QueryWrapper<T, C>,
-    CommonSelect<T, C>, CommonFunctionSelect<T, C> {
+    CommonSelect<T, C>, CommonFunctionSelect<T, C>, MixinWrapper<T, C>, HavingWrapper<T, C> {
 
     // region Group by methods
 
@@ -88,28 +84,6 @@ public interface CommonQueryWrapper<T, C extends CommonQueryWrapper<T, C>> exten
     default C colGroupWithAlias(final String tabAlias, final Collection<String> columns) {
         return this.group(StandardGroup.groupWithAlias(tabAlias, columns));
     }
-
-    /**
-     * 所有查询列分组
-     * @return {@code this}
-     */
-    default C group() {
-        return this.group(true);
-    }
-
-    /**
-     * 是否所有查询列分组
-     * @param all 是否所有
-     * @return {@code this}
-     */
-    C group(final boolean all);
-
-    /**
-     * 分组
-     * @param group {@link Group}
-     * @return {@code this}
-     */
-    C group(final Group group);
 
     // endregion
 
@@ -181,40 +155,6 @@ public interface CommonQueryWrapper<T, C extends CommonQueryWrapper<T, C>> exten
     }
 
     /**
-     * 升序
-     * @param funcAlias 聚合函数别名
-     * @return {@code this}
-     */
-    default C funcAsc(final String funcAlias) {
-        return this.funcAsc(this.getFunction(funcAlias));
-    }
-
-    /**
-     * 升序
-     * @param funcAliases 聚合函数别名列表
-     * @return {@code this}
-     */
-    default C funcAsc(final String... funcAliases) {
-        return this.funcAsc(Objects.asList(funcAliases));
-    }
-
-    /**
-     * 升序
-     * @param funcAliases 聚合函数别名列表
-     * @return {@code this}
-     */
-    C funcAsc(final List<String> funcAliases);
-
-    /**
-     * 升序
-     * @param function {@link Function}
-     * @return {@code this}
-     */
-    default C funcAsc(final Function function) {
-        return this.order(FuncOrder.asc(function));
-    }
-
-    /**
      * 降序
      * @param column 字段名
      * @return {@code this}
@@ -278,61 +218,6 @@ public interface CommonQueryWrapper<T, C extends CommonQueryWrapper<T, C>> exten
     default C colDescWithAlias(final String tabAlias, final List<String> columns) {
         return this.order(StandardOrder.descWithAlias(tabAlias, columns));
     }
-
-    /**
-     * 降序
-     * @param funcAlias 聚合函数别名
-     * @return {@code this}
-     */
-    default C funcDesc(final String funcAlias) {
-        return this.funcDesc(this.getFunction(funcAlias));
-    }
-
-    /**
-     * 降序
-     * @param funcAliases 聚合函数别名列表
-     * @return {@code this}
-     */
-    default C funcDesc(final String... funcAliases) {
-        return this.funcDesc(Objects.asList(funcAliases));
-    }
-
-    /**
-     * 降序
-     * @param funcAliases 聚合函数别名列表
-     * @return {@code this}
-     */
-    C funcDesc(final List<String> funcAliases);
-
-    /**
-     * 降序
-     * @param function {@link Function}
-     * @return {@code this}
-     */
-    default C funcDesc(final Function function) {
-        return this.order(FuncOrder.asc(function));
-    }
-
-    /**
-     * 排序(纯SQL)
-     * @param orderBy 排序语句
-     * @return {@link C}
-     */
-    C nativeOrder(final String orderBy);
-
-    /**
-     * 排序
-     * @param order {@link Order}
-     * @return {@code this}
-     */
-    C order(final Order order);
-
-    /**
-     * 排序
-     * @param orders {@link Order}列表
-     * @return {@code this}
-     */
-    C order(final List<Order> orders);
 
     // endregion
 

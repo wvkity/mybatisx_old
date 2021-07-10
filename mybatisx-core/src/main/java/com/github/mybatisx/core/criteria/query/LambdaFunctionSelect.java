@@ -1,7 +1,6 @@
 package com.github.mybatisx.core.criteria.query;
 
 import com.github.mybatisx.core.property.Property;
-import com.github.mybatisx.core.support.func.Function;
 
 /**
  * 聚合函数查询列接口(支持lambda语法)
@@ -14,21 +13,6 @@ import com.github.mybatisx.core.support.func.Function;
 interface LambdaFunctionSelect<T, C extends LambdaFunctionSelect<T, C>> {
 
     // region Count function methods
-
-    /**
-     * {@code Count}聚合函数
-     * @return {@code this}
-     */
-    default C count() {
-        return this.count(null);
-    }
-
-    /**
-     * {@code Count}聚合函数
-     * @param alias 别名
-     * @return {@code this}
-     */
-    C count(final String alias);
 
     /**
      * {@code Count}聚合函数
@@ -557,29 +541,5 @@ interface LambdaFunctionSelect<T, C extends LambdaFunctionSelect<T, C>> {
     C func(final String property, final String aliasPrefix, final Integer scale, final boolean distinct);
 
     // endregion
-
-    /**
-     * 纯SQL聚合函数
-     * @param funcBody 聚合函数主体部分
-     * @return {@link C}
-     */
-    default C nativeFunc(final String funcBody) {
-        return this.nativeFunc(funcBody, null);
-    }
-
-    /**
-     * 纯SQL聚合函数
-     * @param funcBody 聚合函数主体部分
-     * @param alias    别名
-     * @return {@link C}
-     */
-    C nativeFunc(final String funcBody, final String alias);
-
-    /**
-     * 添加聚合函数
-     * @param function 聚合函数
-     * @return {@code this}
-     */
-    C function(final Function function);
 
 }

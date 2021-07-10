@@ -8,7 +8,6 @@ import com.github.mybatisx.support.expr.Expression;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * 条件包装接口
@@ -95,13 +94,6 @@ public interface ExtCriteria<T> extends Criteria<T> {
      * @return {@link PropertyConverter}
      */
     PropertyConverter getConverter();
-
-    /**
-     * 添加{@link Expression}
-     * @param action {@link Consumer}
-     * @return {@link Criteria}
-     */
-    ExtCriteria<T> where(final Consumer<Criteria<T>> action);
 
     /**
      * 添加{@link Expression}

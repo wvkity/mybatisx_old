@@ -23,5 +23,13 @@ package com.github.mybatisx.core.support.order;
  */
 public enum NullOrdering {
 
-    FIRST, LAST
+    /**
+     * first
+     */
+    FIRST,
+
+    /**
+     * last
+     */
+    LAST
 }

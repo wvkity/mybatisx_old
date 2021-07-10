@@ -36,29 +36,29 @@ public class SingleHaving extends AbstractHaving {
     /**
      * 参数
      */
-    private final String arg;
+    private final Object arg;
 
-    public SingleHaving(Function function, String arg) {
+    public SingleHaving(Function function, Object arg) {
         this.function = function;
         this.arg = arg;
     }
 
-    public SingleHaving(Function function, Slot slot, String arg) {
+    public SingleHaving(Function function, Slot slot, Object arg) {
         this.function = function;
         this.slot = slot;
         this.arg = arg;
     }
 
-    public SingleHaving(Function function, Slot slot, SingleComparator comparator, String arg) {
+    public SingleHaving(Function function, Slot slot, SingleComparator comparator, Object arg) {
         this(null, function, slot, comparator, arg);
     }
 
-    public SingleHaving(Criteria<?> criteria, Function function, Slot slot, String arg) {
+    public SingleHaving(Criteria<?> criteria, Function function, Slot slot, Object arg) {
         this(criteria, function, slot, SingleComparator.EQ, arg);
     }
 
     public SingleHaving(Criteria<?> criteria, Function function, Slot slot,
-                        SingleComparator comparator, String arg) {
+                        SingleComparator comparator, Object arg) {
         this.criteria = criteria;
         this.function = function;
         this.slot = slot;

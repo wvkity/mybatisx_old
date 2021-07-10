@@ -24,7 +24,30 @@ import com.github.mybatisx.support.fragment.Fragment;
  * @since 1.0.0
  */
 public enum SingleComparator implements Fragment {
-    EQ("="), NE("<>"), LT("<"), LE("<="), GT(">"), GE(">=");
+    /**
+     * 等于
+     */
+    EQ("="),
+    /**
+     * 不等于
+     */
+    NE("<>"),
+    /**
+     * 小于
+     */
+    LT("<"),
+    /**
+     * 小于等于
+     */
+    LE("<="),
+    /**
+     * 大于
+     */
+    GT(">"),
+    /**
+     * 大于等于
+     */
+    GE(">=");
 
     private final String symbol;
 
@@ -37,11 +60,4 @@ public enum SingleComparator implements Fragment {
         return this.symbol;
     }
 
-    /**
-     * 是否为多个值
-     * @return boolean
-     */
-    public boolean isMulti() {
-        return this.symbol.contains(":@");
-    }
 }

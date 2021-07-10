@@ -2,10 +2,6 @@ package com.github.mybatisx.core.criteria.query;
 
 import com.github.mybatisx.basic.utils.Objects;
 import com.github.mybatisx.core.property.Property;
-import com.github.mybatisx.core.support.func.Function;
-import com.github.mybatisx.core.support.group.Group;
-import com.github.mybatisx.core.support.order.FuncOrder;
-import com.github.mybatisx.core.support.order.Order;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,7 +15,7 @@ import java.util.List;
  * @since 1.0.0
  */
 public interface LambdaQueryWrapper<T, C extends LambdaQueryWrapper<T, C>> extends QueryWrapper<T, C>,
-    LambdaSelect<T, C>, LambdaFunctionSelect<T, C> {
+    LambdaSelect<T, C>, LambdaFunctionSelect<T, C>, MixinWrapper<T, C>, HavingWrapper<T, C> {
 
     /**
      * 设置map结果中的key值
@@ -61,28 +57,6 @@ public interface LambdaQueryWrapper<T, C extends LambdaQueryWrapper<T, C>> exten
      */
     C group(final Collection<String> properties);
 
-    /**
-     * 所有查询列分组
-     * @return {@code this}
-     */
-    default C group() {
-        return this.group(true);
-    }
-
-    /**
-     * 是否所有查询列分组
-     * @param all 是否所有
-     * @return {@code this}
-     */
-    C group(final boolean all);
-
-    /**
-     * 分组
-     * @param group {@link Group}
-     * @return {@code this}
-     */
-    C group(final Group group);
-
     // endregion
 
     // region Order by methods
@@ -118,40 +92,6 @@ public interface LambdaQueryWrapper<T, C extends LambdaQueryWrapper<T, C>> exten
     C asc(final List<String> properties);
 
     /**
-     * 升序
-     * @param funcAlias 聚合函数别名
-     * @return {@code this}
-     */
-    default C funcAsc(final String funcAlias) {
-        return this.funcAsc(this.getFunction(funcAlias));
-    }
-
-    /**
-     * 升序
-     * @param funcAliases 聚合函数别名列表
-     * @return {@code this}
-     */
-    default C funcAsc(final String... funcAliases) {
-        return this.funcAsc(Objects.asList(funcAliases));
-    }
-
-    /**
-     * 升序
-     * @param funcAliases 聚合函数别名列表
-     * @return {@code this}
-     */
-    C funcAsc(final List<String> funcAliases);
-
-    /**
-     * 升序
-     * @param function {@link Function}
-     * @return {@code this}
-     */
-    default C funcAsc(final Function function) {
-        return this.order(FuncOrder.asc(function));
-    }
-
-    /**
      * 降序
      * @param property Lambda属性
      * @return {@code this}
@@ -180,61 +120,6 @@ public interface LambdaQueryWrapper<T, C extends LambdaQueryWrapper<T, C>> exten
      * @return {@code this}
      */
     C desc(final List<String> properties);
-
-    /**
-     * 降序
-     * @param funcAlias 聚合函数别名
-     * @return {@code this}
-     */
-    default C funcDesc(final String funcAlias) {
-        return this.funcDesc(this.getFunction(funcAlias));
-    }
-
-    /**
-     * 降序
-     * @param funcAliases 聚合函数别名列表
-     * @return {@code this}
-     */
-    default C funcDesc(final String... funcAliases) {
-        return this.funcDesc(Objects.asList(funcAliases));
-    }
-
-    /**
-     * 降序
-     * @param funcAliases 聚合函数别名列表
-     * @return {@code this}
-     */
-    C funcDesc(final List<String> funcAliases);
-
-    /**
-     * 降序
-     * @param function {@link Function}
-     * @return {@code this}
-     */
-    default C funcDesc(final Function function) {
-        return this.order(FuncOrder.desc(function));
-    }
-
-    /**
-     * 排序(纯SQL)
-     * @param orderBy 排序语句
-     * @return {@link C}
-     */
-    C nativeOrder(final String orderBy);
-
-    /**
-     * 排序
-     * @param order {@link Order}
-     * @return {@code this}
-     */
-    C order(final Order order);
-
-    /**
-     * 排序
-     * @param orders {@link Order}列表
-     * @return {@code this}
-     */
-    C order(final List<Order> orders);
 
     // endregion
 

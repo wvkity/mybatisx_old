@@ -35,7 +35,7 @@ public class NativeHaving implements Having {
     /**
      * 聚合函数体
      */
-    private final String funcBody;
+    private final String havingBody;
     /**
      * 单个值
      */
@@ -49,25 +49,25 @@ public class NativeHaving implements Having {
      */
     private final Map<String, String> map;
 
-    public NativeHaving(String funcBody) {
-        this(funcBody, null, null, null);
+    public NativeHaving(String havingBody) {
+        this(havingBody, null, null, null);
     }
 
-    public NativeHaving(String funcBody, String arg) {
-        this(funcBody, arg, null, null);
+    public NativeHaving(String havingBody, String arg) {
+        this(havingBody, arg, null, null);
     }
 
-    public NativeHaving(String funcBody, List<String> list) {
-        this(funcBody, null, list, null);
+    public NativeHaving(String havingBody, List<String> list) {
+        this(havingBody, null, list, null);
     }
 
-    public NativeHaving(String funcBody, Map<String, String> map) {
-        this(funcBody, null, null, map);
+    public NativeHaving(String havingBody, Map<String, String> map) {
+        this(havingBody, null, null, map);
     }
 
-    public NativeHaving(String funcBody, String arg, List<String> list, Map<String, String> map) {
+    public NativeHaving(String havingBody, String arg, List<String> list, Map<String, String> map) {
         this.arg = arg;
-        this.funcBody = funcBody;
+        this.havingBody = havingBody;
         this.list = list;
         this.map = map;
     }
@@ -84,17 +84,17 @@ public class NativeHaving implements Having {
 
     @Override
     public String getSegment() {
-        if (Objects.isNotBlank(this.funcBody)) {
+        if (Objects.isNotBlank(this.havingBody)) {
             if (Objects.isNotEmpty(this.map)) {
-                return Placeholders.format(this.funcBody, this.map);
+                return Placeholders.format(this.havingBody, this.map);
             }
             if (Objects.isNotEmpty(this.list)) {
-                return Placeholders.format(this.funcBody, this.list);
+                return Placeholders.format(this.havingBody, this.list);
             }
             if (Objects.isNotBlank(this.arg)) {
-                return Placeholders.format(this.funcBody, this.arg);
+                return Placeholders.format(this.havingBody, this.arg);
             }
-            return this.funcBody;
+            return this.havingBody;
         }
         return null;
     }

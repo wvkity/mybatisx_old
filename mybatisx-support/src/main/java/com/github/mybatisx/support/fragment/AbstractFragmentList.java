@@ -72,7 +72,7 @@ public abstract class AbstractFragmentList<E> implements FragmentCollection<E> {
 
     @Override
     public void addAll(final Collection<E> fragments) {
-        if (Objects.isNotEmpty(fragments)) {
+        if (Objects.isNotNullElement(fragments)) {
             this.fragments.addAll(fragments.stream().filter(Objects::nonNull).collect(Collectors.toList()));
         }
     }
