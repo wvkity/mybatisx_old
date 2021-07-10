@@ -28,7 +28,7 @@ import com.github.mybatisx.support.constant.Slot;
  * @since 1.0.0
  */
 public interface LambdaCriteriaWrapper<T, C extends LambdaCriteriaWrapper<T, C>> extends CriteriaWrapper<T, C>,
-    LambdaCompare<T, C>, LambdaRange<T, C>, LambdaLike<T, C>, LambdaTemplate<T, C>, OtherConditionWrapper<T, C>,
+    LambdaCompare<T, C>, LambdaRange<T, C>, LambdaLike<T, C>, LambdaTemplate<T, C>, OtherCondition<T, C>,
     QueryCriteriaBuilder<T, C> {
 
     /**

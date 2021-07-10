@@ -27,7 +27,7 @@ import com.github.mybatisx.support.constant.Slot;
  * @since 1.0.0
  */
 public interface CommonCriteriaWrapper<T, C extends CommonCriteriaWrapper<T, C>> extends CriteriaWrapper<T, C>,
-    CommonCompare<T, C>, CommonRange<T, C>, CommonLike<T, C>, CommonTemplate<T, C>, OtherConditionWrapper<T, C>,
+    CommonCompare<T, C>, CommonRange<T, C>, CommonLike<T, C>, CommonTemplate<T, C>, OtherCondition<T, C>,
     QueryCriteriaBuilder<T, C> {
 
     /**

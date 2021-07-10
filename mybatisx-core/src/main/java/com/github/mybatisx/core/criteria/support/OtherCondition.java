@@ -28,7 +28,7 @@ import com.github.mybatisx.support.constant.Slot;
  * @created 2021-07-10
  * @since 1.0.0
  */
-interface OtherConditionWrapper<T, C extends OtherConditionWrapper<T, C>> extends SlotSymbol<T, C> {
+interface OtherCondition<T, C extends OtherCondition<T, C>> extends SlotSymbol<T, C> {
 
     /**
      * exists
