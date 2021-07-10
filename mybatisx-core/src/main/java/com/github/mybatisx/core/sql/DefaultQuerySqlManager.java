@@ -17,10 +17,11 @@ package com.github.mybatisx.core.sql;
 
 import com.github.mybatisx.basic.constant.Constants;
 import com.github.mybatisx.basic.utils.Objects;
-import com.github.mybatisx.core.support.manager.StandardFragmentManager;
-import com.github.mybatisx.support.criteria.Criteria;
 import com.github.mybatisx.core.criteria.AbstractExtCriteria;
 import com.github.mybatisx.core.criteria.ExtCriteria;
+import com.github.mybatisx.core.support.manager.StandardFragmentManager;
+import com.github.mybatisx.core.utils.RegexMatcher;
+import com.github.mybatisx.support.criteria.Criteria;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -132,8 +133,8 @@ public class DefaultQuerySqlManager extends AbstractSqlManager {
                     final StringBuilder csb = new StringBuilder(80);
                     csb.append(aec.getJoin().getSegment().trim()).append(Constants.SPACE);
                     csb.append(aec.getTableName().trim()).append(" ON ");
-                    if (DEF_PATTERN_AND_OR.matcher(fcc).matches()) {
-                        csb.append(fcc.trim().replaceFirst(DEF_REGEX_AND_OR_STR, "$2"));
+                    if (RegexMatcher.startWithAndOr(fcc)) {
+                        csb.append(RegexMatcher.startWithAndOrRemove(fcc.trim()));
                     } else {
                         csb.append(fcc.trim());
                     }

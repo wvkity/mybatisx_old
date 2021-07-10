@@ -28,7 +28,8 @@ import com.github.mybatisx.support.constant.Slot;
  * @since 1.0.0
  */
 public interface LambdaCriteriaWrapper<T, C extends LambdaCriteriaWrapper<T, C>> extends CriteriaWrapper<T, C>,
-    LambdaCompare<T, C>, LambdaRange<T, C>, LambdaLike<T, C>, LambdaTemplate<T, C>, QueryCriteriaBuilder<T, C> {
+    LambdaCompare<T, C>, LambdaRange<T, C>, LambdaLike<T, C>, LambdaTemplate<T, C>, OtherConditionWrapper<T, C>,
+    QueryCriteriaBuilder<T, C> {
 
     /**
      * IS NULL
@@ -36,7 +37,7 @@ public interface LambdaCriteriaWrapper<T, C extends LambdaCriteriaWrapper<T, C>>
      * @return {@link C}
      */
     default C isNull(final Property<T, ?> property) {
-        return this.isNull(Slot.AND, property);
+        return this.isNull(this.getSlot(), property);
     }
 
     /**
@@ -53,7 +54,7 @@ public interface LambdaCriteriaWrapper<T, C extends LambdaCriteriaWrapper<T, C>>
      * @return {@link C}
      */
     default C isNull(final String property) {
-        return this.isNull(Slot.AND, property);
+        return this.isNull(this.getSlot(), property);
     }
 
     /**
@@ -70,7 +71,7 @@ public interface LambdaCriteriaWrapper<T, C extends LambdaCriteriaWrapper<T, C>>
      * @return {@link C}
      */
     default C notNull(final Property<T, ?> property) {
-        return this.notNull(Slot.AND, property);
+        return this.notNull(this.getSlot(), property);
     }
 
     /**
@@ -87,7 +88,7 @@ public interface LambdaCriteriaWrapper<T, C extends LambdaCriteriaWrapper<T, C>>
      * @return {@link C}
      */
     default C notNull(final String property) {
-        return this.notNull(Slot.AND, property);
+        return this.notNull(this.getSlot(), property);
     }
 
     /**

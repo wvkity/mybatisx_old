@@ -19,6 +19,7 @@ import com.github.mybatisx.basic.constant.Constants;
 import com.github.mybatisx.basic.metadata.Column;
 import com.github.mybatisx.basic.utils.Objects;
 import com.github.mybatisx.core.condition.Criterion;
+import com.github.mybatisx.core.condition.ExistsCondition;
 import com.github.mybatisx.core.condition.NestedCondition;
 import com.github.mybatisx.core.condition.SpecialCondition;
 import com.github.mybatisx.core.condition.StandardCondition;
@@ -29,6 +30,7 @@ import com.github.mybatisx.core.expr.AbstractInExpression;
 import com.github.mybatisx.core.expr.AbstractLikeExpression;
 import com.github.mybatisx.core.expr.AbstractNullableExpression;
 import com.github.mybatisx.core.expr.AbstractTemplateExpression;
+import com.github.mybatisx.core.expr.ExistsExpression;
 import com.github.mybatisx.core.expr.NativeExpression;
 import com.github.mybatisx.core.expr.SpecialExpression;
 import com.github.mybatisx.core.expr.StandardNesting;
@@ -269,7 +271,8 @@ public class DefaultConditionConverter implements Converter<Expression<?>, Crite
      * @return {@link Criterion}
      */
     protected Criterion existsExprConvert(final Expression<?> expr) {
-        return null;
+        final ExistsExpression exists = (ExistsExpression) expr;
+        return new ExistsCondition(exists.getCriteria(), exists.getSymbol(), exists.getSlot());
     }
 
     /**
@@ -357,6 +360,11 @@ public class DefaultConditionConverter implements Converter<Expression<?>, Crite
         return null;
     }
 
+    /**
+     * 查询表达式转条件
+     * @param expr {@link Expression}
+     * @return {@link Criterion}
+     */
     protected Criterion subQueryExprConvert(final Expression<?> expr) {
         final SubQueryExpression it = (SubQueryExpression) expr;
         return new SubQueryCondition(it.getCriteria(), it.getAlias(), it.getColumn(), it.getSlot(), it.getSymbol(),
@@ -364,7 +372,7 @@ public class DefaultConditionConverter implements Converter<Expression<?>, Crite
     }
 
     /**
-     * 其他条件表达式转换
+     * 其他条件表达式转条件
      * @param expr 条件表达式
      * @return {@link Criterion}
      */

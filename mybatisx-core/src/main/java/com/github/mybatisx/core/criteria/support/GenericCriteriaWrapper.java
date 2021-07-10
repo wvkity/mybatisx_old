@@ -24,5 +24,5 @@ package com.github.mybatisx.core.criteria.support;
  * @since 1.0.0
  */
 public interface GenericCriteriaWrapper<T, C extends GenericCriteriaWrapper<T, C>> extends CommonCriteriaWrapper<T, C>,
-    LambdaCriteriaWrapper<T, C> {
+    LambdaCriteriaWrapper<T, C>, OtherConditionWrapper<T, C> {
 }

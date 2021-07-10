@@ -19,6 +19,8 @@ import com.github.mybatisx.basic.metadata.Column;
 import com.github.mybatisx.basic.utils.Objects;
 import com.github.mybatisx.core.criteria.AbstractCriteria;
 import com.github.mybatisx.core.criteria.ExtCriteria;
+import com.github.mybatisx.core.expr.ExistsExpression;
+import com.github.mybatisx.core.expr.NativeExpression;
 import com.github.mybatisx.core.expr.SpecialExpression;
 import com.github.mybatisx.core.expr.StandardBetween;
 import com.github.mybatisx.core.expr.StandardEqual;
@@ -385,6 +387,34 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
     protected C ce(final Column cc, final ExtCriteria<?> otherCriteria, final Column oc) {
         if (Objects.nonNull(cc) && Objects.nonNull(oc)) {
             this.where(new SpecialExpression(this, cc.getColumn(), otherCriteria, oc.getColumn()));
+        }
+        return this.self();
+    }
+
+    // endregion
+
+    // region Other condition
+
+    @Override
+    public C exists(Slot slot, ExtCriteria<?> query) {
+        if (Objects.nonNull(query)) {
+            this.where(new ExistsExpression(query, slot));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C notExists(Slot slot, ExtCriteria<?> query) {
+        if (Objects.nonNull(query)) {
+            this.where(new ExistsExpression(query, true, slot));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C nativeCondition(Slot slot, String condition) {
+        if (Objects.isNotBlank(condition)) {
+            this.where(new NativeExpression(condition, slot));
         }
         return this.self();
     }

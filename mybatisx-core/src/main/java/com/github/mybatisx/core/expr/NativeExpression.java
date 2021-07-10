@@ -15,10 +15,12 @@
  */
 package com.github.mybatisx.core.expr;
 
+import com.github.mybatisx.basic.constant.Constants;
 import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.core.utils.RegexMatcher;
 import com.github.mybatisx.support.basic.Matched;
+import com.github.mybatisx.support.constant.Slot;
 import com.github.mybatisx.support.criteria.Criteria;
-import com.github.mybatisx.support.expr.Expression;
 
 /**
  * 纯SQL
@@ -40,8 +42,18 @@ public class NativeExpression extends AbstractExpression<String> {
         this.matched = Matched.IMMEDIATE;
     }
 
+    public NativeExpression(String criterion, final Slot slot) {
+        this.criterion = criterion;
+        this.matched = Matched.IMMEDIATE;
+        this.slot = slot;
+    }
+
     public String getCriterion() {
-        return criterion;
+        if (RegexMatcher.startWithAndOr(this.criterion)) {
+            return this.criterion;
+        }
+        return Objects.isNull(this.slot) ? Slot.AND.getSegment() :
+            this.slot.getSegment() + Constants.SPACE + this.criterion;
     }
 
     public static NativeExpression of(final String criterion) {

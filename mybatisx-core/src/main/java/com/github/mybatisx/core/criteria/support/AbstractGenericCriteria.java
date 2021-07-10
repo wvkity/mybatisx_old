@@ -18,6 +18,7 @@ package com.github.mybatisx.core.criteria.support;
 import com.github.mybatisx.basic.metadata.Column;
 import com.github.mybatisx.basic.utils.Objects;
 import com.github.mybatisx.core.criteria.ExtCriteria;
+import com.github.mybatisx.core.expr.ExistsExpression;
 import com.github.mybatisx.core.expr.ImmediateBetween;
 import com.github.mybatisx.core.expr.ImmediateEqual;
 import com.github.mybatisx.core.expr.ImmediateGreaterThan;
@@ -233,9 +234,25 @@ public abstract class AbstractGenericCriteria<T, C extends GenericCriteriaWrappe
     // region Other condition
 
     @Override
-    public C nativeCondition(String condition) {
+    public C exists(Slot slot, ExtCriteria<?> query) {
+        if (Objects.nonNull(query)) {
+            this.where(new ExistsExpression(query, slot));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C notExists(Slot slot, ExtCriteria<?> query) {
+        if (Objects.nonNull(query)) {
+            this.where(new ExistsExpression(query, true, slot));
+        }
+        return this.self();
+    }
+
+    @Override
+    public C nativeCondition(Slot slot, String condition) {
         if (Objects.isNotBlank(condition)) {
-            this.where(new NativeExpression(condition));
+            this.where(new NativeExpression(condition, slot));
         }
         return this.self();
     }

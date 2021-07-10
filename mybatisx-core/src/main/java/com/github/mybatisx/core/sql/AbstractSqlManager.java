@@ -18,9 +18,10 @@ package com.github.mybatisx.core.sql;
 import com.github.mybatisx.basic.constant.Constants;
 import com.github.mybatisx.basic.exception.MyBatisException;
 import com.github.mybatisx.basic.utils.Objects;
-import com.github.mybatisx.core.support.manager.StandardFragmentManager;
-import com.github.mybatisx.support.criteria.Criteria;
 import com.github.mybatisx.core.criteria.ExtCriteria;
+import com.github.mybatisx.core.support.manager.StandardFragmentManager;
+import com.github.mybatisx.core.utils.RegexMatcher;
+import com.github.mybatisx.support.criteria.Criteria;
 
 import java.util.regex.Pattern;
 
@@ -37,11 +38,11 @@ public abstract class AbstractSqlManager implements SqlManager {
     /**
      * AND、OR运算符正则字符串
      */
-    protected static final String DEF_REGEX_AND_OR_STR = "^(?i)(\\s*and\\s+|\\s*or\\s+)(.*)";
+    protected static final String DEF_REGEX_AND_OR_STR = RegexMatcher.REGEX_AND_OR_STR;
     /**
      * AND、OR运算符正则
      */
-    protected static final Pattern DEF_PATTERN_AND_OR = Pattern.compile(DEF_REGEX_AND_OR_STR, Pattern.CASE_INSENSITIVE);
+    protected static final Pattern DEF_PATTERN_AND_OR = RegexMatcher.PATTERN_AND_OR;
 
     public AbstractSqlManager(ExtCriteria<?> criteria, StandardFragmentManager<? extends Criteria<?>> fragmentManager) {
         this.criteria = criteria;
@@ -60,8 +61,9 @@ public abstract class AbstractSqlManager implements SqlManager {
         final String condition = this.fragmentManager.getSegment(groupByReplacement);
         if (Objects.isNotBlank(condition)) {
             if (this.fragmentManager.hasCondition()) {
-                if (DEF_PATTERN_AND_OR.matcher(condition).matches()) {
-                    return (appendWhere ? "WHERE " : Constants.EMPTY) + condition.replaceFirst(DEF_REGEX_AND_OR_STR, "$2");
+                if (RegexMatcher.startWithAndOr(condition)) {
+                    return (appendWhere ? "WHERE " : Constants.EMPTY) +
+                        RegexMatcher.startWithAndOrRemove(condition.trim());
                 }
                 return (appendWhere ? "WHERE " : Constants.EMPTY) + condition;
             }
