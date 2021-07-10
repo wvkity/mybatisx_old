@@ -29,6 +29,7 @@ import com.github.mybatisx.core.expr.AbstractInExpression;
 import com.github.mybatisx.core.expr.AbstractLikeExpression;
 import com.github.mybatisx.core.expr.AbstractNullableExpression;
 import com.github.mybatisx.core.expr.AbstractTemplateExpression;
+import com.github.mybatisx.core.expr.NativeExpression;
 import com.github.mybatisx.core.expr.SpecialExpression;
 import com.github.mybatisx.core.expr.StandardNesting;
 import com.github.mybatisx.core.expr.SubQueryExpression;
@@ -78,6 +79,9 @@ public class DefaultConditionConverter implements Converter<Expression<?>, Crite
                     case STANDARD:
                         return this.standardExprConvert(source);
                     case IMMEDIATE:
+                        if (source instanceof NativeExpression) {
+                            return ((NativeExpression) source)::getCriterion;
+                        }
                         return this.immediateExprConvert(source);
                     case EXISTS:
                         return this.existsExprConvert(source);
