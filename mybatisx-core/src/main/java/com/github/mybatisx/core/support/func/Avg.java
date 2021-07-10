@@ -32,6 +32,7 @@ public class Avg extends AbstractFunction {
         this.criteria = criteria;
         this.column = column;
         this.alias = alias;
+        this.func = Func.AVG;
     }
 
     public Avg(Criteria<?> criteria, String column, String alias, boolean distinct) {

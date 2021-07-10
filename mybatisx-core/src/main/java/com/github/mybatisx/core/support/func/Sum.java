@@ -32,6 +32,7 @@ public class Sum extends AbstractFunction {
         this.criteria = criteria;
         this.column = column;
         this.alias = alias;
+        this.func = Func.SUM;
     }
 
     public Sum(Criteria<?> criteria, String column, String alias, boolean distinct) {
