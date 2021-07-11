@@ -41,10 +41,10 @@ public class SubQueryCondition implements Criterion {
     protected final String column;
     protected final Slot slot;
     protected final Symbol symbol;
-    protected final String query;
+    protected final Criteria<?> query;
 
     public SubQueryCondition(Criteria<?> criteria, String alias, String column, Slot slot, Symbol symbol,
-                             String query) {
+                             Criteria<?> query) {
         this.criteria = criteria;
         this.alias = alias;
         this.column = column;
@@ -64,20 +64,21 @@ public class SubQueryCondition implements Criterion {
     @Override
     public String getSegment() {
         final StringBuilder builder = new StringBuilder(145);
-        if (this.slot != null) {
-            builder.append(symbol.getSegment()).append(Constants.SPACE);
+        if (this.slot != null && this.slot != Slot.NONE) {
+            builder.append(this.slot.getSegment()).append(Constants.SPACE);
         }
         final String alias = this.getAlias();
         if (Objects.isNotBlank(alias)) {
             builder.append(alias).append(Constants.DOT);
         }
-        builder.append(column).append(Constants.SPACE).append(this.symbol.getSegment());
+        builder.append(this.column).append(Constants.SPACE).append(this.symbol.getSegment());
         builder.append(Constants.SPACE).append(Constants.BRACKET_OPEN);
-        if (DEF_REGEX_ORDER_BY.matcher(this.query).matches()) {
+        final String sql = this.query.getSegment();
+        if (DEF_REGEX_ORDER_BY.matcher(sql).matches()) {
             final SqlParser parser = new SqlParser();
-            builder.append(parser.smartRemoveOrderBy(this.query));
+            builder.append(parser.smartRemoveOrderBy(sql));
         } else {
-            builder.append(this.query);
+            builder.append(sql);
         }
         return builder.append(Constants.BRACKET_CLOSE).toString();
     }

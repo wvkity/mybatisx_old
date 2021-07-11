@@ -16,6 +16,7 @@
 package com.github.mybatisx.core.criteria.support;
 
 import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.core.criteria.ExtCriteria;
 import com.github.mybatisx.core.property.Property;
 import com.github.mybatisx.support.constant.Slot;
 
@@ -119,6 +120,44 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
      */
     C in(final Slot slot, final String property, final Collection<?> values);
 
+    /**
+     * IN
+     * @param property 属性
+     * @param query    {@link ExtCriteria}
+     * @return {@code this}
+     */
+    default C inq(final Property<T, ?> property, final ExtCriteria<?> query) {
+        return this.inq(this.getSlot(), property, query);
+    }
+
+    /**
+     * IN
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link ExtCriteria}
+     * @return {@code this}
+     */
+    C inq(final Slot slot, final Property<T, ?> property, final ExtCriteria<?> query);
+
+    /**
+     * IN
+     * @param property 属性
+     * @param query    {@link ExtCriteria}
+     * @return {@code this}
+     */
+    default C inq(final String property, final ExtCriteria<?> query) {
+        return this.inq(this.getSlot(), property, query);
+    }
+
+    /**
+     * IN
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link ExtCriteria}
+     * @return {@code this}
+     */
+    C inq(final Slot slot, final String property, final ExtCriteria<?> query);
+
     // endregion
 
     // region Not in condition
@@ -208,6 +247,44 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
      * @return {@code this}
      */
     C notIn(final Slot slot, final String property, final Collection<?> values);
+
+    /**
+     * NOT IN
+     * @param property 属性
+     * @param query    {@link ExtCriteria}
+     * @return {@code this}
+     */
+    default C notInq(final Property<T, ?> property, final ExtCriteria<?> query) {
+        return this.notInq(this.getSlot(), property, query);
+    }
+
+    /**
+     * NOT IN
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link ExtCriteria}
+     * @return {@code this}
+     */
+    C notInq(final Slot slot, final Property<T, ?> property, final ExtCriteria<?> query);
+
+    /**
+     * NOT IN
+     * @param property 属性
+     * @param query    {@link ExtCriteria}
+     * @return {@code this}
+     */
+    default C notInq(final String property, final ExtCriteria<?> query) {
+        return this.notInq(this.getSlot(), property, query);
+    }
+
+    /**
+     * NOT IN
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link ExtCriteria}
+     * @return {@code this}
+     */
+    C notInq(final Slot slot, final String property, final ExtCriteria<?> query);
 
     // endregion
 

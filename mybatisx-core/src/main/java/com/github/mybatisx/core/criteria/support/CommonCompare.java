@@ -54,6 +54,25 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> extends SlotSymbol<T, 
 
     /**
      * 等于
+     * @param column 字段名
+     * @param query  {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    default C colEqq(final String column, final ExtCriteria<?> query) {
+        return this.colEqq(this.getSlot(), column, query);
+    }
+
+    /**
+     * 等于
+     * @param slot   {@link Slot}
+     * @param column 字段名
+     * @param query  {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    C colEqq(final Slot slot, final String column, final ExtCriteria<?> query);
+
+    /**
+     * 等于
      * @param c1 字段1
      * @param v1 字段1对应值
      * @param c2 字段2
@@ -148,6 +167,25 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> extends SlotSymbol<T, 
      */
     C colNe(final Slot slot, final String column, final Object value);
 
+    /**
+     * 不等于
+     * @param column 字段名
+     * @param query  {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    default C colNeq(final String column, final ExtCriteria<?> query) {
+        return this.colNeq(this.getSlot(), column, query);
+    }
+
+    /**
+     * 不等于
+     * @param slot   {@link Slot}
+     * @param column 字段名
+     * @param query  {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    C colNeq(final Slot slot, final String column, final ExtCriteria<?> query);
+
     // endregion
 
     // region greater than condition
@@ -170,6 +208,25 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> extends SlotSymbol<T, 
      * @return {@code this}
      */
     C colGt(final Slot slot, final String column, final Object value);
+
+    /**
+     * 大于
+     * @param column 字段名
+     * @param query  {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    default C colGtq(final String column, final ExtCriteria<?> query) {
+        return this.colGtq(this.getSlot(), column, query);
+    }
+
+    /**
+     * 大于
+     * @param slot   {@link Slot}
+     * @param column 字段名
+     * @param query  {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    C colGtq(final Slot slot, final String column, final ExtCriteria<?> query);
 
     // endregion
 
@@ -194,6 +251,25 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> extends SlotSymbol<T, 
      */
     C colGe(final Slot slot, final String column, final Object value);
 
+    /**
+     * 大于或等于
+     * @param column 字段名
+     * @param query  {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    default C colGeq(final String column, final ExtCriteria<?> query) {
+        return this.colGeq(this.getSlot(), column, query);
+    }
+
+    /**
+     * 大于或等于
+     * @param slot   {@link Slot}
+     * @param column 字段名
+     * @param query  {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    C colGeq(final Slot slot, final String column, final ExtCriteria<?> query);
+
     // endregion
 
     // region Less than condition
@@ -217,6 +293,25 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> extends SlotSymbol<T, 
      */
     C colLt(final Slot slot, final String column, final Object value);
 
+    /**
+     * 小于
+     * @param column 字段名
+     * @param query  {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    default C colLtq(final String column, final ExtCriteria<?> query) {
+        return this.colLtq(this.getSlot(), column, query);
+    }
+
+    /**
+     * 小于
+     * @param slot   {@link Slot}
+     * @param column 字段名
+     * @param query  {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    C colLtq(final Slot slot, final String column, final ExtCriteria<?> query);
+
     // endregion
 
     // region Less than or equal to condition
@@ -239,6 +334,25 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> extends SlotSymbol<T, 
      * @return {@code this}
      */
     C colLe(final Slot slot, final String column, final Object value);
+
+    /**
+     * 小于或等于
+     * @param column 字段名
+     * @param query  {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    default C colLeq(final String column, final ExtCriteria<?> query) {
+        return this.colLeq(this.getSlot(), column, query);
+    }
+
+    /**
+     * 小于或等于
+     * @param slot   {@link Slot}
+     * @param column 字段名
+     * @param query  {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    C colLeq(final Slot slot, final String column, final ExtCriteria<?> query);
 
     // endregion
 

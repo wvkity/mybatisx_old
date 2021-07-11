@@ -50,7 +50,7 @@ public class SubQueryExpression extends AbstractExpression<String> {
         this.query = query;
         this.slot = slot;
         this.symbol = symbol;
-        this.matched = Matched.IMMEDIATE;
+        this.matched = Matched.QUERY;
     }
 
     public SubQueryExpression(String alias, String column, ExtCriteria<?> query) {
@@ -72,7 +72,7 @@ public class SubQueryExpression extends AbstractExpression<String> {
         this.query = query;
         this.slot = slot;
         this.symbol = symbol;
-        this.matched = Matched.IMMEDIATE;
+        this.matched = Matched.QUERY;
     }
 
     public ExtCriteria<?> getQuery() {

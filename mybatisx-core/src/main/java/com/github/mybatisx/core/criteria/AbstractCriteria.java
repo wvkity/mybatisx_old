@@ -21,7 +21,9 @@ import com.github.mybatisx.basic.utils.Objects;
 import com.github.mybatisx.core.condition.Criterion;
 import com.github.mybatisx.core.condition.NestedCondition;
 import com.github.mybatisx.core.expr.StandardNesting;
+import com.github.mybatisx.core.expr.SubQueryExpression;
 import com.github.mybatisx.support.constant.Slot;
+import com.github.mybatisx.support.constant.Symbol;
 import com.github.mybatisx.support.criteria.Criteria;
 import com.github.mybatisx.support.expr.Expression;
 import com.github.mybatisx.support.helper.TableHelper;
@@ -132,6 +134,39 @@ public abstract class AbstractCriteria<T, C extends CriteriaWrapper<T, C>> exten
     // endregion
 
     // region Add condition methods
+
+    /**
+     * 添加查询条件
+     * @param slot   {@link Slot}
+     * @param column {@link Column}
+     * @param query  {@link ExtCriteria}
+     * @param symbol {@link Symbol}
+     * @return {@code this}
+     */
+    protected C addSubCondition(final Slot slot, final Column column,
+                                final ExtCriteria<?> query, final Symbol symbol) {
+        if (Objects.nonNull(column)) {
+            this.addSubCondition(slot, column.getColumn(), query, symbol);
+        }
+        return this.self();
+    }
+
+    /**
+     * 添加查询条件
+     * @param slot   {@link Slot}
+     * @param column 字段名称
+     * @param query  {@link ExtCriteria}
+     * @param symbol {@link Symbol}
+     * @return {@code this}
+     */
+    protected C addSubCondition(final Slot slot, final String column,
+                                final ExtCriteria<?> query, final Symbol symbol) {
+        if (Objects.isNotBlank(column)) {
+            Objects.requireNonNull(query, "The query condition object cannot be null.");
+            this.where(new SubQueryExpression(this, column, query, slot, symbol));
+        }
+        return this.self();
+    }
 
     @Override
     public C where(Expression<?> expression) {

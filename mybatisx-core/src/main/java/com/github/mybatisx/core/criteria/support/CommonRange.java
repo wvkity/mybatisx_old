@@ -16,6 +16,7 @@
 package com.github.mybatisx.core.criteria.support;
 
 import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.core.criteria.ExtCriteria;
 import com.github.mybatisx.support.constant.Slot;
 
 import java.util.Collection;
@@ -72,6 +73,25 @@ interface CommonRange<T, C extends CommonRange<T, C>> extends SlotSymbol<T, C> {
      */
     C colIn(final Slot slot, final String column, final Collection<?> values);
 
+    /**
+     * IN
+     * @param column 字段
+     * @param query  {@link ExtCriteria}
+     * @return {@code this}
+     */
+    default C colInq(final String column, final ExtCriteria<?> query) {
+        return this.colInq(this.getSlot(), column, query);
+    }
+
+    /**
+     * IN
+     * @param slot   {@link Slot}
+     * @param column 字段
+     * @param query  {@link ExtCriteria}
+     * @return {@code this}
+     */
+    C colInq(final Slot slot, final String column, final ExtCriteria<?> query);
+
     // endregion
 
     // region Not in condition
@@ -115,6 +135,25 @@ interface CommonRange<T, C extends CommonRange<T, C>> extends SlotSymbol<T, C> {
      * @return {@code this}
      */
     C colNotIn(final Slot slot, final String column, final Collection<?> values);
+
+    /**
+     * NOT IN
+     * @param column 字段
+     * @param query  {@link ExtCriteria}
+     * @return {@code this}
+     */
+    default C colNotInq(final String column, final ExtCriteria<?> query) {
+        return this.colNotInq(this.getSlot(), column, query);
+    }
+
+    /**
+     * NOT IN
+     * @param slot   {@link Slot}
+     * @param column 字段
+     * @param query  {@link ExtCriteria}
+     * @return {@code this}
+     */
+    C colNotInq(final Slot slot, final String column, final ExtCriteria<?> query);
 
     // endregion
 

@@ -368,7 +368,7 @@ public class DefaultConditionConverter implements Converter<Expression<?>, Crite
     protected Criterion subQueryExprConvert(final Expression<?> expr) {
         final SubQueryExpression it = (SubQueryExpression) expr;
         return new SubQueryCondition(it.getCriteria(), it.getAlias(), it.getColumn(), it.getSlot(), it.getSymbol(),
-            it.getQuery().getSegment());
+            it.getQuery());
     }
 
     /**

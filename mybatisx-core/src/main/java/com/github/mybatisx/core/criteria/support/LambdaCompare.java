@@ -92,6 +92,44 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
 
     /**
      * 等于
+     * @param property 属性
+     * @param query    {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    default C eqq(final Property<T, ?> property, final ExtCriteria<?> query) {
+        return this.eqq(this.getSlot(), property, query);
+    }
+
+    /**
+     * 等于
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    C eqq(final Slot slot, final Property<T, ?> property, final ExtCriteria<?> query);
+
+    /**
+     * 等于
+     * @param property 属性
+     * @param query    {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    default C eqq(final String property, final ExtCriteria<?> query) {
+        return this.eqq(this.getSlot(), property, query);
+    }
+
+    /**
+     * 等于
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    C eqq(final Slot slot, final String property, final ExtCriteria<?> query);
+
+    /**
+     * 等于
      * @param p1   属性1
      * @param v1   属性1对应值
      * @param p2   属性2
@@ -274,6 +312,44 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      */
     C ne(final Slot slot, final String property, final Object value);
 
+    /**
+     * 不等于
+     * @param property 属性
+     * @param query    {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    default C neq(final Property<T, ?> property, final ExtCriteria<?> query) {
+        return this.neq(this.getSlot(), property, query);
+    }
+
+    /**
+     * 不等于
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    C neq(final Slot slot, final Property<T, ?> property, final ExtCriteria<?> query);
+
+    /**
+     * 不等于
+     * @param property 属性
+     * @param query    {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    default C neq(final String property, final ExtCriteria<?> query) {
+        return this.neq(this.getSlot(), property, query);
+    }
+
+    /**
+     * 不等于
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    C neq(final Slot slot, final String property, final ExtCriteria<?> query);
+
     // endregion
 
     // region Greater than condition
@@ -317,6 +393,44 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      * @return {@code this}
      */
     C gt(final Slot slot, final String property, final Object value);
+
+    /**
+     * 大于
+     * @param property 属性
+     * @param query    {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    default C gtq(final Property<T, ?> property, final ExtCriteria<?> query) {
+        return this.gtq(this.getSlot(), property, query);
+    }
+
+    /**
+     * 大于
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    C gtq(final Slot slot, final Property<T, ?> property, final ExtCriteria<?> query);
+
+    /**
+     * 大于
+     * @param property 属性
+     * @param query    {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    default C gtq(final String property, final ExtCriteria<?> query) {
+        return this.gtq(this.getSlot(), property, query);
+    }
+
+    /**
+     * 等于
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    C gtq(final Slot slot, final String property, final ExtCriteria<?> query);
 
     // endregion
 
@@ -362,6 +476,44 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      */
     C ge(final Slot slot, final String property, final Object value);
 
+    /**
+     * 大于或等于
+     * @param property 属性
+     * @param query    {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    default C geq(final Property<T, ?> property, final ExtCriteria<?> query) {
+        return this.geq(this.getSlot(), property, query);
+    }
+
+    /**
+     * 大于或等于
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    C geq(final Slot slot, final Property<T, ?> property, final ExtCriteria<?> query);
+
+    /**
+     * 大于或等于
+     * @param property 属性
+     * @param query    {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    default C geq(final String property, final ExtCriteria<?> query) {
+        return this.geq(this.getSlot(), property, query);
+    }
+
+    /**
+     * 大于或等于
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    C geq(final Slot slot, final String property, final ExtCriteria<?> query);
+
     // endregion
 
     // region Less than condition
@@ -406,6 +558,44 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      */
     C lt(final Slot slot, final String property, final Object value);
 
+    /**
+     * 小于
+     * @param property 属性
+     * @param query    {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    default C ltq(final Property<T, ?> property, final ExtCriteria<?> query) {
+        return this.ltq(this.getSlot(), property, query);
+    }
+
+    /**
+     * 小于
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    C ltq(final Slot slot, final Property<T, ?> property, final ExtCriteria<?> query);
+
+    /**
+     * 小于
+     * @param property 属性
+     * @param query    {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    default C ltq(final String property, final ExtCriteria<?> query) {
+        return this.ltq(this.getSlot(), property, query);
+    }
+
+    /**
+     * 小于
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    C ltq(final Slot slot, final String property, final ExtCriteria<?> query);
+
     // endregion
 
     // region Less than or equal to condition
@@ -449,6 +639,44 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      * @return {@code this}
      */
     C le(final Slot slot, final String property, final Object value);
+
+    /**
+     * 小于或等于
+     * @param property 属性
+     * @param query    {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    default C leq(final Property<T, ?> property, final ExtCriteria<?> query) {
+        return this.leq(this.getSlot(), property, query);
+    }
+
+    /**
+     * 小于或等于
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    C leq(final Slot slot, final Property<T, ?> property, final ExtCriteria<?> query);
+
+    /**
+     * 小于或等于
+     * @param property 属性
+     * @param query    {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    default C leq(final String property, final ExtCriteria<?> query) {
+        return this.leq(this.getSlot(), property, query);
+    }
+
+    /**
+     * 小于或等于
+     * @param slot     {@link Slot}
+     * @param property 属性
+     * @param query    {@link ExtCriteria}(查询条件对象)
+     * @return {@code this}
+     */
+    C leq(final Slot slot, final String property, final ExtCriteria<?> query);
 
     // endregion
 

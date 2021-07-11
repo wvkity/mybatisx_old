@@ -40,6 +40,7 @@ import com.github.mybatisx.core.expr.SpecialExpression;
 import com.github.mybatisx.core.expr.TemplateMatch;
 import com.github.mybatisx.support.constant.Like;
 import com.github.mybatisx.support.constant.Slot;
+import com.github.mybatisx.support.constant.Symbol;
 import com.github.mybatisx.support.helper.TableHelper;
 
 import java.util.Collection;
@@ -68,6 +69,11 @@ public abstract class AbstractCommonCriteria<T, C extends CommonCriteriaWrapper<
     }
 
     @Override
+    public C colEqq(Slot slot, String column, ExtCriteria<?> query) {
+        return this.addSubCondition(slot, column, query, Symbol.EQ);
+    }
+
+    @Override
     public C colEq(Slot slot, Map<String, Object> columns) {
         if (Objects.isNotEmpty(columns)) {
             for (Map.Entry<String, Object> entry : columns.entrySet()) {
@@ -86,11 +92,21 @@ public abstract class AbstractCommonCriteria<T, C extends CommonCriteriaWrapper<
     }
 
     @Override
+    public C colNeq(Slot slot, String column, ExtCriteria<?> query) {
+        return this.addSubCondition(slot, column, query, Symbol.NE);
+    }
+
+    @Override
     public C colGt(Slot slot, String column, Object value) {
         if (Objects.isNotBlank(column)) {
             this.where(new ImmediateGreaterThan(this, column, slot, value));
         }
         return this.self();
+    }
+
+    @Override
+    public C colGtq(Slot slot, String column, ExtCriteria<?> query) {
+        return this.addSubCondition(slot, column, query, Symbol.GT);
     }
 
     @Override
@@ -102,6 +118,11 @@ public abstract class AbstractCommonCriteria<T, C extends CommonCriteriaWrapper<
     }
 
     @Override
+    public C colGeq(Slot slot, String column, ExtCriteria<?> query) {
+        return this.addSubCondition(slot, column, query, Symbol.GE);
+    }
+
+    @Override
     public C colLt(Slot slot, String column, Object value) {
         if (Objects.isNotBlank(column)) {
             this.where(new ImmediateLessThan(this, column, slot, value));
@@ -110,11 +131,21 @@ public abstract class AbstractCommonCriteria<T, C extends CommonCriteriaWrapper<
     }
 
     @Override
+    public C colLtq(Slot slot, String column, ExtCriteria<?> query) {
+        return this.addSubCondition(slot, column, query, Symbol.LT);
+    }
+
+    @Override
     public C colLe(Slot slot, String column, Object value) {
         if (Objects.isNotBlank(column)) {
             this.where(new ImmediateLessThanOrEqual(this, column, slot, value));
         }
         return this.self();
+    }
+
+    @Override
+    public C colLeq(Slot slot, String column, ExtCriteria<?> query) {
+        return this.addSubCondition(slot, column, query, Symbol.LE);
     }
 
     // endregion
@@ -130,11 +161,21 @@ public abstract class AbstractCommonCriteria<T, C extends CommonCriteriaWrapper<
     }
 
     @Override
+    public C colInq(Slot slot, String column, ExtCriteria<?> query) {
+        return this.addSubCondition(slot, column, query, Symbol.IN);
+    }
+
+    @Override
     public C colNotIn(Slot slot, String column, Collection<?> values) {
         if (Objects.isNotBlank(column)) {
             this.where(new ImmediateNotIn(this, column, slot, values));
         }
         return this.self();
+    }
+
+    @Override
+    public C colNotInq(Slot slot, String column, ExtCriteria<?> query) {
+        return this.addSubCondition(slot, column, query, Symbol.NOT_IN);
     }
 
     @Override
