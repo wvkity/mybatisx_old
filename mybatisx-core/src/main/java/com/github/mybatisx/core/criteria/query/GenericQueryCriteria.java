@@ -26,6 +26,6 @@ import com.github.mybatisx.core.criteria.support.GenericCriteriaWrapper;
  * @since 1.0.0
  */
 public interface GenericQueryCriteria<T, C extends GenericQueryCriteria<T, C>> extends GenericCriteriaWrapper<T, C>,
-    CommonQueryCriteria<T, C>, LambdaQueryCriteria<T, C>, MixinWrapper<T, C>, HavingWrapper<T, C> {
+    CommonQueryCriteria<T, C>, LambdaQueryCriteria<T, C>, OtherSelect<T, C>, MixinWrapper<T, C>, HavingWrapper<T, C> {
 
 }

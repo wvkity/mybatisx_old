@@ -13,28 +13,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.github.mybatisx.core.criteria.query;
+package com.github.mybatisx.core.support.group;
+
+import com.github.mybatisx.basic.constant.Constants;
+import com.github.mybatisx.basic.utils.Objects;
 
 /**
- * 抽象子外联表查询条件容器
- * @param <T> 实体类型
- * @param <C> 子类型
+ * 分组(纯SQL)
  * @author wvkity
- * @created 2021-05-21
+ * @created 2021-07-11
  * @since 1.0.0
  */
-@SuppressWarnings("serial")
-public abstract class AbstractSubForeignQueryCriteria<T, C extends SubForeignQueryWrapper<T, C>> extends
-    AbstractCommonForeignQueryCriteria<T, C> implements SubForeignQueryWrapper<T, C> {
+public class NativeGroup implements Group {
 
-    @Override
-    public C select() {
-        return this.fetch();
+    private static final long serialVersionUID = -2246328812945443040L;
+    protected String groupBy;
+
+    public NativeGroup(String groupBy) {
+        this.groupBy = groupBy;
     }
 
     @Override
-    public String getTableName(final boolean joinAs) {
-        return this.getTableName(this.refQuery.getSegment(), joinAs);
+    public String getSegment() {
+        if (Objects.isNotBlank(this.groupBy)) {
+            return groupBy;
+        }
+        return Constants.EMPTY;
     }
-
 }

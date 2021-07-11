@@ -70,6 +70,14 @@ public interface QueryWrapper<T, C extends QueryWrapper<T, C>> extends CriteriaW
     C containsFunc(final boolean contains);
 
     /**
+     * 仅仅查询聚合函数
+     * @return {@code this}
+     */
+    default C onlyFunc() {
+        return this.onlyFunc(true);
+    }
+
+    /**
      * 设置是否仅仅查询聚合函数
      * @param only 是否
      * @return {@code this}
@@ -108,10 +116,10 @@ public interface QueryWrapper<T, C extends QueryWrapper<T, C>> extends CriteriaW
 
     /**
      * 设置是否使用属性名作为字段别名
-     * @param used 是否使用
+     * @param using 是否使用
      * @return {@code this}
      */
-    C usePropAlias(final boolean used);
+    C usePropAlias(final boolean using);
 
     /**
      * 添加保持排序注释(避免优化sql时被干掉)

@@ -30,7 +30,7 @@ import java.util.List;
  * @since 1.0.0
  */
 public interface LambdaQueryWrapper<T, C extends LambdaQueryWrapper<T, C>> extends QueryWrapper<T, C>,
-    LambdaSelect<T, C>, LambdaFunctionSelect<T, C>, MixinWrapper<T, C>, HavingWrapper<T, C> {
+    LambdaSelect<T, C>, OtherSelect<T, C>, LambdaFunctionSelect<T, C>, MixinWrapper<T, C>, HavingWrapper<T, C> {
 
     /**
      * 设置map结果中的key值

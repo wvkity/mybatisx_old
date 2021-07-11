@@ -17,6 +17,9 @@ package com.github.mybatisx.core.support.select;
 
 import com.github.mybatisx.basic.constant.Constants;
 import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.core.criteria.ExtCriteria;
+import com.github.mybatisx.support.basic.Matched;
+import com.github.mybatisx.support.criteria.Criteria;
 
 /**
  * 子查询字段
@@ -28,16 +31,19 @@ public class SubSelection extends AbstractSelection<String> {
 
     private static final long serialVersionUID = 4307693761233245536L;
 
-    /*public SubSelection(CommonQueryCriteria<?> criteria, final String columnAlias) {
+    protected Criteria<?> query;
+
+    public SubSelection(ExtCriteria<?> criteria, ExtCriteria<?> query, final String alias) {
         this.criteria = criteria;
-        this.alias = columnAlias;
+        this.query = query;
+        this.alias = alias;
         this.matched = Matched.QUERY;
-    }*/
+    }
 
     @Override
     public String getColumn() {
-        if (Objects.nonNull(this.criteria)) {
-            return Constants.BRACKET_OPEN + this.criteria.getSegment() + Constants.BRACKET_CLOSE;
+        if (Objects.nonNull(this.query)) {
+            return Constants.BRACKET_OPEN + this.query.getSegment() + Constants.BRACKET_CLOSE;
         }
         return null;
     }

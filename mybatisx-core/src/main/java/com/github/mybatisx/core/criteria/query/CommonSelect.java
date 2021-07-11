@@ -15,17 +15,10 @@
  */
 package com.github.mybatisx.core.criteria.query;
 
-import com.github.mybatisx.basic.metadata.Column;
 import com.github.mybatisx.basic.utils.Objects;
-import com.github.mybatisx.core.support.select.Selection;
-import com.github.mybatisx.core.support.select.StandardSelection;
-import com.github.mybatisx.support.basic.Matched;
 import com.github.mybatisx.support.criteria.Criteria;
-import com.github.mybatisx.support.helper.TableHelper;
 
-import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 
 /**
  * 查询字段接口
@@ -36,14 +29,6 @@ import java.util.function.Predicate;
  * @since 1.0.0
  */
 interface CommonSelect<T, C extends CommonSelect<T, C>> extends Criteria<T> {
-
-    /**
-     * 查询所有字段
-     * @return {@code this}
-     */
-    default C colSelect() {
-        return this.colFiltrate(__ -> true);
-    }
 
     /**
      * 查询字段
@@ -61,51 +46,6 @@ interface CommonSelect<T, C extends CommonSelect<T, C>> extends Criteria<T> {
      * @return {@code this}
      */
     C colSelect(final String column, final String alias);
-
-    /**
-     * 纯SQL查询字段
-     * @param sql SQL语句
-     * @return {@code this}
-     */
-    default C nativeSelect(final String sql) {
-        return this.nativeSelect(sql, null);
-    }
-
-    /**
-     * 纯SQL查询字段
-     * @param sql   SQL语句
-     * @param alias 别名
-     * @return {@code this}
-     */
-    C nativeSelect(final String sql, final String alias);
-
-    /**
-     * 查询列
-     * @param selection {@link Selection}
-     * @return {@code this}
-     */
-    C select(final Selection selection);
-
-    /**
-     * 筛选字段
-     * @param accept {@link Predicate}
-     * @return {@code this}
-     */
-    @SuppressWarnings("unchecked")
-    default C colFiltrate(final Predicate<String> accept) {
-        if (Objects.nonNull(accept)) {
-            final List<Column> columns;
-            if (Objects.isNotEmpty((columns = TableHelper.getColumns(this.getEntityClass(), null)))) {
-                for (Column it : columns) {
-                    final String column;
-                    if (accept.test((column = it.getColumn()))) {
-                        this.select(new StandardSelection(this, column, null, Matched.IMMEDIATE));
-                    }
-                }
-            }
-        }
-        return (C) this;
-    }
 
     /**
      * 查询字段

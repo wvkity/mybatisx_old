@@ -39,14 +39,6 @@ import java.util.function.Predicate;
 interface LambdaSelect<T, C extends LambdaSelect<T, C>> extends Criteria<T> {
 
     /**
-     * 查询所有
-     * @return {@code this}
-     */
-    default C select() {
-        return this.filtrate(ignore -> true);
-    }
-
-    /**
      * 查询字段
      * @param property 属性
      * @return {@code this}

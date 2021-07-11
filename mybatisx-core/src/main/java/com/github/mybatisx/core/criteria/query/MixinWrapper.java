@@ -94,6 +94,13 @@ interface MixinWrapper<T, C extends MixinWrapper<T, C>> {
     C group(final boolean all);
 
     /**
+     * 纯SQL分组
+     * @param groupBody 分组语句
+     * @return {@code this}
+     */
+    C nativeGroup(final String groupBody);
+
+    /**
      * 分组
      * @param group {@link Group}
      * @return {@code this}

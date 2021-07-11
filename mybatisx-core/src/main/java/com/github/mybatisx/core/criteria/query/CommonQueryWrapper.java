@@ -31,7 +31,7 @@ import java.util.List;
  * @since 1.0.0
  */
 public interface CommonQueryWrapper<T, C extends CommonQueryWrapper<T, C>> extends QueryWrapper<T, C>,
-    CommonSelect<T, C>, CommonFunctionSelect<T, C>, MixinWrapper<T, C>, HavingWrapper<T, C> {
+    CommonSelect<T, C>, OtherSelect<T, C>, CommonFunctionSelect<T, C>, MixinWrapper<T, C>, HavingWrapper<T, C> {
 
     // region Group by methods
 

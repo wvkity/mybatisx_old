@@ -29,6 +29,7 @@ import com.github.mybatisx.core.support.func.Min;
 import com.github.mybatisx.core.support.func.NativeFunction;
 import com.github.mybatisx.core.support.func.Sum;
 import com.github.mybatisx.core.support.group.Group;
+import com.github.mybatisx.core.support.group.NativeGroup;
 import com.github.mybatisx.core.support.group.StandardGroup;
 import com.github.mybatisx.core.support.having.Having;
 import com.github.mybatisx.core.support.having.MultiComparator;
@@ -41,8 +42,10 @@ import com.github.mybatisx.core.support.order.NativeOrder;
 import com.github.mybatisx.core.support.order.Order;
 import com.github.mybatisx.core.support.order.StandardOrder;
 import com.github.mybatisx.core.support.select.FuncSelection;
+import com.github.mybatisx.core.support.select.NativeSelection;
 import com.github.mybatisx.core.support.select.Selection;
 import com.github.mybatisx.core.support.select.StandardSelection;
+import com.github.mybatisx.core.support.select.SubSelection;
 import com.github.mybatisx.support.basic.Matched;
 import com.github.mybatisx.support.constant.Slot;
 
@@ -96,8 +99,8 @@ public abstract class AbstractLambdaQueryCriteria<T, C extends LambdaQueryCriter
     }
 
     @Override
-    public C usePropAlias(final boolean used) {
-        this.propAsAlias = used;
+    public C usePropAlias(final boolean using) {
+        this.propAsAlias = using;
         return this.self();
     }
 
@@ -184,8 +187,30 @@ public abstract class AbstractLambdaQueryCriteria<T, C extends LambdaQueryCriter
     // region Select column methods
 
     @Override
+    public C select() {
+        this.fetch = true;
+        return this.self();
+    }
+
+    @Override
+    public C select(ExtCriteria<?> query, String alias) {
+        if (Objects.nonNull(query)) {
+            this.select(new SubSelection(this, query, alias));
+        }
+        return this.self();
+    }
+
+    @Override
     public C select(Selection selection) {
         this.fragmentManager.select(selection);
+        return this.self();
+    }
+
+    @Override
+    public C nativeSelect(String sql, String alias) {
+        if (Objects.isNotBlank(sql)) {
+            this.select(new NativeSelection(this, sql, alias));
+        }
         return this.self();
     }
 
@@ -349,6 +374,14 @@ public abstract class AbstractLambdaQueryCriteria<T, C extends LambdaQueryCriter
     @Override
     public C group(boolean all) {
         this.groupAll = all;
+        return this.self();
+    }
+
+    @Override
+    public C nativeGroup(String groupBody) {
+        if (Objects.isNotBlank(groupBody)) {
+            this.group(new NativeGroup(groupBody));
+        }
         return this.self();
     }
 
