@@ -16,6 +16,10 @@
 package com.github.mybatisx.session;
 
 import com.github.mybatisx.basic.constant.Constants;
+import com.github.mybatisx.binding.MyBatisMapperRegistry;
+import com.github.mybatisx.executor.MyBatisBatchExecutor;
+import com.github.mybatisx.executor.MyBatisReuseExecutor;
+import com.github.mybatisx.executor.MyBatisSimpleExecutor;
 import com.github.mybatisx.executor.resultset.MyBatisResultSetHandler;
 import com.github.mybatisx.reflection.factory.MyBatisObjectFactory;
 import com.github.mybatisx.reflection.wrapper.MyBatisMapWrapperFactory;
@@ -24,9 +28,9 @@ import com.github.mybatisx.support.config.MyBatisGlobalConfiguration;
 import com.github.mybatisx.support.config.MyBatisLocalConfigurationCache;
 import com.github.mybatisx.support.inject.mapping.sql.Supplier;
 import com.github.mybatisx.support.inject.mapping.sql.SupplierRegistry;
-import com.github.mybatisx.binding.MyBatisMapperRegistry;
 import com.github.mybatisx.type.CalendarTypeHandler;
 import org.apache.ibatis.cache.Cache;
+import org.apache.ibatis.executor.CachingExecutor;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
@@ -325,7 +329,21 @@ public class MyBatisConfiguration extends Configuration {
 
     @Override
     public Executor newExecutor(Transaction transaction, ExecutorType executorType) {
-        return super.newExecutor(transaction, executorType);
+        executorType = executorType == null ? defaultExecutorType : executorType;
+        executorType = executorType == null ? ExecutorType.SIMPLE : executorType;
+        Executor executor;
+        if (ExecutorType.BATCH == executorType) {
+            executor = new MyBatisBatchExecutor(this, transaction);
+        } else if (ExecutorType.REUSE == executorType) {
+            executor = new MyBatisReuseExecutor(this, transaction);
+        } else {
+            executor = new MyBatisSimpleExecutor(this, transaction);
+        }
+        if (cacheEnabled) {
+            executor = new CachingExecutor(executor);
+        }
+        executor = (Executor) interceptorChain.pluginAll(executor);
+        return executor;
     }
 
     // Slow but a one time cost. A better solution is welcome.
