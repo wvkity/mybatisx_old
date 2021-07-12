@@ -249,7 +249,7 @@ interface HavingWrapper<T, C extends HavingWrapper<T, C>> extends SlotSymbol<T, 
      * @return {@code this}
      */
     default C nativeHaving(final String havingBody, final Object... args) {
-        return this.having(havingBody, Objects.asList(args));
+        return this.nativeHaving(havingBody, Objects.asList(args));
     }
 
     /**
