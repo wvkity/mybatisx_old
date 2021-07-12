@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.support.config;
 
-import com.github.mybatisx.annotation.NamingStrategy;
+import com.github.mybatisx.annotation.NamingPolicy;
 import com.github.mybatisx.basic.exception.MapperException;
 import com.github.mybatisx.basic.exception.MyBatisException;
 import com.github.mybatisx.basic.inject.Injector;
@@ -65,7 +65,7 @@ public class MyBatisLocalConfigurationCache {
      */
     public static MyBatisGlobalConfiguration newInstance() {
         final MyBatisGlobalConfiguration it = new MyBatisGlobalConfiguration();
-        it.setNamingStrategy(NamingStrategy.UPPER_UNDERSCORE);
+        it.setNamingPolicy(NamingPolicy.UPPER_UNDERSCORE);
         return it;
     }
 

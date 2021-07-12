@@ -37,7 +37,7 @@ public @interface Naming {
 
     /**
      * 命名策略
-     * @return {@link NamingStrategy}
+     * @return {@link NamingPolicy}
      */
-    NamingStrategy value() default NamingStrategy.UPPER_UNDERSCORE;
+    NamingPolicy value() default NamingPolicy.UPPER_UNDERSCORE;
 }

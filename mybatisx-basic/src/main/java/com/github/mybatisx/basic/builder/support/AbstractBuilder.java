@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.basic.builder.support;
 
-import com.github.mybatisx.annotation.NamingStrategy;
+import com.github.mybatisx.annotation.NamingPolicy;
 import com.github.mybatisx.basic.naming.PhysicalNamingConverter;
 
 /**
@@ -29,7 +29,7 @@ public abstract class AbstractBuilder {
     /**
      * 命名策略
      */
-    protected NamingStrategy strategy;
+    protected NamingPolicy strategy;
     /**
      * 命名转换器
      */
@@ -39,11 +39,11 @@ public abstract class AbstractBuilder {
      */
     protected String keyWordFormat;
 
-    public NamingStrategy strategy() {
+    public NamingPolicy strategy() {
         return strategy;
     }
 
-    public AbstractBuilder strategy(NamingStrategy strategy) {
+    public AbstractBuilder strategy(NamingPolicy strategy) {
         this.strategy = strategy;
         return this;
     }

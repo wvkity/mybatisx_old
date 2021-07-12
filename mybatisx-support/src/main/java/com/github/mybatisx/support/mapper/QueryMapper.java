@@ -129,7 +129,7 @@ public interface QueryMapper<T, U, ID> {
 
     /**
      * 分页查询记录
-     * @param pageable 分页对象
+     * @param pageable {@link Pageable}分页对象
      * @return 多条记录
      */
     List<U> selectPageableList(@Param(Constants.PARAM_PAGEABLE) final Pageable pageable);
@@ -137,7 +137,7 @@ public interface QueryMapper<T, U, ID> {
     /**
      * 根据实体对象分页查询记录
      * @param entity   实体对象
-     * @param pageable 分页对象
+     * @param pageable {@link Pageable}分页对象
      * @return 多条记录
      */
     List<U> selectPageableListByEntity(@Param(Constants.PARAM_ENTITY) final T entity,
@@ -146,7 +146,7 @@ public interface QueryMapper<T, U, ID> {
     /**
      * 根据{@link Criteria}对象分页查询记录
      * @param criteria {@link Criteria}
-     * @param pageable 分页对象
+     * @param pageable {@link Pageable}分页对象
      * @return 多条记录
      */
     List<U> selectPageableListByCriteria(@Param(Constants.PARAM_CRITERIA) final Criteria<T> criteria,
@@ -155,7 +155,7 @@ public interface QueryMapper<T, U, ID> {
     /**
      * 根据{@link Criteria}对象分页查询记录
      * @param criteria {@link Criteria}对象
-     * @param pageable 分页对象
+     * @param pageable {@link Pageable}分页对象
      * @return 多条记录
      */
     List<Object> selectPageableListWithObject(@Param(Constants.PARAM_CRITERIA) final Criteria<T> criteria,
@@ -164,6 +164,7 @@ public interface QueryMapper<T, U, ID> {
     /**
      * 根据{@link Criteria}对象分页查询记录
      * @param criteria {@link Criteria}对象
+     * @param pageable {@link Pageable}分页对象
      * @return 多条记录
      */
     List<Object[]> selectPageableListWithArray(@Param(Constants.PARAM_CRITERIA) final Criteria<T> criteria,
@@ -191,7 +192,7 @@ public interface QueryMapper<T, U, ID> {
     /**
      * 根据{@link Criteria}对象分页查询记录
      * @param criteria {@link Criteria}对象
-     * @param pageable 分页对象
+     * @param pageable {@link Pageable}分页对象
      * @return 多条记录
      */
     List<Map<String, Object>> selectPageableListWithMapObject(@Param(Constants.PARAM_CRITERIA) final Criteria<T> criteria,

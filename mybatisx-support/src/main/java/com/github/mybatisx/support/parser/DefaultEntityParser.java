@@ -25,7 +25,7 @@ import com.github.mybatisx.annotation.IdStrategy;
 import com.github.mybatisx.annotation.Identity;
 import com.github.mybatisx.annotation.MultiTenancy;
 import com.github.mybatisx.annotation.Naming;
-import com.github.mybatisx.annotation.NamingStrategy;
+import com.github.mybatisx.annotation.NamingPolicy;
 import com.github.mybatisx.annotation.Option;
 import com.github.mybatisx.annotation.Priority;
 import com.github.mybatisx.annotation.Snowflake;
@@ -145,7 +145,7 @@ public class DefaultEntityParser implements EntityParser, Constants {
         reflector.setterFilter(getSetterFilter(globalConfiguration));
         reflector.parse();
         // 命名策略
-        final NamingStrategy strategy = naming(globalConfiguration, reflector);
+        final NamingPolicy strategy = naming(globalConfiguration, reflector);
         final PhysicalNamingConverter namingConverter = namingConverter(globalConfiguration);
         tb.strategy(strategy).namingConverter(namingConverter);
         tb.keyWordFormat(globalConfiguration.getKeyWordFormat());
@@ -205,7 +205,7 @@ public class DefaultEntityParser implements EntityParser, Constants {
      * @param tb              表对象构建器
      */
     private void handleEntityClassRelatedAttributes(final MyBatisGlobalConfiguration configuration,
-                                                    final NamingStrategy strategy,
+                                                    final NamingPolicy strategy,
                                                     final PhysicalNamingConverter namingConverter,
                                                     final Reflector reflector,
                                                     final TableBuilder tb) {
@@ -730,10 +730,10 @@ public class DefaultEntityParser implements EntityParser, Constants {
      * @param reflector     反射器
      * @return 命名策略
      */
-    private NamingStrategy naming(final MyBatisGlobalConfiguration configuration, final Reflector reflector) {
+    private NamingPolicy naming(final MyBatisGlobalConfiguration configuration, final Reflector reflector) {
         return Optional.ofNullable(reflector.getAnnotation(Naming.class))
-            .map(Naming::value).orElse(Optional.ofNullable(configuration.getNamingStrategy())
-                .orElse(NamingStrategy.UPPER_UNDERSCORE));
+            .map(Naming::value).orElse(Optional.ofNullable(configuration.getNamingPolicy())
+                .orElse(NamingPolicy.UPPER_UNDERSCORE));
     }
 
     /**

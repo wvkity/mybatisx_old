@@ -23,51 +23,51 @@ import java.util.function.Predicate;
  * @created 2020-10-01
  * @since 1.0.0
  */
-public enum NamingStrategy {
+public enum NamingPolicy {
 
     /**
      * 原值
      */
-    NORMAL(__ -> false, ""),
+    NORMAL(ignore -> false, ""),
     /**
      * 小写
      */
-    LOWER(NamingStrategy::isUpper, "") {
+    LOWER(NamingPolicy::isUpper, "") {
         @Override
         String normalized(String word) {
-            return NamingStrategy.toLower(word);
+            return NamingPolicy.toLower(word);
         }
     },
     /**
      * 大写
      */
-    UPPER(NamingStrategy::isLower, "") {
+    UPPER(NamingPolicy::isLower, "") {
         @Override
         String normalized(String word) {
-            return NamingStrategy.toUpper(word);
+            return NamingPolicy.toUpper(word);
         }
     },
     /**
      * 小写驼峰
      */
-    LOWER_CAMEL(NamingStrategy::isUpper, "") {
+    LOWER_CAMEL(NamingPolicy::isUpper, "") {
         @Override
         String normalized(String word) {
-            return NamingStrategy.firstCharOnlyToUpper(word);
+            return NamingPolicy.firstCharOnlyToUpper(word);
         }
 
         @Override
         String normalizedOfFirst(String word) {
-            return NamingStrategy.toLower(word);
+            return NamingPolicy.toLower(word);
         }
     },
     /**
      * 大写驼峰
      */
-    UPPER_CAMEL(NamingStrategy::isUpper, "") {
+    UPPER_CAMEL(NamingPolicy::isUpper, "") {
         @Override
         String normalized(String word) {
-            return NamingStrategy.firstCharOnlyToUpper(word);
+            return NamingPolicy.firstCharOnlyToUpper(word);
         }
     },
     /**
@@ -76,13 +76,13 @@ public enum NamingStrategy {
     LOWER_UNDERSCORE(c -> '_' == c, "_") {
         @Override
         String normalized(String word) {
-            return NamingStrategy.toLower(word);
+            return NamingPolicy.toLower(word);
         }
 
         @Override
-        String convert(NamingStrategy format, String source) {
+        String convert(NamingPolicy format, String source) {
             if (format == UPPER_UNDERSCORE) {
-                return NamingStrategy.toUpper(source);
+                return NamingPolicy.toUpper(source);
             }
             return super.convert(format, source);
         }
@@ -93,13 +93,13 @@ public enum NamingStrategy {
     UPPER_UNDERSCORE(c -> '_' == c, "_") {
         @Override
         String normalized(String word) {
-            return NamingStrategy.toUpper(word);
+            return NamingPolicy.toUpper(word);
         }
 
         @Override
-        String convert(NamingStrategy format, String source) {
+        String convert(NamingPolicy format, String source) {
             if (format == LOWER_UNDERSCORE) {
-                return NamingStrategy.toLower(source);
+                return NamingPolicy.toLower(source);
             }
             return super.convert(format, source);
         }
@@ -108,18 +108,18 @@ public enum NamingStrategy {
     private final Predicate<Character> matcher;
     private final String separator;
 
-    NamingStrategy(Predicate<Character> matcher, String separator) {
+    NamingPolicy(Predicate<Character> matcher, String separator) {
         this.matcher = matcher;
         this.separator = separator;
     }
 
     /**
      * 转换字符串
-     * @param format {@link NamingStrategy}
+     * @param format {@link NamingPolicy}
      * @param source 待转换字符串
      * @return 转换后的字符串
      */
-    String convert(final NamingStrategy format, final String source) {
+    String convert(final NamingPolicy format, final String source) {
         StringBuilder out = null;
         int i = 0;
         int j = -1;
@@ -143,12 +143,12 @@ public enum NamingStrategy {
 
     /**
      * 将字符串格式化
-     * @param format {@link NamingStrategy}
+     * @param format {@link NamingPolicy}
      * @param source 待格式化字符串
      * @return 新的字符串
      */
-    public String to(final NamingStrategy format, final String source) {
-        return (NamingStrategy.isBlank(source) || format == null || this == format || format == NORMAL) ?
+    public String to(final NamingPolicy format, final String source) {
+        return (NamingPolicy.isBlank(source) || format == null || this == format || format == NORMAL) ?
             source : convert(format, source);
     }
 
@@ -252,7 +252,7 @@ public enum NamingStrategy {
      * @return 转换后的字符串
      */
     static String toLower(final String source) {
-        if (NamingStrategy.isBlank(source)) {
+        if (NamingPolicy.isBlank(source)) {
             return source;
         }
         for (int i = 0, len = source.length(); i < len; i++) {
@@ -276,7 +276,7 @@ public enum NamingStrategy {
      * @return 转换后的字符串
      */
     static String toUpper(final String source) {
-        if (NamingStrategy.isBlank(source)) {
+        if (NamingPolicy.isBlank(source)) {
             return source;
         }
         for (int i = 0, len = source.length(); i < len; i++) {
@@ -300,7 +300,7 @@ public enum NamingStrategy {
      * @return 新的字符串
      */
     static String firstCharToLower(final String source) {
-        return NamingStrategy.isBlank(source) ? source : toLower(source.charAt(0)) + source.substring(1);
+        return NamingPolicy.isBlank(source) ? source : toLower(source.charAt(0)) + source.substring(1);
     }
 
     /**
@@ -309,7 +309,7 @@ public enum NamingStrategy {
      * @return 新的字符串
      */
     static String firstCharToUpper(final String source) {
-        return NamingStrategy.isBlank(source) ? source : toUpper(source.charAt(0)) + source.substring(1);
+        return NamingPolicy.isBlank(source) ? source : toUpper(source.charAt(0)) + source.substring(1);
     }
 
     /**
@@ -318,7 +318,7 @@ public enum NamingStrategy {
      * @return 新的字符串
      */
     static String firstCharOnlyToUpper(final String source) {
-        return NamingStrategy.isBlank(source) ? source : toUpper(source.charAt(0)) + toLower(source.substring(1));
+        return NamingPolicy.isBlank(source) ? source : toUpper(source.charAt(0)) + toLower(source.substring(1));
     }
     // endregion
 }

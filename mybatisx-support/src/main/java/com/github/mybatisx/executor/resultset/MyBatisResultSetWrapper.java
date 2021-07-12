@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.executor.resultset;
 
-import com.github.mybatisx.annotation.NamingStrategy;
+import com.github.mybatisx.annotation.NamingPolicy;
 import com.github.mybatisx.basic.constant.Constants;
 import org.apache.ibatis.executor.resultset.ResultSetWrapper;
 import org.apache.ibatis.io.Resources;
@@ -98,7 +98,7 @@ public class MyBatisResultSetWrapper extends ResultSetWrapper {
         if (UPPER_UNDERSCORE_PATTERN.matcher(value).matches()) {
             return value;
         }
-        return NamingStrategy.UPPER_CAMEL.to(NamingStrategy.UPPER_UNDERSCORE, value);
+        return NamingPolicy.UPPER_CAMEL.to(NamingPolicy.UPPER_UNDERSCORE, value);
     }
 
     @Override

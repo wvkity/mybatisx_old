@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.basic.naming;
 
-import com.github.mybatisx.annotation.NamingStrategy;
+import com.github.mybatisx.annotation.NamingPolicy;
 
 /**
  * 命名转换器
@@ -33,7 +33,7 @@ public interface PhysicalNamingConverter {
      * @param format   格式化策略
      * @return 新名称
      */
-    String convert(final String name, final NamingStrategy original, final NamingStrategy format);
+    String convert(final String name, final NamingPolicy original, final NamingPolicy format);
 
     /**
      * 类名转表名
@@ -41,8 +41,8 @@ public interface PhysicalNamingConverter {
      * @param format 转换策略
      * @return 表名
      */
-    default String entityToTable(final String entity, final NamingStrategy format) {
-        return convert(entity, NamingStrategy.UPPER_CAMEL, format);
+    default String entityToTable(final String entity, final NamingPolicy format) {
+        return convert(entity, NamingPolicy.UPPER_CAMEL, format);
     }
 
     /**
@@ -51,8 +51,8 @@ public interface PhysicalNamingConverter {
      * @param format   转换策略
      * @return 字段名
      */
-    default String propToColumn(final String property, final NamingStrategy format) {
-        return convert(property, NamingStrategy.LOWER_CAMEL, format);
+    default String propToColumn(final String property, final NamingPolicy format) {
+        return convert(property, NamingPolicy.LOWER_CAMEL, format);
     }
 
 }

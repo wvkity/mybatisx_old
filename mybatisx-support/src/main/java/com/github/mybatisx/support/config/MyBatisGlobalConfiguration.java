@@ -17,7 +17,7 @@ package com.github.mybatisx.support.config;
 
 import com.github.mybatisx.annotation.ColumnExt;
 import com.github.mybatisx.annotation.IdStrategy;
-import com.github.mybatisx.annotation.NamingStrategy;
+import com.github.mybatisx.annotation.NamingPolicy;
 import com.github.mybatisx.basic.filter.Filter;
 import com.github.mybatisx.basic.inject.Injector;
 import com.github.mybatisx.basic.keygen.KeyGenerator;
@@ -86,7 +86,7 @@ public class MyBatisGlobalConfiguration {
     /**
      * 默认数据库表/字段命名策略
      */
-    private NamingStrategy namingStrategy;
+    private NamingPolicy namingPolicy;
     /**
      * 默认命名转换器
      */
@@ -295,12 +295,12 @@ public class MyBatisGlobalConfiguration {
         this.injector = injector;
     }
 
-    public NamingStrategy getNamingStrategy() {
-        return namingStrategy;
+    public NamingPolicy getNamingPolicy() {
+        return namingPolicy;
     }
 
-    public void setNamingStrategy(NamingStrategy namingStrategy) {
-        this.namingStrategy = namingStrategy;
+    public void setNamingPolicy(NamingPolicy namingPolicy) {
+        this.namingPolicy = namingPolicy;
     }
 
     public PhysicalNamingConverter getPhysicalNamingConverter() {

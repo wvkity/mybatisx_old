@@ -1,6 +1,6 @@
 package com.github.mybatisx.reflection.wrapper;
 
-import com.github.mybatisx.annotation.NamingStrategy;
+import com.github.mybatisx.annotation.NamingPolicy;
 import com.github.mybatisx.basic.constant.Constants;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.wrapper.MapWrapper;
@@ -40,9 +40,9 @@ public class MyBatisMapWrapper extends MapWrapper {
         if (name.contains(Constants.DOT)) {
             final String[] it = name.split(DEF_SPLIT_SEPARATOR);
             final int last = it.length - 1;
-            it[last] = NamingStrategy.UPPER_UNDERSCORE.to(NamingStrategy.LOWER_CAMEL, it[last]);
+            it[last] = NamingPolicy.UPPER_UNDERSCORE.to(NamingPolicy.LOWER_CAMEL, it[last]);
             return String.join(Constants.DOT, Arrays.asList(it));
         }
-        return NamingStrategy.UPPER_UNDERSCORE.to(NamingStrategy.LOWER_CAMEL, name);
+        return NamingPolicy.UPPER_UNDERSCORE.to(NamingPolicy.LOWER_CAMEL, name);
     }
 }

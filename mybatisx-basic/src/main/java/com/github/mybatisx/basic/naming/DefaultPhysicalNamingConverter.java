@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.basic.naming;
 
-import com.github.mybatisx.annotation.NamingStrategy;
+import com.github.mybatisx.annotation.NamingPolicy;
 
 /**
  * 默认命名转换器
@@ -26,7 +26,7 @@ import com.github.mybatisx.annotation.NamingStrategy;
 public class DefaultPhysicalNamingConverter implements PhysicalNamingConverter {
 
     @Override
-    public String convert(String name, NamingStrategy original, NamingStrategy format) {
+    public String convert(String name, NamingPolicy original, NamingPolicy format) {
         return original.to(format, name);
     }
 }

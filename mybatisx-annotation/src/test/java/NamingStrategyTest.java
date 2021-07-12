@@ -14,7 +14,7 @@
  * the License.
  */
 
-import com.github.mybatisx.annotation.NamingStrategy;
+import com.github.mybatisx.annotation.NamingPolicy;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -26,33 +26,33 @@ public class NamingStrategyTest {
 
     @Test
     public void test() {
-        System.out.println(NamingStrategy.UPPER.to(NamingStrategy.LOWER, "ADMIN"));
-        System.out.println(NamingStrategy.UPPER_CAMEL.to(NamingStrategy.UPPER, "Admin"));
-        System.out.println(NamingStrategy.LOWER.to(NamingStrategy.UPPER, "admin"));
-        System.out.println(NamingStrategy.LOWER.to(NamingStrategy.UPPER_CAMEL, "admin"));
-        System.out.println(NamingStrategy.UPPER_UNDERSCORE.to(NamingStrategy.LOWER, "ADMIN_ROOT"));
-        System.out.println(NamingStrategy.UPPER_UNDERSCORE.to(NamingStrategy.UPPER, "ADMIN_ROOT"));
-        System.out.println(NamingStrategy.UPPER_UNDERSCORE.to(NamingStrategy.UPPER_CAMEL, "ADMIN_ROOT"));
-        System.out.println(NamingStrategy.UPPER_UNDERSCORE.to(NamingStrategy.LOWER_CAMEL, "ADMIN_ROOT"));
+        System.out.println(NamingPolicy.UPPER.to(NamingPolicy.LOWER, "ADMIN"));
+        System.out.println(NamingPolicy.UPPER_CAMEL.to(NamingPolicy.UPPER, "Admin"));
+        System.out.println(NamingPolicy.LOWER.to(NamingPolicy.UPPER, "admin"));
+        System.out.println(NamingPolicy.LOWER.to(NamingPolicy.UPPER_CAMEL, "admin"));
+        System.out.println(NamingPolicy.UPPER_UNDERSCORE.to(NamingPolicy.LOWER, "ADMIN_ROOT"));
+        System.out.println(NamingPolicy.UPPER_UNDERSCORE.to(NamingPolicy.UPPER, "ADMIN_ROOT"));
+        System.out.println(NamingPolicy.UPPER_UNDERSCORE.to(NamingPolicy.UPPER_CAMEL, "ADMIN_ROOT"));
+        System.out.println(NamingPolicy.UPPER_UNDERSCORE.to(NamingPolicy.LOWER_CAMEL, "ADMIN_ROOT"));
         System.out.println("================");
-        System.out.println(NamingStrategy.LOWER_CAMEL.to(NamingStrategy.NORMAL, "maxWidth"));
-        System.out.println(NamingStrategy.LOWER_CAMEL.to(NamingStrategy.LOWER, "maxWidth"));
-        System.out.println(NamingStrategy.LOWER_CAMEL.to(NamingStrategy.UPPER, "maxWidth"));
-        System.out.println(NamingStrategy.LOWER_CAMEL.to(NamingStrategy.UPPER_CAMEL, "maxWidth"));
-        System.out.println(NamingStrategy.LOWER_CAMEL.to(NamingStrategy.UPPER_UNDERSCORE, "maxWidth"));
-        System.out.println(NamingStrategy.LOWER_CAMEL.to(NamingStrategy.LOWER_UNDERSCORE, "maxWidth"));
+        System.out.println(NamingPolicy.LOWER_CAMEL.to(NamingPolicy.NORMAL, "maxWidth"));
+        System.out.println(NamingPolicy.LOWER_CAMEL.to(NamingPolicy.LOWER, "maxWidth"));
+        System.out.println(NamingPolicy.LOWER_CAMEL.to(NamingPolicy.UPPER, "maxWidth"));
+        System.out.println(NamingPolicy.LOWER_CAMEL.to(NamingPolicy.UPPER_CAMEL, "maxWidth"));
+        System.out.println(NamingPolicy.LOWER_CAMEL.to(NamingPolicy.UPPER_UNDERSCORE, "maxWidth"));
+        System.out.println(NamingPolicy.LOWER_CAMEL.to(NamingPolicy.LOWER_UNDERSCORE, "maxWidth"));
         System.out.println("===============");
-        System.out.println(NamingStrategy.UPPER_CAMEL.to(NamingStrategy.NORMAL, "UserName"));
-        System.out.println(NamingStrategy.UPPER_CAMEL.to(NamingStrategy.LOWER, "UserName"));
-        System.out.println(NamingStrategy.UPPER_CAMEL.to(NamingStrategy.LOWER_CAMEL, "UserName"));
-        System.out.println(NamingStrategy.UPPER_CAMEL.to(NamingStrategy.LOWER_UNDERSCORE, "UserName"));
-        System.out.println(NamingStrategy.UPPER_CAMEL.to(NamingStrategy.UPPER_UNDERSCORE, "UserName"));
+        System.out.println(NamingPolicy.UPPER_CAMEL.to(NamingPolicy.NORMAL, "UserName"));
+        System.out.println(NamingPolicy.UPPER_CAMEL.to(NamingPolicy.LOWER, "UserName"));
+        System.out.println(NamingPolicy.UPPER_CAMEL.to(NamingPolicy.LOWER_CAMEL, "UserName"));
+        System.out.println(NamingPolicy.UPPER_CAMEL.to(NamingPolicy.LOWER_UNDERSCORE, "UserName"));
+        System.out.println(NamingPolicy.UPPER_CAMEL.to(NamingPolicy.UPPER_UNDERSCORE, "UserName"));
         System.out.println("=============");
-        System.out.println(NamingStrategy.LOWER_UNDERSCORE.to(NamingStrategy.NORMAL, "my_school"));
-        System.out.println(NamingStrategy.LOWER_UNDERSCORE.to(NamingStrategy.LOWER, "my_school"));
-        System.out.println(NamingStrategy.LOWER_UNDERSCORE.to(NamingStrategy.UPPER, "my_school"));
-        System.out.println(NamingStrategy.LOWER_UNDERSCORE.to(NamingStrategy.UPPER_UNDERSCORE, "my_school"));
-        System.out.println(NamingStrategy.LOWER_UNDERSCORE.to(NamingStrategy.LOWER_CAMEL, "my_school"));
-        System.out.println(NamingStrategy.LOWER_UNDERSCORE.to(NamingStrategy.UPPER_CAMEL, "my_school"));
+        System.out.println(NamingPolicy.LOWER_UNDERSCORE.to(NamingPolicy.NORMAL, "my_school"));
+        System.out.println(NamingPolicy.LOWER_UNDERSCORE.to(NamingPolicy.LOWER, "my_school"));
+        System.out.println(NamingPolicy.LOWER_UNDERSCORE.to(NamingPolicy.UPPER, "my_school"));
+        System.out.println(NamingPolicy.LOWER_UNDERSCORE.to(NamingPolicy.UPPER_UNDERSCORE, "my_school"));
+        System.out.println(NamingPolicy.LOWER_UNDERSCORE.to(NamingPolicy.LOWER_CAMEL, "my_school"));
+        System.out.println(NamingPolicy.LOWER_UNDERSCORE.to(NamingPolicy.UPPER_CAMEL, "my_school"));
     }
 }
