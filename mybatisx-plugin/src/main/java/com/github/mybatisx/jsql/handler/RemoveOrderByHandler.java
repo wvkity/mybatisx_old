@@ -15,9 +15,9 @@
  */
 package com.github.mybatisx.jsql.handler;
 
-import com.github.mybatisx.basic.constant.Constants;
-import com.github.mybatisx.basic.immutable.ImmutableLinkedSet;
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.constant.Constants;
+import com.github.mybatisx.immutable.ImmutableLinkedSet;
 import net.sf.jsqlparser.statement.select.FromItem;
 import net.sf.jsqlparser.statement.select.Join;
 import net.sf.jsqlparser.statement.select.LateralSubSelect;

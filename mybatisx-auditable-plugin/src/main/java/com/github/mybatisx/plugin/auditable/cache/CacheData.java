@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,7 +21,7 @@ import java.io.Serializable;
  * 缓存数据
  * @param <T> 数据类型
  * @author wvkity
- * @created 2021-03-14
+ * @created 2021-07-16
  * @since 1.0.0
  */
 public interface CacheData<T> extends Serializable {

@@ -15,9 +15,9 @@
  */
 package com.github.mybatisx.cache;
 
-import com.github.mybatisx.basic.constant.Constants;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.plugin.exception.MyBatisPluginException;
-import com.github.mybatisx.plugin.utils.Objects;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;

@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.jsql.parser;
 
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
 
 import java.util.HashMap;
 import java.util.Map;

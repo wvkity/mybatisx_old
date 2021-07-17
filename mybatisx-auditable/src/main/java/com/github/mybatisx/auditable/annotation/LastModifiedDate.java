@@ -26,6 +26,8 @@ import java.lang.annotation.Target;
  * @created 2021-02-27
  * @since 1.0.0
  */
+@Time
+@Modified
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface LastModifiedDate {

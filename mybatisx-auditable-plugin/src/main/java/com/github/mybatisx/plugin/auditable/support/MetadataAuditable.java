@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,22 +15,24 @@
  */
 package com.github.mybatisx.plugin.auditable.support;
 
-import com.github.mybatisx.auditable.OriginalProperty;
-import com.github.mybatisx.auditable.alter.AuditedAlterData;
+import com.github.mybatisx.auditable.PropertyWrapper;
+import com.github.mybatisx.auditable.meta.AuditedMetadata;
+import org.apache.ibatis.mapping.MappedStatement;
 
 /**
- * 源数据审计处理
+ * 元数据审计处理
  * @author wvkity
- * @created 2021-03-05
+ * @created 2021-07-16
  * @since 1.0.0
  */
 public interface MetadataAuditable {
 
     /**
-     * 注入值
+     * 审计
+     * @param ms       {@link MappedStatement}
+     * @param property {@link PropertyWrapper}
      * @param target   目标对象
-     * @param property {@link OriginalProperty}
-     * @return {@link AuditedAlterData}
+     * @return 审计前的数据
      */
-    AuditedAlterData invoke(final Object target, final OriginalProperty property);
+    AuditedMetadata invoke(final MappedStatement ms, final PropertyWrapper property, final Object target);
 }

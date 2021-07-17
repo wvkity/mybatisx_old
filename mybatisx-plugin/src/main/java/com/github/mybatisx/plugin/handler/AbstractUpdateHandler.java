@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.plugin.handler;
 
-import com.github.mybatisx.plugin.utils.BasicDataTypeRegistry;
+import com.github.mybatisx.BasicDataTypeRegistry;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.plugin.Invocation;

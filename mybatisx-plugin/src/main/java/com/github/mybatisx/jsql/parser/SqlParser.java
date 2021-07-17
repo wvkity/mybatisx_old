@@ -15,8 +15,8 @@
  */
 package com.github.mybatisx.jsql.parser;
 
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.jsql.handler.RemoveOrderByHandler;
-import com.github.mybatisx.plugin.utils.Objects;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.expression.Alias;
 import net.sf.jsqlparser.expression.Expression;

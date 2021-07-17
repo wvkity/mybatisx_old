@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.cache;
 
-import com.github.mybatisx.plugin.utils.Objects;
+import com.github.mybatisx.Objects;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.decorators.FifoCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;

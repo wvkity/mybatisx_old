@@ -15,9 +15,9 @@
  */
 package com.github.mybatisx.spring.boot.autoconfigure;
 
-import com.github.mybatisx.basic.utils.Objects;
-import com.github.mybatisx.auditable.DefaultAuditMatcher;
-import com.github.mybatisx.plugin.auditable.support.AuditMatcher;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.core.auditable.DefaultAuditedPropertyLoader;
+import com.github.mybatisx.plugin.auditable.support.AuditedPropertyLoader;
 import com.github.mybatisx.session.MyBatisConfiguration;
 import com.github.mybatisx.spring.MyBatisSqlSessionFactoryBean;
 import com.github.mybatisx.support.config.MyBatisGlobalConfiguration;
@@ -83,7 +83,7 @@ import java.util.stream.Stream;
 @EnableConfigurationProperties(MyBatisProperties.class)
 @AutoConfigureAfter({DataSourceAutoConfiguration.class})
 @AutoConfigureBefore(name = {"org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration"
-    , "com.github.mybatisx.spring.boot.auditable.MyBatisMetadataAuditingAutoConfiguration"})
+    , "com.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisMetadataAuditableAutoConfiguration"})
 public class MyBatisAutoConfiguration implements InitializingBean {
 
     private static final Logger logger = LoggerFactory.getLogger(MyBatisAutoConfiguration.class);
@@ -130,7 +130,8 @@ public class MyBatisAutoConfiguration implements InitializingBean {
         if (this.properties.isCheckConfigLocation() && StringUtils.hasText(this.properties.getConfigLocation())) {
             final Resource resource = this.resourceLoader.getResource(this.properties.getConfigLocation());
             Assert.state(resource.exists(),
-                "Cannot find config location: " + resource + " (please add config file or check your Mybatis configuration)");
+                "Cannot find config location: " + resource + " (please add config file or check your Mybatis " +
+                    "configuration)");
         }
     }
 
@@ -229,8 +230,8 @@ public class MyBatisAutoConfiguration implements InitializingBean {
 
     @Bean
     @ConditionalOnMissingBean
-    public AuditMatcher auditMatcher() {
-        return new DefaultAuditMatcher();
+    public AuditedPropertyLoader auditedPropertyLoader() {
+        return new DefaultAuditedPropertyLoader();
     }
 
     private boolean containsBean(final Class<?> target) {
@@ -243,10 +244,12 @@ public class MyBatisAutoConfiguration implements InitializingBean {
 
     /**
      * This will just scan the same base package as Spring Boot does. If you want more power, you can explicitly use
-     * {@link org.mybatis.spring.annotation.MapperScan} but this will get typed mappers working correctly, out-of-the-box,
+     * {@link org.mybatis.spring.annotation.MapperScan} but this will get typed mappers working correctly,
+     * out-of-the-box,
      * similar to using Spring Data JPA repositories.
      */
-    public static class AutoConfiguredMapperScannerRegistrar implements BeanFactoryAware, ImportBeanDefinitionRegistrar {
+    public static class AutoConfiguredMapperScannerRegistrar implements BeanFactoryAware,
+        ImportBeanDefinitionRegistrar {
 
         private BeanFactory beanFactory;
 
@@ -292,7 +295,8 @@ public class MyBatisAutoConfiguration implements InitializingBean {
     }
 
     /**
-     * If mapper registering configuration or mapper scanning configuration not present, this configuration allow to scan
+     * If mapper registering configuration or mapper scanning configuration not present, this configuration allow to
+     * scan
      * mappers based on the same component-scanning path as Spring Boot itself.
      */
     @org.springframework.context.annotation.Configuration
@@ -303,7 +307,8 @@ public class MyBatisAutoConfiguration implements InitializingBean {
         @Override
         public void afterPropertiesSet() {
             logger.debug(
-                "Not found configuration for registering mapper bean using @MapperScan, MapperFactoryBean and MapperScannerConfigurer.");
+                "Not found configuration for registering mapper bean using @MapperScan, MapperFactoryBean and " +
+                    "MapperScannerConfigurer.");
         }
 
     }

@@ -44,7 +44,6 @@ public final class PluginUtil {
         try {
             final Field field = BoundSql.class.getDeclaredField("additionalParameters");
             field.setAccessible(true);
-            // METHOD_HANDLE_ADDITIONAL = LOOKUP.findGetter(BoundSql.class, "additionalParameters", Map.class);
             METHOD_HANDLE_ADDITIONAL = LOOKUP.unreflectGetter(field);
         } catch (Exception e) {
             throw new MyBatisPluginException("Failure to obtain BoundSql attribute additionalParameters："

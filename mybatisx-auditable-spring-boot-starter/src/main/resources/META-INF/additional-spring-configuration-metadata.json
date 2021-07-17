@@ -1,13 +1,13 @@
 {
     "groups": [
         {
-            "sourceType": "com.github.mybatisx.spring.boot.auditable.config.MyBatisAuditingProperties",
-            "name": "wvkity.mybatis.plugin.batch",
-            "type": "com.github.mybatisx.spring.boot.auditable.config.MyBatisAuditingProperties"
+            "sourceType": "com.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisMetadataAuditableProperties",
+            "name": "github.mybatisx.plugin.auditable",
+            "type": "com.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisMetadataAuditableProperties"
         },
         {
-            "sourceType": "com.github.mybatisx.spring.boot.auditable.config.MyBatisAuditingProperties",
-            "name": "wvkity.mybatis.plugin.batch.properties",
+            "sourceType": "com.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisMetadataAuditableProperties",
+            "name": "github.mybatisx.plugin.auditable.properties",
             "sourceMethod": "getProperties()",
             "type": "java.util.Properties"
         }

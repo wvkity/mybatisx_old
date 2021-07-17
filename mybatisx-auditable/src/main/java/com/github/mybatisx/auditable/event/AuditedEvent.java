@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,20 +15,23 @@
  */
 package com.github.mybatisx.auditable.event;
 
+import com.github.mybatisx.auditable.meta.AuditedMetadata;
+import com.github.mybatisx.event.Event;
+
+import java.util.List;
+
 /**
  * 审计事件
- * @param <T> 数据类型
  * @author wvkity
- * @created 2021-03-11
+ * @created 2021-07-15
  * @since 1.0.0
  */
-public interface AuditedEvent<T> extends Event<T> {
+public interface AuditedEvent extends Event<List<AuditedMetadata>> {
 
     /**
-     * 标识
+     * 获取标识
      * @return 标识
      */
-    default String getCode() {
-        return null;
-    }
+    String getUniqueCode();
+
 }

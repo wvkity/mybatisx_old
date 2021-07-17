@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,37 +15,44 @@
  */
 package com.github.mybatisx.plugin.auditable.support;
 
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.auditable.AuditType;
-import com.github.mybatisx.auditable.OriginalProperty;
-import com.github.mybatisx.auditable.time.TimeProviderProxy;
-import com.github.mybatisx.auditable.time.provider.TimeProvider;
+import com.github.mybatisx.auditable.PropertyWrapper;
+import com.github.mybatisx.datetime.DateTimeProviderProxy;
+import com.github.mybatisx.datetime.provider.DateTimeProvider;
+import org.apache.ibatis.mapping.MappedStatement;
 
 import java.util.Optional;
 
 /**
- * 默认源数据审计处理
+ * 默认元数据审计处理
  * @author wvkity
- * @created 2021-03-11
+ * @created 2021-07-16
  * @since 1.0.0
  */
 public class DefaultMetadataAuditable extends AbstractMetadataAuditable {
 
-    private final AuditorAware auditorAware;
+    protected final AuditorAware auditorAware;
 
     public DefaultMetadataAuditable(AuditorAware auditorAware) {
         this.auditorAware = auditorAware;
     }
 
     @Override
-    protected Object getNewValue(OriginalProperty property) {
+    Object getNewValue(MappedStatement ms, PropertyWrapper property, Object target) {
         final AuditType type = property.getAuditType();
-        if (type == AuditType.ID) {
-            return this.auditorAware.getCurUserId();
-        } else if (type == AuditType.NAME) {
-            return this.auditorAware.getCurUserName();
-        } else if (type == AuditType.DATE) {
-            return Optional.ofNullable(TimeProviderProxy.create().target(property.getJavaType()).build())
-                .map(TimeProvider::getNow).orElse(null);
+        if (Objects.nonNull(type) && Objects.nonNull(this.auditorAware)) {
+            switch (type) {
+                case ID:
+                    return this.auditorAware.getOptUserId().orElse(null);
+                case NAME:
+                    return this.auditorAware.getOptUserName().orElse(null);
+                case TIME:
+                    return Optional.ofNullable(DateTimeProviderProxy.create().target(property.getJavaType()).build())
+                        .map(DateTimeProvider::getNow).orElse(null);
+                default:
+                    return null;
+            }
         }
         return null;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,23 +15,25 @@
  */
 package com.github.mybatisx.plugin.auditable.support;
 
+import java.util.Optional;
+
 /**
  * 审计数据
  * @author wvkity
- * @created 2021-03-07
+ * @created 2021-07-16
  * @since 1.0.0
  */
 public interface AuditorAware {
 
     /**
-     * 获取当前操作用户标识
-     * @return 用户标识
+     * 获取当前操作人唯一标识
+     * @return {@link Optional}
      */
-    Object getCurUserId();
+    Optional<Object> getOptUserId();
 
     /**
-     * 获取当前操作用户名
-     * @return 用户名
+     * 获取当前操作人名称
+     * @return {@link Optional}
      */
-    String getCurUserName();
+    Optional<String> getOptUserName();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,48 +15,74 @@
  */
 package com.github.mybatisx.auditable.event;
 
-import com.github.mybatisx.auditable.alter.AuditedAlterData;
+import com.github.mybatisx.auditable.meta.AuditedMetadata;
+import com.github.mybatisx.event.EventPhase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 默认审计事件
  * @author wvkity
- * @created 2021-03-11
+ * @created 2021-07-16
  * @since 1.0.0
  */
-public class DefaultAuditedEvent implements AuditedEvent<List<AuditedAlterData>> {
+public class DefaultAuditedEvent implements AuditedEvent {
 
-    private static final long serialVersionUID = 4793736721866881055L;
-
-    private final List<AuditedAlterData> source;
+    private static final long serialVersionUID = -7984339256387890359L;
+    private final List<AuditedMetadata> source;
     private final EventPhase eventPhase;
-    private final String code;
+    private final String uniqueCode;
     private final long timestamp;
 
-    public DefaultAuditedEvent(List<AuditedAlterData> source, EventPhase eventPhase, String code) {
-        if (source == null) {
-            throw new IllegalArgumentException("null source");
-        }
-        this.source = source;
+    public DefaultAuditedEvent(EventPhase eventPhase, String uniqueCode) {
+        this(new ArrayList<>(), eventPhase, uniqueCode);
+    }
+
+    public DefaultAuditedEvent(List<AuditedMetadata> source, EventPhase eventPhase, String uniqueCode) {
+        this.source = source == null ? new ArrayList<>() : source;
         this.eventPhase = eventPhase;
-        this.code = code;
+        this.uniqueCode = uniqueCode;
         this.timestamp = System.currentTimeMillis();
     }
 
+    /**
+     * 添加审计数据
+     * @param metadata {@link AuditedMetadata}
+     * @return {@code this}
+     */
+    public DefaultAuditedEvent add(final AuditedMetadata metadata) {
+        if (metadata != null) {
+            this.source.add(metadata);
+        }
+        return this;
+    }
+
+    /**
+     * 添加多个审计数据
+     * @param metadataList 审计数据列表
+     * @return {@code this}
+     */
+    public DefaultAuditedEvent addAll(final List<AuditedMetadata> metadataList) {
+        if (metadataList != null && !metadataList.isEmpty()) {
+            this.source.addAll(metadataList);
+        }
+        return this;
+    }
+
     @Override
-    public List<AuditedAlterData> getSource() {
+    public String getUniqueCode() {
+        return this.uniqueCode;
+    }
+
+    @Override
+    public List<AuditedMetadata> getSource() {
         return this.source;
     }
 
     @Override
     public EventPhase getEventPhase() {
         return this.eventPhase;
-    }
-
-    @Override
-    public String getCode() {
-        return this.code;
     }
 
     @Override
@@ -69,17 +95,17 @@ public class DefaultAuditedEvent implements AuditedEvent<List<AuditedAlterData>>
         return "DefaultAuditedEvent{" +
             "source=" + source +
             ", eventPhase=" + eventPhase +
+            ", uniqueCode='" + uniqueCode + '\'' +
             ", timestamp=" + timestamp +
             '}';
     }
 
-    public static DefaultAuditedEvent of(final List<AuditedAlterData> source, final EventPhase eventPhase,
-                                         final String code) {
-        return new DefaultAuditedEvent(source, eventPhase, code);
+    public static DefaultAuditedEvent of(final EventPhase eventPhase, final String uniqueCode) {
+        return new DefaultAuditedEvent(eventPhase, uniqueCode);
     }
 
-    public static DefaultAuditedEvent rollback(final List<AuditedAlterData> source, final String code) {
-        return of(source, EventPhase.AFTER_ROLLBACK, code);
+    public static DefaultAuditedEvent of(final List<AuditedMetadata> source, final EventPhase eventPhase,
+                                         final String uniqueCode) {
+        return new DefaultAuditedEvent(source, eventPhase, uniqueCode);
     }
-
 }

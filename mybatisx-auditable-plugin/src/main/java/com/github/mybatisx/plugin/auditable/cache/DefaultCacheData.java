@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,25 +15,27 @@
  */
 package com.github.mybatisx.plugin.auditable.cache;
 
+import com.github.mybatisx.auditable.PropertyWrapper;
+
+import java.util.List;
+
 /**
  * 默认缓存数据
- * @param <T> 数据类型
  * @author wvkity
- * @created 2021-03-15
+ * @created 2021-07-16
  * @since 1.0.0
  */
-public class DefaultCacheData<T> implements CacheData<T> {
+public class DefaultCacheData implements CacheData<List<PropertyWrapper>> {
 
-    private static final long serialVersionUID = 7428294712561649085L;
+    private static final long serialVersionUID = 5743451825760166183L;
+    private final List<PropertyWrapper> data;
 
-    private final T data;
-
-    public DefaultCacheData(T data) {
+    public DefaultCacheData(List<PropertyWrapper> data) {
         this.data = data;
     }
 
     @Override
-    public T getData() {
+    public List<PropertyWrapper> getData() {
         return this.data;
     }
 }

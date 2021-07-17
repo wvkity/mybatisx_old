@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,73 +15,64 @@
  */
 package com.github.mybatisx.plugin.auditable.support;
 
-import com.github.mybatisx.auditable.OriginalProperty;
-import com.github.mybatisx.auditable.alter.AuditedAlterData;
-import com.github.mybatisx.auditable.alter.DefaultAuditedAlterData;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.auditable.PropertyWrapper;
+import com.github.mybatisx.auditable.meta.AuditedMetadata;
+import com.github.mybatisx.auditable.meta.DefaultAuditedMetadata;
+import org.apache.ibatis.mapping.MappedStatement;
 
-import java.lang.reflect.ReflectPermission;
+import java.sql.PreparedStatement;
 
 /**
- * 抽象源数据审计处理
+ * 抽象元数据审计处理
  * @author wvkity
- * @created 2021-03-11
+ * @created 2021-07-16
  * @since 1.0.0
  */
 public abstract class AbstractMetadataAuditable implements MetadataAuditable {
 
     @Override
-    public AuditedAlterData invoke(Object target, OriginalProperty property) {
-        if (this.canInjectValue(target, property)) {
-            final Object newValue = this.getNewValue(property);
-            if (newValue != null) {
-                return this.invoke(target, property, property.getValue(target), newValue);
+    public AuditedMetadata invoke(MappedStatement ms, PropertyWrapper property, Object target) {
+        if (this.canInvoke(property, target) && Objects.isNull(property.getValue(target))) {
+            final Object newValue = this.getNewValue(ms, property, target);
+            if (Objects.nonNull(newValue)) {
+                return this.invoke(ms, property, target, null, newValue);
             }
         }
         return null;
     }
 
     /**
-     * 检查是否可审计
+     * 审计
+     * @param ms       {@link MappedStatement}
+     * @param property {@link PropertyWrapper}
      * @param target   目标对象
-     * @param property {@link OriginalProperty}
-     * @return boolean
+     * @param oldValue 旧值
+     * @param newValue 新值
+     * @return {@link AuditedMetadata}
      */
-    protected boolean canInjectValue(final Object target, final OriginalProperty property) {
-        return !property.isPrimaryKey() && property.canInvoke(target);
+    protected AuditedMetadata invoke(final MappedStatement ms, final PropertyWrapper property, final Object target,
+                                     final Object oldValue, final Object newValue) {
+        property.invoke(target, newValue);
+        return new DefaultAuditedMetadata(target, property, oldValue);
     }
-
 
     /**
-     * 注入值
+     * 检查是否可调用
+     * @param property {@link PropertyWrapper}
      * @param target   目标对象
-     * @param property {@link OriginalProperty}
-     * @param oldValue 旧的值
-     * @param newValue 新的值
-     * @return {@link AuditedAlterData}
+     * @return boolean
      */
-    protected AuditedAlterData invoke(final Object target, final OriginalProperty property,
-                                      final Object oldValue, final Object newValue) {
-        property.invoke(target, newValue);
-        return new DefaultAuditedAlterData(target, property, oldValue);
-    }
-
-    protected boolean canControlMemberAccessible() {
-        try {
-            SecurityManager securityManager = System.getSecurityManager();
-            if (null != securityManager) {
-                securityManager.checkPermission(new ReflectPermission("suppressAccessChecks"));
-            }
-        } catch (SecurityException ignore) {
-            return false;
-        }
-        return true;
+    public boolean canInvoke(final PropertyWrapper property, final Object target) {
+        return property.nonPrimaryKey() && property.canInvoke(target);
     }
 
     /**
      * 获取新的值
-     * @param property {@link OriginalProperty}
-     * @return 新的值
+     * @param ms       {@link MappedStatement}
+     * @param property {@link PropertyWrapper}
+     * @param target   目标对象
+     * @return 新值
      */
-    protected abstract Object getNewValue(final OriginalProperty property);
-
+    abstract Object getNewValue(final MappedStatement ms, final PropertyWrapper property, final Object target);
 }
