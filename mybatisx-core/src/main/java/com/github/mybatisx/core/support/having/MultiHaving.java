@@ -15,8 +15,8 @@
  */
 package com.github.mybatisx.core.support.having;
 
+import com.github.mybatisx.Placeholders;
 import com.github.mybatisx.core.support.func.Function;
-import com.github.mybatisx.core.utils.Placeholders;
 import com.github.mybatisx.support.constant.Slot;
 import com.github.mybatisx.support.criteria.Criteria;
 

@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.support.mapper;
 
-import com.github.mybatisx.basic.constant.Constants;
+import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.support.criteria.Criteria;
 import com.github.paging.Pageable;
 import org.apache.ibatis.annotations.Param;

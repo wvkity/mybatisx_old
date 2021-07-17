@@ -15,10 +15,10 @@
  */
 package com.github.mybatisx.ext.service;
 
-import com.github.mybatisx.basic.reflect.Reflections;
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.batch.BatchDataWrapper;
 import com.github.mybatisx.executor.resultset.EmbedResult;
+import com.github.mybatisx.reflect.Reflections;
 import com.github.mybatisx.support.criteria.Criteria;
 import com.github.mybatisx.support.mapper.BaseMapper;
 import com.github.paging.Pageable;

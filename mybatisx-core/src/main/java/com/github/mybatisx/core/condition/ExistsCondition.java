@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.core.condition;
 
-import com.github.mybatisx.basic.constant.Constants;
+import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.jsql.parser.SqlParser;
 import com.github.mybatisx.support.constant.Slot;
 import com.github.mybatisx.support.constant.Symbol;

@@ -15,14 +15,14 @@
  */
 package com.github.mybatisx.support.helper;
 
-import com.github.mybatisx.basic.builder.support.TableBuilder;
-import com.github.mybatisx.basic.immutable.ImmutableLinkedMap;
-import com.github.mybatisx.basic.immutable.ImmutableList;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.basic.builder.TableBuilder;
 import com.github.mybatisx.basic.metadata.Column;
 import com.github.mybatisx.basic.metadata.Table;
 import com.github.mybatisx.basic.parser.EntityParser;
-import com.github.mybatisx.basic.reflect.Reflections;
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.immutable.ImmutableLinkedMap;
+import com.github.mybatisx.immutable.ImmutableList;
+import com.github.mybatisx.reflect.Reflections;
 import com.github.mybatisx.support.parser.DefaultEntityParser;
 import com.github.mybatisx.support.config.MyBatisGlobalConfiguration;
 import com.github.mybatisx.support.config.MyBatisLocalConfigurationCache;

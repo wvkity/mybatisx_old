@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.support.fragment;
 
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;

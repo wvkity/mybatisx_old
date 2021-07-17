@@ -15,8 +15,8 @@
  */
 package com.github.mybatisx.core.convert;
 
-import com.github.mybatisx.basic.constant.Constants;
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.constant.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -15,9 +15,9 @@
  */
 package com.github.mybatisx.core.expr;
 
-import com.github.mybatisx.basic.constant.Constants;
-import com.github.mybatisx.basic.utils.Objects;
-import com.github.mybatisx.core.utils.RegexMatcher;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.RegexMatcher;
+import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.support.basic.Matched;
 import com.github.mybatisx.support.constant.Slot;
 import com.github.mybatisx.support.criteria.Criteria;

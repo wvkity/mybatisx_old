@@ -15,10 +15,10 @@
  */
 package com.github.mybatisx.core.inject.mapping.sql;
 
-import com.github.mybatisx.basic.constant.Constants;
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.basic.metadata.Column;
 import com.github.mybatisx.basic.metadata.Table;
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.core.inject.mapping.utils.Scripts;
 import com.github.mybatisx.support.config.MyBatisGlobalConfiguration;
 import com.github.mybatisx.support.criteria.Criteria;

@@ -15,8 +15,8 @@
  */
 package com.github.mybatisx.core.criteria.update;
 
-import com.github.mybatisx.basic.constant.Constants;
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.core.criteria.support.AbstractLambdaCriteria;
 import com.github.mybatisx.core.inject.mapping.utils.Scripts;
 import com.github.mybatisx.core.property.Property;

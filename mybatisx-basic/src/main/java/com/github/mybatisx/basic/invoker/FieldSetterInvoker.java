@@ -16,7 +16,7 @@
 package com.github.mybatisx.basic.invoker;
 
 
-import com.github.mybatisx.basic.reflect.Reflections;
+import com.github.mybatisx.reflect.Reflections;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

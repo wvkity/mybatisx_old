@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.core.criteria;
 
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.support.criteria.Criteria;
 import com.github.mybatisx.support.expr.Expression;
 

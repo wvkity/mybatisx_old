@@ -15,9 +15,9 @@
  */
 package com.github.mybatisx.core.criteria.query;
 
-import com.github.mybatisx.basic.constant.Constants;
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.basic.metadata.Column;
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.core.criteria.ExtCriteria;
 import com.github.mybatisx.core.criteria.support.AbstractLambdaCriteria;
 import com.github.mybatisx.core.property.Property;

@@ -16,7 +16,7 @@
 package com.github.mybatisx.core.expr.builder;
 
 
-import com.github.mybatisx.basic.builder.Builder;
+import com.github.mybatisx.builder.Builder;
 
 /**
  * 条件表达式构建器

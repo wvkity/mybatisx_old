@@ -15,10 +15,9 @@
  */
 package com.github.mybatisx.core.inject;
 
-import com.github.mybatisx.basic.immutable.ImmutableSet;
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.basic.inject.Injector;
 import com.github.mybatisx.basic.metadata.Table;
-import com.github.mybatisx.basic.utils.Objects;
 import com.github.mybatisx.core.inject.method.MappedMethod;
 import com.github.mybatisx.core.inject.method.invoke.Delete;
 import com.github.mybatisx.core.inject.method.invoke.DeleteById;
@@ -50,6 +49,7 @@ import com.github.mybatisx.core.inject.method.invoke.SelectTotal;
 import com.github.mybatisx.core.inject.method.invoke.Update;
 import com.github.mybatisx.core.inject.method.invoke.UpdateByCriteria;
 import com.github.mybatisx.core.inject.method.invoke.UpdateWithNonNull;
+import com.github.mybatisx.immutable.ImmutableSet;
 import com.github.mybatisx.support.config.MyBatisLocalConfigurationCache;
 import com.github.mybatisx.support.helper.TableHelper;
 import com.github.mybatisx.support.mapper.DeleteMapper;

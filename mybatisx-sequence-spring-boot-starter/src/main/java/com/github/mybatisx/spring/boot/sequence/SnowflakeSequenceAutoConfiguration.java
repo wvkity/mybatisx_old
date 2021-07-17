@@ -47,7 +47,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConditionalOnClass(SnowflakeSequence.class)
 @EnableConfigurationProperties(SnowflakeSequenceProperties.class)
-@ConditionalOnProperty(prefix = "wvkity.mybatis.sequence", name = "enable", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "github.mybatisx.sequence", name = "enable", havingValue = "true", matchIfMissing = true)
 public class SnowflakeSequenceAutoConfiguration {
 
     private final SnowflakeSequenceProperties properties;

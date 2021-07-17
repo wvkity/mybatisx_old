@@ -38,7 +38,7 @@ import javax.sql.DataSource;
 @Configuration
 @ConditionalOnSingleCandidate(DataSource.class)
 @ConditionalOnClass({SqlSessionFactory.class, SqlSessionFactoryBean.class})
-@ConditionalOnProperty(prefix = "wvkity.mybatis.plugin.pageable", name = "enable", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "github.mybatisx.plugin.pageable", name = "enable", havingValue = "true", matchIfMissing = true)
 public class MyBatisPageableAutoConfiguration {
 
     private final MyBatisPageableConfigurer pageableConfigurer;

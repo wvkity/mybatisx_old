@@ -15,9 +15,9 @@
  */
 package com.github.mybatisx.core.inject.mapping.utils;
 
-import com.github.mybatisx.basic.constant.Constants;
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.basic.metadata.Column;
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.support.constant.Operation;
 import com.github.mybatisx.support.constant.Slot;
 import com.github.mybatisx.support.constant.Symbol;

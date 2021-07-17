@@ -15,8 +15,10 @@
  */
 package com.github.mybatisx.basic.reflect;
 
-import com.github.mybatisx.basic.immutable.ImmutableMap;
-import com.github.mybatisx.basic.utils.Objects;
+
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.immutable.ImmutableMap;
+import com.github.mybatisx.reflect.Reflections;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;

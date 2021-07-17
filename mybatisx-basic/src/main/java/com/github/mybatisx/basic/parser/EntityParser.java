@@ -16,7 +16,7 @@
 package com.github.mybatisx.basic.parser;
 
 
-import com.github.mybatisx.basic.builder.support.TableBuilder;
+import com.github.mybatisx.basic.builder.TableBuilder;
 import com.github.mybatisx.basic.metadata.Table;
 import org.apache.ibatis.session.Configuration;
 

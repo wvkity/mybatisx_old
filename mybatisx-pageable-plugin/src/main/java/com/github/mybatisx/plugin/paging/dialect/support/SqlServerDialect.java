@@ -15,6 +15,7 @@
  */
 package com.github.mybatisx.plugin.paging.dialect.support;
 
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.cache.LocalCacheFactory;
 import com.github.mybatisx.cache.LocalCache;
 import com.github.mybatisx.plugin.exception.MyBatisPluginException;
@@ -23,7 +24,6 @@ import com.github.mybatisx.plugin.paging.parser.SqlServerPageableSqlParser;
 import com.github.mybatisx.plugin.paging.parser.replace.RegexWithNoLockReplacer;
 import com.github.mybatisx.plugin.paging.parser.replace.Replacer;
 import com.github.mybatisx.plugin.paging.parser.replace.SimpleWithNoLockReplacer;
-import com.github.mybatisx.plugin.utils.Objects;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;

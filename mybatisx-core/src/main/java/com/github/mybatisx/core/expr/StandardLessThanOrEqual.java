@@ -16,7 +16,6 @@
 package com.github.mybatisx.core.expr;
 
 import com.github.mybatisx.basic.metadata.Column;
-import com.github.mybatisx.basic.utils.Objects;
 import com.github.mybatisx.core.expr.builder.AbstractBasicExprBuilder;
 import com.github.mybatisx.support.basic.Matched;
 import com.github.mybatisx.support.constant.Slot;
@@ -53,7 +52,7 @@ public class StandardLessThanOrEqual extends AbstractBasicExpression<Column> {
 
         @Override
         public StandardLessThanOrEqual build() {
-            if (Objects.nonNull(this.target)) {
+            if (this.target != null) {
                 return new StandardLessThanOrEqual(this.criteria, this.target, this.slot, this.value);
             }
             return null;

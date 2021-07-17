@@ -15,10 +15,10 @@
  */
 package com.github.mybatisx.core.convert;
 
-import com.github.mybatisx.basic.constant.Constants;
-import com.github.mybatisx.basic.reflect.Reflections;
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.core.inject.mapping.utils.Scripts;
+import com.github.mybatisx.reflect.Reflections;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 

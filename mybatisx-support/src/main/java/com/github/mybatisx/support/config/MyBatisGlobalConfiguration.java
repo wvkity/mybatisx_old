@@ -16,8 +16,10 @@
 package com.github.mybatisx.support.config;
 
 import com.github.mybatisx.annotation.ColumnExt;
-import com.github.mybatisx.annotation.IdStrategy;
+import com.github.mybatisx.annotation.IdPolicy;
 import com.github.mybatisx.annotation.NamingPolicy;
+import com.github.mybatisx.auditable.parser.AuditPropertyAutoScanParser;
+import com.github.mybatisx.auditable.parser.AuditPropertyParser;
 import com.github.mybatisx.basic.filter.Filter;
 import com.github.mybatisx.basic.inject.Injector;
 import com.github.mybatisx.basic.keygen.KeyGenerator;
@@ -26,7 +28,6 @@ import com.github.mybatisx.basic.naming.DefaultPhysicalNamingConverter;
 import com.github.mybatisx.basic.naming.PhysicalNamingConverter;
 import com.github.mybatisx.basic.parser.EntityParser;
 import com.github.mybatisx.basic.parser.FieldParser;
-import com.github.mybatisx.auditable.parser.AuditParser;
 import com.github.mybatisx.basic.type.JdbcTypeMappingRegistry;
 import com.github.sequence.Sequence;
 import org.apache.ibatis.session.Configuration;
@@ -60,9 +61,13 @@ public class MyBatisGlobalConfiguration {
      */
     private FieldParser fieldParser;
     /**
-     * 自动审计属性解析器
+     * 审计属性解析器
      */
-    private AuditParser auditParser;
+    private AuditPropertyParser auditPropertyParser;
+    /**
+     * 审计属性自动识别解析器
+     */
+    private AuditPropertyAutoScanParser auditPropertyAutoScanParser;
     /**
      * 父类类过滤器
      */
@@ -118,7 +123,7 @@ public class MyBatisGlobalConfiguration {
     /**
      * 默认主键生成策略
      */
-    private IdStrategy idStrategy = IdStrategy.UNDEFINED;
+    private IdPolicy idPolicy = IdPolicy.UNDEFINED;
     /**
      * 自动扫描审计属性
      */
@@ -247,12 +252,20 @@ public class MyBatisGlobalConfiguration {
         this.fieldParser = fieldParser;
     }
 
-    public AuditParser getAuditParser() {
-        return auditParser;
+    public AuditPropertyParser getAuditPropertyParser() {
+        return auditPropertyParser;
     }
 
-    public void setAuditParser(AuditParser auditParser) {
-        this.auditParser = auditParser;
+    public void setAuditPropertyParser(AuditPropertyParser auditPropertyParser) {
+        this.auditPropertyParser = auditPropertyParser;
+    }
+
+    public AuditPropertyAutoScanParser getAuditPropertyAutoScanParser() {
+        return auditPropertyAutoScanParser;
+    }
+
+    public void setAuditPropertyAutoScanParser(AuditPropertyAutoScanParser auditPropertyAutoScanParser) {
+        this.auditPropertyAutoScanParser = auditPropertyAutoScanParser;
     }
 
     public Filter<Class<?>> getClassFilter() {
@@ -359,12 +372,12 @@ public class MyBatisGlobalConfiguration {
         this.idProperty = idProperty;
     }
 
-    public IdStrategy getIdStrategy() {
-        return idStrategy;
+    public IdPolicy getIdPolicy() {
+        return idPolicy;
     }
 
-    public void setIdStrategy(IdStrategy idStrategy) {
-        this.idStrategy = idStrategy;
+    public void setIdPolicy(IdPolicy idPolicy) {
+        this.idPolicy = idPolicy;
     }
 
     public boolean isAuditAutoScan() {

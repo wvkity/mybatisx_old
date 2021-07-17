@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.core.criteria.query;
 
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.core.criteria.support.SlotSymbol;
 import com.github.mybatisx.core.support.func.Function;
 import com.github.mybatisx.core.support.having.Having;

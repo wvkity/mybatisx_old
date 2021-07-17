@@ -15,8 +15,8 @@
  */
 package com.github.mybatisx.core.inject.mapping.sql.update;
 
-import com.github.mybatisx.basic.constant.Constants;
 import com.github.mybatisx.basic.metadata.Table;
+import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.core.inject.mapping.sql.AbstractCriteriaSupplier;
 import com.github.mybatisx.support.config.MyBatisGlobalConfiguration;
 

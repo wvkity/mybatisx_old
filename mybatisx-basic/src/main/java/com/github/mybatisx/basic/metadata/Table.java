@@ -15,9 +15,9 @@
  */
 package com.github.mybatisx.basic.metadata;
 
-import com.github.mybatisx.basic.immutable.ImmutableLinkedMap;
-import com.github.mybatisx.basic.immutable.ImmutableLinkedSet;
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.immutable.ImmutableLinkedMap;
+import com.github.mybatisx.immutable.ImmutableLinkedSet;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -169,7 +169,7 @@ public class Table {
         this.readOnlyInsertableColumnCache = ImmutableLinkedSet.of(this.filtrate(Column::isInsertable));
         this.readOnlyUpdatableColumnCache = ImmutableLinkedSet.of(this.filtrate(Column::isUpdatable));
         this.readOnlyLogicDeleteAuditColumnCache =
-            ImmutableLinkedSet.of(this.filtrate(it -> it.isUpdatable() && it.getAuditor().deletedAuditable()));
+            ImmutableLinkedSet.of(this.filtrate(it -> it.isUpdatable() && it.getAuditMeta().deletedAuditable()));
         final MethodHandles.Lookup lookup = MethodHandles.lookup();
         MethodHandle handle = null;
         try {
@@ -289,8 +289,8 @@ public class Table {
      */
     public Set<Column> updateColumnsNonWithSpecial() {
         return this.readOnlyUpdatableColumnCache.stream().filter(it ->
-            !it.isLogicDelete() && !it.isVersion() && !it.getAuditor().insertedAuditable()
-                && !it.getAuditor().deletedAuditable()).collect(Collectors.toCollection(LinkedHashSet::new));
+            !it.isLogicDelete() && !it.isVersion() && !it.getAuditMeta().insertedAuditable()
+                && !it.getAuditMeta().deletedAuditable()).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     /**

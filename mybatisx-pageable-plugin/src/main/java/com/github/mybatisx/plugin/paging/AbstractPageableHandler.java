@@ -15,9 +15,9 @@
  */
 package com.github.mybatisx.plugin.paging;
 
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.plugin.paging.dialect.Dialect;
 import com.github.mybatisx.plugin.handler.AbstractSelectHandler;
-import com.github.mybatisx.plugin.utils.Objects;
 import com.github.paging.Pageable;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;

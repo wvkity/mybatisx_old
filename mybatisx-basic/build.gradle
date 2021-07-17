@@ -1,5 +1,6 @@
 dependencies {
     api project(":sequence")
     api project(":mybatisx-annotation")
+    api project(":mybatisx-commons")
     api "${libs.mybatis}"
 }

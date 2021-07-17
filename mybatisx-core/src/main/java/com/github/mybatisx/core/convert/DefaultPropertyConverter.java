@@ -15,11 +15,11 @@
  */
 package com.github.mybatisx.core.convert;
 
-import com.github.mybatisx.basic.exception.MyBatisException;
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.basic.metadata.Column;
-import com.github.mybatisx.basic.utils.Objects;
 import com.github.mybatisx.core.property.PropertiesMappingCache;
 import com.github.mybatisx.core.property.Property;
+import com.github.mybatisx.exception.MyBatisException;
 import com.github.mybatisx.support.criteria.Criteria;
 import com.github.mybatisx.support.helper.TableHelper;
 import org.slf4j.Logger;

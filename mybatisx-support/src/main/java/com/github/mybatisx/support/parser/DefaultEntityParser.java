@@ -15,13 +15,14 @@
  */
 package com.github.mybatisx.support.parser;
 
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.annotation.Column;
 import com.github.mybatisx.annotation.ColumnExt;
 import com.github.mybatisx.annotation.Entity;
 import com.github.mybatisx.annotation.Executing;
 import com.github.mybatisx.annotation.GeneratedValue;
 import com.github.mybatisx.annotation.GenerationType;
-import com.github.mybatisx.annotation.IdStrategy;
+import com.github.mybatisx.annotation.IdPolicy;
 import com.github.mybatisx.annotation.Identity;
 import com.github.mybatisx.annotation.MultiTenancy;
 import com.github.mybatisx.annotation.Naming;
@@ -30,17 +31,21 @@ import com.github.mybatisx.annotation.Option;
 import com.github.mybatisx.annotation.Priority;
 import com.github.mybatisx.annotation.Snowflake;
 import com.github.mybatisx.annotation.Version;
-import com.github.mybatisx.basic.builder.support.ColumnBuilder;
-import com.github.mybatisx.basic.builder.support.TableBuilder;
-import com.github.mybatisx.basic.constant.Constants;
-import com.github.mybatisx.basic.exception.MyBatisParserException;
+import com.github.mybatisx.auditable.AuditPolicy;
+import com.github.mybatisx.auditable.PropertyWrapper;
+import com.github.mybatisx.auditable.annotation.LogicDelete;
+import com.github.mybatisx.auditable.matcher.AuditMatcher;
+import com.github.mybatisx.auditable.parser.AuditPropertyAutoScanParser;
+import com.github.mybatisx.auditable.parser.AuditPropertyParser;
+import com.github.mybatisx.auditable.parser.DefaultAuditPropertyAutoScanParser;
+import com.github.mybatisx.auditable.parser.DefaultAuditPropertyParser;
+import com.github.mybatisx.basic.builder.ColumnBuilder;
+import com.github.mybatisx.basic.builder.TableBuilder;
 import com.github.mybatisx.basic.filter.ClassFilter;
 import com.github.mybatisx.basic.filter.FieldFilter;
 import com.github.mybatisx.basic.filter.Filter;
 import com.github.mybatisx.basic.filter.GetMethodFilter;
 import com.github.mybatisx.basic.filter.SetMethodFilter;
-import com.github.mybatisx.basic.immutable.ImmutableMap;
-import com.github.mybatisx.basic.immutable.ImmutableSet;
 import com.github.mybatisx.basic.metadata.Field;
 import com.github.mybatisx.basic.metadata.Table;
 import com.github.mybatisx.basic.naming.DefaultPhysicalNamingConverter;
@@ -48,25 +53,12 @@ import com.github.mybatisx.basic.naming.PhysicalNamingConverter;
 import com.github.mybatisx.basic.parser.EntityParser;
 import com.github.mybatisx.basic.parser.FieldParser;
 import com.github.mybatisx.basic.reflect.ReflectMetadata;
-import com.github.mybatisx.basic.reflect.Reflections;
 import com.github.mybatisx.basic.reflect.Reflector;
 import com.github.mybatisx.basic.type.JdbcTypeMappingRegistry;
-import com.github.mybatisx.basic.utils.Objects;
-import com.github.mybatisx.auditable.AuditMatching;
-import com.github.mybatisx.auditable.AuditType;
-import com.github.mybatisx.auditable.AutomaticAuditableProperties;
-import com.github.mybatisx.auditable.OriginalProperty;
-import com.github.mybatisx.auditable.annotation.CreatedById;
-import com.github.mybatisx.auditable.annotation.CreatedByName;
-import com.github.mybatisx.auditable.annotation.CreatedDate;
-import com.github.mybatisx.auditable.annotation.DeletedById;
-import com.github.mybatisx.auditable.annotation.DeletedByName;
-import com.github.mybatisx.auditable.annotation.DeletedDate;
-import com.github.mybatisx.auditable.annotation.LastModifiedById;
-import com.github.mybatisx.auditable.annotation.LastModifiedByName;
-import com.github.mybatisx.auditable.annotation.LastModifiedDate;
-import com.github.mybatisx.auditable.annotation.LogicDelete;
-import com.github.mybatisx.auditable.parser.AuditParser;
+import com.github.mybatisx.constant.Constants;
+import com.github.mybatisx.exception.MyBatisParserException;
+import com.github.mybatisx.immutable.ImmutableSet;
+import com.github.mybatisx.reflect.Reflections;
 import com.github.mybatisx.support.config.MyBatisGlobalConfiguration;
 import com.github.mybatisx.support.config.MyBatisLocalConfigurationCache;
 import org.apache.ibatis.session.Configuration;
@@ -85,9 +77,11 @@ import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 默认实体解析器
@@ -125,7 +119,7 @@ public class DefaultEntityParser implements EntityParser, Constants {
     /**
      * 默认审计属性解析器
      */
-    private static final AuditParser DEF_AUDIT_PARSER = new DefaultAuditParser();
+    private static final AuditPropertyParser DEF_AUDIT_PROP_PARSER = new DefaultAuditPropertyParser(false, null);
     /**
      * 乐观锁支持的类型
      */
@@ -361,7 +355,8 @@ public class DefaultEntityParser implements EntityParser, Constants {
         if (field.isAnnotationPresent(MultiTenancy.class)) {
             if (cb.primaryKey()) {
                 throw new MyBatisParserException("The attribute \"" + cb.property() + "\" of the entity class \"" +
-                    tb.entity().getName() + "\" is the primary key. Adding \"@MultiTenancy\" annotation is not supported.");
+                    tb.entity().getName() + "\" is the primary key. Adding \"@MultiTenancy\" annotation is not " +
+                    "supported.");
             }
             if (tb.multiTenant()) {
                 throw new MyBatisParserException("The entity class \"" + tb.entity().getName() + "\" already has " +
@@ -474,12 +469,12 @@ public class DefaultEntityParser implements EntityParser, Constants {
             cb.snowflake(true).executing(Executing.BEFORE);
         }
         // 如果不存在主键生成策略，则根据全局配置主键生成策略填充
-        final IdStrategy strategy;
+        final IdPolicy policy;
         if (!cb.hasPrimaryKeyStrategy()
-            && (strategy = configuration.getIdStrategy()) != IdStrategy.UNDEFINED) {
-            cb.identity(strategy == IdStrategy.JDBC || strategy == IdStrategy.IDENTITY);
-            cb.uuid(strategy == IdStrategy.UUID);
-            cb.snowflake(strategy == IdStrategy.SNOWFLAKE);
+            && (policy = configuration.getIdPolicy()) != IdPolicy.UNDEFINED) {
+            cb.identity(policy == IdPolicy.JDBC || policy == IdPolicy.IDENTITY);
+            cb.uuid(policy == IdPolicy.UUID);
+            cb.snowflake(policy == IdPolicy.SNOWFLAKE);
         }
     }
 
@@ -565,7 +560,8 @@ public class DefaultEntityParser implements EntityParser, Constants {
                     "\n\t\t\t 2.@GeneratedValue(generator = \"JDBC\")" +
                     "\n\t\t\t 3.@GeneratedValue(generator = \"SNOWFLAKE\")" +
                     "\n\t\t\t 4.@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = \"SequenceName\")" +
-                    "\n\t\t\t 5.@GeneratedValue(strategy = GenerationType.IDENTITY, generator = \"[MySql, MSSQL...]\")");
+                    "\n\t\t\t 5.@GeneratedValue(strategy = GenerationType.IDENTITY, generator = \"[MySql, MSSQL.." +
+                    ".]\")");
             }
         }
     }
@@ -583,46 +579,25 @@ public class DefaultEntityParser implements EntityParser, Constants {
         final boolean updatable = cb.canAuditing() && cb.updatable();
         final boolean insertable = cb.canAuditing() && cb.insertable();
         if (updatable || insertable) {
-            final boolean isAutoScan = configuration.isAuditAutoScan();
-            final AuditParser auditParser = this.getAuditParser(configuration);
-            final OriginalProperty property = new OriginalProperty(tb.entity(), field.getOriginalField(),
+            final AuditPropertyParser parser = this.getAuditPropertyParser(configuration);
+            final PropertyWrapper pw = new PropertyWrapper(tb.entity(), field.getOriginalField(),
                 field.getName(), field.getJavaType(), field.isPrimaryKey(), field.getGetter(), field.getSetter(),
-                null, ImmutableSet.of(field.getAnnotations()), ImmutableMap.of(field.getAnnotationCaches()));
-            if (insertable) {
-                cb.createdById(auditParser.idMatches(property, AuditMatching.SAVE, CreatedById.class)
-                    || this.handleAutomaticAuditingProperty(isAutoScan, field, AuditMatching.SAVE, AuditType.ID));
-                cb.createdByName(auditParser.nameMatches(property, AuditMatching.SAVE, CreatedByName.class)
-                    || this.handleAutomaticAuditingProperty(isAutoScan, field, AuditMatching.SAVE, AuditType.NAME));
-                cb.createdDate(auditParser.dateMatches(property, AuditMatching.SAVE, CreatedDate.class)
-                    || this.handleAutomaticAuditingProperty(isAutoScan, field, AuditMatching.SAVE, AuditType.DATE));
-            } else {
-                cb.lastModifiedById(auditParser.idMatches(property, AuditMatching.UPDATE, LastModifiedById.class)
-                    || this.handleAutomaticAuditingProperty(isAutoScan, field, AuditMatching.UPDATE, AuditType.ID));
-                cb.lastModifiedByName(auditParser.nameMatches(property, AuditMatching.UPDATE, LastModifiedByName.class)
-                    || this.handleAutomaticAuditingProperty(isAutoScan, field, AuditMatching.UPDATE, AuditType.NAME));
-                cb.lastModifiedDate(auditParser.dateMatches(property, AuditMatching.UPDATE, LastModifiedDate.class)
-                    || this.handleAutomaticAuditingProperty(isAutoScan, field, AuditMatching.UPDATE, AuditType.DATE));
-                cb.deletedById(auditParser.idMatches(property, AuditMatching.DELETE, DeletedById.class)
-                    || this.handleAutomaticAuditingProperty(isAutoScan, field, AuditMatching.DELETE, AuditType.ID));
-                cb.deletedByName(auditParser.nameMatches(property, AuditMatching.DELETE, DeletedByName.class)
-                    || this.handleAutomaticAuditingProperty(isAutoScan, field, AuditMatching.DELETE, AuditType.NAME));
-                cb.lastModifiedDate(auditParser.dateMatches(property, AuditMatching.DELETE, DeletedDate.class)
-                    || this.handleAutomaticAuditingProperty(isAutoScan, field, AuditMatching.DELETE, AuditType.DATE));
+                null, field.getAnnotations(), field.getAnnotationCaches());
+            final AuditMatcher am = parser.parse(pw);
+            if (Objects.nonNull(am) && am.canMatches()) {
+                cb.createdById(am.isCreatedById()).createdByName(am.isCreatedByName())
+                    .createdDate(am.isCreatedDate()).lastModifiedById(am.isLastModifiedById())
+                    .lastModifiedByName(am.isLastModifiedByName()).lastModifiedDate(am.isLastModifiedDate())
+                    .deletedById(am.isDeletedById()).deletedByName(am.isDeletedByName())
+                    .deletedDate(am.isDeletedDate()).auditType(am.getType().ordinal());
+                final Set<AuditPolicy> policies = am.getPolicies();
+                if (Objects.isNotEmpty(policies)) {
+                    cb.auditPolicies(policies.stream().map(AuditPolicy::ordinal).collect(Collectors.toSet()));
+                } else {
+                    cb.auditPolicies(new HashSet<>(0));
+                }
             }
         }
-    }
-
-    /**
-     * 自动识别审计属性
-     * @param autoScan 是否自动扫描
-     * @param field    {@link Field}
-     * @param matching {@link AuditMatching}
-     * @param type     {@link AuditType}
-     * @return boolean
-     */
-    private boolean handleAutomaticAuditingProperty(final boolean autoScan, final Field field,
-                                                    final AuditMatching matching, final AuditType type) {
-        return autoScan && !field.isPrimaryKey() && AutomaticAuditableProperties.matches(matching, type, field.getName());
     }
 
     /**
@@ -710,18 +685,23 @@ public class DefaultEntityParser implements EntityParser, Constants {
 
     /**
      * 获取审计属性解析器
-     * @param configuration {@link MyBatisGlobalConfiguration}
+     * @param configuration – MyBatisGlobalConfiguration
      * @return 审计属性解析器
      */
-    private AuditParser getAuditParser(final MyBatisGlobalConfiguration configuration) {
+    private AuditPropertyParser getAuditPropertyParser(final MyBatisGlobalConfiguration configuration) {
         return Optional.ofNullable(configuration).map(it -> {
-            final AuditParser parser = it.getAuditParser();
+            AuditPropertyParser parser = it.getAuditPropertyParser();
             if (parser == null) {
-                it.setAuditParser(DEF_AUDIT_PARSER);
-                return DEF_AUDIT_PARSER;
+                AuditPropertyAutoScanParser autoScanParser = it.getAuditPropertyAutoScanParser();
+                if (autoScanParser == null) {
+                    autoScanParser = new DefaultAuditPropertyAutoScanParser();
+                    it.setAuditPropertyAutoScanParser(autoScanParser);
+                }
+                parser = new DefaultAuditPropertyParser(it.isAuditAutoScan(), autoScanParser);
+                it.setAuditPropertyParser(parser);
             }
             return parser;
-        }).orElse(DEF_AUDIT_PARSER);
+        }).orElse(DEF_AUDIT_PROP_PARSER);
     }
 
     /**

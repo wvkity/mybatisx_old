@@ -15,9 +15,9 @@
  */
 package com.github.mybatisx.core.inject.method.support;
 
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.Strings;
 import com.github.mybatisx.basic.metadata.Table;
-import com.github.mybatisx.basic.utils.Objects;
-import com.github.mybatisx.basic.utils.Strings;
 import com.github.mybatisx.core.inject.mapping.script.ScriptBuilder;
 import com.github.mybatisx.support.config.MyBatisGlobalConfiguration;
 import com.github.mybatisx.support.config.MyBatisLocalConfigurationCache;

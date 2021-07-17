@@ -15,9 +15,9 @@
  */
 package com.github.mybatisx.core.invoke;
 
-import com.github.mybatisx.basic.exception.MyBatisParserException;
 import com.github.mybatisx.core.property.Property;
 import com.github.mybatisx.core.utils.SerializationUtils;
+import com.github.mybatisx.exception.MyBatisParserException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

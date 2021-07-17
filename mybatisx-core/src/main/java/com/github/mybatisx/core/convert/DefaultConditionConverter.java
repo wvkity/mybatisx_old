@@ -15,9 +15,11 @@
  */
 package com.github.mybatisx.core.convert;
 
-import com.github.mybatisx.basic.constant.Constants;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.PlaceholderPattern;
+import com.github.mybatisx.Placeholders;
 import com.github.mybatisx.basic.metadata.Column;
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.core.condition.Criterion;
 import com.github.mybatisx.core.condition.ExistsCondition;
 import com.github.mybatisx.core.condition.NestedCondition;
@@ -35,9 +37,7 @@ import com.github.mybatisx.core.expr.NativeExpression;
 import com.github.mybatisx.core.expr.SpecialExpression;
 import com.github.mybatisx.core.expr.StandardNesting;
 import com.github.mybatisx.core.expr.SubQueryExpression;
-import com.github.mybatisx.core.expr.TemplateMatch;
 import com.github.mybatisx.core.inject.mapping.utils.Scripts;
-import com.github.mybatisx.core.utils.Placeholders;
 import com.github.mybatisx.support.basic.Matched;
 import com.github.mybatisx.support.constant.Like;
 import com.github.mybatisx.support.constant.Slot;
@@ -293,7 +293,7 @@ public class DefaultConditionConverter implements Converter<Expression<?>, Crite
         final String templateStr = it.getTemplate();
         if (Objects.isNotBlank(templateStr)) {
             it.checkMatch();
-            final TemplateMatch match = it.getMatch();
+            final PlaceholderPattern pattern = it.getPattern();
             final Slot slot = it.getSlot();
             final Object value = it.getValue();
             final Collection<Object> listValues = it.getListValues();
@@ -302,7 +302,7 @@ public class DefaultConditionConverter implements Converter<Expression<?>, Crite
             if (Objects.nonNull(slot) && slot != Slot.NONE) {
                 builder.append(slot.getSegment());
             }
-            switch (match) {
+            switch (pattern) {
                 case MULTIPLE:
                     if (it.getExprMatched() == Matched.STANDARD) {
                         builder.append(Placeholders.format(templateStr, this.placeholderConverter.convert(listValues,

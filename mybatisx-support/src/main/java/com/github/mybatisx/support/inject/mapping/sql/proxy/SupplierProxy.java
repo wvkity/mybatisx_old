@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.support.inject.mapping.sql.proxy;
 
-import com.github.mybatisx.basic.reflect.Reflections;
+import com.github.mybatisx.reflect.Reflections;
 import com.github.mybatisx.support.inject.mapping.sql.Supplier;
 import com.github.mybatisx.session.MyBatisConfiguration;
 import org.apache.ibatis.reflection.ExceptionUtil;

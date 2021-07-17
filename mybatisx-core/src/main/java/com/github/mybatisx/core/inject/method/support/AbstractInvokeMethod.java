@@ -15,12 +15,12 @@
  */
 package com.github.mybatisx.core.inject.method.support;
 
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.annotation.Executing;
 import com.github.mybatisx.basic.keygen.SequenceGenerator;
 import com.github.mybatisx.basic.metadata.Column;
 import com.github.mybatisx.basic.metadata.PrimaryKey;
 import com.github.mybatisx.basic.metadata.Table;
-import com.github.mybatisx.basic.utils.Objects;
 import com.github.mybatisx.support.config.MyBatisGlobalConfiguration;
 import com.github.mybatisx.support.config.MyBatisLocalConfigurationCache;
 import com.github.mybatisx.support.inject.mapping.sql.Supplier;

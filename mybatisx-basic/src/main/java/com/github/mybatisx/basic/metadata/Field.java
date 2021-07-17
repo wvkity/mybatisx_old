@@ -15,15 +15,15 @@
  */
 package com.github.mybatisx.basic.metadata;
 
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.annotation.Id;
 import com.github.mybatisx.annotation.Identity;
 import com.github.mybatisx.annotation.Snowflake;
-import com.github.mybatisx.basic.immutable.ImmutableMap;
-import com.github.mybatisx.basic.immutable.ImmutableSet;
 import com.github.mybatisx.basic.reflect.AnnotationMetadata;
-import com.github.mybatisx.basic.reflect.Reflections;
-import com.github.mybatisx.basic.utils.Objects;
-import com.github.mybatisx.basic.constant.Constants;
+import com.github.mybatisx.constant.Constants;
+import com.github.mybatisx.immutable.ImmutableMap;
+import com.github.mybatisx.immutable.ImmutableSet;
+import com.github.mybatisx.reflect.Reflections;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

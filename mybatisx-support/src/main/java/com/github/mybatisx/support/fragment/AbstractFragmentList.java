@@ -15,9 +15,8 @@
  */
 package com.github.mybatisx.support.fragment;
 
-
-import com.github.mybatisx.basic.immutable.ImmutableList;
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.immutable.ImmutableList;
 
 import java.util.ArrayList;
 import java.util.Collection;

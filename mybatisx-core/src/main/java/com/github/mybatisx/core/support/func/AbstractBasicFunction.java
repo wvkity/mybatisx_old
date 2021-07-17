@@ -15,8 +15,8 @@
  */
 package com.github.mybatisx.core.support.func;
 
-import com.github.mybatisx.basic.constant.Constants;
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.support.criteria.Criteria;
 
 import java.util.Optional;

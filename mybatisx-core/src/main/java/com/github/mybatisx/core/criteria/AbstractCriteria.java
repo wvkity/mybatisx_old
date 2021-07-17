@@ -15,9 +15,9 @@
  */
 package com.github.mybatisx.core.criteria;
 
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.basic.metadata.Column;
 import com.github.mybatisx.basic.metadata.Table;
-import com.github.mybatisx.basic.utils.Objects;
 import com.github.mybatisx.core.condition.Criterion;
 import com.github.mybatisx.core.condition.NestedCondition;
 import com.github.mybatisx.core.expr.StandardNesting;

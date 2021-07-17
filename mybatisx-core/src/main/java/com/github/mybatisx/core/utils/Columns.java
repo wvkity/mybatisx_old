@@ -15,11 +15,11 @@
  */
 package com.github.mybatisx.core.utils;
 
-import com.github.mybatisx.basic.metadata.Auditor;
+import com.github.mybatisx.auditable.AuditType;
+import com.github.mybatisx.auditable.PropertyWrapper;
+import com.github.mybatisx.basic.metadata.AuditMeta;
 import com.github.mybatisx.basic.metadata.Column;
 import com.github.mybatisx.basic.metadata.Descriptor;
-import com.github.mybatisx.auditable.AuditType;
-import com.github.mybatisx.auditable.OriginalProperty;
 
 /**
  * 字段工具
@@ -33,16 +33,15 @@ public final class Columns {
     }
 
     /**
-     * 转成{@link OriginalProperty}对象
+     * 转成{@link PropertyWrapper}对象
      * @param column {@link Column}
-     * @return {@link OriginalProperty}
+     * @return {@link PropertyWrapper}
      */
-    public static OriginalProperty toProperty(final Column column) {
+    public static PropertyWrapper toProperty(final Column column) {
         final Descriptor desc = column.getDescriptor();
-        final Auditor auditor = column.getAuditor();
-        return new OriginalProperty(column.getEntity(), desc.getField(), desc.getName(),
+        final AuditMeta auditMeta = column.getAuditMeta();
+        return new PropertyWrapper(column.getEntity(), desc.getField(), desc.getName(),
             desc.getJavaType(), column.isUnique(), desc.getGetter(), desc.getSetter(),
-            auditor.matchingId() ? AuditType.ID : auditor.matchingName()
-                ? AuditType.NAME : auditor.matchingDate() ? AuditType.DATE : AuditType.OTHER, null, null);
+            AuditType.get(auditMeta.getAuditType()), null, null);
     }
 }

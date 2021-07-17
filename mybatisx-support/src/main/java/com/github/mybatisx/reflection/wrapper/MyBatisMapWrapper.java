@@ -1,7 +1,7 @@
 package com.github.mybatisx.reflection.wrapper;
 
 import com.github.mybatisx.annotation.NamingPolicy;
-import com.github.mybatisx.basic.constant.Constants;
+import com.github.mybatisx.constant.Constants;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.wrapper.MapWrapper;
 

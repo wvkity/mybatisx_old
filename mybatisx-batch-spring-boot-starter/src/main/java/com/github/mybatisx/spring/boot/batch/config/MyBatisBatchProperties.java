@@ -26,7 +26,7 @@ import java.util.Properties;
  * @created 2021-02-23
  * @since 1.0.0
  */
-@ConfigurationProperties(prefix = "wvkity.mybatis.plugin.batch")
+@ConfigurationProperties(prefix = "github.mybatisx.plugin.batch")
 public class MyBatisBatchProperties {
 
     /**

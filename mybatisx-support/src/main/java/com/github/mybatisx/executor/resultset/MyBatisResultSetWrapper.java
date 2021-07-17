@@ -16,7 +16,7 @@
 package com.github.mybatisx.executor.resultset;
 
 import com.github.mybatisx.annotation.NamingPolicy;
-import com.github.mybatisx.basic.constant.Constants;
+import com.github.mybatisx.constant.Constants;
 import org.apache.ibatis.executor.resultset.ResultSetWrapper;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.ResultMap;

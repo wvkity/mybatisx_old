@@ -15,8 +15,9 @@
  */
 package com.github.mybatisx.core.expr;
 
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.PlaceholderPattern;
 import com.github.mybatisx.basic.metadata.Column;
-import com.github.mybatisx.basic.utils.Objects;
 import com.github.mybatisx.core.expr.builder.AbstractTemplateExprBuilder;
 import com.github.mybatisx.support.basic.Matched;
 import com.github.mybatisx.support.constant.Slot;
@@ -36,12 +37,12 @@ public class StandardTemplate extends AbstractTemplateExpression<Column> {
 
     private static final long serialVersionUID = -3342020710178444452L;
 
-    public StandardTemplate(Criteria<?> criteria, Column column, String template, TemplateMatch match, Slot slot,
-                            Object value, Collection<Object> listValues, Map<String, Object> mapValues) {
+    public StandardTemplate(Criteria<?> criteria, Column column, String template, PlaceholderPattern pattern,
+                            Slot slot, Object value, Collection<Object> listValues, Map<String, Object> mapValues) {
         this.criteria = criteria;
         this.column = column;
         this.template = template;
-        this.match = match;
+        this.pattern = pattern;
         this.slot = slot;
         this.value = value;
         this.listValues = listValues;
@@ -62,7 +63,7 @@ public class StandardTemplate extends AbstractTemplateExpression<Column> {
         @Override
         public StandardTemplate build() {
             if (Objects.isNotBlank(this.template) && Objects.nonNull(this.target)) {
-                return new StandardTemplate(this.criteria, this.target, this.template, this.match,
+                return new StandardTemplate(this.criteria, this.target, this.template, this.pattern,
                     this.slot, this.value, this.listValues, this.mapValues);
             }
             return null;

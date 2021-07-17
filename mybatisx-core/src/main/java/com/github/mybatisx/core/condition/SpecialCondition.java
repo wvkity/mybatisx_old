@@ -15,8 +15,8 @@
  */
 package com.github.mybatisx.core.condition;
 
-import com.github.mybatisx.basic.constant.Constants;
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.support.constant.Slot;
 import com.github.mybatisx.support.constant.Symbol;
 import com.github.mybatisx.support.criteria.Criteria;

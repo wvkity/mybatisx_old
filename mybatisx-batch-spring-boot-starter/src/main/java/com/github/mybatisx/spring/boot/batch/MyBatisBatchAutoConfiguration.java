@@ -33,7 +33,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ConditionalOnClass(BatchDataWrapper.class)
-@ConditionalOnProperty(prefix = "wvkity.mybatis.plugin.batch", name = "enable", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "github.mybatisx.plugin.batch", name = "enable", havingValue = "true", matchIfMissing = true)
 public class MyBatisBatchAutoConfiguration {
 
     private final MyBatisBatchConfigurer batchConfigurer;

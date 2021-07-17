@@ -16,9 +16,9 @@
 package com.github.mybatisx.support.config;
 
 import com.github.mybatisx.annotation.NamingPolicy;
-import com.github.mybatisx.basic.exception.MapperException;
-import com.github.mybatisx.basic.exception.MyBatisException;
 import com.github.mybatisx.basic.inject.Injector;
+import com.github.mybatisx.exception.MapperException;
+import com.github.mybatisx.exception.MyBatisException;
 import com.github.mybatisx.support.mapper.BaseMapper;
 import com.github.mybatisx.session.MyBatisConfiguration;
 import org.apache.ibatis.builder.MapperBuilderAssistant;

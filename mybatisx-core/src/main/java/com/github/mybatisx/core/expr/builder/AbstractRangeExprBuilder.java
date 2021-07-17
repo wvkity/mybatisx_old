@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.core.expr.builder;
 
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
 
 import java.util.Collection;
 

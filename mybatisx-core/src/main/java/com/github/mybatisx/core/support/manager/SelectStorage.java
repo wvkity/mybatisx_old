@@ -15,14 +15,14 @@
  */
 package com.github.mybatisx.core.support.manager;
 
-import com.github.mybatisx.basic.constant.Constants;
-import com.github.mybatisx.basic.immutable.ImmutableList;
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.basic.metadata.Column;
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.core.criteria.ExtCriteria;
 import com.github.mybatisx.core.support.select.FuncSelection;
 import com.github.mybatisx.core.support.select.Selection;
 import com.github.mybatisx.core.support.select.StandardSelection;
+import com.github.mybatisx.immutable.ImmutableList;
 import com.github.mybatisx.support.basic.Matched;
 import com.github.mybatisx.support.criteria.Criteria;
 import com.github.mybatisx.support.fragment.AbstractFragmentList;

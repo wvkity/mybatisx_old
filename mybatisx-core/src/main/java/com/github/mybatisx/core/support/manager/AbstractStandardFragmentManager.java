@@ -15,8 +15,8 @@
  */
 package com.github.mybatisx.core.support.manager;
 
-import com.github.mybatisx.basic.constant.Constants;
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.core.support.having.Having;
 import com.github.mybatisx.core.support.order.Order;
 import com.github.mybatisx.core.support.select.FuncSelection;

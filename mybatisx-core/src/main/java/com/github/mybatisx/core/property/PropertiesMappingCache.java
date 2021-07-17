@@ -15,9 +15,9 @@
  */
 package com.github.mybatisx.core.property;
 
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.basic.metadata.Column;
-import com.github.mybatisx.basic.reflect.Reflections;
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.reflect.Reflections;
 import com.github.mybatisx.support.helper.TableHelper;
 import com.github.mybatisx.core.invoke.SerializedLambda;
 

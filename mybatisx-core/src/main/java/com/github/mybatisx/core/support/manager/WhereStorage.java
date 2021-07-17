@@ -15,10 +15,10 @@
  */
 package com.github.mybatisx.core.support.manager;
 
-import com.github.mybatisx.basic.constant.Constants;
-import com.github.mybatisx.basic.immutable.ImmutableList;
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.core.condition.Criterion;
+import com.github.mybatisx.immutable.ImmutableList;
 import com.github.mybatisx.support.fragment.AbstractFragmentList;
 
 import java.util.ArrayList;

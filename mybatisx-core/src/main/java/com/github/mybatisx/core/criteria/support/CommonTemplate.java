@@ -15,9 +15,9 @@
  */
 package com.github.mybatisx.core.criteria.support;
 
-import com.github.mybatisx.basic.immutable.ImmutableLinkedMap;
-import com.github.mybatisx.basic.utils.Objects;
-import com.github.mybatisx.core.expr.TemplateMatch;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.PlaceholderPattern;
+import com.github.mybatisx.immutable.ImmutableLinkedMap;
 import com.github.mybatisx.support.constant.Slot;
 
 import java.util.Collection;
@@ -40,7 +40,7 @@ interface CommonTemplate<T, C extends CommonTemplate<T, C>> extends SlotSymbol<T
      * @return {@code this}
      */
     default C tpl(final String template, final Object value) {
-        return this.tpl(this.getSlot(), template, null, TemplateMatch.SINGLE, value, null, null);
+        return this.tpl(this.getSlot(), template, null, PlaceholderPattern.SINGLE, value, null, null);
     }
 
     /**
@@ -51,7 +51,7 @@ interface CommonTemplate<T, C extends CommonTemplate<T, C>> extends SlotSymbol<T
      * @return {@code this}
      */
     default C tpl(final Slot slot, final String template, final Object value) {
-        return this.tpl(slot, template, null, TemplateMatch.SINGLE, value, null, null);
+        return this.tpl(slot, template, null, PlaceholderPattern.SINGLE, value, null, null);
     }
 
     /**
@@ -74,7 +74,7 @@ interface CommonTemplate<T, C extends CommonTemplate<T, C>> extends SlotSymbol<T
      * @return {@code this}
      */
     default C colTpl(final Slot slot, final String template, final String column, final Object value) {
-        return tpl(slot, template, column, TemplateMatch.SINGLE, value, null, null);
+        return tpl(slot, template, column, PlaceholderPattern.SINGLE, value, null, null);
     }
 
     /**
@@ -116,7 +116,7 @@ interface CommonTemplate<T, C extends CommonTemplate<T, C>> extends SlotSymbol<T
      * @return {@code this}
      */
     default C tpl(final Slot slot, final String template, final Collection<Object> values) {
-        return this.tpl(slot, template, null, TemplateMatch.MAP, null, null, values);
+        return this.tpl(slot, template, null, PlaceholderPattern.MAP, null, null, values);
     }
 
     /**
@@ -244,7 +244,7 @@ interface CommonTemplate<T, C extends CommonTemplate<T, C>> extends SlotSymbol<T
      * @return {@code this}
      */
     default C tpl(final Slot slot, final String template, final Map<String, Object> values) {
-        return this.tpl(slot, template, null, TemplateMatch.MAP, null, null, values);
+        return this.tpl(slot, template, null, PlaceholderPattern.MAP, null, null, values);
     }
 
     /**
@@ -333,7 +333,7 @@ interface CommonTemplate<T, C extends CommonTemplate<T, C>> extends SlotSymbol<T
      * @return {@code this}
      */
     default C colTpl(final Slot slot, final String template, final String column, final Map<String, Object> values) {
-        return this.tpl(slot, template, column, TemplateMatch.MAP, null, null, values);
+        return this.tpl(slot, template, column, PlaceholderPattern.MAP, null, null, values);
     }
 
     /**
@@ -341,13 +341,13 @@ interface CommonTemplate<T, C extends CommonTemplate<T, C>> extends SlotSymbol<T
      * @param slot       {@link Slot}
      * @param template   模板
      * @param column     字段
-     * @param match      {@link TemplateMatch}
+     * @param pattern      {@link PlaceholderPattern}
      * @param value      值
      * @param listValues 多个值
      * @param mapValues  多个值
      * @return {@code this}
      */
-    C tpl(Slot slot, String template, String column, TemplateMatch match, Object value,
+    C tpl(Slot slot, String template, String column, PlaceholderPattern pattern, Object value,
           Collection<Object> listValues, Map<String, Object> mapValues);
 
 }

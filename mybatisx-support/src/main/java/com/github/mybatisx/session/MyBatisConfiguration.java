@@ -15,8 +15,8 @@
  */
 package com.github.mybatisx.session;
 
-import com.github.mybatisx.basic.constant.Constants;
 import com.github.mybatisx.binding.MyBatisMapperRegistry;
+import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.executor.MyBatisBatchExecutor;
 import com.github.mybatisx.executor.MyBatisReuseExecutor;
 import com.github.mybatisx.executor.MyBatisSimpleExecutor;

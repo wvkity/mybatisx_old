@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.builder.annotation;
 
-import com.github.mybatisx.basic.constant.Constants;
+import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.support.config.MyBatisLocalConfigurationCache;
 import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.CacheNamespace;

@@ -15,8 +15,9 @@
  */
 package com.github.mybatisx.core.criteria.support;
 
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.PlaceholderPattern;
 import com.github.mybatisx.basic.metadata.Column;
-import com.github.mybatisx.basic.utils.Objects;
 import com.github.mybatisx.core.criteria.ExtCriteria;
 import com.github.mybatisx.core.expr.ExistsExpression;
 import com.github.mybatisx.core.expr.ImmediateBetween;
@@ -36,7 +37,6 @@ import com.github.mybatisx.core.expr.ImmediateNull;
 import com.github.mybatisx.core.expr.ImmediateTemplate;
 import com.github.mybatisx.core.expr.NativeExpression;
 import com.github.mybatisx.core.expr.SpecialExpression;
-import com.github.mybatisx.core.expr.TemplateMatch;
 import com.github.mybatisx.support.constant.Like;
 import com.github.mybatisx.support.constant.Slot;
 import com.github.mybatisx.support.constant.Symbol;
@@ -220,10 +220,10 @@ public abstract class AbstractGenericCriteria<T, C extends GenericCriteriaWrappe
     // region Template condition
 
     @Override
-    public C tpl(Slot slot, String template, String column, TemplateMatch match, Object value,
+    public C tpl(Slot slot, String template, String column, PlaceholderPattern pattern, Object value,
                  Collection<Object> values, Map<String, Object> mapValues) {
         if (Objects.isNotBlank(template)) {
-            this.where(new ImmediateTemplate(this, column, template, match, slot, value, values, mapValues));
+            this.where(new ImmediateTemplate(this, column, template, pattern, slot, value, values, mapValues));
         }
         return this.self();
     }

@@ -17,8 +17,8 @@ package com.github.mybatisx.basic.filter;
 
 
 import com.github.mybatisx.annotation.Entity;
-import com.github.mybatisx.basic.constant.Constants;
-import com.github.mybatisx.basic.reflect.Reflections;
+import com.github.mybatisx.constant.Constants;
+import com.github.mybatisx.reflect.Reflections;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;

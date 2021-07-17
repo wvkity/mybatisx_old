@@ -2,7 +2,7 @@
     "groups": [
         {
             "sourceType": "com.github.mybatisx.spring.boot.sequence.config.SnowflakeSequenceProperties",
-            "name": "wvkity.mybatis.plugin.pageable",
+            "name": "github.mybatisx.plugin.pageable",
             "type": "com.github.mybatisx.spring.boot.sequence.config.SnowflakeSequenceProperties"
         }
     ]

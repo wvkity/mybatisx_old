@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.core.criteria.query;
 
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.core.criteria.CriteriaWrapper;
 import com.github.mybatisx.core.criteria.ExtCriteria;
 import com.github.mybatisx.core.support.func.Function;

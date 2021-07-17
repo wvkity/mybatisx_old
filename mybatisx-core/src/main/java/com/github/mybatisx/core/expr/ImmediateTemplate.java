@@ -15,7 +15,8 @@
  */
 package com.github.mybatisx.core.expr;
 
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.PlaceholderPattern;
 import com.github.mybatisx.core.expr.builder.AbstractTemplateExprBuilder;
 import com.github.mybatisx.support.basic.Matched;
 import com.github.mybatisx.support.constant.Slot;
@@ -34,12 +35,12 @@ public class ImmediateTemplate extends AbstractTemplateExpression<String> {
 
     private static final long serialVersionUID = -415830760117182971L;
 
-    public ImmediateTemplate(Criteria<?> criteria, String column, String template, TemplateMatch match, Slot slot,
-                             Object value, Collection<Object> listValues, Map<String, Object> mapValues) {
+    public ImmediateTemplate(Criteria<?> criteria, String column, String template, PlaceholderPattern pattern,
+                             Slot slot, Object value, Collection<Object> listValues, Map<String, Object> mapValues) {
         this.criteria = criteria;
         this.column = column;
         this.template = template;
-        this.match = match;
+        this.pattern = pattern;
         this.slot = slot;
         this.value = value;
         this.listValues = listValues;
@@ -59,7 +60,7 @@ public class ImmediateTemplate extends AbstractTemplateExpression<String> {
         @Override
         public ImmediateTemplate build() {
             if (Objects.isNotBlank(this.template)) {
-                return new ImmediateTemplate(this.criteria, this.target, this.template, this.match, this.slot,
+                return new ImmediateTemplate(this.criteria, this.target, this.template, this.pattern, this.slot,
                     this.value, this.listValues, this.mapValues);
             }
             return null;

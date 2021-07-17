@@ -15,9 +15,9 @@
  */
 package com.github.mybatisx.plugin.paging.config;
 
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.plugin.paging.PageableUtil;
 import com.github.mybatisx.plugin.paging.dialect.Dialect;
-import com.github.mybatisx.plugin.utils.Objects;
 import com.github.paging.Pageable;
 import com.github.paging.StandardPageable;
 import org.apache.ibatis.session.RowBounds;
@@ -76,9 +76,9 @@ public class StandardPageableConfig {
                 final long offset = rb.getOffset();
                 final long size = rb.getLimit();
                 final long page = size != 0 ? (long) Math.ceil(((double) (offset + size)) / size) : 0;
-                final Pageable _pageable = StandardPageable.of(page, size);
-                StandardPageableThreadLocalCache.set(_pageable);
-                return _pageable;
+                final Pageable newPageable = StandardPageable.of(page, size);
+                StandardPageableThreadLocalCache.set(newPageable);
+                return newPageable;
             }
         } catch (Exception ignore) {
             // ignore

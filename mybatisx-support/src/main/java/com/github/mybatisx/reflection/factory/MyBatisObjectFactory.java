@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.reflection.factory;
 
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.support.config.MyBatisGlobalConfiguration;
 import org.apache.ibatis.reflection.ReflectionException;
 import org.apache.ibatis.reflection.Reflector;

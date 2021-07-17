@@ -15,10 +15,10 @@
  */
 package com.github.mybatisx.core.support.having;
 
-import com.github.mybatisx.basic.constant.Constants;
-import com.github.mybatisx.basic.exception.MyBatisException;
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.core.support.func.Function;
+import com.github.mybatisx.exception.MyBatisException;
 import com.github.mybatisx.support.constant.Slot;
 import com.github.mybatisx.support.criteria.Criteria;
 

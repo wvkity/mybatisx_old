@@ -15,7 +15,8 @@
  */
 package com.github.mybatisx.plugin.paging.proxy;
 
-import com.github.mybatisx.basic.constant.Constants;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.plugin.paging.dialect.AbstractDialect;
 import com.github.mybatisx.plugin.paging.dialect.Dialect;
 import com.github.mybatisx.plugin.paging.dialect.support.Db2Dialect;
@@ -27,7 +28,6 @@ import com.github.mybatisx.plugin.paging.dialect.support.OracleDialect;
 import com.github.mybatisx.plugin.paging.dialect.support.SqlServer2012LaterDialect;
 import com.github.mybatisx.plugin.paging.dialect.support.SqlServerDialect;
 import com.github.mybatisx.plugin.exception.MyBatisPluginException;
-import com.github.mybatisx.plugin.utils.Objects;
 import org.apache.ibatis.mapping.MappedStatement;
 
 import javax.sql.DataSource;

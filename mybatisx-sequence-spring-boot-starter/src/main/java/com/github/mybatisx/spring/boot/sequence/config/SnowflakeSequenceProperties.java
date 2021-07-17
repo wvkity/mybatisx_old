@@ -28,7 +28,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = SnowflakeSequenceProperties.PREFIX)
 public class SnowflakeSequenceProperties {
 
-    public static final String PREFIX = "wvkity.mybatis.sequence";
+    public static final String PREFIX = "github.mybatisx.sequence";
     /**
      * 是否启用
      */

@@ -15,12 +15,13 @@
  */
 package com.github.mybatisx.basic.reflect;
 
-import com.github.mybatisx.basic.exception.ReflectionException;
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.basic.filter.Filter;
-import com.github.mybatisx.basic.immutable.ImmutableLinkedSet;
-import com.github.mybatisx.basic.immutable.ImmutableMap;
-import com.github.mybatisx.basic.immutable.ImmutableSet;
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.exception.ReflectionException;
+import com.github.mybatisx.immutable.ImmutableLinkedSet;
+import com.github.mybatisx.immutable.ImmutableMap;
+import com.github.mybatisx.immutable.ImmutableSet;
+import com.github.mybatisx.reflect.Reflections;
 import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

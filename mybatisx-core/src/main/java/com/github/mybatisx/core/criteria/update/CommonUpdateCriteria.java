@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.core.criteria.update;
 
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.core.criteria.support.CommonCriteriaWrapper;
 
 import java.util.Map;

@@ -122,14 +122,14 @@ public class Column {
     /**
      * 审计信息
      */
-    private final Auditor auditor;
+    private final AuditMeta auditMeta;
 
     public Column(Class<?> entity, String property, String column,
                   JdbcType jdbcType, Class<? extends TypeHandler<?>> typeHandler, Class<?> javaType,
                   String sequence, boolean unique, boolean blob, boolean insertable,
                   boolean updatable, boolean useJavaType, boolean checkNotNull,
                   boolean checkNotEmpty, boolean version, boolean multiTenant, boolean logicDelete,
-                  Descriptor descriptor, PrimaryKey primaryKey, Auditor auditor) {
+                  Descriptor descriptor, PrimaryKey primaryKey, AuditMeta auditMeta) {
         this.entity = entity;
         this.property = property;
         this.column = column;
@@ -153,7 +153,7 @@ public class Column {
         this.descriptor = descriptor;
         this.primaryKey = primaryKey;
         this.priority = primaryKey.isPriority();
-        this.auditor = auditor;
+        this.auditMeta = auditMeta;
     }
 
     public Class<?> getEntity() {
@@ -244,8 +244,8 @@ public class Column {
         return primaryKey;
     }
 
-    public Auditor getAuditor() {
-        return auditor;
+    public AuditMeta getAuditMeta() {
+        return auditMeta;
     }
 
     @Override
@@ -277,14 +277,14 @@ public class Column {
             Objects.equals(sequence, column1.sequence) &&
             Objects.equals(descriptor, column1.descriptor) &&
             Objects.equals(primaryKey, column1.primaryKey) &&
-            Objects.equals(auditor, column1.auditor);
+            Objects.equals(auditMeta, column1.auditMeta);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(entity, property, column, jdbcType, javaType, typeHandler, sequence, unique,
             priority, blob, insertable, updatable, useJavaType, checkNotNull, checkNotEmpty,
-            version, multiTenant, logicDelete, descriptor, primaryKey, auditor);
+            version, multiTenant, logicDelete, descriptor, primaryKey, auditMeta);
     }
 
     @Override
@@ -312,7 +312,7 @@ public class Column {
             ", logicDelete=" + logicDelete +
             ", descriptor=" + descriptor +
             ", primaryKey=" + primaryKey +
-            ", auditor=" + auditor +
+            ", auditMeta=" + auditMeta +
             '}';
     }
 }

@@ -15,8 +15,8 @@
  */
 package com.github.mybatisx.executor;
 
-import com.github.mybatisx.basic.constant.Constants;
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.executor.resultset.EmbedResult;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.BaseExecutor;

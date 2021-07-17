@@ -15,7 +15,8 @@
  */
 package com.github.mybatisx.core.expr;
 
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.PlaceholderPattern;
 
 import java.util.Collection;
 import java.util.Map;
@@ -40,7 +41,7 @@ public abstract class AbstractTemplateExpression<E> extends AbstractExpression<E
     /**
      * 匹配模式
      */
-    protected TemplateMatch match;
+    protected PlaceholderPattern pattern;
     /**
      * 单个值
      */
@@ -58,13 +59,13 @@ public abstract class AbstractTemplateExpression<E> extends AbstractExpression<E
      * 检查匹配模式
      */
     public void checkMatch() {
-        if (Objects.isNull(this.match)) {
+        if (Objects.isNull(this.pattern)) {
             if (Objects.isNotEmpty(this.mapValues)) {
-                this.match = TemplateMatch.MAP;
+                this.pattern = PlaceholderPattern.MAP;
             } else if (Objects.isNotEmpty(this.listValues)) {
-                this.match = TemplateMatch.MULTIPLE;
+                this.pattern = PlaceholderPattern.MULTIPLE;
             } else {
-                this.match = TemplateMatch.SINGLE;
+                this.pattern = PlaceholderPattern.SINGLE;
             }
         }
     }
@@ -73,8 +74,8 @@ public abstract class AbstractTemplateExpression<E> extends AbstractExpression<E
         return template;
     }
 
-    public TemplateMatch getMatch() {
-        return match;
+    public PlaceholderPattern getPattern() {
+        return pattern;
     }
 
     public Object getValue() {

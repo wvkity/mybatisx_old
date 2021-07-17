@@ -15,8 +15,8 @@
  */
 package com.github.mybatisx.core.inject.mapping.sql;
 
-import com.github.mybatisx.basic.reflect.Reflections;
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.reflect.Reflections;
 import com.github.mybatisx.support.inject.mapping.sql.Supplier;
 
 import java.util.Collections;

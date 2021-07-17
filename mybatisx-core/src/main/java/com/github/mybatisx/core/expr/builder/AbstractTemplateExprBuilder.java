@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.core.expr.builder;
 
-import com.github.mybatisx.core.expr.TemplateMatch;
+import com.github.mybatisx.PlaceholderPattern;
 
 import java.util.Collection;
 import java.util.Map;
@@ -37,7 +37,7 @@ public abstract class AbstractTemplateExprBuilder<T, E> extends AbstractExprBuil
     /**
      * 匹配模式
      */
-    protected TemplateMatch match;
+    protected PlaceholderPattern pattern;
     /**
      * 值
      */
@@ -56,8 +56,8 @@ public abstract class AbstractTemplateExprBuilder<T, E> extends AbstractExprBuil
         return this;
     }
 
-    public AbstractTemplateExprBuilder<T, E> match(TemplateMatch match) {
-        this.match = match;
+    public AbstractTemplateExprBuilder<T, E> pattern(PlaceholderPattern pattern) {
+        this.pattern = pattern;
         return this;
     }
 

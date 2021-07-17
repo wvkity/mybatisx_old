@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.basic.keygen;
 
-import com.github.mybatisx.basic.constant.Constants;
+import com.github.mybatisx.constant.Constants;
 
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;

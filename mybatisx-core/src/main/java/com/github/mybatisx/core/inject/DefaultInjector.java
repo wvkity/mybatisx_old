@@ -15,9 +15,9 @@
  */
 package com.github.mybatisx.core.inject;
 
-import com.github.mybatisx.basic.immutable.ImmutableList;
 import com.github.mybatisx.basic.inject.Injector;
 import com.github.mybatisx.core.inject.method.MappedMethod;
+import com.github.mybatisx.immutable.ImmutableList;
 import com.github.mybatisx.support.mapper.BaseMapper;
 import com.github.mybatisx.support.mapper.DeleteMapper;
 import com.github.mybatisx.support.mapper.InsertMapper;

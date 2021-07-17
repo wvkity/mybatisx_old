@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.core.support.manager;
 
-import com.github.mybatisx.basic.constant.Constants;
+import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.core.support.having.Having;
 import com.github.mybatisx.support.fragment.AbstractFragmentList;
 

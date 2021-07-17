@@ -15,8 +15,8 @@
  */
 package com.github.mybatisx.core.inject.mapping.script;
 
-import com.github.mybatisx.basic.constant.Constants;
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.constant.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

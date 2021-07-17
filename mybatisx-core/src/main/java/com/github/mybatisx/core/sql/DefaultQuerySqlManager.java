@@ -15,12 +15,12 @@
  */
 package com.github.mybatisx.core.sql;
 
-import com.github.mybatisx.basic.constant.Constants;
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.RegexMatcher;
+import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.core.criteria.AbstractExtCriteria;
 import com.github.mybatisx.core.criteria.ExtCriteria;
 import com.github.mybatisx.core.support.manager.StandardFragmentManager;
-import com.github.mybatisx.core.utils.RegexMatcher;
 import com.github.mybatisx.support.criteria.Criteria;
 
 import java.util.ArrayList;

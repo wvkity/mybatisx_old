@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.core.sql;
 
-import com.github.mybatisx.basic.constant.Constants;
+import com.github.mybatisx.constant.Constants;
 
 /**
  * SQL管理器

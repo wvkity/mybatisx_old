@@ -15,8 +15,9 @@
  */
 package com.github.mybatisx.core.criteria.support;
 
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.PlaceholderPattern;
 import com.github.mybatisx.basic.metadata.Column;
-import com.github.mybatisx.basic.utils.Objects;
 import com.github.mybatisx.core.criteria.AbstractCriteria;
 import com.github.mybatisx.core.criteria.ExtCriteria;
 import com.github.mybatisx.core.expr.ExistsExpression;
@@ -37,7 +38,6 @@ import com.github.mybatisx.core.expr.StandardNotLike;
 import com.github.mybatisx.core.expr.StandardNotNull;
 import com.github.mybatisx.core.expr.StandardNull;
 import com.github.mybatisx.core.expr.StandardTemplate;
-import com.github.mybatisx.core.expr.TemplateMatch;
 import com.github.mybatisx.core.property.Property;
 import com.github.mybatisx.support.constant.Like;
 import com.github.mybatisx.support.constant.Slot;
@@ -348,7 +348,7 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
     public C tpl(Slot slot, String template, String property, Object value) {
         final Column column;
         if (Objects.nonNull((column = this.toColumn(property)))) {
-            this.where(new StandardTemplate(this, column, template, TemplateMatch.SINGLE, slot, value, null, null));
+            this.where(new StandardTemplate(this, column, template, PlaceholderPattern.SINGLE, slot, value, null, null));
         }
         return this.self();
     }
@@ -376,7 +376,7 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
     public C tpl(Slot slot, String template, String property, Map<String, Object> values) {
         final Column column;
         if (Objects.nonNull((column = this.toColumn(property)))) {
-            this.where(new StandardTemplate(this, column, template, TemplateMatch.MAP, slot, null, null, values));
+            this.where(new StandardTemplate(this, column, template, PlaceholderPattern.MAP, slot, null, null, values));
         }
         return this.self();
     }

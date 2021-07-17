@@ -18,8 +18,8 @@ package com.github.mybatisx.basic.filter;
 import com.github.mybatisx.annotation.Column;
 import com.github.mybatisx.annotation.ColumnExt;
 import com.github.mybatisx.annotation.Transient;
-import com.github.mybatisx.basic.constant.Constants;
-import com.github.mybatisx.basic.reflect.Reflections;
+import com.github.mybatisx.constant.Constants;
+import com.github.mybatisx.reflect.Reflections;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

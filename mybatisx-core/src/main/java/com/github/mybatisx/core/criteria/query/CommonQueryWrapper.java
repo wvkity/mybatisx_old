@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.core.criteria.query;
 
-import com.github.mybatisx.basic.utils.Objects;
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.core.support.group.StandardGroup;
 import com.github.mybatisx.core.support.order.StandardOrder;
 

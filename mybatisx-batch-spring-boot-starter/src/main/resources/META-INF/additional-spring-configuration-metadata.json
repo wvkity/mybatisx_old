@@ -2,12 +2,12 @@
     "groups": [
         {
             "sourceType": "com.github.mybatisx.spring.boot.batch.config.MyBatisBatchProperties",
-            "name": "wvkity.mybatis.plugin.batch",
+            "name": "github.mybatisx.plugin.batch",
             "type": "com.github.mybatisx.spring.boot.batch.config.MyBatisBatchProperties"
         },
         {
             "sourceType": "com.github.mybatisx.spring.boot.batch.config.MyBatisBatchProperties",
-            "name": "wvkity.mybatis.plugin.batch.properties",
+            "name": "github.mybatisx.plugin.batch.properties",
             "sourceMethod": "getProperties()",
             "type": "java.util.Properties"
         }

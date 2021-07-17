@@ -15,8 +15,8 @@
  */
 package com.github.mybatisx.core.criteria.query;
 
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.basic.metadata.Column;
-import com.github.mybatisx.basic.utils.Objects;
 import com.github.mybatisx.core.property.Property;
 import com.github.mybatisx.core.support.select.Selection;
 import com.github.mybatisx.core.support.select.StandardSelection;

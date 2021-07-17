@@ -16,11 +16,11 @@
 package com.github.mybatisx.support.parser;
 
 
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.basic.metadata.Field;
 import com.github.mybatisx.basic.parser.FieldParser;
 import com.github.mybatisx.basic.reflect.ReflectField;
 import com.github.mybatisx.basic.reflect.Reflector;
-import com.github.mybatisx.basic.utils.Objects;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
