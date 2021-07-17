@@ -13,19 +13,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.github.mybatisx.spring.boot.auditable.listener;
+package com.github.mybatisx.event;
 
 /**
- * 事件监听器
+ * 事件监听类型
  * @author wvkity
- * @created 2021-03-14
+ * @created 2021-03-17
  * @since 1.0.0
  */
-public interface EventListener<T> {
+public enum EventPhase {
 
     /**
-     * 监听
-     * @param event 事件
+     * 事务提交前
      */
-    void listen(final T event);
+    BEFORE_COMMIT,
+    /**
+     * 事务提交后
+     */
+    AFTER_COMMIT,
+    /**
+     * 事务回滚
+     */
+    AFTER_ROLLBACK,
+    /**
+     * 事务完成
+     */
+    AFTER_COMPLETION
 }

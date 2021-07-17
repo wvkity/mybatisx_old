@@ -13,18 +13,34 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.github.mybatisx.auditable.event;
+package com.github.mybatisx.event;
+
+import java.io.Serializable;
 
 /**
- * 事件监听类型
+ * 事件
+ * @param <T> 数据类型
  * @author wvkity
- * @created 2021-03-17
+ * @created 2021-03-13
  * @since 1.0.0
  */
-public enum EventPhase {
+public interface Event<T> extends Serializable {
 
-    BEFORE_COMMIT,
-    AFTER_COMMIT,
-    AFTER_ROLLBACK,
-    AFTER_COMPLETION
+    /**
+     * 数据
+     * @return 数据
+     */
+    T getSource();
+
+    /**
+     * 获取事件类型
+     * @return {@link EventPhase}
+     */
+    EventPhase getEventPhase();
+
+    /**
+     * 触发时间
+     * @return 时间戳
+     */
+    long getTimestamp();
 }

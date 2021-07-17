@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,20 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.github.mybatisx.auditable.event;
+package com.github.mybatisx.event.handle;
+
+import com.github.mybatisx.event.EventPhase;
 
 /**
- * 事件发布器
- * @param <T> 事件类型
+ * 事件数据处理器
+ * @param <T> 事件数据
  * @author wvkity
- * @created 2021-03-13
+ * @created 2021-07-16
  * @since 1.0.0
  */
-public interface EventPublisher<T> {
+public interface EventDataHandler<T> {
 
     /**
-     * 发布
-     * @param event 事件
+     * 处理事件数据
+     * @param event 事件数据
+     * @param phase {@link EventPhase}
      */
-    void publishEvent(final T event);
+    void handle(final T event, final EventPhase phase);
 }
