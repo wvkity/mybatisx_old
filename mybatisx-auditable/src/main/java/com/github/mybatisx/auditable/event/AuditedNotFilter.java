@@ -21,12 +21,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 禁止审计监听处理
+ * 禁止审计拦截处理
  * @author wvkity
  * @created 2021-07-16
  * @since 1.0.0
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AuditedNotListener {
+public @interface AuditedNotFilter {
 }
