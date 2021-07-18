@@ -234,6 +234,11 @@ public class MyBatisConfiguration extends Configuration {
     }
 
     @Override
+    public ResultMap getResultMap(String id) {
+        return this.resultMaps.get(id);
+    }
+
+    @Override
     public Collection<String> getResultMapNames() {
         return this.resultMaps.keySet();
     }

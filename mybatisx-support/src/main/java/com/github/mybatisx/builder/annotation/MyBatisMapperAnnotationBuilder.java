@@ -142,7 +142,7 @@ public class MyBatisMapperAnnotationBuilder extends MapperAnnotationBuilder {
             for (Method method : methods) {
                 try {
                     // issue #237
-                    if (!method.isBridge() && !method.isDefault()) {
+                    if (!method.isBridge()) {
                         parseStatement(method);
                     }
                 } catch (IncompleteElementException e) {
