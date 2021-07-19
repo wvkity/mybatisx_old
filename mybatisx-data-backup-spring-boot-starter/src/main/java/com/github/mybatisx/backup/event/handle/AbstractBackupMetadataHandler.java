@@ -86,7 +86,9 @@ public abstract class AbstractBackupMetadataHandler implements BackupMetadataHan
     @Override
     public void onCommit(BackupEvent event, EventPhase phase) {
         final boolean hasBroadcast = Objects.nonNull(this.broadcast);
-        this.broadcast.before(event.getSource(), phase);
+        if (hasBroadcast) {
+            this.broadcast.before(event.getSource(), phase);
+        }
         final BackupMetadata metadata = event.getSource();
         boolean success = false;
         Exception exp = null;
