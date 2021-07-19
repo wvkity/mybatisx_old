@@ -1,3 +1,5 @@
 dependencies {
-
+    api project(':mybatisx-batch')
+    api project(':mybatisx-data-backup')
+    api project(':mybatisx-plugin')
 }

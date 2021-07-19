@@ -1,0 +1,21 @@
+{
+    "groups": [
+        {
+            "sourceType": "com.github.mybatisx.spring.boot.backup.autoconfigure.MyBatisBackupProperties",
+            "name": "github.mybatisx.plugin.backup",
+            "type": "com.github.mybatisx.spring.boot.backup.autoconfigure.MyBatisBackupProperties"
+        },
+        {
+            "sourceType": "com.github.mybatisx.spring.boot.backup.autoconfigure.MyBatisBackupProperties",
+            "name": "github.mybatisx.plugin.backup.properties",
+            "sourceMethod": "getProperties()",
+            "type": "java.util.Properties"
+        },
+        {
+            "sourceType": "com.github.mybatisx.spring.boot.backup.autoconfigure.MyBatisBackupProperties",
+            "name": "github.mybatisx.plugin.backup.thread",
+            "sourceMethod": "getThread()",
+            "type": "com.github.mybatisx.spring.boot.backup.autoconfigure.ThreadConfig"
+        }
+    ]
+}
