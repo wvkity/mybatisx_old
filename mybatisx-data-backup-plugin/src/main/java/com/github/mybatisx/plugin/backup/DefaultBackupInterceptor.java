@@ -28,6 +28,100 @@ import java.util.Properties;
 
 /**
  * 默认数据备份拦截器
+ * <pre>{@code
+ *      // 使用说明:
+ *
+ *      // 例子:
+ *      // @BackupListener可选
+ *
+ *      @BackupListener(@BackupTarget(value = UserBak.class, args = {List.class}))
+ *      public class User {
+ *          private Long id;
+ *          private String userName;
+ *          private Integer state;
+ *          private String email;
+ *          private Integer version;
+ *          // ...
+ *      }
+ *
+ *      public class UserBak {
+ *          private Long id;
+ *          private String userName;
+ *          private Integer state;
+ *          private String email;
+ *          private Integer version;
+ *          //...
+ *          private Long orgId;
+ *      }
+ *
+ *      @Mapper
+ *      @Repository
+ *      public interface UserMapper {
+ *
+ *          @BackupFilter(selectMethod = "selectUser1")
+ *          @Update("UPDATE USER SET USER_NAME = #{userName}, EMAIL = #{email} WHERE ID = #{id} AND VERSION = #{version}")
+ *          int updateInfo1(User user);
+ *
+ *          @BackupFilter(selectMethod = "selectUser2", alias = "user")
+ *          @Update("UPDATE USER SET USER_NAME = #{user.userName}, EMAIL = #{user.email} WHERE ID = #{user.id} AND STATE = #{user.state}")
+ *          int updateInfo2(@Param("user") User user);
+ *
+ *          @BackupFilter(source = User.class, target = UserBak.class, args = {List.class})
+ *          @Update("UPDATE USER SET USER_NAME = #{userName}, EMAIL = #{email} WHERE ID = #{id} AND VERSION = #{version}")
+ *          int updateInfo3(@Param("userName") String userName, @Param("email") String email, @Param("id") Long id,
+ *                          @Param("version") Integer version);
+ *
+ *          @Select("SELECT * FROM USER WHERE ID = #{id} AND VERSION = #{version}")
+ *          User selectUser1(User user);
+ *
+ *          @Select("SELECT * FROM USER WHERE WHERE ID = #{user.id} AND STATE = #{user.state}")
+ *          User selectUser2(@Param("user") User user);
+ *
+ *      }
+ *
+ *      // 省略UserService类
+ *
+ *      @Mapper
+ *      @Repository
+ *      public interface UserBakMapper {
+ *
+ *          int saveInsert(@Param("batchWrapper") List<UserBak> users);
+ *      }
+ *
+ *      public interface UserBakService {
+ *
+ *          int saveBatch(List<UserBak> users);
+ *      }
+ *
+ *      // 省略UserBakServiceImpl类
+ *
+ *      // 配置
+ *
+ *      // 数据查询配置(可选)
+ *      @Component
+ *      public class DefaultQueryProcessor implements QueryProcessor {
+ *
+ *          // 方法优先级: queryList > makeMappedStatement > makeQuerySql
+ *          // ... 实现方法即可
+ *      }
+ *
+ *      // 数据备份通知配置
+ *      @Component
+ *      public class DefaultBroadcast implements Broadcast {
+ *
+ *          // ... 实现方法即可
+ *      }
+ *
+ *      // yml文件配置
+ *      github:
+ *          mybatisx:
+ *              plugin:
+ *                  filter-policies: #拦截策略，可指定多个，默认拦截所有(增、删、改)
+ *                  non-condition-filter: #删除、修改操作没有条件是否拦截备份
+ *                  policy: #监听处理策略(默认是用队列处理)
+ *
+ *      // 其他配置，按自己的需求重写类实现即可
+ * }</pre>
  * @author wvkity
  * @created 2021-07-17
  * @since 1.0.0
