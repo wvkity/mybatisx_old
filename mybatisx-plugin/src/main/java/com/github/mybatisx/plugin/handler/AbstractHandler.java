@@ -23,15 +23,14 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.WeakHashMap;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Predicate;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -42,15 +41,14 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractHandler implements Handler, Filter {
 
+    protected static final String PARAM_COLLECTION = "collection";
+    protected static final String PARAM_LIST = "list";
+    protected static final String PARAM_ARRAY = "array";
+    protected static final String PARAM_ENTITY = "entity";
     /**
-     * Mapper方法上的注解缓存
+     * Mapper接口方法注解缓存
      */
-    protected static final Map<String, Set<Class<? extends Annotation>>> MAPPER_METHOD_ANNOTATION_CACHE =
-        Collections.synchronizedMap(new WeakHashMap<>());
-    /**
-     * 是否存在注解缓存
-     */
-    protected static final Map<String, Boolean> MAPPER_METHOD_HAS_ANNOTATION_CACHE = new ConcurrentHashMap<>();
+    protected final AntSingletonShareCache antShareCache = AntSingletonShareCache.getInstance();
     /**
      * 相关配置
      */
@@ -71,7 +69,7 @@ public abstract class AbstractHandler implements Handler, Filter {
      * 是否反射Mapper方法
      * @return boolean
      */
-    protected boolean isReflect() {
+    protected boolean isEnableReflect() {
         return false;
     }
 
@@ -82,44 +80,30 @@ public abstract class AbstractHandler implements Handler, Filter {
      * @return boolean
      */
     protected boolean isAnnotationPresent(final MappedStatement ms, final Class<? extends Annotation> target) {
-        if (Objects.isNull(target)) {
-            return false;
+        return this.antShareCache.isAnnotationPresent(ms.getId(), target, this.isEnableReflect());
+    }
+
+    /**
+     * 缓存方法上的注解
+     * @param ms {@link MappedStatement}
+     * @return 注解列表
+     */
+    protected Set<Annotation> cacheMethodAnnotation(final MappedStatement ms) {
+        if (this.isEnableReflect()) {
+            return this.antShareCache.getAndCacheAnnotations(ms.getId());
         }
-        final String namespace = ms.getId();
-        final String cacheKey = namespace + "@" + target.getName();
-        if (MAPPER_METHOD_HAS_ANNOTATION_CACHE.containsKey(cacheKey)) {
-            return MAPPER_METHOD_HAS_ANNOTATION_CACHE.get(cacheKey);
-        }
-        final Set<Class<? extends Annotation>> annotations = MAPPER_METHOD_ANNOTATION_CACHE.get(namespace);
-        if (Objects.nonNull(annotations)) {
-            final boolean hasAnt =
-                Objects.isNotEmpty(annotations) && annotations.stream().anyMatch(it -> it.equals(target));
-            MAPPER_METHOD_HAS_ANNOTATION_CACHE.putIfAbsent(cacheKey, hasAnt);
-            return hasAnt;
-        } else if (this.isReflect()) {
-            final int index = namespace.lastIndexOf(Constants.DOT);
-            final String className = namespace.substring(0, index);
-            final String methodName = namespace.substring(index + 1);
-            try {
-                final Class<?> mapperClass = Class.forName(className);
-                final Method method = new ArrayList<>(Reflections.getAllMethods(mapperClass,
-                    (Predicate<Method>) it -> it.getName().equals(methodName))).get(0);
-                final Set<Annotation> ants = Reflections.getAllAnnotations(method,
-                    Reflections.METADATA_ANNOTATION_FILTER);
-                if (Objects.isNotEmpty(ants)) {
-                    MAPPER_METHOD_ANNOTATION_CACHE.put(namespace,
-                        ants.stream().map(Annotation::annotationType).collect(Collectors.toSet()));
-                    final boolean hasAnt = method.isAnnotationPresent(target);
-                    MAPPER_METHOD_HAS_ANNOTATION_CACHE.putIfAbsent(cacheKey, hasAnt);
-                    return hasAnt;
-                } else {
-                    MAPPER_METHOD_HAS_ANNOTATION_CACHE.put(cacheKey, Boolean.FALSE);
-                }
-            } catch (Exception ignore) {
-                // ignore
-            }
-        }
-        return false;
+        return null;
+    }
+
+    /**
+     * 获取Mapper方法上指定的注解实例
+     * @param ms     {@link MappedStatement}
+     * @param target 指定注解类
+     * @param <T>    注解类型
+     * @return 注解实例
+     */
+    protected <T extends Annotation> T getMethodAnt(final MappedStatement ms, final Class<T> target) {
+        return this.antShareCache.getAnnotation(ms.getId(), target, this.isEnableReflect());
     }
 
     /**
@@ -129,6 +113,110 @@ public abstract class AbstractHandler implements Handler, Filter {
      */
     protected boolean isInsert(final MappedStatement ms) {
         return ms.getSqlCommandType() == SqlCommandType.INSERT;
+    }
+
+    /**
+     * 检查是否为更新操作
+     * @param ms {@link MappedStatement}
+     * @return boolean
+     */
+    protected boolean isUpdate(final MappedStatement ms) {
+        return ms.getSqlCommandType() == SqlCommandType.UPDATE;
+    }
+
+    /**
+     * 检查是否为删除操作
+     * @param ms {@link MappedStatement}
+     * @return boolean
+     */
+    protected boolean isDelete(final MappedStatement ms) {
+        return ms.getSqlCommandType() == SqlCommandType.DELETE;
+    }
+
+    /**
+     * 获取原始参数列表
+     * @param parameter 方法参数
+     * @param action    {@link Function} 当返回值为null或false时，则返回null，否则继续后续判断
+     * @return 参数列表
+     */
+    @SuppressWarnings("unchecked")
+    protected List<Object> getOriginalParameter(final Object parameter,
+                                                final Function<Map<String, Object>, Object> action) {
+        if (parameter instanceof Collection) {
+            return this.toList((Collection<Object>) parameter);
+        } else if (Objects.isArray(parameter)) {
+            return this.toList(Arrays.asList((Object[]) parameter));
+        } else if (parameter instanceof Map) {
+            final Map<String, Object> paramMap = (Map<String, Object>) parameter;
+            if (Objects.nonNull(action)) {
+                final Object value = action.apply(paramMap);
+                if (Objects.isNull(value)) {
+                    return null;
+                }
+                if (value instanceof Collection) {
+                    return this.toList((Collection<Object>) value);
+                } else if (Objects.isArray(value)) {
+                    return this.toList(Arrays.asList((Object[]) value));
+                } else if (!(value instanceof Boolean)) {
+                    return this.toList(Collections.singletonList(value));
+                } else if (!((Boolean) value)) {
+                    return null;
+                }
+            }
+            if (paramMap.containsKey(PARAM_COLLECTION)) {
+                final Object value = paramMap.get(PARAM_COLLECTION);
+                if (value instanceof Collection) {
+                    return this.toList((Collection<Object>) value);
+                }
+            }
+            if (paramMap.containsKey(PARAM_LIST)) {
+                final Object value = paramMap.get(PARAM_LIST);
+                if (value instanceof Collection) {
+                    return this.toList((Collection<Object>) value);
+                }
+            }
+            if (paramMap.containsKey(PARAM_ARRAY)) {
+                final Object value = paramMap.get(PARAM_ARRAY);
+                if (Objects.isArray(value)) {
+                    return this.toList(Arrays.asList((Object[]) value));
+                }
+            }
+            if (paramMap.containsKey(PARAM_ENTITY)) {
+                final Object value = paramMap.get(PARAM_ENTITY);
+                if (value != null) {
+                    return this.toList(Collections.singletonList(value));
+                }
+            }
+            if (paramMap.containsKey(Constants.PARAM_ENTITIES)) {
+                final Object value = paramMap.get(Constants.PARAM_ENTITIES);
+                if (value instanceof Collection) {
+                    return this.toList((Collection<Object>) value);
+                } else if (Objects.isArray(value)) {
+                    return this.toList(Arrays.asList((Object[]) value));
+                }
+            }
+            if (paramMap.size() == 1) {
+                return this.toList(paramMap.values());
+            }
+        } else if (!Reflections.isSimpleJavaType(parameter.getClass())) {
+            return this.toList(Collections.singletonList(parameter));
+        }
+        return null;
+    }
+
+    /**
+     * {@link Collection}参数转{@link List}参数
+     * @param values 参数列表
+     * @return {@link List}参数
+     */
+    protected List<Object> toList(final Collection<Object> values) {
+        if (Objects.isNotNullElement(values)) {
+            if (values instanceof List) {
+                return (List<Object>) values;
+            }
+            return values.stream().filter(Objects::nonNull).collect(Collectors.toList());
+        }
+        return null;
     }
 
     public Properties getProperties() {

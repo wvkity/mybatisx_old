@@ -18,8 +18,8 @@ package com.github.mybatisx.plugin.auditable;
 import com.github.mybatisx.Objects;
 import com.github.mybatisx.auditable.PropertyWrapper;
 import com.github.mybatisx.auditable.event.AuditedEvent;
-import com.github.mybatisx.auditable.event.AuditedListener;
-import com.github.mybatisx.auditable.event.AuditedNotListener;
+import com.github.mybatisx.auditable.event.AuditedFilter;
+import com.github.mybatisx.auditable.event.AuditedNotFilter;
 import com.github.mybatisx.auditable.event.DefaultAuditedEvent;
 import com.github.mybatisx.auditable.event.publisher.AuditedEventPublisher;
 import com.github.mybatisx.batch.BatchDataWrapper;
@@ -28,17 +28,13 @@ import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.event.EventPhase;
 import com.github.mybatisx.plugin.auditable.cache.CacheData;
 import com.github.mybatisx.plugin.handler.AbstractUpdateHandler;
-import com.github.mybatisx.reflect.Reflections;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.plugin.Invocation;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -52,10 +48,6 @@ import java.util.stream.Collectors;
 public abstract class AbstractMetadataAuditedHandler extends AbstractUpdateHandler implements
     MetadataAuditedHandler {
 
-    protected static final String PARAM_COLLECTION = "collection";
-    protected static final String PARAM_LIST = "list";
-    protected static final String PARAM_ARRAY = "array";
-    protected static final String PARAM_ENTITY = "entity";
     public static final String PROP_KEY_AUDITED_INTERCEPT_METHODS = "auditedInterceptMethods";
     public static final String PROP_KEY_AUDITED_IGNORE_METHODS = "auditedIgnoreMethods";
     public static final String PROP_KEY_AUDITED_LOGIC_DELETE_METHODS = "auditedLogicDeleteMethods";
@@ -107,7 +99,7 @@ public abstract class AbstractMetadataAuditedHandler extends AbstractUpdateHandl
      * @return boolean
      */
     protected boolean canAudited(final MappedStatement ms, final Method method) {
-        if (this.isAnnotationPresent(ms, AuditedNotListener.class)) {
+        if (this.isAnnotationPresent(ms, AuditedNotFilter.class)) {
             return false;
         }
         final String execMethod = this.execMethod(ms);
@@ -115,7 +107,7 @@ public abstract class AbstractMetadataAuditedHandler extends AbstractUpdateHandl
             return false;
         }
         return Objects.isEmpty(this.interceptMethods) || this.interceptMethods.contains(execMethod)
-            || this.isAnnotationPresent(ms, AuditedListener.class);
+            || this.isAnnotationPresent(ms, AuditedFilter.class);
     }
 
 
@@ -125,8 +117,17 @@ public abstract class AbstractMetadataAuditedHandler extends AbstractUpdateHandl
      * @param parameter 方法参数
      * @return {@link AuditedEvent}
      */
+    @SuppressWarnings("unchecked")
     protected AuditedEvent handleParameter(final MappedStatement ms, final Object parameter) {
-        final List<Object> args = this.getOriginalParameter(parameter);
+        final List<Object> args = this.getOriginalParameter(parameter, it -> {
+            if (it.containsKey(BatchDataWrapper.PARAM_BATCH_DATA_WRAPPER)) {
+                final Object value = it.get(BatchDataWrapper.PARAM_BATCH_DATA_WRAPPER);
+                if (value instanceof BatchDataWrapper) {
+                    return ((BatchDataWrapper<Object>) value).getData();
+                }
+            }
+            return true;
+        });
         if (Objects.isNotEmpty(args)) {
             final Object first = args.get(0);
             final boolean isInsert = this.isInsert(ms);
@@ -142,73 +143,6 @@ public abstract class AbstractMetadataAuditedHandler extends AbstractUpdateHandl
                     args.forEach(it -> this.audited(ms, parameter, it, pws));
                 }
             }
-        }
-        return null;
-    }
-
-    /**
-     * 获取原始参数列表
-     * @param parameter 方法参数
-     * @return 参数列表
-     */
-    @SuppressWarnings("unchecked")
-    protected List<Object> getOriginalParameter(final Object parameter) {
-        if (parameter instanceof Collection) {
-            return this.toList((Collection<Object>) parameter);
-        } else if (Objects.isArray(parameter)) {
-            return this.toList(Arrays.asList((Object[]) parameter));
-        } else if (parameter instanceof Map) {
-            final Map<String, Object> paramMap = (Map<String, Object>) parameter;
-            if (paramMap.containsKey(PARAM_COLLECTION)) {
-                final Object value = paramMap.get(PARAM_COLLECTION);
-                if (value instanceof Collection) {
-                    return this.toList((Collection<Object>) value);
-                }
-            }
-            if (paramMap.containsKey(PARAM_LIST)) {
-                final Object value = paramMap.get(PARAM_LIST);
-                if (value instanceof Collection) {
-                    return this.toList((Collection<Object>) value);
-                }
-            }
-            if (paramMap.containsKey(PARAM_ARRAY)) {
-                final Object value = paramMap.get(PARAM_ARRAY);
-                if (Objects.isArray(value)) {
-                    return this.toList(Arrays.asList((Object[]) value));
-                }
-            }
-            if (paramMap.containsKey(PARAM_ENTITY)) {
-                final Object value = paramMap.get(PARAM_ENTITY);
-                if (value != null) {
-                    return this.toList(Collections.singletonList(value));
-                }
-            }
-            if (paramMap.containsKey(Constants.PARAM_ENTITIES)) {
-                final Object value = paramMap.get(Constants.PARAM_ENTITIES);
-                if (value instanceof Collection) {
-                    return this.toList((Collection<Object>) value);
-                } else if (Objects.isArray(value)) {
-                    return this.toList(Arrays.asList((Object[]) value));
-                }
-            }
-            if (paramMap.containsKey(BatchDataWrapper.PARAM_BATCH_DATA_WRAPPER)) {
-                final Object value = paramMap.get(BatchDataWrapper.PARAM_BATCH_DATA_WRAPPER);
-                if (value instanceof BatchDataWrapper) {
-                    return this.toList(((BatchDataWrapper<Object>) value).getData());
-                }
-            }
-            if (paramMap.size() == 1) {
-                return this.toList(paramMap.values());
-            }
-        } else if (Reflections.isSimpleJavaType(parameter.getClass())) {
-            return this.toList(Collections.singletonList(parameter));
-        }
-        return null;
-    }
-
-    private List<Object> toList(final Collection<Object> values) {
-        if (Objects.isNotNullElement(values)) {
-            return values.stream().filter(Objects::nonNull).collect(Collectors.toList());
         }
         return null;
     }

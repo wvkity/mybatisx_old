@@ -16,6 +16,7 @@
 package com.github.mybatisx.cache;
 
 import com.github.mybatisx.Objects;
+import com.github.mybatisx.constant.Constants;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.decorators.FifoCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
@@ -42,7 +43,7 @@ public class MyBatisLocalCache<K, V> implements LocalCache<K, V> {
         this.properties = properties;
         this.prefix = prefix;
         final CacheBuilder it = new CacheBuilder(cacheId);
-        final String targetClass = this.properties.getProperty(this.prefix + PROP_KEY_MYBATIS_TYPE_CLASS);
+        final String targetClass = this.getProperty(PROP_KEY_MYBATIS_TYPE_CLASS);
         if (Objects.isNotBlank(targetClass)) {
             try {
                 it.implementation((Class<? extends Cache>) Class.forName(targetClass));
@@ -52,7 +53,7 @@ public class MyBatisLocalCache<K, V> implements LocalCache<K, V> {
         } else {
             it.implementation(PerpetualCache.class);
         }
-        final String evictionClass = this.properties.getProperty(this.prefix + PROP_KEY_MYBATIS_EVICTION_CLASS);
+        final String evictionClass = this.getProperty(PROP_KEY_MYBATIS_EVICTION_CLASS);
         if (Objects.isNotBlank(evictionClass)) {
             try {
                 it.addDecorator((Class<? extends Cache>) Class.forName(evictionClass));
@@ -69,7 +70,7 @@ public class MyBatisLocalCache<K, V> implements LocalCache<K, V> {
     }
 
     private void ifPresent(final String key, final Consumer<Long> consumer) {
-        Optional.ofNullable(this.properties.getProperty(this.prefix + key)).ifPresent(it ->
+        Optional.ofNullable(this.getProperty(key)).ifPresent(it ->
             consumer.accept(Long.parseLong(it)));
     }
 
@@ -82,5 +83,13 @@ public class MyBatisLocalCache<K, V> implements LocalCache<K, V> {
     @Override
     public void put(K key, V value) {
         this.cache.putObject(key, value);
+    }
+
+    @Override
+    public String getProperty(String key) {
+        if (Objects.isNotBlank(this.prefix)) {
+            return this.properties.getProperty(this.prefix + Constants.DOT + key);
+        }
+        return this.properties.getProperty(key);
     }
 }

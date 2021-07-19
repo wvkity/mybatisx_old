@@ -33,7 +33,7 @@ import java.util.Properties;
  */
 public final class LocalCacheFactory {
 
-    static final String DEF_CACHE_TYPE = "caffeine";
+    public static final String DEF_CACHE_TYPE = "caffeine";
 
     private LocalCacheFactory() {
     }
@@ -57,7 +57,7 @@ public final class LocalCacheFactory {
                 return new CaffeineLocalCache<>(properties, prefix);
             } catch (Exception ignore) {
                 final String cacheId =
-                    Optional.ofNullable(properties.getProperty(prefix + LocalCache.PROP_KEY_CACHE_ID))
+                    Optional.ofNullable(LocalCacheFactory.getDefCacheId(properties, prefix))
                         .filter(Objects::isNotBlank).orElse("Ms_Record_Sql_Cache");
                 return new MyBatisLocalCache<>(properties, prefix, cacheId);
             }
@@ -73,7 +73,7 @@ public final class LocalCacheFactory {
                         return (LocalCache<K, V>) mh.invokeWithArguments(properties, prefix);
                     } catch (Exception ignore) {
                         final String cacheId =
-                            Optional.ofNullable(properties.getProperty(prefix + LocalCache.PROP_KEY_CACHE_ID))
+                            Optional.ofNullable(LocalCacheFactory.getDefCacheId(properties, prefix))
                                 .filter(Objects::isNotBlank).orElse("Ms_Record_Sql_Cache");
                         final MethodHandle mh = lookup.findConstructor(cacheClass,
                             MethodType.methodType(void.class, Properties.class, String.class, String.class));
@@ -84,9 +84,22 @@ public final class LocalCacheFactory {
                     return (LocalCache<K, V>) mh.invokeWithArguments();
                 }
             } catch (Throwable e) {
-                throw new MyBatisPluginException("SQL cache instance creation failed: `" + cacheImplClass + "`: " + e, e);
+                throw new MyBatisPluginException("SQL cache instance creation failed: `" + cacheImplClass + "`: " + e
+                    , e);
             }
         }
     }
 
+    /**
+     * 获取默认缓存标识
+     * @param properties 配置项
+     * @param prefix     配置项前缀
+     * @return 缓存标识
+     */
+    public static String getDefCacheId(final Properties properties, final String prefix) {
+        if (Objects.isNotBlank(prefix)) {
+            return properties.getProperty(prefix + Constants.DOT + LocalCache.PROP_KEY_CACHE_ID);
+        }
+        return properties.getProperty(LocalCache.PROP_KEY_CACHE_ID);
+    }
 }

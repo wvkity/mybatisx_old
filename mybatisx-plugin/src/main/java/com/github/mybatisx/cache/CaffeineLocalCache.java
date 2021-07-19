@@ -17,6 +17,8 @@ package com.github.mybatisx.cache;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.constant.Constants;
 
 import java.util.Optional;
 import java.util.Properties;
@@ -41,7 +43,7 @@ public class CaffeineLocalCache<K, V> implements LocalCache<K, V> {
         this.prefix = prefix;
         this.properties = properties;
         final Caffeine<Object, Object> it = Caffeine.newBuilder();
-        it.maximumSize(Long.parseLong(Optional.ofNullable(properties.getProperty(prefix + PROP_KEY_CAFFEINE_MAXIMUM_SIZE))
+        it.maximumSize(Long.parseLong(Optional.ofNullable(this.getProperty(PROP_KEY_CAFFEINE_MAXIMUM_SIZE))
             .orElse("1000")));
         ifPresent(PROP_KEY_CAFFEINE_EXPIRE_AFTER_ACCESS, v -> it.expireAfterAccess(v, TimeUnit.MILLISECONDS));
         ifPresent(PROP_KEY_CAFFEINE_EXPIRE_AFTER_WRITE, v -> it.expireAfterWrite(v, TimeUnit.MILLISECONDS));
@@ -50,7 +52,7 @@ public class CaffeineLocalCache<K, V> implements LocalCache<K, V> {
     }
 
     private void ifPresent(final String key, final Consumer<Long> consumer) {
-        Optional.ofNullable(this.properties.getProperty(this.prefix + key)).ifPresent(it ->
+        Optional.ofNullable(this.getProperty(key)).ifPresent(it ->
             consumer.accept(Long.parseLong(it)));
     }
 
@@ -62,5 +64,13 @@ public class CaffeineLocalCache<K, V> implements LocalCache<K, V> {
     @Override
     public void put(K key, V value) {
         this.cache.put(key, value);
+    }
+
+    @Override
+    public String getProperty(String key) {
+        if (Objects.isNotBlank(this.prefix)) {
+            return this.properties.getProperty(this.prefix + Constants.DOT + key);
+        }
+        return this.properties.getProperty(key);
     }
 }

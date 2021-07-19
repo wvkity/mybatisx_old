@@ -103,7 +103,7 @@ public class DefaultMetadataAuditedHandler extends AbstractMetadataAuditedHandle
     }
 
     @Override
-    protected boolean isReflect() {
+    protected boolean isEnableReflect() {
         return this.annotationEnable;
     }
 

@@ -54,7 +54,7 @@ import java.util.function.Function;
     havingValue = "true", matchIfMissing = true)
 public class MyBatisMetadataAuditableAutoConfiguration {
 
-    public static final String CFG_PREFIX = "github.mybatisx.plugin.auditable";
+    public static final String CFG_PREFIX = MyBatisMetadataAuditableProperties.CFG_PREFIX;
     private final MyBatisMetadataAuditableProperties configProperties;
     private final ApplicationContext context;
     private final AuditorAware auditorAware;

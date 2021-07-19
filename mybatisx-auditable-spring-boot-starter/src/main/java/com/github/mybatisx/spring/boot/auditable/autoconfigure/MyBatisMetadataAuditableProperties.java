@@ -25,9 +25,13 @@ import java.util.Properties;
  * @created 2021-07-16
  * @since 1.0.0
  */
-@ConfigurationProperties(prefix = "github.mybatisx.plugin.auditable")
+@ConfigurationProperties(prefix = MyBatisMetadataAuditableProperties.CFG_PREFIX)
 public class MyBatisMetadataAuditableProperties {
 
+    public static final String CFG_PREFIX = "github.mybatisx.plugin.auditable";
+    /**
+     * 是否启用
+     */
     private boolean enable = true;
     /**
      * 是否开启事务回滚属性值还原

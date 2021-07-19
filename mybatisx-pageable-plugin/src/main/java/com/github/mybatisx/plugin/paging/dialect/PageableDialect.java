@@ -49,6 +49,7 @@ public interface PageableDialect extends Dialect {
      * @param bs        {@link BoundSql}
      * @param rh        {@link ResultHandler}
      * @return 总记录数
+     * @throws SQLException 执行查询可能出现SQL异常
      */
     Long executingQueryRecord(final Executor executor, final MappedStatement ms, final Object parameter,
                               final RowBounds rb, final BoundSql bs, final ResultHandler<?> rh) throws SQLException;
@@ -62,6 +63,7 @@ public interface PageableDialect extends Dialect {
      * @param bs        {@link BoundSql}
      * @param rh        {@link ResultHandler}
      * @return 总记录数
+     * @throws SQLException 执行查询可能出现SQL异常
      */
     default boolean executingQueryRecordAfter(final Executor executor, final MappedStatement ms,
                                               final Object parameter, final RowBounds rb,

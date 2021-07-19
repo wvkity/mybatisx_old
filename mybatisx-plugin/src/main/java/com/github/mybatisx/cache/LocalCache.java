@@ -25,15 +25,15 @@ package com.github.mybatisx.cache;
  */
 public interface LocalCache<K, V> {
 
-    String PROP_KEY_CACHE_ID = ".cacheId";
-    String PROP_KEY_MYBATIS_TYPE_CLASS = ".typeClass";
-    String PROP_KEY_MYBATIS_EVICTION_CLASS = ".evictionClass";
-    String PROP_KEY_MYBATIS_FLUSH_INTERVAL = ".flushInterval";
-    String PROP_KEY_MYBATIS_SIZE = ".size";
-    String PROP_KEY_CAFFEINE_MAXIMUM_SIZE = ".maximumSize";
-    String PROP_KEY_CAFFEINE_EXPIRE_AFTER_ACCESS = ".expireAfterAccess";
-    String PROP_KEY_CAFFEINE_EXPIRE_AFTER_WRITE = ".expireAfterWrite";
-    String PROP_KEY_CAFFEINE_INITIAL_CAPACITY = ".initialCapacity";
+    String PROP_KEY_CACHE_ID = "cacheId";
+    String PROP_KEY_MYBATIS_TYPE_CLASS = "typeClass";
+    String PROP_KEY_MYBATIS_EVICTION_CLASS = "evictionClass";
+    String PROP_KEY_MYBATIS_FLUSH_INTERVAL = "flushInterval";
+    String PROP_KEY_MYBATIS_SIZE = "size";
+    String PROP_KEY_CAFFEINE_MAXIMUM_SIZE = "maximumSize";
+    String PROP_KEY_CAFFEINE_EXPIRE_AFTER_ACCESS = "expireAfterAccess";
+    String PROP_KEY_CAFFEINE_EXPIRE_AFTER_WRITE = "expireAfterWrite";
+    String PROP_KEY_CAFFEINE_INITIAL_CAPACITY = "initialCapacity";
 
     /**
      * 获取值
@@ -48,4 +48,11 @@ public interface LocalCache<K, V> {
      * @param value 值
      */
     void put(final K key, final V value);
+
+    /**
+     * 获取配置项值
+     * @param key 键
+     * @return 值
+     */
+    String getProperty(final String key);
 }

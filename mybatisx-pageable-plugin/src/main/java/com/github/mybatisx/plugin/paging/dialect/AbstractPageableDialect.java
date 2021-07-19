@@ -162,7 +162,7 @@ public abstract class AbstractPageableDialect extends AbstractDialect implements
     @Override
     public void setProperties(Properties properties) {
         super.setProperties(properties);
-        this.recordMsCache = LocalCacheFactory.create(properties.getProperty(PROP_KEY_RECORD_MS_CACHE_CLASS), properties,
-            properties.getProperty(PROP_KEY_RECORD_MS_CFG_PREFIX));
+        this.recordMsCache = LocalCacheFactory.create(properties.getProperty(PROP_KEY_RECORD_MS_CACHE_CLASS),
+            properties, properties.getProperty(PROP_KEY_RECORD_MS_CFG_PREFIX));
     }
 }

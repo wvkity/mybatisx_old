@@ -15,7 +15,7 @@
  */
 package com.github.mybatisx.support.mapper;
 
-import com.github.mybatisx.auditable.event.AuditedNotListener;
+import com.github.mybatisx.auditable.event.AuditedNotFilter;
 import com.github.mybatisx.constant.Constants;
 import org.apache.ibatis.annotations.Param;
 
@@ -33,7 +33,7 @@ public interface InsertMapper<T> {
      * @param entity 待保存记录
      * @return 受影响行数
      */
-    @AuditedNotListener
+    @AuditedNotFilter
     int insert(@Param(Constants.PARAM_ENTITY) final T entity);
 
     /**

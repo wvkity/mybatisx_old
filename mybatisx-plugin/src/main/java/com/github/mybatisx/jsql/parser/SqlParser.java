@@ -23,12 +23,16 @@ import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.Function;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Column;
+import net.sf.jsqlparser.schema.Table;
+import net.sf.jsqlparser.statement.Statement;
+import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.select.SelectBody;
 import net.sf.jsqlparser.statement.select.SelectExpressionItem;
 import net.sf.jsqlparser.statement.select.SelectItem;
 import net.sf.jsqlparser.statement.select.SubSelect;
+import net.sf.jsqlparser.statement.update.Update;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -120,7 +124,7 @@ public class SqlParser {
     public String smartCountParse(final String originalSql, final String colName) {
         final Select select;
         try {
-            select = parse(originalSql);
+            select = parseSelect(originalSql);
             new RemoveOrderByHandler(originalSql, select).handleTryRemove();
         } catch (Exception ignore) {
             return this.toSimpleQueryRecordSql(originalSql, colName);
@@ -138,7 +142,7 @@ public class SqlParser {
         final ParameterParser paramParser = new ParameterParser(originalSql);
         final Select select;
         try {
-            select = parse(paramParser.replace().isReplaced() ? paramParser.getReplaceSql() : originalSql);
+            select = parseSelect(paramParser.replace().isReplaced() ? paramParser.getReplaceSql() : originalSql);
             new RemoveOrderByHandler(originalSql, select).handleTryRemove();
         } catch (Exception ignore) {
             return originalSql;
@@ -146,7 +150,13 @@ public class SqlParser {
         return paramParser.restore(select.toString());
     }
 
-    protected Select parse(final String originalSql) throws JSQLParserException {
+    /**
+     * 解析查询语句
+     * @param originalSql 原SQL语句
+     * @return {@link Select}
+     * @throws JSQLParserException 非完整查询语句将抛出异常
+     */
+    protected Select parseSelect(final String originalSql) throws JSQLParserException {
         return (Select) CCJSqlParserUtil.parse(originalSql);
     }
 
@@ -163,7 +173,7 @@ public class SqlParser {
         final Select select;
         final RemoveOrderByHandler orderByHandler;
         try {
-            select = this.parse(paramParser.replace().isReplaced() ? paramParser.getReplaceSql() : originalSql);
+            select = this.parseSelect(paramParser.replace().isReplaced() ? paramParser.getReplaceSql() : originalSql);
             orderByHandler = new RemoveOrderByHandler(originalSql, select);
         } catch (Exception ignore) {
             return this.regexExistsParse(originalSql);
@@ -288,6 +298,62 @@ public class SqlParser {
      */
     public String toSimpleQueryRecordSql(final String originalSql, final String colName) {
         return "SELECT COUNT(" + colName + ") RECORDS FROM (" + originalSql + ") TMP_TAB_RECORDS";
+    }
+
+    /**
+     * 解析WHERE条件
+     * @param originalSql 原SQL语句
+     * @return WHERE条件
+     */
+    public String parseWhereCondition(final String originalSql) {
+        final Statement statement;
+        try {
+            statement = CCJSqlParserUtil.parse(originalSql);
+            final Expression where;
+            if (statement instanceof Select) {
+                where = ((PlainSelect) ((Select) statement).getSelectBody()).getWhere();
+            } else if (statement instanceof Update) {
+                where = ((Update) statement).getWhere();
+            } else if (statement instanceof Delete) {
+                where = ((Delete) statement).getWhere();
+            } else {
+                where = null;
+            }
+            if (Objects.nonNull(where)) {
+                return where.toString();
+            }
+        } catch (Exception ignore) {
+            // ignore
+        }
+        return null;
+    }
+
+    /**
+     * 表名
+     * @param originalSql 原SQL
+     * @return 表名
+     */
+    public String parseTableName(final String originalSql) {
+        final Statement statement;
+        try {
+            statement = CCJSqlParserUtil.parse(originalSql);
+            final Table table;
+            if (statement instanceof Select) {
+                table = ((PlainSelect) ((Select) statement).getSelectBody()).getIntoTables().get(0);
+            } else if (statement instanceof Update) {
+                table = ((Update) statement).getTable();
+            } else if (statement instanceof Delete) {
+                table = ((Delete) statement).getTable();
+            } else {
+                table = null;
+            }
+            if (Objects.nonNull(table)) {
+                return table.toString();
+            }
+        } catch (Exception ignore) {
+            // ignore
+        }
+        return null;
     }
 
 }

@@ -15,10 +15,10 @@
  */
 package com.github.mybatisx.plugin.auditable;
 
-import com.github.mybatisx.plugin.AbstractInterceptor;
 import com.github.mybatisx.plugin.annotation.Order;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Plugin;
@@ -35,11 +35,11 @@ import java.util.Properties;
  * @created 2021-07-16
  * @since 1.0.0
  */
-@Order(168)
+@Order(188)
 @Intercepts({
     @Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class})
 })
-public class DefaultMetadataAuditedInterceptor extends AbstractInterceptor {
+public class DefaultMetadataAuditedInterceptor implements Interceptor {
 
     private final MetadataAuditedHandler metadataAuditedHandler;
 
