@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.github.mybatisx.auditable.annotation;
+package com.github.mybatisx.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -26,8 +26,6 @@ import java.lang.annotation.Target;
  * @created 2021-02-27
  * @since 1.0.0
  */
-@Time
-@Deleted
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface LogicDelete {
