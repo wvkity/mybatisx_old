@@ -259,7 +259,7 @@ public abstract class AbstractBackupMetadataHandler implements BackupMetadataHan
             if (specified) {
                 this.SPECIFIED_PROCESS_BEAN_CACHE.putIfAbsent(beanName, processBean);
             } else {
-                this.MATCHES_PROCESS_BEAN_CACHE.put(target.getCanonicalName(), processBean);
+                this.MATCHES_PROCESS_BEAN_CACHE.putIfAbsent(target.getCanonicalName(), processBean);
             }
             return processBean;
         }
