@@ -32,6 +32,7 @@ import com.github.mybatisx.backup.queue.BackupQueueProcessor;
 import com.github.mybatisx.backup.queue.DefaultBackupBlockingQueue;
 import com.github.mybatisx.backup.queue.DefaultBackupQueueProcessor;
 import com.github.mybatisx.backup.thread.QueueThreadExecutor;
+import com.github.mybatisx.plugin.annotation.Order;
 import com.github.mybatisx.plugin.backup.BackupHandler;
 import com.github.mybatisx.plugin.backup.DefaultBackupHandler;
 import com.github.mybatisx.plugin.backup.DefaultBackupInterceptor;
@@ -52,6 +53,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Function;
 
 /**
+ * 数据备份插件注入自动配置
  * @author wvkity
  * @created 2021-07-17
  * @since 1.0.0
@@ -107,6 +109,7 @@ public class MyBatisBackupAutoConfiguration {
             this.configProperties.getFilterPolicies(), backupEventPublisher);
     }
 
+    @Order(168)
     @Bean
     @ConditionalOnMissingBean
     public DefaultBackupInterceptor backupInterceptor(final BackupHandler backupHandler) {

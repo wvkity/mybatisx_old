@@ -18,6 +18,8 @@ package com.github.mybatisx.backup.additional;
 import com.github.mybatisx.CommandType;
 import com.github.mybatisx.backup.meta.BackupMetadata;
 
+import java.util.List;
+
 /**
  * 附加处理器
  * @author wvkity
@@ -31,13 +33,21 @@ public interface AdditionalProcessor {
      * @param metadata     备份数据
      * @param source       元数据
      * @param sourceIdProp 元数据ID属性
-     * @param clazz        目标类
+     * @param targetClass  目标类
      * @param target       目标类ID属性对应元数据ID属性
      * @param targetIdProp 目标类ID属性对应元数据ID属性
      * @param commandType  当前执行类型
-     * @return 处理结果
      */
-    Object process(final BackupMetadata metadata, final Object source, final String sourceIdProp,
-                   final Class<?> clazz, final Object target, final String targetIdProp,
-                   final CommandType commandType);
+    void process(final BackupMetadata metadata, final Object source, final String sourceIdProp,
+                 final Class<?> targetClass, final Object target, final String targetIdProp,
+                 final CommandType commandType);
+
+    /**
+     * 转换成最终参数
+     * @param metadata    {@link BackupMetadata}
+     * @param data        备份数据
+     * @param commandType 当前执行类型
+     * @return 参数
+     */
+    Object convert(final BackupMetadata metadata, final List<Object> data, final CommandType commandType);
 }

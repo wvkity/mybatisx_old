@@ -70,7 +70,7 @@ public abstract class AbstractBackupMetadataHandler implements BackupMetadataHan
     /**
      * 附加处理器
      */
-    protected AdditionalProcessor processor;
+    protected AdditionalProcessor additionalProcessor;
     /**
      * 广播通知
      */
@@ -174,12 +174,13 @@ public abstract class AbstractBackupMetadataHandler implements BackupMetadataHan
             final String targetIdProp = metadata.getTargetIdProp();
             final Class<?> target = metadata.getTarget();
             final List<Object> dataList = new ArrayList<>(sources.size());
-            final boolean hasAdditional = Objects.nonNull(this.processor);
+            final boolean hasAdditional = Objects.nonNull(this.additionalProcessor);
             final CommandType commandType = metadata.getCommandType();
             for (Object source : sources) {
                 final Object data = this.beanConverter.convert(source, sourceIdProp, target, targetIdProp);
                 if (hasAdditional) {
-                    this.processor.process(metadata, source, sourceIdProp, target, data, targetIdProp, commandType);
+                    this.additionalProcessor.process(metadata, source, sourceIdProp, target, data, targetIdProp,
+                        commandType);
                 }
                 dataList.add(data);
             }
@@ -197,11 +198,18 @@ public abstract class AbstractBackupMetadataHandler implements BackupMetadataHan
      */
     protected void process(final BackupMetadata metadata, final Object processBean, final List<Object> dataList) {
         try {
+            Object parameterObject = null;
+            if (Objects.nonNull(this.additionalProcessor)) {
+                parameterObject = this.additionalProcessor.convert(metadata, dataList, metadata.getCommandType());
+            }
+            if (Objects.isNull(parameterObject)) {
+                parameterObject = dataList;
+            }
             final String processMethod = Objects.isNotBlank(metadata.getProcessMethod()) ?
                 metadata.getProcessMethod() : "saveBatch";
             final Method method = processBean.getClass().getMethod(processMethod,
-                Objects.isEmpty(metadata.getArgs()) ? new Class<?>[]{dataList.getClass()} : metadata.getArgs());
-            method.invoke(processBean, dataList);
+                Objects.isEmpty(metadata.getArgs()) ? new Class<?>[]{parameterObject.getClass()} : metadata.getArgs());
+            method.invoke(processBean, parameterObject);
         } catch (Exception e) {
             throw new BackupProcessedException("Data backup failed: " + e.getMessage(), e);
         }
