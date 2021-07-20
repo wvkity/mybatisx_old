@@ -31,7 +31,6 @@ import com.github.mybatisx.reflection.MetaObjects;
 import org.apache.ibatis.reflection.MetaObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.aop.support.AopUtils;
 import org.springframework.context.ApplicationContext;
 
 import java.lang.reflect.Method;
@@ -198,18 +197,22 @@ public abstract class AbstractBackupMetadataHandler implements BackupMetadataHan
      */
     protected void process(final BackupMetadata metadata, final Object processBean, final List<Object> dataList) {
         try {
-            Object parameterObject = null;
+            List<Object> parameters = null;
             if (Objects.nonNull(this.additionalProcessor)) {
-                parameterObject = this.additionalProcessor.convert(metadata, dataList, metadata.getCommandType());
+                parameters = this.additionalProcessor.convert(metadata, dataList, metadata.getCommandType());
             }
-            if (Objects.isNull(parameterObject)) {
-                parameterObject = dataList;
+            final Object[] args;
+            if (Objects.nonNull(parameters)) {
+                args = parameters.toArray(new Object[0]);
+            } else {
+                args = new Object[]{dataList};
             }
+            final Class<?>[] argClasses =
+                Objects.isEmpty(metadata.getArgs()) ? new Class<?>[]{dataList.getClass()} : metadata.getArgs();
             final String processMethod = Objects.isNotBlank(metadata.getProcessMethod()) ?
                 metadata.getProcessMethod() : "saveBatch";
-            final Method method = processBean.getClass().getMethod(processMethod,
-                Objects.isEmpty(metadata.getArgs()) ? new Class<?>[]{parameterObject.getClass()} : metadata.getArgs());
-            method.invoke(processBean, parameterObject);
+            final Method method = processBean.getClass().getMethod(processMethod, argClasses);
+            method.invoke(processBean, args);
         } catch (Exception e) {
             throw new BackupProcessedException("Data backup failed: " + e.getMessage(), e);
         }
@@ -253,13 +256,6 @@ public abstract class AbstractBackupMetadataHandler implements BackupMetadataHan
         }
         if (this.context.containsBean(beanName)) {
             processBean = this.context.getBean(beanName);
-            if (AopUtils.isAopProxy(processBean)) {
-                if (AopUtils.isCglibProxy(processBean)) {
-                    processBean = this.getCglibProxyTargetObject(processBean);
-                } else {
-                    processBean = this.getJdkDynamicProxyTargetObject(processBean);
-                }
-            }
             if (specified) {
                 this.SPECIFIED_PROCESS_BEAN_CACHE.putIfAbsent(beanName, processBean);
             } else {

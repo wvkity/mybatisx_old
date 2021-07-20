@@ -47,7 +47,7 @@ public interface AdditionalProcessor {
      * @param metadata    {@link BackupMetadata}
      * @param data        备份数据
      * @param commandType 当前执行类型
-     * @return 参数
+     * @return 参数列表
      */
-    Object convert(final BackupMetadata metadata, final List<Object> data, final CommandType commandType);
+    List<Object> convert(final BackupMetadata metadata, final List<Object> data, final CommandType commandType);
 }
