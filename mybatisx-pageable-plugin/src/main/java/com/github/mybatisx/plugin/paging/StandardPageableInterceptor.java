@@ -15,7 +15,6 @@
  */
 package com.github.mybatisx.plugin.paging;
 
-import com.github.mybatisx.plugin.annotation.Order;
 import com.github.mybatisx.plugin.handler.Handler;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
@@ -37,7 +36,6 @@ import java.util.Properties;
  * @created 2021-02-08
  * @since 1.0.0
  */
-@Order(88)
 @Intercepts({
     @Signature(type = Executor.class, method = "query",
         args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}),

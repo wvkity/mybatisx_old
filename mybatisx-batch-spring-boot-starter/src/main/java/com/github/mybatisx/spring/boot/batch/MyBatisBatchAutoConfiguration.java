@@ -24,6 +24,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 
 /**
  * 批量操作拦截器自动注入配置
@@ -42,6 +43,7 @@ public class MyBatisBatchAutoConfiguration {
         this.batchConfigurer = batchConfigurer;
     }
 
+    @Order(168)
     @Bean
     @ConditionalOnMissingBean
     public BatchParameterInterceptor batchParameterInterceptor() {
@@ -50,6 +52,7 @@ public class MyBatisBatchAutoConfiguration {
         return it;
     }
 
+    @Order(168)
     @Bean
     @ConditionalOnMissingBean
     public BatchStatementInterceptor batchStatementInterceptor() {

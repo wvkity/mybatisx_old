@@ -38,6 +38,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.annotation.Order;
 
 import java.util.Properties;
 import java.util.function.Function;
@@ -121,6 +122,7 @@ public class MyBatisMetadataAuditableAutoConfiguration {
 
     }
 
+    @Order(198)
     @Bean
     @ConditionalOnMissingBean
     public DefaultMetadataAuditedInterceptor metadataAuditedInterceptor(@Lazy MetadataAuditedHandler metadataAuditedHandler) {

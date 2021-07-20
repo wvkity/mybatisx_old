@@ -20,8 +20,6 @@ import com.github.mybatisx.backup.convert.BeanConverter;
 import com.github.mybatisx.backup.message.Broadcast;
 import org.springframework.context.ApplicationContext;
 
-import java.util.Optional;
-
 /**
  * 默认备份数据处理器
  * @author wvkity
@@ -31,10 +29,10 @@ import java.util.Optional;
 public class DefaultBackupMetadataHandler extends AbstractBackupMetadataHandler {
 
     public DefaultBackupMetadataHandler(ApplicationContext context, BeanConverter beanConverter,
-                                        AdditionalProcessor processor, Broadcast broadcast) {
+                                        AdditionalProcessor additionalProcessor, Broadcast broadcast) {
         this.context = context;
         this.beanConverter = beanConverter;
-        this.processor = processor;
+        this.additionalProcessor = additionalProcessor;
         this.broadcast = broadcast;
     }
 }

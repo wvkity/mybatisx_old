@@ -26,6 +26,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnSingleCandidate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 
 import javax.sql.DataSource;
 
@@ -47,6 +48,7 @@ public class MyBatisPageableAutoConfiguration {
         this.pageableConfigurer = pageableConfigurer;
     }
 
+    @Order(168)
     @Bean
     @ConditionalOnMissingBean
     public RangePageableInterceptor rangePageableInterceptor() {
@@ -55,6 +57,7 @@ public class MyBatisPageableAutoConfiguration {
         return interceptor;
     }
 
+    @Order(138)
     @Bean
     @ConditionalOnMissingBean
     public StandardPageableInterceptor standardPageableInterceptor() {

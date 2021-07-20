@@ -15,7 +15,6 @@
  */
 package com.github.mybatisx.plugin.auditable;
 
-import com.github.mybatisx.plugin.annotation.Order;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.plugin.Interceptor;
@@ -35,7 +34,6 @@ import java.util.Properties;
  * @created 2021-07-16
  * @since 1.0.0
  */
-@Order(188)
 @Intercepts({
     @Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class})
 })

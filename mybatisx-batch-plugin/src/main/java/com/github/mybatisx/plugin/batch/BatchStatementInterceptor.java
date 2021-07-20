@@ -15,7 +15,6 @@
  */
 package com.github.mybatisx.plugin.batch;
 
-import com.github.mybatisx.plugin.annotation.Order;
 import com.github.mybatisx.plugin.handler.Handler;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.plugin.Interceptor;
@@ -33,7 +32,6 @@ import java.util.Properties;
  * @created 2021-02-23
  * @since 1.0.0
  */
-@Order(98)
 @Intercepts({
     @Signature(type = StatementHandler.class, method = "update", args = {Statement.class}),
     @Signature(type = StatementHandler.class, method = "batch", args = {Statement.class})
