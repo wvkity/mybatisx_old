@@ -16,7 +16,9 @@
 package com.github.mybatisx.plugin.auditable;
 
 import com.github.mybatisx.auditable.PropertyWrapper;
-import com.github.mybatisx.plugin.auditable.cache.CacheData;
+import com.github.mybatisx.auditable.meta.AuditedMetadata;
+import com.github.mybatisx.plugin.handler.Handler;
+import org.apache.ibatis.mapping.MappedStatement;
 
 import java.util.List;
 
@@ -26,5 +28,27 @@ import java.util.List;
  * @created 2021-07-16
  * @since 1.0.0
  */
-public interface MetadataAuditedHandler extends AuditedHandler<CacheData<List<PropertyWrapper>>> {
+public interface MetadataAuditedHandler extends Handler {
+
+    /**
+     * 加载审计属性
+     * @param ms            {@link MappedStatement}
+     * @param target        目标对象
+     * @param isInsert      是否保存操作
+     * @param isLogicDelete 是否逻辑删除操作
+     * @return 审计数据列表
+     */
+    List<PropertyWrapper> loadProperties(final MappedStatement ms, final Object target,
+                                         final boolean isInsert, final boolean isLogicDelete);
+
+    /**
+     * 审计
+     * @param ms         {@link MappedStatement}
+     * @param parameter  方法参数
+     * @param target     目标对象
+     * @param properties 审计属性列表
+     * @return 审计数据列表
+     */
+    List<AuditedMetadata> audited(final MappedStatement ms, final Object parameter, final Object target,
+                                  final List<PropertyWrapper> properties);
 }

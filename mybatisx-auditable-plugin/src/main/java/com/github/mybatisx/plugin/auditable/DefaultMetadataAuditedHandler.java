@@ -28,7 +28,6 @@ import com.github.mybatisx.plugin.auditable.support.AuditedPropertyLoader;
 import com.github.mybatisx.plugin.auditable.support.MetadataAuditable;
 import org.apache.ibatis.mapping.MappedStatement;
 
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
@@ -108,8 +107,8 @@ public class DefaultMetadataAuditedHandler extends AbstractMetadataAuditedHandle
     }
 
     @Override
-    protected boolean canAudited(MappedStatement ms, Method method) {
-        return super.canAudited(ms, method) && Objects.nonNull(this.metadataAuditable)
+    public boolean canAudited(MappedStatement ms) {
+        return super.canAudited(ms) && Objects.nonNull(this.metadataAuditable)
             && Objects.nonNull(this.propertyLoader);
     }
 

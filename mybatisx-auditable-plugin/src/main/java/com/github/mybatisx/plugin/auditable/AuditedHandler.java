@@ -15,12 +15,9 @@
  */
 package com.github.mybatisx.plugin.auditable;
 
-import com.github.mybatisx.auditable.PropertyWrapper;
-import com.github.mybatisx.auditable.meta.AuditedMetadata;
+import com.github.mybatisx.auditable.event.AuditedEvent;
 import com.github.mybatisx.plugin.handler.Handler;
 import org.apache.ibatis.mapping.MappedStatement;
-
-import java.util.List;
 
 /**
  * 审计拦截处理器
@@ -45,25 +42,18 @@ public interface AuditedHandler<T> extends Handler {
     void cache(final String cacheKey, final T data);
 
     /**
-     * 加载审计属性
-     * @param ms            {@link MappedStatement}
-     * @param target        目标对象
-     * @param isInsert      是否保存操作
-     * @param isLogicDelete 是否逻辑删除操作
-     * @return 审计数据列表
+     * 检查是否可审计
+     * @param ms {@link MappedStatement}
+     * @return boolean
      */
-    List<PropertyWrapper> loadProperties(final MappedStatement ms, final Object target,
-                                         final boolean isInsert, final boolean isLogicDelete);
+    boolean canAudited(final MappedStatement ms);
 
     /**
-     * 审计
-     * @param ms         {@link MappedStatement}
-     * @param parameter  方法参数
-     * @param target     目标对象
-     * @param properties 审计属性列表
-     * @return 审计数据列表
+     * 审计处理
+     * @param ms        {@link MappedStatement}
+     * @param parameter 方法参数
+     * @return {@link AuditedEvent}
      */
-    List<AuditedMetadata> audited(final MappedStatement ms, final Object parameter, final Object target,
-                                  final List<PropertyWrapper> properties);
+    AuditedEvent auditedHandle(final MappedStatement ms, final Object parameter);
 
 }
