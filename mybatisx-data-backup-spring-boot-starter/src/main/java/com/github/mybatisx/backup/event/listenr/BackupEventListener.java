@@ -18,6 +18,7 @@ package com.github.mybatisx.backup.event.listenr;
 import com.github.mybatisx.backup.event.BackupEvent;
 import com.github.mybatisx.event.EventPhase;
 import com.github.mybatisx.event.listener.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
@@ -33,6 +34,7 @@ public interface BackupEventListener extends EventListener<BackupEvent> {
      * 事务提交成功监听
      * @param event {@link BackupEvent}
      */
+    @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     default void afterCommit(final BackupEvent event) {
         this.listen(event, EventPhase.AFTER_COMMIT);
@@ -42,6 +44,7 @@ public interface BackupEventListener extends EventListener<BackupEvent> {
      * 事务回滚监听
      * @param event {@link BackupEvent}
      */
+    @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_ROLLBACK)
     default void afterRollback(final BackupEvent event) {
         this.listen(event, EventPhase.AFTER_ROLLBACK);
