@@ -20,6 +20,7 @@ import com.github.mybatisx.auditable.PropertyWrapper;
 import com.github.mybatisx.basic.metadata.AuditMeta;
 import com.github.mybatisx.basic.metadata.Column;
 import com.github.mybatisx.basic.metadata.Descriptor;
+import com.github.mybatisx.basic.metadata.PrimaryKey;
 
 /**
  * 字段工具
@@ -40,8 +41,9 @@ public final class Columns {
     public static PropertyWrapper toProperty(final Column column) {
         final Descriptor desc = column.getDescriptor();
         final AuditMeta auditMeta = column.getAuditMeta();
+        final PrimaryKey pk = column.getPrimaryKey();
         return new PropertyWrapper(column.getEntity(), desc.getField(), desc.getName(),
-            desc.getJavaType(), column.isUnique(), desc.getGetter(), desc.getSetter(),
+            desc.getJavaType(), column.isUnique(), pk.isUuid(), pk.isSnowflake(), desc.getGetter(), desc.getSetter(),
             AuditType.get(auditMeta.getAuditType()), null, null);
     }
 }

@@ -25,14 +25,14 @@ import org.apache.ibatis.mapping.MappedStatement;
 import java.util.Map;
 
 /**
- * 源数据解析器
+ * 源数据表映射解析器
  * @author wvkity
  * @created 2021-03-14
  * @since 1.0.0
  */
-public class MetadataParser {
+public class SourceTableParser {
 
-    public MetadataParser() {
+    public SourceTableParser() {
     }
 
     /**
@@ -59,9 +59,8 @@ public class MetadataParser {
                     return TableHelper.getTable(((Criteria<?>) value).getEntityClass());
                 }
             }
-        } else if (target != null && !Object.class.equals((entityClass = target.getClass()))
-            && !Reflections.isSimpleJavaType(entityClass)) {
-            return TableHelper.getTable(entityClass);
+        } else if (!Reflections.isSimpleJavaObject(target)) {
+            return TableHelper.getTable(target.getClass());
         }
         return null;
     }

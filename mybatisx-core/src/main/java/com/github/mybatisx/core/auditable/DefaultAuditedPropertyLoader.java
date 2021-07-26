@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  */
 public class DefaultAuditedPropertyLoader implements AuditedPropertyLoader {
 
-    protected final MetadataParser parser = new MetadataParser();
+    protected final SourceTableParser parser = new SourceTableParser();
 
     @Override
     public List<PropertyWrapper> load(MappedStatement ms, Object target, AuditedPattern pattern,

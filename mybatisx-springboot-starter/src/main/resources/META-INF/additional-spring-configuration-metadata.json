@@ -16,6 +16,17 @@
             "name": "github.mybatisx.globalConfiguration",
             "sourceMethod": "getGlobalConfiguration()",
             "type": "com.github.mybatisx.support.config.MyBatisGlobalConfiguration"
+        },
+        {
+            "sourceType": "com.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisSysBuiltAuditedProperties",
+            "name": "github.mybatisx.plugin.sys",
+            "type": "com.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisSysBuiltAuditedProperties"
+        },
+        {
+            "sourceType": "com.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisSysBuiltAuditedProperties",
+            "name": "github.mybatisx.plugin.sys.properties",
+            "sourceMethod": "getProperties()",
+            "type": "java.util.Properties"
         }
     ]
 }

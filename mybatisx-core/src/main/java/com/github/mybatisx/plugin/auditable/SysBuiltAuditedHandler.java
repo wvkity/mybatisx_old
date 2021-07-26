@@ -13,22 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.github.mybatisx.backup.event.listenr;
+package com.github.mybatisx.plugin.auditable;
+
+import com.github.mybatisx.plugin.handler.Handler;
 
 /**
- * 监听器处理策略
+ * 内置审计拦截处理器
  * @author wvkity
- * @created 2021-07-19
+ * @created 2021-07-21
  * @since 1.0.0
  */
-public enum ProcessedPolicy {
-
-    /**
-     * 常规
-     */
-    STANDARD,
-    /**
-     * 队列
-     */
-    QUEUE
+public interface SysBuiltAuditedHandler extends Handler {
 }
