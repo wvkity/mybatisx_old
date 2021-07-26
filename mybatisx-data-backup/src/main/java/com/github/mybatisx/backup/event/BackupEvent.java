@@ -27,8 +27,22 @@ import com.github.mybatisx.event.Event;
 public interface BackupEvent extends Event<BackupMetadata> {
 
     /**
+     * 事件类型唯一标识
+     */
+    String EVENT_UNIQUE = "backupEvent";
+
+    /**
      * 唯一标识
      * @return 唯一标识
      */
     String getUniqueCode();
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    default String getEventUnique() {
+        return EVENT_UNIQUE;
+    }
+
 }

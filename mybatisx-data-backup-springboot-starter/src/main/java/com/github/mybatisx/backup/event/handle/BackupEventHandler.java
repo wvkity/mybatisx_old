@@ -18,6 +18,7 @@ package com.github.mybatisx.backup.event.handle;
 import com.github.mybatisx.Objects;
 import com.github.mybatisx.backup.event.BackupEvent;
 import com.github.mybatisx.event.EventPhase;
+import com.github.mybatisx.event.handle.EventHandler;
 
 /**
  * 备份数据处理器
@@ -25,14 +26,15 @@ import com.github.mybatisx.event.EventPhase;
  * @created 2021-07-19
  * @since 1.0.0
  */
-public interface BackupMetadataHandler {
+public interface BackupEventHandler extends EventHandler<BackupEvent> {
 
     /**
      * 备份数据处理
      * @param event {@link BackupEvent}
      * @param phase {@link EventPhase}
      */
-    default void handle(final BackupEvent event, final EventPhase phase) {
+    @Override
+    default void doHandle(final BackupEvent event, final EventPhase phase) {
         if (Objects.nonNull(event)) {
             switch (phase) {
                 case AFTER_COMMIT:
@@ -45,6 +47,14 @@ public interface BackupMetadataHandler {
                     break;
             }
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    default String getEventUnique() {
+        return BackupEvent.EVENT_UNIQUE;
     }
 
     /**

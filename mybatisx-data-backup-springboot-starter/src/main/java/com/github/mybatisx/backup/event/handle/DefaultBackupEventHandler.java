@@ -26,10 +26,10 @@ import org.springframework.context.ApplicationContext;
  * @created 2021-07-19
  * @since 1.0.0
  */
-public class DefaultBackupMetadataHandler extends AbstractBackupMetadataHandler {
+public class DefaultBackupEventHandler extends AbstractBackupEventHandler {
 
-    public DefaultBackupMetadataHandler(ApplicationContext context, BeanConverter beanConverter,
-                                        AdditionalProcessor additionalProcessor, Broadcast broadcast) {
+    public DefaultBackupEventHandler(ApplicationContext context, BeanConverter beanConverter,
+                                     AdditionalProcessor additionalProcessor, Broadcast broadcast) {
         this.context = context;
         this.beanConverter = beanConverter;
         this.additionalProcessor = additionalProcessor;

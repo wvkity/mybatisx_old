@@ -19,37 +19,30 @@ import com.github.mybatisx.Objects;
 import com.github.mybatisx.backup.additional.AdditionalProcessor;
 import com.github.mybatisx.backup.convert.BeanConverter;
 import com.github.mybatisx.backup.convert.DefaultBeanConverter;
-import com.github.mybatisx.backup.event.handle.BackupMetadataHandler;
-import com.github.mybatisx.backup.event.handle.DefaultBackupMetadataHandler;
+import com.github.mybatisx.backup.event.handle.BackupEventHandler;
+import com.github.mybatisx.backup.event.handle.DefaultBackupEventHandler;
 import com.github.mybatisx.backup.event.listenr.BackupEventListener;
 import com.github.mybatisx.backup.event.listenr.DefaultBackupEventListener;
 import com.github.mybatisx.backup.event.listenr.DefaultBlockingQueueBackupEventListener;
 import com.github.mybatisx.backup.event.publisher.BackupEventPublisher;
 import com.github.mybatisx.backup.event.publisher.DefaultBackupEventPublisher;
 import com.github.mybatisx.backup.message.Broadcast;
-import com.github.mybatisx.backup.queue.BackupQueue;
-import com.github.mybatisx.backup.queue.BackupQueueProcessor;
-import com.github.mybatisx.backup.queue.DefaultBackupBlockingQueue;
-import com.github.mybatisx.backup.queue.DefaultBackupQueueProcessor;
-import com.github.mybatisx.backup.thread.QueueThreadExecutor;
 import com.github.mybatisx.plugin.annotation.Order;
 import com.github.mybatisx.plugin.backup.BackupHandler;
 import com.github.mybatisx.plugin.backup.DefaultBackupHandler;
 import com.github.mybatisx.plugin.backup.DefaultBackupInterceptor;
 import com.github.mybatisx.plugin.backup.process.QueryProcessor;
+import com.github.mybatisx.queue.EventQueue;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 
 import java.util.Properties;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Function;
 
 /**
@@ -62,6 +55,7 @@ import java.util.function.Function;
 @EnableConfigurationProperties(MyBatisBackupProperties.class)
 @ConditionalOnProperty(prefix = MyBatisBackupAutoConfiguration.CFG_PREFIX, name = "enable",
     havingValue = "true", matchIfMissing = true)
+@AutoConfigureBefore(name = {"com.github.mybatisx.spring.boot.queue.autoconfigure.MyBatisEventQueueAutoConfiguration"})
 public class MyBatisBackupAutoConfiguration {
 
     public static final String CFG_PREFIX = MyBatisBackupProperties.CFG_PREFIX;
@@ -81,9 +75,6 @@ public class MyBatisBackupAutoConfiguration {
         this.queryProcessor = queryProcessorProvider.getIfAvailable();
         this.additionalProcessor = additionalProcessorProvider.getIfAvailable();
         this.broadcast = broadcastProvider.getIfAvailable();
-        if (Objects.isNull(this.configProperties.getThread())) {
-            this.configProperties.setThread(new ThreadConfig());
-        }
         if (Objects.isNull(configProperties.getProperties())) {
             this.properties = new Properties();
         } else {
@@ -120,63 +111,29 @@ public class MyBatisBackupAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = CFG_PREFIX, name = "policy", havingValue = "QUEUE", matchIfMissing = true)
-    public ThreadPoolExecutor executor() {
-        final ThreadFactory factory = new CustomizableThreadFactory("data-backup-thread-pool");
-        final ThreadConfig cfg = this.configProperties.getThread();
-        return new ThreadPoolExecutor(cfg.getCorePoolSize(), cfg.getMaximumPoolSize(), cfg.getKeepAliveTime(),
-            cfg.getTimeUnit(), new LinkedBlockingQueue<>(cfg.getCapacity()), factory,
-            new ThreadPoolExecutor.AbortPolicy());
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = CFG_PREFIX, name = "policy", havingValue = "QUEUE", matchIfMissing = true)
-    public QueueThreadExecutor queueThreadExecutor(final ThreadPoolExecutor executor) {
-        return new QueueThreadExecutor(executor);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = CFG_PREFIX, name = "policy", havingValue = "QUEUE", matchIfMissing = true)
-    public BackupQueue backupQueue() {
-        return new DefaultBackupBlockingQueue(this.configProperties.getThread().getCapacity());
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
     public BeanConverter beanConverter() {
         return new DefaultBeanConverter();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public BackupMetadataHandler backupMetadataHandler(final BeanConverter beanConverter) {
-        return new DefaultBackupMetadataHandler(this.context, beanConverter, this.additionalProcessor,
+    public BackupEventHandler backupMetadataHandler(final BeanConverter beanConverter) {
+        return new DefaultBackupEventHandler(this.context, beanConverter, this.additionalProcessor,
             this.broadcast);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = CFG_PREFIX, name = "policy", havingValue = "QUEUE", matchIfMissing = true)
-    public BackupQueueProcessor backupQueueProcessor(final QueueThreadExecutor executor,
-                                                     final BackupQueue backupQueue,
-                                                     final BackupMetadataHandler backupMetadataHandler) {
-        return new DefaultBackupQueueProcessor(executor, backupQueue, backupMetadataHandler);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
     @ConditionalOnProperty(prefix = CFG_PREFIX, name = "policy", havingValue = "STANDARD")
-    public BackupEventListener backupEventListener(final BackupMetadataHandler metadataHandler) {
+    public BackupEventListener backupEventListener(final BackupEventHandler metadataHandler) {
         return new DefaultBackupEventListener(metadataHandler);
     }
 
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(prefix = CFG_PREFIX, name = "policy", havingValue = "QUEUE", matchIfMissing = true)
-    public BackupEventListener backupQueueEventListener(final BackupQueue backupQueue) {
-        return new DefaultBlockingQueueBackupEventListener(backupQueue);
+    public BackupEventListener queueBackupEventListener(final ObjectProvider<EventQueue> eventQueueProvider) {
+        return new DefaultBlockingQueueBackupEventListener(eventQueueProvider.getIfAvailable());
     }
 
     private void ifPresentOfString(final String property,

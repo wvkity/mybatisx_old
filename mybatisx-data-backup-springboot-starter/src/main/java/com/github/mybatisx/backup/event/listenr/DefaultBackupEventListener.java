@@ -17,28 +17,27 @@ package com.github.mybatisx.backup.event.listenr;
 
 import com.github.mybatisx.Objects;
 import com.github.mybatisx.backup.event.BackupEvent;
-import com.github.mybatisx.backup.queue.BackupQueue;
-import com.github.mybatisx.backup.queue.QueueData;
+import com.github.mybatisx.backup.event.handle.BackupEventHandler;
 import com.github.mybatisx.event.EventPhase;
 
 /**
- * 默认数据备份事件监听器(队列处理方式)
+ * 默认数据备份事件监听器
  * @author wvkity
  * @created 2021-07-19
  * @since 1.0.0
  */
-public class DefaultBlockingQueueBackupEventListener implements BackupEventListener {
+public class DefaultBackupEventListener implements BackupEventListener {
 
-    private final BackupQueue backupQueue;
+    protected final BackupEventHandler metadataHandler;
 
-    public DefaultBlockingQueueBackupEventListener(BackupQueue backupQueue) {
-        this.backupQueue = backupQueue;
+    public DefaultBackupEventListener(BackupEventHandler metadataHandler) {
+        this.metadataHandler = metadataHandler;
     }
 
     @Override
     public void listen(BackupEvent event, EventPhase phase) {
-        if (Objects.nonNull(event)) {
-            this.backupQueue.offer(new QueueData(event, phase));
+        if (Objects.nonNull(this.metadataHandler)) {
+            this.metadataHandler.doHandle(event, phase);
         }
     }
 }

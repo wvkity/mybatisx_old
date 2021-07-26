@@ -16,9 +16,8 @@
 package com.github.mybatisx.spring.boot.backup.autoconfigure;
 
 import com.github.mybatisx.backup.BackupPolicy;
-import com.github.mybatisx.backup.event.listenr.ProcessedPolicy;
+import com.github.mybatisx.event.EventPolicy;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import java.util.Properties;
 import java.util.Set;
@@ -40,7 +39,7 @@ public class MyBatisBackupProperties {
     /**
      * 监听处理策略
      */
-    private ProcessedPolicy policy = ProcessedPolicy.QUEUE;
+    private EventPolicy policy = EventPolicy.QUEUE;
     /**
      * 是否开启注解方式拦截
      */
@@ -57,11 +56,6 @@ public class MyBatisBackupProperties {
      * 审计属性缓存配置项前缀
      */
     private String cacheCfgPrefix;
-    /**
-     * 线程配置
-     */
-    @NestedConfigurationProperty
-    private ThreadConfig thread;
     /**
      * 拦截策略(默认拦截所有)
      */
@@ -82,11 +76,11 @@ public class MyBatisBackupProperties {
         this.enable = enable;
     }
 
-    public ProcessedPolicy getPolicy() {
+    public EventPolicy getPolicy() {
         return policy;
     }
 
-    public void setPolicy(ProcessedPolicy policy) {
+    public void setPolicy(EventPolicy policy) {
         this.policy = policy;
     }
 
@@ -120,14 +114,6 @@ public class MyBatisBackupProperties {
 
     public void setCacheCfgPrefix(String cacheCfgPrefix) {
         this.cacheCfgPrefix = cacheCfgPrefix;
-    }
-
-    public ThreadConfig getThread() {
-        return thread;
-    }
-
-    public void setThread(ThreadConfig thread) {
-        this.thread = thread;
     }
 
     public Set<BackupPolicy> getFilterPolicies() {

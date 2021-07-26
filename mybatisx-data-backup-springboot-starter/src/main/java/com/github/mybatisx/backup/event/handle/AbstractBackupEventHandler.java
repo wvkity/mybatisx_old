@@ -47,9 +47,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @created 2021-07-19
  * @since 1.0.0
  */
-public abstract class AbstractBackupMetadataHandler implements BackupMetadataHandler {
+public abstract class AbstractBackupEventHandler implements BackupEventHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(AbstractBackupMetadataHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractBackupEventHandler.class);
     /**
      * 指定Bean缓存
      */
