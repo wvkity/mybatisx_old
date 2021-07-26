@@ -16,8 +16,8 @@
 package com.github.mybatisx.plugin.handler;
 
 import com.github.mybatisx.BasicDataTypeRegistry;
+import com.github.mybatisx.reflect.Reflections;
 import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.plugin.Invocation;
 
 /**
@@ -37,9 +37,7 @@ public abstract class AbstractUpdateHandler extends AbstractHandler {
 
     @Override
     public boolean filter(MappedStatement ms, Object parameter) {
-        final SqlCommandType command = ms.getSqlCommandType();
-        return (command == SqlCommandType.INSERT || command == SqlCommandType.UPDATE) && parameter != null
-            && !(BasicDataTypeRegistry.isPrimitiveOrWrapper(parameter) || String.class.equals(parameter));
+        return (this.isInsert(ms) || this.isUpdate(ms)) && parameter != null && !Reflections.isSimpleJavaObject(parameter);
     }
 
     /**

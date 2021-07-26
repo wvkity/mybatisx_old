@@ -223,9 +223,18 @@ public abstract class AbstractHandler implements Handler, Filter {
         return properties;
     }
 
+    /**
+     * 获取配置项值
+     * @param key 键
+     * @return 值
+     */
+    protected String getProperty(final String key) {
+        return this.properties.getProperty(key);
+    }
+
     @Override
     public void setProperties(Properties properties) {
-        this.properties = properties;
+        this.properties = Objects.nonNull(properties) ? properties : new Properties();
     }
 
 }
