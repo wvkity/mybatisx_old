@@ -77,7 +77,7 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> extends SlotSymbol<T, 
      * @param v1 字段1对应值
      * @param c2 字段2
      * @param v2 字段2对应值
-     * @return {@link C}
+     * @return {@code this}
      */
     default C colEq(final String c1, final Object v1, final String c2, final Object v2) {
         return this.colEq(this.getSlot(), c1, v1, c2, v2);
@@ -90,7 +90,7 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> extends SlotSymbol<T, 
      * @param v1   字段1对应值
      * @param c2   字段2
      * @param v2   字段2对应值
-     * @return {@link C}
+     * @return {@code this}
      */
     default C colEq(final Slot slot, final String c1, final Object v1, final String c2, final Object v2) {
         return this.colEq(slot, c1, v1).colEq(slot, c2, v2);
@@ -104,7 +104,7 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> extends SlotSymbol<T, 
      * @param v2 字段2对应值
      * @param c3 字段3
      * @param v3 字段3对应值
-     * @return {@link C}
+     * @return {@code this}
      */
     default C colEq(final String c1, final Object v1, final String c2,
                     final Object v2, final String c3, final Object v3) {
@@ -120,7 +120,7 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> extends SlotSymbol<T, 
      * @param v2   字段2对应值
      * @param c3   字段3
      * @param v3   字段3对应值
-     * @return {@link C}
+     * @return {@code this}
      */
     default C colEq(final Slot slot, final String c1, final Object v1, final String c2,
                     final Object v2, final String c3, final Object v3) {
@@ -130,7 +130,7 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> extends SlotSymbol<T, 
     /**
      * 等于
      * @param columns 字段-值集合
-     * @return {@link C}
+     * @return {@code this}
      */
     default C colEq(final Map<String, Object> columns) {
         return colEq(this.getSlot(), columns);
@@ -140,7 +140,7 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> extends SlotSymbol<T, 
      * 等于
      * @param slot    {@link Slot}
      * @param columns 字段-值集合
-     * @return {@link C}
+     * @return {@code this}
      */
     C colEq(final Slot slot, final Map<String, Object> columns);
 

@@ -954,8 +954,8 @@ public final class Reflections {
      * @param method 目标方法
      * @param args   参数
      * @return 执行结果
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
+     * @throws InvocationTargetException 方法调用可能会抛异常
+     * @throws IllegalAccessException    底层方法不可访问可能会抛异常
      */
     public static Object methodInvoke(final Object target, final Method method, final Object... args) throws InvocationTargetException, IllegalAccessException {
         Objects.requireNonNull(target);

@@ -174,6 +174,7 @@ public abstract class AbstractInjector implements Injector {
     /**
      * 获取泛型实体类
      * @param genericTypes 泛型数组
+     * @param max          索引最大值
      * @param index        索引
      * @return 泛型实体类
      */

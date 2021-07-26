@@ -97,24 +97,29 @@ public interface LambdaUpdateCriteria<T, C extends LambdaUpdateCriteria<T, C>> e
 
     /**
      * 更新字段值
-     * @param p1 属性1
-     * @param v1 属性1对应值
-     * @param p2 属性2
-     * @param v2 属性2对应值
+     * @param p1   属性1
+     * @param v1   属性1对应值
+     * @param p2   属性2
+     * @param v2   属性2对应值
+     * @param <V1> 值类型
+     * @param <V2> 值类型
      * @return {@code this}
      */
-    default <V1, V2, V3> C set(final String p1, final Object v1, final String p2, final Object v2) {
+    default <V1, V2> C set(final String p1, final Object v1, final String p2, final Object v2) {
         return this.set(p1, v1).set(p2, v2);
     }
 
     /**
      * 更新字段值
-     * @param p1 属性1
-     * @param v1 属性1对应值
-     * @param p2 属性2
-     * @param v2 属性2对应值
-     * @param p3 属性3
-     * @param v3 属性3对应值
+     * @param p1   属性1
+     * @param v1   属性1对应值
+     * @param p2   属性2
+     * @param v2   属性2对应值
+     * @param p3   属性3
+     * @param v3   属性3对应值
+     * @param <V1> 值类型
+     * @param <V2> 值类型
+     * @param <V3> 值类型
      * @return {@code this}
      */
     default <V1, V2, V3> C set(final String p1, final Object v1, final String p2,

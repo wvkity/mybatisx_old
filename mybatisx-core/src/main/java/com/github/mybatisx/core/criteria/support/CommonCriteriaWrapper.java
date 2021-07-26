@@ -33,7 +33,7 @@ public interface CommonCriteriaWrapper<T, C extends CommonCriteriaWrapper<T, C>>
     /**
      * IS NULL
      * @param column 字段
-     * @return {@link C}
+     * @return {@code this}
      */
     default C colIsNull(final String column) {
         return this.colIsNull(this.getSlot(), column);
@@ -43,14 +43,14 @@ public interface CommonCriteriaWrapper<T, C extends CommonCriteriaWrapper<T, C>>
      * IS NULL
      * @param slot   {@link Slot}
      * @param column 字段
-     * @return {@link C}
+     * @return {@code this}
      */
     C colIsNull(final Slot slot, final String column);
 
     /**
      * IS NOT NULL
      * @param column 字段
-     * @return {@link C}
+     * @return {@code this}
      */
     default C colNotNull(final String column) {
         return this.colNotNull(this.getSlot(), column);
@@ -60,7 +60,7 @@ public interface CommonCriteriaWrapper<T, C extends CommonCriteriaWrapper<T, C>>
      * IS NOT NULL
      * @param slot   {@link Slot}
      * @param column 字段
-     * @return {@link C}
+     * @return {@code this}
      */
     C colNotNull(final Slot slot, final String column);
 

@@ -550,6 +550,7 @@ public abstract class AbstractBackupHandler extends AbstractUpdateHandler implem
 
     /**
      * 是否匹配指定策略
+     * @param policy {@link BackupPolicy}
      * @return boolean
      */
     public boolean specifiedFilterMatches(final BackupPolicy policy) {

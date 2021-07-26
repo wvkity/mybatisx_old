@@ -100,7 +100,7 @@ import java.util.Properties;
  *      @Component
  *      public class DefaultQueryProcessor implements QueryProcessor {
  *
- *          // 方法优先级: queryList > makeMappedStatement > makeQuerySql
+ *          // 方法优先级: queryList &gt; makeMappedStatement &gt; makeQuerySql
  *          // ... 实现方法即可
  *      }
  *

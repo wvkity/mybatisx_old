@@ -34,7 +34,7 @@ public interface LambdaCriteriaWrapper<T, C extends LambdaCriteriaWrapper<T, C>>
     /**
      * IS NULL
      * @param property 属性
-     * @return {@link C}
+     * @return {@code this}
      */
     default C isNull(final Property<T, ?> property) {
         return this.isNull(this.getSlot(), property);
@@ -44,14 +44,14 @@ public interface LambdaCriteriaWrapper<T, C extends LambdaCriteriaWrapper<T, C>>
      * IS NULL
      * @param slot     {@link Slot}
      * @param property 属性
-     * @return {@link C}
+     * @return {@code this}
      */
     C isNull(final Slot slot, final Property<T, ?> property);
 
     /**
      * IS NULL
      * @param property 属性
-     * @return {@link C}
+     * @return {@code this}
      */
     default C isNull(final String property) {
         return this.isNull(this.getSlot(), property);
@@ -61,14 +61,14 @@ public interface LambdaCriteriaWrapper<T, C extends LambdaCriteriaWrapper<T, C>>
      * IS NULL
      * @param property 属性
      * @param slot     {@link Slot}
-     * @return {@link C}
+     * @return {@code this}
      */
     C isNull(final Slot slot, final String property);
 
     /**
      * IS NOT NULL
      * @param property 属性
-     * @return {@link C}
+     * @return {@code this}
      */
     default C notNull(final Property<T, ?> property) {
         return this.notNull(this.getSlot(), property);
@@ -78,14 +78,14 @@ public interface LambdaCriteriaWrapper<T, C extends LambdaCriteriaWrapper<T, C>>
      * IS NOT NULL
      * @param slot     {@link Slot}
      * @param property 属性
-     * @return {@link C}
+     * @return {@code this}
      */
     C notNull(final Slot slot, final Property<T, ?> property);
 
     /**
      * IS NOT NULL
      * @param property 属性
-     * @return {@link C}
+     * @return {@code this}
      */
     default C notNull(final String property) {
         return this.notNull(this.getSlot(), property);
@@ -95,7 +95,7 @@ public interface LambdaCriteriaWrapper<T, C extends LambdaCriteriaWrapper<T, C>>
      * IS NOT NULL
      * @param slot     {@link Slot}
      * @param property 属性
-     * @return {@link C}
+     * @return {@code this}
      */
     C notNull(final Slot slot, final String property);
 

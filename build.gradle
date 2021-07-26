@@ -88,6 +88,10 @@ allprojects {
     group 'com.github.mybatisx'
     version '1.0.0-SNAPSHOT'
     apply from: rootDir.canonicalPath + '/.gradle/publish.gradle'
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+        options.addStringOption('encoding', 'UTF-8')
+    }
 }
 
 subprojects {
@@ -109,6 +113,26 @@ subprojects {
         mavenCentral()
     }
 
+    sourceSets {
+        main {
+            java {
+                srcDir 'src/main/java'
+            }
+            resources {
+                srcDir 'src/main/resources'
+                exclude '.gitkeep'
+            }
+        }
+        test {
+            java {
+                srcDir 'src/main/java'
+            }
+            resources {
+                srcDir 'src/main/resources'
+            }
+        }
+    }
+
     configurations {
         compileOnly {
             extendsFrom annotationProcessor
@@ -122,6 +146,7 @@ subprojects {
     }
 
     jar {
+        exclude '**/.gitkeep'
         afterEvaluate {
             manifest {
                 attributes 'Implementation-Version': archiveVersion

@@ -53,7 +53,7 @@ interface MixinWrapper<T, C extends MixinWrapper<T, C>> {
     /**
      * 纯SQL聚合函数
      * @param funcBody 聚合函数主体部分
-     * @return {@link C}
+     * @return {@code this}
      */
     default C nativeFunc(final String funcBody) {
         return this.nativeFunc(funcBody, null);
@@ -63,7 +63,7 @@ interface MixinWrapper<T, C extends MixinWrapper<T, C>> {
      * 纯SQL聚合函数
      * @param funcBody 聚合函数主体部分
      * @param alias    别名
-     * @return {@link C}
+     * @return {@code this}
      */
     C nativeFunc(final String funcBody, final String alias);
 
@@ -178,7 +178,7 @@ interface MixinWrapper<T, C extends MixinWrapper<T, C>> {
     /**
      * 排序(纯SQL)
      * @param orderBy 排序语句
-     * @return {@link C}
+     * @return {@code this}
      */
     C nativeOrder(final String orderBy);
 

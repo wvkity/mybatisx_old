@@ -124,7 +124,7 @@ public abstract class AbstractCriteria<T, C extends CriteriaWrapper<T, C>> exten
 
     /**
      * 创建实例(需要自行实现，默认返回null)
-     * @return {@link C}
+     * @return {@code this}
      */
     protected C newInstance() {
         // empty

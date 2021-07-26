@@ -341,7 +341,8 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
 
     /**
      * 初始化方法
-     * @param alias 表别名
+     * @param alias    表别名
+     * @param category {@link Category}
      */
     protected void initialize(final String alias, Category category) {
         final boolean hasAlias = Objects.isNotBlank(alias);
