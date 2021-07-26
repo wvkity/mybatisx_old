@@ -1,5 +1,6 @@
 dependencies {
     api project(':mybatisx-auditable-plugin')
+    api project(':mybatisx-event-listener-springboot-starter')
     implementation "${libs["spring-context"]}"
     implementation "${libs["spring-tx"]}"
     implementation "${libs["springboot-autoconfigure"]}"

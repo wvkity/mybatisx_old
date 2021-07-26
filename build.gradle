@@ -105,7 +105,7 @@ subprojects {
         maven { url 'https://maven.aliyun.com/repository/public/' }
         maven { url 'https://plugins.gradle.org/m2/' }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        jcenter()
+        maven { url 'https://jcenter.bintray.com/' }
         mavenCentral()
     }
 
@@ -124,7 +124,7 @@ subprojects {
     jar {
         afterEvaluate {
             manifest {
-                attributes 'Implementation-Version': version
+                attributes 'Implementation-Version': archiveVersion
                 attributes 'Built-Gradle': gradle.gradleVersion
                 attributes 'Bundle-DocURL': ''
                 attributes 'Build-OS': System.getProperty("os.name")

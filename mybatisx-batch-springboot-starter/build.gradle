@@ -1,5 +1,6 @@
 dependencies {
     api project(':mybatisx-batch-plugin')
+    api project(':mybatisx-event-listener-springboot-starter')
     implementation "${libs["mybatis-spring"]}"
     implementation "${libs["spring-context"]}"
     implementation "${libs["springboot-autoconfigure"]}"

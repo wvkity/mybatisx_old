@@ -1,11 +1,12 @@
 dependencies {
     api project(":mybatisx-spring")
     api project(":mybatisx-extension")
-    api project(":mybatisx-datasource-spring-boot-starter")
-    api project(":mybatisx-pageable-spring-boot-starter")
-    api project(":mybatisx-sequence-spring-boot-starter")
-    api project(':mybatisx-batch-spring-boot-starter')
-    api project(':mybatisx-auditable-spring-boot-starter')
+    api project(":mybatisx-datasource-springboot-starter")
+    api project(":mybatisx-pageable-springboot-starter")
+    api project(":mybatisx-sequence-springboot-starter")
+    api project(':mybatisx-batch-springboot-starter')
+    api project(':mybatisx-event-listener-springboot-starter')
+    api project(':mybatisx-auditable-springboot-starter')
     implementation "${libs["spring-aspects"]}"
     implementation "${libs["springboot-jdbc"]}"
     implementation "${libs["springboot-autoconfigure"]}"

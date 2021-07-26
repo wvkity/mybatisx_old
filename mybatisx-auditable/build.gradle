@@ -1,4 +1,4 @@
 dependencies {
     api project(':mybatisx-commons')
-    api project(':mybatisx-transaction-event-listener')
+    api project(':mybatisx-event-listener')
 }
