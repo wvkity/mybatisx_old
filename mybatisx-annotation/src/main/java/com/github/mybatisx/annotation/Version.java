@@ -29,4 +29,16 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Version {
+
+    /**
+     * true: 使用当前默认值, false: 使用全局配置的默认值
+     * @return 是否应用
+     */
+    boolean value() default true;
+
+    /**
+     * 初始值(只针对数值有效)
+     * @return 初始值
+     */
+    int init() default 0;
 }
