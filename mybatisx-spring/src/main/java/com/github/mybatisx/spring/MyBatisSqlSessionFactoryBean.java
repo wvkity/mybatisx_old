@@ -511,7 +511,7 @@ public class MyBatisSqlSessionFactoryBean implements
         }
         final JdbcType jdbcType;
         if (this.globalConfiguration.isJdbcTypeAutoMapping() &&
-            JdbcType.UNDEFINED != (jdbcType = this.globalConfiguration.getBooleanPropertyOverrideMappedJdbcType())) {
+            JdbcType.UNDEFINED != (jdbcType = this.globalConfiguration.getBooleanPropOverrideJdbcType())) {
             JdbcTypeMappingRegistry.registry(boolean.class, jdbcType, true);
             JdbcTypeMappingRegistry.registry(Boolean.class, jdbcType, true);
         }

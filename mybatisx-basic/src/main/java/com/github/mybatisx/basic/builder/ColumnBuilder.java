@@ -147,6 +147,10 @@ public class ColumnBuilder extends AbstractBuilder implements Builder<Column> {
      */
     private boolean version;
     /**
+     * 乐观锁初始化值
+     */
+    private Integer versionInitValue;
+    /**
      * 是否为多租户
      */
     private boolean multiTenant;
@@ -225,11 +229,11 @@ public class ColumnBuilder extends AbstractBuilder implements Builder<Column> {
             this.property, this.field.getGetter(), this.field.getSetter());
         final PrimaryKey primaryKey = new PrimaryKey(this.priority, this.uuid, this.identity, this.snowflake,
             this.generator, this.executing);
-        final AuditMeta auditMeta = new AuditMeta(this.version, this.multiTenant, this.createdDate, this.createdById,
-            this.createdByName, this.lastModifiedDate, this.lastModifiedById, this.lastModifiedByName,
-            this.deletedDate, this.deletedById, this.deletedByName, this.logicDelete, this.deletedValue,
-            this.undeletedValue, this.auditType, Objects.isNullElement(this.auditPolicies) ? ImmutableLinkedSet.of() :
-            ImmutableLinkedSet.of(this.auditPolicies));
+        final AuditMeta auditMeta = new AuditMeta(this.version, this.versionInitValue, this.multiTenant,
+            this.createdDate, this.createdById, this.createdByName, this.lastModifiedDate, this.lastModifiedById,
+            this.lastModifiedByName, this.deletedDate, this.deletedById, this.deletedByName, this.logicDelete,
+            this.deletedValue, this.undeletedValue, this.auditType, Objects.isNullElement(this.auditPolicies) ?
+            ImmutableLinkedSet.of() : ImmutableLinkedSet.of(this.auditPolicies));
         return new Column(this.entity, this.property, handleColumnName(), this.jdbcType, this.typeHandler,
             this.javaType, this.sequence, this.primaryKey, this.blob, this.insertable, this.updatable,
             this.useJavaType, this.checkNotNull, this.checkNotEmpty, this.version, this.multiTenant,
@@ -509,6 +513,15 @@ public class ColumnBuilder extends AbstractBuilder implements Builder<Column> {
 
     public ColumnBuilder version(boolean version) {
         this.version = version;
+        return this;
+    }
+
+    public Integer versionInitValue() {
+        return versionInitValue;
+    }
+
+    public ColumnBuilder versionInitValue(Integer versionValue) {
+        this.versionInitValue = versionValue;
         return this;
     }
 

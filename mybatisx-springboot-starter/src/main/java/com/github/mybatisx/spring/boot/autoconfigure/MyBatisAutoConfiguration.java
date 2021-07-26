@@ -83,7 +83,8 @@ import java.util.stream.Stream;
 @EnableConfigurationProperties(MyBatisProperties.class)
 @AutoConfigureAfter({DataSourceAutoConfiguration.class})
 @AutoConfigureBefore(name = {"org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration"
-    , "com.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisMetadataAuditableAutoConfiguration"})
+    , "com.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisMetadataAuditableAutoConfiguration",
+    "com.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisSysBuiltAuditableAutoConfiguration"})
 public class MyBatisAutoConfiguration implements InitializingBean {
 
     private static final Logger logger = LoggerFactory.getLogger(MyBatisAutoConfiguration.class);

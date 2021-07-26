@@ -6,7 +6,7 @@ pluginManagement {
         maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url "https://repo.spring.io/plugins-release" }
         maven { url 'https://maven.aliyun.com/repository/central' }
-        jcenter()
+        maven { url 'https://jcenter.bintray.com/' }
         mavenCentral()
     }
 }
@@ -28,25 +28,26 @@ include 'mybatisx-support'
 include 'mybatisx-core'
 include 'mybatisx-extension'
 include 'mybatisx-datasource'
-include 'mybatisx-datasource-spring-boot-starter'
+include 'mybatisx-datasource-springboot-starter'
 include 'mybatisx-spring'
 include 'sequence'
-include 'mybatisx-sequence-spring-boot-starter'
+include 'mybatisx-sequence-springboot-starter'
 include 'mybatisx-plugin'
 include 'pageable'
 include 'mybatisx-pageable-plugin'
-include 'mybatisx-pageable-spring-boot-starter'
-include 'mybatisx-spring-boot-starter'
+include 'mybatisx-pageable-springboot-starter'
+include 'mybatisx-springboot-starter'
 include 'mybatisx-batch'
 include 'mybatisx-batch-plugin'
-include 'mybatisx-batch-spring-boot-starter'
-include 'mybatisx-transaction-event-listener'
+include 'mybatisx-batch-springboot-starter'
+include 'mybatisx-event-listener'
+include 'mybatisx-event-listener-springboot-starter'
 include 'mybatisx-auditable'
 include 'mybatisx-auditable-plugin'
-include 'mybatisx-auditable-spring-boot-starter'
+include 'mybatisx-auditable-springboot-starter'
 include 'mybatisx-data-backup'
 include 'mybatisx-data-backup-plugin'
-include 'mybatisx-data-backup-spring-boot-starter'
+include 'mybatisx-data-backup-springboot-starter'
 include 'mybatisx-generator-core'
 include 'mybatisx-generator-gui'
 include 'mybatisx-example'

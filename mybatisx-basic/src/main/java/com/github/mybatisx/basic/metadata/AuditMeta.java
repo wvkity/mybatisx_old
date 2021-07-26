@@ -15,6 +15,7 @@
  */
 package com.github.mybatisx.basic.metadata;
 
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -29,6 +30,10 @@ public class AuditMeta {
      * 是否为乐观锁标识
      */
     private final boolean version;
+    /**
+     * 乐观锁初始值
+     */
+    private final Integer versionInitValue;
     /**
      * 是否为多租户标识
      */
@@ -90,12 +95,13 @@ public class AuditMeta {
      */
     private final Set<Integer> auditPolicies;
 
-    public AuditMeta(boolean version, boolean multiTenant, boolean createdDate, boolean createdById,
-                     boolean createdByName, boolean lastModifiedDate, boolean lastModifiedById,
+    public AuditMeta(boolean version, Integer versionInitValue, boolean multiTenant, boolean createdDate,
+                     boolean createdById, boolean createdByName, boolean lastModifiedDate, boolean lastModifiedById,
                      boolean lastModifiedByName, boolean deletedDate, boolean deletedById, boolean deletedByName,
                      boolean logicDelete, Object deletedValue, Object undeletedValue, int auditType,
                      Set<Integer> auditPolicies) {
         this.version = version;
+        this.versionInitValue = versionInitValue;
         this.multiTenant = multiTenant;
         this.createdDate = createdDate;
         this.createdById = createdById;
@@ -151,6 +157,10 @@ public class AuditMeta {
 
     public boolean isVersion() {
         return version;
+    }
+
+    public Integer getVersionInitValue() {
+        return versionInitValue;
     }
 
     public boolean isMultiTenant() {
@@ -211,5 +221,34 @@ public class AuditMeta {
 
     public Set<Integer> getAuditPolicies() {
         return auditPolicies;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof AuditMeta)) {
+            return false;
+        }
+        AuditMeta auditMeta = (AuditMeta) o;
+        return version == auditMeta.version && multiTenant == auditMeta.multiTenant
+            && createdDate == auditMeta.createdDate && createdById == auditMeta.createdById
+            && createdByName == auditMeta.createdByName && lastModifiedDate == auditMeta.lastModifiedDate
+            && lastModifiedById == auditMeta.lastModifiedById && lastModifiedByName == auditMeta.lastModifiedByName
+            && deletedDate == auditMeta.deletedDate && deletedById == auditMeta.deletedById
+            && deletedByName == auditMeta.deletedByName && logicDelete == auditMeta.logicDelete
+            && auditType == auditMeta.auditType
+            && Objects.equals(versionInitValue, auditMeta.versionInitValue)
+            && Objects.equals(deletedValue, auditMeta.deletedValue)
+            && Objects.equals(undeletedValue, auditMeta.undeletedValue)
+            && Objects.equals(auditPolicies, auditMeta.auditPolicies);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(version, versionInitValue, multiTenant, createdDate, createdById, createdByName,
+            lastModifiedDate, lastModifiedById, lastModifiedByName, deletedDate, deletedById, deletedByName,
+            logicDelete, deletedValue, undeletedValue, auditType, auditPolicies);
     }
 }

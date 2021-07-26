@@ -36,8 +36,11 @@ import org.apache.ibatis.type.JdbcType;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * MyBatis全局配置
@@ -164,15 +167,19 @@ public class MyBatisGlobalConfiguration {
      * 指定对应的{@link JdbcType}即可
      * </p>
      */
-    private JdbcType booleanPropertyOverrideMappedJdbcType = JdbcType.UNDEFINED;
+    private JdbcType booleanPropOverrideJdbcType = JdbcType.UNDEFINED;
+    /**
+     * 自动扫描逻辑删除属性
+     */
+    private boolean logicDeleteAutoScan;
     /**
      * 逻辑删除属性
      */
-    private String logicDeleteProperty;
+    private Set<String> logicDeleteProperties = new HashSet<>(Collections.singletonList("deleted"));
     /**
-     * 逻辑删除属性自动审计(保存操作)
+     * 逻辑删除属性值是否自动初始化(保存操作)
      */
-    private boolean logicDeletePropertyAutoAudit;
+    private boolean logicDeletedInit;
     /**
      * 已删除标识值
      */
@@ -181,6 +188,22 @@ public class MyBatisGlobalConfiguration {
      * 未删除标识值
      */
     private String undeletedValue = "0";
+    /**
+     * 自动扫描乐观锁属性
+     */
+    private boolean optimisticLockAutoScan;
+    /**
+     * 乐观锁属性
+     */
+    private Set<String> optimisticLockProperties = new HashSet<>(Collections.singletonList("version"));
+    /**
+     * 乐观锁属性是否自动初始化(保存操作)
+     */
+    private boolean optimisticLockInit;
+    /**
+     * 乐观锁默认初始值(数字类型)
+     */
+    private int optimisticLockInitValue = 0;
     /**
      * 关键词格式化模板
      */
@@ -201,10 +224,6 @@ public class MyBatisGlobalConfiguration {
      * 返回值为Map类型时，采用具体{@link Map}实现类
      */
     private Class<? extends Map> mapImplementClass;
-    /**
-     * 将内置的拦截器注册到Spring上下文中
-     */
-    private boolean systemInterceptorRegisteredIntoContext = true;
 
     public MyBatisGlobalConfiguration() {
     }
@@ -388,12 +407,12 @@ public class MyBatisGlobalConfiguration {
         this.auditAutoScan = auditAutoScan;
     }
 
-    public boolean isLogicDeletePropertyAutoAudit() {
-        return logicDeletePropertyAutoAudit;
+    public boolean isLogicDeletedInit() {
+        return logicDeletedInit;
     }
 
-    public void setLogicDeletePropertyAutoAudit(boolean logicDeletePropertyAutoAudit) {
-        this.logicDeletePropertyAutoAudit = logicDeletePropertyAutoAudit;
+    public void setLogicDeletedInit(boolean logicDeletedInit) {
+        this.logicDeletedInit = logicDeletedInit;
     }
 
     public boolean isUseSimpleType() {
@@ -452,20 +471,28 @@ public class MyBatisGlobalConfiguration {
         this.dynamicSqlNotEmptyChecking = dynamicSqlNotEmptyChecking;
     }
 
-    public JdbcType getBooleanPropertyOverrideMappedJdbcType() {
-        return booleanPropertyOverrideMappedJdbcType;
+    public JdbcType getBooleanPropOverrideJdbcType() {
+        return booleanPropOverrideJdbcType;
     }
 
-    public void setBooleanPropertyOverrideMappedJdbcType(JdbcType booleanPropertyOverrideMappedJdbcType) {
-        this.booleanPropertyOverrideMappedJdbcType = booleanPropertyOverrideMappedJdbcType;
+    public void setBooleanPropOverrideJdbcType(JdbcType booleanPropOverrideJdbcType) {
+        this.booleanPropOverrideJdbcType = booleanPropOverrideJdbcType;
     }
 
-    public String getLogicDeleteProperty() {
-        return logicDeleteProperty;
+    public Set<String> getLogicDeleteProperties() {
+        return logicDeleteProperties;
     }
 
-    public void setLogicDeleteProperty(String logicDeleteProperty) {
-        this.logicDeleteProperty = logicDeleteProperty;
+    public void setLogicDeleteProperties(Set<String> logicDeleteProperties) {
+        this.logicDeleteProperties = logicDeleteProperties;
+    }
+
+    public boolean isLogicDeleteAutoScan() {
+        return logicDeleteAutoScan;
+    }
+
+    public void setLogicDeleteAutoScan(boolean logicDeleteAutoScan) {
+        this.logicDeleteAutoScan = logicDeleteAutoScan;
     }
 
     public String getDeletedValue() {
@@ -482,6 +509,38 @@ public class MyBatisGlobalConfiguration {
 
     public void setUndeletedValue(String undeletedValue) {
         this.undeletedValue = undeletedValue;
+    }
+
+    public boolean isOptimisticLockAutoScan() {
+        return optimisticLockAutoScan;
+    }
+
+    public void setOptimisticLockAutoScan(boolean optimisticLockAutoScan) {
+        this.optimisticLockAutoScan = optimisticLockAutoScan;
+    }
+
+    public Set<String> getOptimisticLockProperties() {
+        return optimisticLockProperties;
+    }
+
+    public void setOptimisticLockProperties(Set<String> optimisticLockProperties) {
+        this.optimisticLockProperties = optimisticLockProperties;
+    }
+
+    public boolean isOptimisticLockInit() {
+        return optimisticLockInit;
+    }
+
+    public void setOptimisticLockInit(boolean optimisticLockInit) {
+        this.optimisticLockInit = optimisticLockInit;
+    }
+
+    public int getOptimisticLockInitValue() {
+        return optimisticLockInitValue;
+    }
+
+    public void setOptimisticLockInitValue(int optimisticLockInitValue) {
+        this.optimisticLockInitValue = optimisticLockInitValue;
     }
 
     public String getKeyWordFormat() {
@@ -525,11 +584,4 @@ public class MyBatisGlobalConfiguration {
         return this;
     }
 
-    public boolean isSystemInterceptorRegisteredIntoContext() {
-        return systemInterceptorRegisteredIntoContext;
-    }
-
-    public void setSystemInterceptorRegisteredIntoContext(boolean systemInterceptorRegisteredIntoContext) {
-        this.systemInterceptorRegisteredIntoContext = systemInterceptorRegisteredIntoContext;
-    }
 }

@@ -70,12 +70,8 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.OffsetDateTime;
-import java.time.OffsetTime;
-import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
@@ -124,39 +120,38 @@ public class DefaultEntityParser implements EntityParser, Constants {
      * 乐观锁支持的类型
      */
     private static final Set<Class<?>> OPTIMISTIC_LOCK_SUPPORT_CLASSES = ImmutableSet.construct(int.class,
-        Integer.class, long.class, Long.class, Date.class, LocalTime.class, LocalDate.class, LocalDateTime.class,
-        OffsetTime.class, OffsetDateTime.class, ZonedDateTime.class, Instant.class, Timestamp.class);
+        Integer.class, long.class, Long.class, Date.class, LocalDateTime.class, OffsetDateTime.class,
+        Instant.class, Timestamp.class);
 
     @Override
     public Table parse(Configuration configuration, Class<?> entity, TableBuilder tb) {
-        final MyBatisGlobalConfiguration globalConfiguration =
-            MyBatisLocalConfigurationCache.getGlobalConfiguration(configuration);
+        final MyBatisGlobalConfiguration mgc = MyBatisLocalConfigurationCache.getGlobalConfiguration(configuration);
         // 反射解析实体类
         final Reflector reflector = Reflector.of(entity);
-        reflector.classFilter(getClassFilter(globalConfiguration));
-        reflector.fieldFilter(getFieldFilter(globalConfiguration));
-        reflector.getterFilter(getGetterFilter(globalConfiguration));
-        reflector.setterFilter(getSetterFilter(globalConfiguration));
+        reflector.classFilter(getClassFilter(mgc));
+        reflector.fieldFilter(getFieldFilter(mgc));
+        reflector.getterFilter(getGetterFilter(mgc));
+        reflector.setterFilter(getSetterFilter(mgc));
         reflector.parse();
         // 命名策略
-        final NamingPolicy strategy = naming(globalConfiguration, reflector);
-        final PhysicalNamingConverter namingConverter = namingConverter(globalConfiguration);
+        final NamingPolicy strategy = naming(mgc, reflector);
+        final PhysicalNamingConverter namingConverter = namingConverter(mgc);
         tb.strategy(strategy).namingConverter(namingConverter);
-        tb.keyWordFormat(globalConfiguration.getKeyWordFormat());
+        tb.keyWordFormat(mgc.getKeyWordFormat());
         // 处理实体类上的注解
-        handleAnnotationOnEntityClass(globalConfiguration, reflector, tb);
+        handleAnnotationOnEntityClass(mgc, reflector, tb);
         // 处理实体属性
-        handleEntityClassRelatedAttributes(globalConfiguration, strategy, namingConverter, reflector, tb);
+        handleEntityClassRelatedAttributes(mgc, strategy, namingConverter, reflector, tb);
         return tb.build();
     }
 
     /**
      * 处理实体类上的注解
-     * @param configuration 全局配置对象
-     * @param reflector     反射器
-     * @param tb            表对象构建器
+     * @param mgc       全局配置对象
+     * @param reflector 反射器
+     * @param tb        表对象构建器
      */
-    private void handleAnnotationOnEntityClass(final MyBatisGlobalConfiguration configuration,
+    private void handleAnnotationOnEntityClass(final MyBatisGlobalConfiguration mgc,
                                                final Reflector reflector,
                                                final TableBuilder tb) {
         // 处理@Table注解(系统自带或依赖JPA)
@@ -180,34 +175,34 @@ public class DefaultEntityParser implements EntityParser, Constants {
             }
         }
         if (Objects.isBlank(tb.prefix())) {
-            tb.prefix(configuration.getTablePrefix());
+            tb.prefix(mgc.getTablePrefix());
         }
         if (Objects.isBlank(tb.schema())) {
-            tb.schema(configuration.getSchema());
+            tb.schema(mgc.getSchema());
         }
         if (Objects.isBlank(tb.catalog())) {
-            tb.catalog(configuration.getCatalog());
+            tb.catalog(mgc.getCatalog());
         }
     }
 
     /**
      * 处理实体类的相关属性
-     * @param configuration   全局配置对象
+     * @param mgc             全局配置对象
      * @param strategy        命名策略
      * @param namingConverter 命名转换器
      * @param reflector       反射器
      * @param tb              表对象构建器
      */
-    private void handleEntityClassRelatedAttributes(final MyBatisGlobalConfiguration configuration,
+    private void handleEntityClassRelatedAttributes(final MyBatisGlobalConfiguration mgc,
                                                     final NamingPolicy strategy,
                                                     final PhysicalNamingConverter namingConverter,
                                                     final Reflector reflector,
                                                     final TableBuilder tb) {
-        final FieldParser fieldParser = getFieldParser(configuration);
+        final FieldParser fieldParser = getFieldParser(mgc);
         // 解析属性
         final Set<Field> fields = fieldParser.parse(reflector);
         if (Objects.isNotEmpty(fields)) {
-            final boolean autoAddedIsPrefixed = configuration.isBooleanPropertyAutoAddedPrefixedWithIs();
+            final boolean autoAddedIsPrefixed = mgc.isBooleanPropertyAutoAddedPrefixedWithIs();
             final Class<?> entityClass = reflector.getClazz();
             fields.forEach(it -> {
                 // 数据库表字段构建器
@@ -217,32 +212,32 @@ public class DefaultEntityParser implements EntityParser, Constants {
                     .property(it.getName())
                     .javaType(it.getJavaType())
                     .field(it);
-                cb.namingConverter(namingConverter).strategy(strategy).keyWordFormat(configuration.getKeyWordFormat());
+                cb.namingConverter(namingConverter).strategy(strategy).keyWordFormat(mgc.getKeyWordFormat());
                 // 处理属性上的注解
-                handleAnnotationOnField(configuration, it, reflector, tb, cb);
+                handleAnnotationOnField(mgc, it, reflector, tb, cb);
             });
         }
     }
 
     /**
      * 处理属性上的注解
-     * @param configuration 全局配置对象
-     * @param field         属性包装对象
-     * @param reflector     反射器
-     * @param tb            表对象构建器
-     * @param cb            数据库字段对象构建器
+     * @param mgc       全局配置对象
+     * @param field     属性包装对象
+     * @param reflector 反射器
+     * @param tb        表对象构建器
+     * @param cb        数据库字段对象构建器
      */
-    private void handleAnnotationOnField(final MyBatisGlobalConfiguration configuration,
+    private void handleAnnotationOnField(final MyBatisGlobalConfiguration mgc,
                                          final Field field, final Reflector reflector,
                                          final TableBuilder tb, final ColumnBuilder cb) {
         // 处理@Column/@ColumnExt注解
-        handleColumnAnnotation(configuration, field, cb);
+        handleColumnAnnotation(mgc, field, cb);
         // 处理自动识别主键
-        handleAutoDiscernPrimaryKey(configuration, field, tb, cb);
+        handleAutoDiscernPrimaryKey(mgc, field, tb, cb);
         // 处理多租户标识
-        handleMultiTenancyAnnotation(configuration, field, tb, cb);
+        handleMultiTenancyAnnotation(mgc, field, tb, cb);
         // 处理乐观锁注解
-        handleVersionAnnotation(configuration, field, tb, cb);
+        handleVersionAnnotation(mgc, field, tb, cb);
         // 检查是否为主键
         if (cb.primaryKey()) {
             cb.insertable(true).updatable(false);
@@ -255,23 +250,23 @@ public class DefaultEntityParser implements EntityParser, Constants {
                 tb.idColumn(cb).idProperty(cb.property());
             }
             // 处理主键生成策略
-            handlePrimaryKeyGenerated(configuration, field, tb, cb);
+            handlePrimaryKeyGenerated(mgc, field, tb, cb);
         } else {
             // 处理逻辑删除注解@LogicDelete
-            handleLogicDeleteAnnotation(configuration, field, tb, cb);
+            handleLogicDeleteAnnotation(mgc, field, tb, cb);
             // 处理审计注解
-            handleAuditingAnnotations(configuration, field, tb, cb);
+            handleAuditingAnnotations(mgc, field, tb, cb);
         }
         tb.addColumn(cb);
     }
 
     /**
      * 处理属性上的@Column/@ColumnExt注解
-     * @param configuration 全局配置对象
-     * @param field         属性包装对象
-     * @param cb            数据库字段对象构建器
+     * @param mgc   全局配置对象
+     * @param field 属性包装对象
+     * @param cb    数据库字段对象构建器
      */
-    private void handleColumnAnnotation(final MyBatisGlobalConfiguration configuration,
+    private void handleColumnAnnotation(final MyBatisGlobalConfiguration mgc,
                                         final Field field, final ColumnBuilder cb) {
         cb.primaryKey(field.isPrimaryKey());
         // 处理@Column注解
@@ -299,20 +294,20 @@ public class DefaultEntityParser implements EntityParser, Constants {
             Optional.of(ext.typeHandler()).filter(it -> !it.equals(UnknownTypeHandler.class))
                 .ifPresent(cb::typeHandler);
             if (ext.javaType() == Option.CONFIG) {
-                cb.useJavaType(configuration.isAutoSplicingJavaType());
+                cb.useJavaType(mgc.isAutoSplicingJavaType());
             }
             if (ext.notNull() == Option.CONFIG) {
-                cb.checkNotNull(configuration.isDynamicSqlNotNullChecking());
+                cb.checkNotNull(mgc.isDynamicSqlNotNullChecking());
             }
             if (ext.notEmpty() == Option.CONFIG) {
-                cb.checkNotEmpty(configuration.isDynamicSqlNotEmptyChecking());
+                cb.checkNotEmpty(mgc.isDynamicSqlNotEmptyChecking());
             }
         } else {
-            cb.useJavaType(configuration.isAutoSplicingJavaType());
-            cb.checkNotNull(configuration.isDynamicSqlNotNullChecking());
-            cb.checkNotEmpty(configuration.isDynamicSqlNotEmptyChecking());
+            cb.useJavaType(mgc.isAutoSplicingJavaType());
+            cb.checkNotNull(mgc.isDynamicSqlNotNullChecking());
+            cb.checkNotEmpty(mgc.isDynamicSqlNotEmptyChecking());
         }
-        if (cb.jdbcType() == null && configuration.isJdbcTypeAutoMapping()) {
+        if (cb.jdbcType() == null && mgc.isJdbcTypeAutoMapping()) {
             cb.jdbcType(JdbcTypeMappingRegistry.getJdbcType(field.getJavaType(), JdbcType.UNDEFINED));
         }
         if (cb.javaType().isPrimitive()) {
@@ -328,28 +323,28 @@ public class DefaultEntityParser implements EntityParser, Constants {
 
     /**
      * 处理自动识别主键
-     * @param configuration 全局配置对象
-     * @param field         属性包装对象
-     * @param tb            数据库表对象构建器
-     * @param cb            数据库字段构建器
+     * @param mgc   全局配置对象
+     * @param field 属性包装对象
+     * @param tb    数据库表对象构建器
+     * @param cb    数据库字段构建器
      */
-    private void handleAutoDiscernPrimaryKey(final MyBatisGlobalConfiguration configuration,
+    private void handleAutoDiscernPrimaryKey(final MyBatisGlobalConfiguration mgc,
                                              final Field field, final TableBuilder tb,
                                              final ColumnBuilder cb) {
-        if (!cb.primaryKey() && configuration.isIdAutoScan()) {
-            final String primaryKey = configuration.getIdProperty();
+        if (!cb.primaryKey() && mgc.isIdAutoScan()) {
+            final String primaryKey = mgc.getIdProperty();
             cb.primaryKey(Objects.isNotBlank(primaryKey) && Objects.equals(primaryKey, cb.property()));
         }
     }
 
     /**
      * 处理多租户注解
-     * @param configuration 全局配置对象
-     * @param field         属性包装对象
-     * @param tb            数据库表对象构建器
-     * @param cb            数据库字段构建器
+     * @param mgc   全局配置对象
+     * @param field 属性包装对象
+     * @param tb    数据库表对象构建器
+     * @param cb    数据库字段构建器
      */
-    private void handleMultiTenancyAnnotation(final MyBatisGlobalConfiguration configuration,
+    private void handleMultiTenancyAnnotation(final MyBatisGlobalConfiguration mgc,
                                               final Field field, final TableBuilder tb,
                                               final ColumnBuilder cb) {
         if (field.isAnnotationPresent(MultiTenancy.class)) {
@@ -372,15 +367,18 @@ public class DefaultEntityParser implements EntityParser, Constants {
 
     /**
      * 处理@Version注解
-     * @param configuration 全局配置对象
-     * @param field         属性包装对象
-     * @param tb            数据库表对象构建器
-     * @param cb            数据库字段构建器
+     * @param mgc   全局配置对象
+     * @param field 属性包装对象
+     * @param tb    数据库表对象构建器
+     * @param cb    数据库字段构建器
      */
-    private void handleVersionAnnotation(final MyBatisGlobalConfiguration configuration,
+    private void handleVersionAnnotation(final MyBatisGlobalConfiguration mgc,
                                          final Field field, final TableBuilder tb,
                                          final ColumnBuilder cb) {
-        if (field.isAnnotationPresent(Version.class) || field.isAnnotationPresent(JPA_VERSION)) {
+        final boolean isVersion;
+        final Version version;
+        if ((isVersion = Objects.nonNull(version = field.getAnnotation(Version.class)))
+            || field.isAnnotationPresent(JPA_VERSION) || this.checkVersion(mgc, cb.property())) {
             if (cb.primaryKey()) {
                 throw new MyBatisParserException("The attribute \"" + cb.property() + "\" of the entity class \"" +
                     tb.entity().getName() + "\" is the primary key. The primary key is not updatable. " +
@@ -403,22 +401,44 @@ public class DefaultEntityParser implements EntityParser, Constants {
             }
             cb.version(true);
             tb.optimisticLockColumn(cb);
+            if (Reflections.isPrimitiveOrWrapType(cb.javaType())) {
+                final int defValue = mgc.getOptimisticLockInitValue();
+                if (isVersion) {
+                    if (version.value()) {
+                        cb.versionInitValue(version.init());
+                    } else {
+                        cb.versionInitValue(defValue);
+                    }
+                } else {
+                    cb.versionInitValue(defValue);
+                }
+            }
         }
     }
 
     /**
-     * 处理逻辑删除注解
-     * @param configuration 全局配置对象
-     * @param field         属性包装对象
-     * @param tb            数据库表对象构建器
-     * @param cb            数据库字段构建器
+     * 检查是否为乐观锁属性
+     * @param mgc      全局配置对象
+     * @param property 属性
+     * @return boolean
      */
-    private void handleLogicDeleteAnnotation(final MyBatisGlobalConfiguration configuration,
+    private boolean checkVersion(final MyBatisGlobalConfiguration mgc, final String property) {
+        final Set<String> properties = mgc.getOptimisticLockProperties();
+        return mgc.isOptimisticLockAutoScan() && Objects.isNotNullElement(properties) && properties.contains(property);
+    }
+
+    /**
+     * 处理逻辑删除注解
+     * @param mgc   全局配置对象
+     * @param field 属性包装对象
+     * @param tb    数据库表对象构建器
+     * @param cb    数据库字段构建器
+     */
+    private void handleLogicDeleteAnnotation(final MyBatisGlobalConfiguration mgc,
                                              final Field field, final TableBuilder tb,
                                              final ColumnBuilder cb) {
-        final String logicalDeletedProperty = configuration.getLogicDeleteProperty();
         if (field.isAnnotationPresent(LogicDelete.class)
-            || Objects.equals(logicalDeletedProperty, cb.property())) {
+            || this.checkLogicDelete(mgc, cb.property())) {
             // 检查是否已存在逻辑删除属性
             if (tb.logicDelete()) {
                 throw new MyBatisParserException("There are already \"" + tb.logicDeleteColumn()
@@ -434,13 +454,13 @@ public class DefaultEntityParser implements EntityParser, Constants {
             if (Objects.nonNull(deletion)) {
                 // 注解 > 全局
                 deletedValue = Optional.of(deletion.deleted()).filter(Objects::isNotBlank)
-                    .orElseGet(configuration::getDeletedValue);
+                    .orElseGet(mgc::getDeletedValue);
                 undeletedValue = Optional.of(deletion.undeleted()).filter(Objects::isNotBlank)
-                    .orElseGet(configuration::getUndeletedValue);
+                    .orElseGet(mgc::getUndeletedValue);
             } else {
                 // 全局
-                deletedValue = configuration.getDeletedValue();
-                undeletedValue = configuration.getUndeletedValue();
+                deletedValue = mgc.getDeletedValue();
+                undeletedValue = mgc.getUndeletedValue();
             }
             Objects.requireNonEmpty(deletedValue, "The deleted value cannot be null.");
             Objects.requireNonEmpty(undeletedValue, "The undeleted value cannot be null.");
@@ -451,27 +471,39 @@ public class DefaultEntityParser implements EntityParser, Constants {
     }
 
     /**
-     * 处理主键生成策略
-     * @param configuration 全局配置对象
-     * @param field         属性包装对象
-     * @param tb            数据库表对象构建器
-     * @param cb            数据库字段构建器
+     * 检查是否为逻辑删除属性
+     * @param mgc      全局配置对象
+     * @param property 属性
+     * @return boolean
      */
-    private void handlePrimaryKeyGenerated(final MyBatisGlobalConfiguration configuration,
+    private boolean checkLogicDelete(final MyBatisGlobalConfiguration mgc, final String property) {
+        final Set<String> properties = mgc.getLogicDeleteProperties();
+        return mgc.isLogicDeleteAutoScan() && Objects.isNotNullElement(properties)
+            && properties.contains(property);
+    }
+
+    /**
+     * 处理主键生成策略
+     * @param mgc   全局配置对象
+     * @param field 属性包装对象
+     * @param tb    数据库表对象构建器
+     * @param cb    数据库字段构建器
+     */
+    private void handlePrimaryKeyGenerated(final MyBatisGlobalConfiguration mgc,
                                            final Field field, final TableBuilder tb,
                                            final ColumnBuilder cb) {
         if (field.isAnnotationPresent(Identity.class)) {
-            handleIdentityAnnotation(configuration, field, tb, cb);
+            handleIdentityAnnotation(mgc, field, tb, cb);
         } else if (field.isAnnotationPresent(GeneratedValue.class)
             || field.isAnnotationPresent(JPA_GENERATED_VALUE)) {
-            handleGeneratedValueAnnotation(configuration, field, tb, cb);
+            handleGeneratedValueAnnotation(mgc, field, tb, cb);
         } else if (field.isAnnotationPresent(Snowflake.class)) {
             cb.snowflake(true).executing(Executing.BEFORE);
         }
         // 如果不存在主键生成策略，则根据全局配置主键生成策略填充
         final IdPolicy policy;
         if (!cb.hasPrimaryKeyStrategy()
-            && (policy = configuration.getIdPolicy()) != IdPolicy.UNDEFINED) {
+            && (policy = mgc.getIdPolicy()) != IdPolicy.UNDEFINED) {
             cb.identity(policy == IdPolicy.JDBC || policy == IdPolicy.IDENTITY);
             cb.uuid(policy == IdPolicy.UUID);
             cb.snowflake(policy == IdPolicy.SNOWFLAKE);
@@ -480,17 +512,17 @@ public class DefaultEntityParser implements EntityParser, Constants {
 
     /**
      * 处理@Identity主键生成策略
-     * @param configuration 全局配置对象
-     * @param field         属性包装对象
-     * @param tb            数据库表对象构建器
-     * @param cb            数据库字段构建器
+     * @param mgc   全局配置对象
+     * @param field 属性包装对象
+     * @param tb    数据库表对象构建器
+     * @param cb    数据库字段构建器
      */
-    private void handleIdentityAnnotation(final MyBatisGlobalConfiguration configuration,
+    private void handleIdentityAnnotation(final MyBatisGlobalConfiguration mgc,
                                           final Field field, final TableBuilder tb, final ColumnBuilder cb) {
         final Identity identity = field.getAnnotation(Identity.class);
         final Executing executing = identity.executing();
         final boolean isAfter = executing == Executing.AFTER ||
-            (executing == Executing.CONFIG && configuration.isGeneratedAfter());
+            (executing == Executing.CONFIG && mgc.isGeneratedAfter());
         if (identity.useJdbc()) {
             cb.identity(true).executing(Executing.AFTER).generator("JDBC");
         } else if (isAfter) {
@@ -506,12 +538,12 @@ public class DefaultEntityParser implements EntityParser, Constants {
 
     /**
      * 处理@GeneratedValue主键生成策略
-     * @param configuration 全局配置对象
-     * @param field         属性包装对象
-     * @param tb            数据库表对象构建器
-     * @param cb            数据库字段构建器
+     * @param mgc   全局配置对象
+     * @param field 属性包装对象
+     * @param tb    数据库表对象构建器
+     * @param cb    数据库字段构建器
      */
-    private void handleGeneratedValueAnnotation(final MyBatisGlobalConfiguration configuration,
+    private void handleGeneratedValueAnnotation(final MyBatisGlobalConfiguration mgc,
                                                 final Field field, final TableBuilder tb,
                                                 final ColumnBuilder cb) {
         final String generator;
@@ -568,21 +600,21 @@ public class DefaultEntityParser implements EntityParser, Constants {
 
     /**
      * 处理审计注解
-     * @param configuration 全局配置对象
-     * @param field         属性包装对象
-     * @param tb            数据库表对象构建器
-     * @param cb            数据库字段构建器
+     * @param mgc   全局配置对象
+     * @param field 属性包装对象
+     * @param tb    数据库表对象构建器
+     * @param cb    数据库字段构建器
      */
-    private void handleAuditingAnnotations(final MyBatisGlobalConfiguration configuration,
+    private void handleAuditingAnnotations(final MyBatisGlobalConfiguration mgc,
                                            final Field field, final TableBuilder tb,
                                            final ColumnBuilder cb) {
         final boolean updatable = cb.canAuditing() && cb.updatable();
         final boolean insertable = cb.canAuditing() && cb.insertable();
         if (updatable || insertable) {
-            final AuditPropertyParser parser = this.getAuditPropertyParser(configuration);
-            final PropertyWrapper pw = new PropertyWrapper(tb.entity(), field.getOriginalField(),
-                field.getName(), field.getJavaType(), field.isPrimaryKey(), field.getGetter(), field.getSetter(),
-                null, field.getAnnotations(), field.getAnnotationCaches());
+            final AuditPropertyParser parser = this.getAuditPropertyParser(mgc);
+            final PropertyWrapper pw = new PropertyWrapper(tb.entity(), field.getOriginalField(), field.getName(),
+                field.getJavaType(), field.isPrimaryKey(), cb.uuid(), cb.snowflake(), field.getGetter(),
+                field.getSetter(), null, field.getAnnotations(), field.getAnnotationCaches());
             final AuditMatcher am = parser.parse(pw);
             if (Objects.nonNull(am) && am.canMatches()) {
                 cb.createdById(am.isCreatedById()).createdByName(am.isCreatedByName())
@@ -602,11 +634,11 @@ public class DefaultEntityParser implements EntityParser, Constants {
 
     /**
      * 获取类型过滤器
-     * @param configuration 全局配置对象
+     * @param mgc 全局配置对象
      * @return {@link Filter}对象
      */
-    private Filter<Class<?>> getClassFilter(final MyBatisGlobalConfiguration configuration) {
-        return Optional.ofNullable(configuration).map(it -> {
+    private Filter<Class<?>> getClassFilter(final MyBatisGlobalConfiguration mgc) {
+        return Optional.ofNullable(mgc).map(it -> {
             final Filter<Class<?>> filter = it.getClassFilter();
             if (filter == null) {
                 it.setClassFilter(DEF_CLASS_FILTER);
@@ -620,11 +652,11 @@ public class DefaultEntityParser implements EntityParser, Constants {
     /**
      * 获取属性过滤器
      * <p>排除static或final修饰、@Transient注解的、非简单类型、或枚举类型不转换成简单类型的属性</p>
-     * @param configuration 全局配置对象
+     * @param mgc 全局配置对象
      * @return {@link Filter}对象
      */
-    private Filter<java.lang.reflect.Field> getFieldFilter(final MyBatisGlobalConfiguration configuration) {
-        return Optional.ofNullable(configuration).map(it -> {
+    private Filter<java.lang.reflect.Field> getFieldFilter(final MyBatisGlobalConfiguration mgc) {
+        return Optional.ofNullable(mgc).map(it -> {
             final Filter<java.lang.reflect.Field> filter = it.getFieldFilter();
             if (filter == null) {
                 final FieldFilter newFilter = FieldFilter.of(it.isUseSimpleType(), it.isEnumAsSimpleType());
@@ -637,11 +669,11 @@ public class DefaultEntityParser implements EntityParser, Constants {
 
     /**
      * 获取get方法过滤器
-     * @param configuration 全局配置对象
+     * @param mgc 全局配置对象
      * @return {@link Filter}对象
      */
-    private Filter<Method> getGetterFilter(final MyBatisGlobalConfiguration configuration) {
-        return Optional.ofNullable(configuration).map(it -> {
+    private Filter<Method> getGetterFilter(final MyBatisGlobalConfiguration mgc) {
+        return Optional.ofNullable(mgc).map(it -> {
             final Filter<Method> filter = it.getGetterFilter();
             if (filter == null) {
                 it.setGetterFilter(DEF_GET_METHOD_FILTER);
@@ -653,11 +685,11 @@ public class DefaultEntityParser implements EntityParser, Constants {
 
     /**
      * 获取set方法过滤器
-     * @param configuration 全局配置对象
+     * @param mgc 全局配置对象
      * @return {@link Filter}对象
      */
-    private Filter<Method> getSetterFilter(final MyBatisGlobalConfiguration configuration) {
-        return Optional.ofNullable(configuration).map(it -> {
+    private Filter<Method> getSetterFilter(final MyBatisGlobalConfiguration mgc) {
+        return Optional.ofNullable(mgc).map(it -> {
             final Filter<Method> filter = it.getSetterFilter();
             if (filter == null) {
                 it.setSetterFilter(DEF_SET_METHOD_FILTER);
@@ -669,12 +701,12 @@ public class DefaultEntityParser implements EntityParser, Constants {
 
     /**
      * 获取属性解析器
-     * @param configuration {@link MyBatisGlobalConfiguration}
+     * @param mgc {@link MyBatisGlobalConfiguration}
      * @return 属性解析器
      */
-    private FieldParser getFieldParser(final MyBatisGlobalConfiguration configuration) {
-        return Optional.ofNullable(configuration).map(it -> {
-            final FieldParser parser = configuration.getFieldParser();
+    private FieldParser getFieldParser(final MyBatisGlobalConfiguration mgc) {
+        return Optional.ofNullable(mgc).map(it -> {
+            final FieldParser parser = mgc.getFieldParser();
             if (parser == null) {
                 it.setFieldParser(DEF_FIELD_PARSER);
                 return DEF_FIELD_PARSER;
@@ -685,11 +717,11 @@ public class DefaultEntityParser implements EntityParser, Constants {
 
     /**
      * 获取审计属性解析器
-     * @param configuration – MyBatisGlobalConfiguration
+     * @param mgc 全局配置对象
      * @return 审计属性解析器
      */
-    private AuditPropertyParser getAuditPropertyParser(final MyBatisGlobalConfiguration configuration) {
-        return Optional.ofNullable(configuration).map(it -> {
+    private AuditPropertyParser getAuditPropertyParser(final MyBatisGlobalConfiguration mgc) {
+        return Optional.ofNullable(mgc).map(it -> {
             AuditPropertyParser parser = it.getAuditPropertyParser();
             if (parser == null) {
                 AuditPropertyAutoScanParser autoScanParser = it.getAuditPropertyAutoScanParser();
@@ -706,26 +738,26 @@ public class DefaultEntityParser implements EntityParser, Constants {
 
     /**
      * 获取命名策略
-     * @param configuration 全局配置对象
-     * @param reflector     反射器
+     * @param mgc       全局配置对象
+     * @param reflector 反射器
      * @return 命名策略
      */
-    private NamingPolicy naming(final MyBatisGlobalConfiguration configuration, final Reflector reflector) {
+    private NamingPolicy naming(final MyBatisGlobalConfiguration mgc, final Reflector reflector) {
         return Optional.ofNullable(reflector.getAnnotation(Naming.class))
-            .map(Naming::value).orElse(Optional.ofNullable(configuration.getNamingPolicy())
+            .map(Naming::value).orElse(Optional.ofNullable(mgc.getNamingPolicy())
                 .orElse(NamingPolicy.UPPER_UNDERSCORE));
     }
 
     /**
      * 获取命名转换器
-     * @param configuration {@link MyBatisGlobalConfiguration}
+     * @param mgc 全局配置对象
      * @return {@link PhysicalNamingConverter}
      */
-    private PhysicalNamingConverter namingConverter(final MyBatisGlobalConfiguration configuration) {
-        if (configuration != null) {
+    private PhysicalNamingConverter namingConverter(final MyBatisGlobalConfiguration mgc) {
+        if (mgc != null) {
             final PhysicalNamingConverter converter;
-            if ((converter = configuration.getPhysicalNamingConverter()) == null) {
-                configuration.setPhysicalNamingConverter(DEF_PHYSICAL_NAMING_CONVERTER);
+            if ((converter = mgc.getPhysicalNamingConverter()) == null) {
+                mgc.setPhysicalNamingConverter(DEF_PHYSICAL_NAMING_CONVERTER);
             } else {
                 return converter;
             }

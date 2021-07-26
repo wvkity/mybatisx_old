@@ -224,6 +224,16 @@ public final class Reflections {
     }
 
     /**
+     * 判断指定类型是否为简单对象
+     * @param target 目标对象
+     * @return boolean
+     */
+    public static boolean isSimpleJavaObject(final Object target) {
+        return Objects.nonNull(target) && Object.class != target.getClass()
+            && SIMPLE_TYPES.contains(target.getClass());
+    }
+
+    /**
      * 判断指定类型是否为简单类型
      * @param clazz 指定类型
      * @return boolean
