@@ -13,23 +13,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.github.mybatisx.event.handle;
+package com.github.mybatisx.processor;
 
-import com.github.mybatisx.event.EventPhase;
+import com.github.mybatisx.queue.QueueMetadata;
 
 /**
- * 事件数据处理器
- * @param <T> 事件数据
+ * 事件队列处理器
  * @author wvkity
- * @created 2021-07-16
+ * @created 2021-07-25
  * @since 1.0.0
  */
-public interface EventDataHandler<T> {
+public interface EventQueueProcessor extends Runnable {
 
     /**
-     * 处理事件数据
-     * @param event 事件数据
-     * @param phase {@link EventPhase}
+     * 处理数据队列
+     * @param data 队列数据
      */
-    void handle(final T event, final EventPhase phase);
+    void process(final QueueMetadata data);
+
+    /**
+     * 继续开始任务
+     */
+    void start();
+
+    /**
+     * 暂停任务
+     */
+    void stop();
 }

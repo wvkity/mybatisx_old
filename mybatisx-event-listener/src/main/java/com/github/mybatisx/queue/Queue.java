@@ -13,67 +13,68 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.github.mybatisx.backup.queue;
+package com.github.mybatisx.queue;
 
 /**
- * 数据备份队列
+ * 队列
+ * @param <T> 数据类型
  * @author wvkity
- * @created 2021-07-19
+ * @created 2021-07-25
  * @since 1.0.0
  */
-public interface BackupQueue {
+public interface Queue<T> {
+
 
     /**
      * 入队
      * @param data 数据
      * @throws InterruptedException 线程终止时将抛出异常
      */
-    void put(final QueueData data) throws InterruptedException;
+    void put(final T data) throws InterruptedException;
 
     /**
      * 入队
      * @param data 数据
      * @return boolean
      */
-    boolean offer(final QueueData data);
+    boolean offer(final T data);
 
     /**
      * 出队
-     * @return {@link QueueData}
+     * @return 数据
      * @throws InterruptedException 线程终止时将抛出异常
      */
-    QueueData take() throws InterruptedException;
+    T take() throws InterruptedException;
 
     /**
      * 出队
-     * @return {@link QueueData}
+     * @return 数据
      */
-    QueueData poll();
+    T poll();
 
     /**
      * 获取头部元素
-     * @return {@link QueueData}
+     * @return 数据
      */
-    QueueData peek();
+    T peek();
 
     /**
      * 移除元素
-     * @param data {@link QueueData}
+     * @param data 数据
      * @return boolean
      */
-    boolean remove(final QueueData data);
+    boolean remove(final T data);
 
     /**
      * 检查队列中是否包含指定元素
-     * @param data {@link QueueData}
+     * @param data 数据
      * @return boolean
      */
-    boolean contains(final QueueData data);
+    boolean contains(final T data);
 
     /**
      * 队列是否为空
      * @return boolean
      */
     boolean isEmpty();
-
 }

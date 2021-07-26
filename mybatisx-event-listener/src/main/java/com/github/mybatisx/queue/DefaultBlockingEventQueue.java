@@ -13,65 +13,61 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.github.mybatisx.backup.queue;
+package com.github.mybatisx.queue;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * 默认数据备份队列
+ * 默认事件队列
  * @author wvkity
- * @created 2021-07-19
+ * @created 2021-07-25
  * @since 1.0.0
  */
-public class DefaultBackupBlockingQueue implements BackupQueue {
+public class DefaultBlockingEventQueue implements EventQueue {
 
-    private final BlockingQueue<QueueData> queue;
+    private final BlockingQueue<QueueMetadata> queue;
 
-    public DefaultBackupBlockingQueue() {
-        this(4096);
-    }
-
-    public DefaultBackupBlockingQueue(final int capacity) {
+    public DefaultBlockingEventQueue(int capacity) {
         this(new LinkedBlockingQueue<>(capacity));
     }
 
-    public DefaultBackupBlockingQueue(BlockingQueue<QueueData> queue) {
+    public DefaultBlockingEventQueue(BlockingQueue<QueueMetadata> queue) {
         this.queue = queue;
     }
 
     @Override
-    public void put(QueueData data) throws InterruptedException {
+    public void put(QueueMetadata data) throws InterruptedException {
         this.queue.put(data);
     }
 
     @Override
-    public boolean offer(QueueData data) {
+    public boolean offer(QueueMetadata data) {
         return this.queue.offer(data);
     }
 
     @Override
-    public QueueData take() throws InterruptedException {
+    public QueueMetadata take() throws InterruptedException {
         return this.queue.take();
     }
 
     @Override
-    public QueueData poll() {
-        return this.queue.poll();
+    public QueueMetadata poll() {
+        return null;
     }
 
     @Override
-    public QueueData peek() {
+    public QueueMetadata peek() {
         return this.queue.peek();
     }
 
     @Override
-    public boolean remove(QueueData data) {
+    public boolean remove(QueueMetadata data) {
         return this.queue.remove(data);
     }
 
     @Override
-    public boolean contains(QueueData data) {
+    public boolean contains(QueueMetadata data) {
         return this.queue.contains(data);
     }
 

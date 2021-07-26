@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,34 +13,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.github.mybatisx.event;
+package com.github.mybatisx.queue;
 
-import java.io.Serializable;
+import com.github.mybatisx.event.Event;
+import com.github.mybatisx.event.EventPhase;
 
 /**
- * 事件
- * @param <T> 数据类型
+ * 队列数据
  * @author wvkity
- * @created 2021-03-13
+ * @created 2021-07-25
  * @since 1.0.0
  */
-public interface Event<T> extends Serializable {
+public interface QueueMetadata {
 
     /**
-     * 数据
-     * @return 数据
+     * 事件对象
+     * @return {@link Event}
      */
-    T getSource();
+    Event<?> getEvent();
 
     /**
-     * 获取事件类型
+     * 事务监听类型
      * @return {@link EventPhase}
      */
     EventPhase getEventPhase();
 
-    /**
-     * 触发时间
-     * @return 时间戳
-     */
-    long getTimestamp();
 }

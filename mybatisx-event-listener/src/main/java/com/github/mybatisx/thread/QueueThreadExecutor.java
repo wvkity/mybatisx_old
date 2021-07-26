@@ -13,14 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.github.mybatisx.backup.thread;
+package com.github.mybatisx.thread;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * 队列线程池
  * @author wvkity
- * @created 2021-07-19
+ * @created 2021-07-25
  * @since 1.0.0
  */
 public class QueueThreadExecutor {

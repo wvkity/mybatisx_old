@@ -1,0 +1,15 @@
+{
+    "groups": [
+        {
+            "sourceType": "com.github.mybatisx.spring.boot.queue.autoconfigure.MyBatisEventQueueProperties",
+            "name": "github.mybatisx.event",
+            "type": "com.github.mybatisx.spring.boot.queue.autoconfigure.MyBatisEventQueueProperties"
+        },
+        {
+            "sourceType": "com.github.mybatisx.spring.boot.queue.autoconfigure.MyBatisEventQueueProperties",
+            "name": "github.mybatisx.queue.pool",
+            "sourceMethod": "getPool()",
+            "type": "com.github.mybatisx.thread.ThreadPoolConfig"
+        }
+    ]
+}

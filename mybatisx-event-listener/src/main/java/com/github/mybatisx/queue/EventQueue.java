@@ -13,32 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.github.mybatisx.backup.queue;
-
-import com.github.mybatisx.backup.event.BackupEvent;
-import com.github.mybatisx.event.EventPhase;
+package com.github.mybatisx.queue;
 
 /**
- * 队列数据
+ * 事件队列
  * @author wvkity
- * @created 2021-07-19
+ * @created 2021-07-25
  * @since 1.0.0
  */
-public class QueueData {
+public interface EventQueue extends Queue<QueueMetadata> {
 
-    private final BackupEvent event;
-    private final EventPhase phase;
-
-    public QueueData(BackupEvent event, EventPhase phase) {
-        this.event = event;
-        this.phase = phase;
-    }
-
-    public BackupEvent getEvent() {
-        return event;
-    }
-
-    public EventPhase getPhase() {
-        return phase;
-    }
 }

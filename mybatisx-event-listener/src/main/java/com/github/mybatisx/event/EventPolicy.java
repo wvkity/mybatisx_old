@@ -13,29 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.github.mybatisx.backup.queue;
+package com.github.mybatisx.event;
 
 /**
- * 备份数据队列处理器
+ * 事件处理策略
  * @author wvkity
- * @created 2021-07-19
+ * @created 2021-07-26
  * @since 1.0.0
  */
-public interface BackupQueueProcessor extends Runnable {
+public enum EventPolicy {
 
     /**
-     * 处理数据队列
-     * @param data 队列数据
+     * 常规
      */
-    void process(final QueueData data);
-
+    STANDARD,
     /**
-     * 继续开始任务
+     * 队列
      */
-    void start();
-
-    /**
-     * 暂停任务
-     */
-    void stop();
+    QUEUE
 }
