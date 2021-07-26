@@ -23,10 +23,12 @@ import com.github.mybatisx.auditable.meta.AuditedMetadata;
 import com.github.mybatisx.cache.LocalCache;
 import com.github.mybatisx.cache.LocalCacheFactory;
 import com.github.mybatisx.plugin.auditable.cache.CacheData;
-import com.github.mybatisx.plugin.auditable.cache.DefaultCacheData;
+import com.github.mybatisx.plugin.auditable.cache.DefaultMultiCacheData;
 import com.github.mybatisx.plugin.auditable.support.AuditedPropertyLoader;
 import com.github.mybatisx.plugin.auditable.support.MetadataAuditable;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Properties;
@@ -41,14 +43,7 @@ import java.util.stream.Collectors;
  */
 public class DefaultMetadataAuditedHandler extends AbstractMetadataAuditedHandler {
 
-    /**
-     * 缓存实现类
-     */
-    public static final String PROP_KEY_MA_CACHE_CLASS = "metadataAuditedCacheClass";
-    /**
-     * 缓存配置项前缀
-     */
-    public static final String PROP_KEY_MA_CACHE_CFG_PREFIX = "metadataAuditedCacheCfgPrefix";
+    private static final Logger log = LoggerFactory.getLogger(DefaultMetadataAuditedHandler.class);
     /**
      * 缓存后缀
      */
@@ -65,7 +60,7 @@ public class DefaultMetadataAuditedHandler extends AbstractMetadataAuditedHandle
     public DefaultMetadataAuditedHandler(boolean rollbackEnable, boolean annotationEnable,
                                          AuditedPropertyLoader propertyLoader, MetadataAuditable metadataAuditable,
                                          AuditedEventPublisher auditedEventPublisher) {
-        this.rollbackEnable = rollbackEnable;
+        this.rollbackRestore = rollbackEnable;
         this.annotationEnable = annotationEnable;
         this.propertyLoader = propertyLoader;
         this.metadataAuditable = metadataAuditable;
@@ -76,7 +71,7 @@ public class DefaultMetadataAuditedHandler extends AbstractMetadataAuditedHandle
                                          AuditedPropertyLoader propertyLoader, MetadataAuditable metadataAuditable,
                                          LocalCache<String, CacheData<List<PropertyWrapper>>> localCache,
                                          AuditedEventPublisher auditedEventPublisher) {
-        this.rollbackEnable = rollbackEnable;
+        this.rollbackRestore = rollbackEnable;
         this.annotationEnable = annotationEnable;
         this.localCache = localCache;
         this.propertyLoader = propertyLoader;
@@ -90,7 +85,7 @@ public class DefaultMetadataAuditedHandler extends AbstractMetadataAuditedHandle
                                          AuditedPropertyLoader propertyLoader, MetadataAuditable metadataAuditable,
                                          LocalCache<String, CacheData<List<PropertyWrapper>>> localCache,
                                          AuditedEventPublisher auditedEventPublisher) {
-        this.rollbackEnable = rollbackEnable;
+        this.rollbackRestore = rollbackEnable;
         this.annotationEnable = annotationEnable;
         this.interceptMethods = interceptMethods;
         this.ignoreMethods = ignoreMethods;
@@ -102,13 +97,8 @@ public class DefaultMetadataAuditedHandler extends AbstractMetadataAuditedHandle
     }
 
     @Override
-    protected boolean isEnableReflect() {
-        return this.annotationEnable;
-    }
-
-    @Override
-    public boolean canAudited(MappedStatement ms) {
-        return super.canAudited(ms) && Objects.nonNull(this.metadataAuditable)
+    public boolean canAudited(MappedStatement ms, Object parameter) {
+        return super.canAudited(ms, parameter) && Objects.nonNull(this.metadataAuditable)
             && Objects.nonNull(this.propertyLoader);
     }
 
@@ -123,7 +113,7 @@ public class DefaultMetadataAuditedHandler extends AbstractMetadataAuditedHandle
         }
         pws = this.propertyLoader.load(ms, target, AuditedPattern.METADATA, isInsert, isLogicDelete);
         if (Objects.isNotEmpty(pws)) {
-            this.cache(cacheKey, new DefaultCacheData(pws));
+            this.cache(cacheKey, new DefaultMultiCacheData(pws));
         }
         return pws;
     }
@@ -142,8 +132,8 @@ public class DefaultMetadataAuditedHandler extends AbstractMetadataAuditedHandle
     public void setProperties(Properties properties) {
         super.setProperties(properties);
         if (Objects.isNull(this.localCache)) {
-            this.localCache = LocalCacheFactory.create(properties.getProperty(PROP_KEY_MA_CACHE_CLASS),
-                properties, properties.getProperty(PROP_KEY_MA_CACHE_CFG_PREFIX));
+            this.localCache = LocalCacheFactory.create(properties.getProperty(PROP_KEY_CACHE_CLASS),
+                properties, properties.getProperty(PROP_KEY_CACHE_CFG_PREFIX));
         }
     }
 }

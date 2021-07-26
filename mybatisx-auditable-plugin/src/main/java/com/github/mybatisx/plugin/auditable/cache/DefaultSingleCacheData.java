@@ -13,25 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.github.mybatisx.auditable.event.handle;
+package com.github.mybatisx.plugin.auditable.cache;
 
-import com.github.mybatisx.auditable.event.AuditedEvent;
-import com.github.mybatisx.event.EventPhase;
-import com.github.mybatisx.event.handle.EventDataHandler;
+import com.github.mybatisx.auditable.PropertyWrapper;
 
 /**
- * 审计元数据处理器
+ * 默认单值缓存数据
  * @author wvkity
- * @created 2021-07-16
+ * @created 2021-07-22
  * @since 1.0.0
  */
-public interface AuditedEventDataHandler extends EventDataHandler<AuditedEvent> {
+public class DefaultSingleCacheData implements CacheData<PropertyWrapper> {
 
-    /**
-     * 处理审计元数据
-     * @param event 审计事件数据
-     * @param phase {@link EventPhase}
-     */
+    private static final long serialVersionUID = -290832704805231004L;
+    private final PropertyWrapper data;
+
+    public DefaultSingleCacheData(PropertyWrapper data) {
+        this.data = data;
+    }
+
     @Override
-    void handle(final AuditedEvent event, final EventPhase phase);
+    public PropertyWrapper getData() {
+        return this.data;
+    }
 }

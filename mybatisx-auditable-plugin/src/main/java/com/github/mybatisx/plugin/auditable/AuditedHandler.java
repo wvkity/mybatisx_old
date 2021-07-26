@@ -43,10 +43,11 @@ public interface AuditedHandler<T> extends Handler {
 
     /**
      * 检查是否可审计
-     * @param ms {@link MappedStatement}
+     * @param ms        {@link MappedStatement}
+     * @param parameter 方法参数
      * @return boolean
      */
-    boolean canAudited(final MappedStatement ms);
+    boolean canAudited(final MappedStatement ms, final Object parameter);
 
     /**
      * 审计处理

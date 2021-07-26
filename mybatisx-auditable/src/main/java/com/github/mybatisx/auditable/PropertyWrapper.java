@@ -54,6 +54,14 @@ public class PropertyWrapper {
      */
     private final boolean primaryKey;
     /**
+     * 是否为UUID主键
+     */
+    private final boolean uuid;
+    /**
+     * 是否为雪花算法主键
+     */
+    private final boolean snowflake;
+    /**
      * get方法
      */
     private final Method getter;
@@ -74,14 +82,16 @@ public class PropertyWrapper {
      */
     private final Map<String, ? extends Annotation> annotationCaches;
 
-    public PropertyWrapper(Class<?> entity, Field field, String name, Class<?> javaType,
-                           boolean primaryKey, Method getter, Method setter, AuditType auditType,
+    public PropertyWrapper(Class<?> entity, Field field, String name, Class<?> javaType, boolean primaryKey,
+                           boolean uuid, boolean snowflake, Method getter, Method setter, AuditType auditType,
                            Set<? extends Annotation> annotations, Map<String, ? extends Annotation> annotationCaches) {
         this.entity = entity;
         this.field = field;
         this.name = name;
         this.javaType = javaType;
         this.primaryKey = primaryKey;
+        this.uuid = uuid;
+        this.snowflake = snowflake;
         this.getter = getter;
         this.setter = setter;
         this.auditType = auditType;
@@ -131,6 +141,14 @@ public class PropertyWrapper {
 
     public boolean nonPrimaryKey() {
         return !isPrimaryKey();
+    }
+
+    public boolean isUuid() {
+        return uuid;
+    }
+
+    public boolean isSnowflake() {
+        return snowflake;
     }
 
     public Method getGetter() {

@@ -13,37 +13,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.github.mybatisx.auditable.event;
+package com.github.mybatisx.plugin.auditable.cache;
 
-import com.github.mybatisx.auditable.meta.AuditedMetadata;
-import com.github.mybatisx.event.Event;
+import com.github.mybatisx.auditable.PropertyWrapper;
 
 import java.util.List;
 
 /**
- * 审计事件
+ * 默认多值缓存数据
  * @author wvkity
- * @created 2021-07-15
+ * @created 2021-07-16
  * @since 1.0.0
  */
-public interface AuditedEvent extends Event<List<AuditedMetadata>> {
+public class DefaultMultiCacheData implements CacheData<List<PropertyWrapper>> {
 
-    /**
-     * 事件类型唯一标识
-     */
-    String EVENT_UNIQUE = "auditedEvent";
+    private static final long serialVersionUID = 5743451825760166183L;
+    private final List<PropertyWrapper> data;
 
-    /**
-     * 获取标识
-     * @return 标识
-     */
-    String getUniqueCode();
+    public DefaultMultiCacheData(List<PropertyWrapper> data) {
+        this.data = data;
+    }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    default String getEventUnique() {
-        return EVENT_UNIQUE;
+    public List<PropertyWrapper> getData() {
+        return this.data;
     }
 }

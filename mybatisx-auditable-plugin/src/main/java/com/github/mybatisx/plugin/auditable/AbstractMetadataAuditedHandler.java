@@ -21,7 +21,6 @@ import com.github.mybatisx.auditable.event.AuditedEvent;
 import com.github.mybatisx.auditable.event.AuditedFilter;
 import com.github.mybatisx.auditable.event.AuditedNotFilter;
 import com.github.mybatisx.auditable.event.DefaultAuditedEvent;
-import com.github.mybatisx.batch.BatchDataWrapper;
 import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.event.EventPhase;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -39,12 +38,16 @@ import java.util.stream.Collectors;
  * @created 2021-07-16
  * @since 1.0.0
  */
-public abstract class AbstractMetadataAuditedHandler extends AbstractAuditedHandler implements
+public abstract class AbstractMetadataAuditedHandler extends AbstractAuditedHandler<List<PropertyWrapper>> implements
     MetadataAuditedHandler {
 
     public static final String PROP_KEY_AUDITED_INTERCEPT_METHODS = "auditedInterceptMethods";
     public static final String PROP_KEY_AUDITED_IGNORE_METHODS = "auditedIgnoreMethods";
 
+    /**
+     * 是否启用识别拦截注解
+     */
+    protected boolean annotationEnable;
     /**
      * 拦截方法列表
      */
@@ -55,7 +58,12 @@ public abstract class AbstractMetadataAuditedHandler extends AbstractAuditedHand
     protected Set<String> ignoreMethods;
 
     @Override
-    public boolean canAudited(final MappedStatement ms) {
+    protected boolean isEnableReflect() {
+        return this.annotationEnable;
+    }
+
+    @Override
+    public boolean canAudited(MappedStatement ms, Object parameter) {
         if (this.isAnnotationPresent(ms, AuditedNotFilter.class)) {
             return false;
         }
@@ -67,38 +75,19 @@ public abstract class AbstractMetadataAuditedHandler extends AbstractAuditedHand
             || this.isAnnotationPresent(ms, AuditedFilter.class);
     }
 
-    /**
-     * 处理参数
-     * @param ms        {@link MappedStatement}
-     * @param parameter 方法参数
-     * @return {@link AuditedEvent}
-     */
     @Override
-    @SuppressWarnings("unchecked")
-    public AuditedEvent auditedHandle(final MappedStatement ms, final Object parameter) {
-        final List<Object> args = this.getOriginalParameter(parameter, it -> {
-            if (it.containsKey(BatchDataWrapper.PARAM_BATCH_DATA_WRAPPER)) {
-                final Object value = it.get(BatchDataWrapper.PARAM_BATCH_DATA_WRAPPER);
-                if (value instanceof BatchDataWrapper) {
-                    return ((BatchDataWrapper<Object>) value).getData();
-                }
-            }
-            return true;
-        });
-        if (Objects.isNotEmpty(args)) {
-            final Object first = args.get(0);
-            final boolean isInsert = this.isInsert(ms);
-            final boolean isLogicDelete = this.logicDeleteMethods.contains(this.execMethod(ms));
-            final List<PropertyWrapper> pws = this.loadProperties(ms, first, isInsert, isLogicDelete);
-            if (Objects.isNotEmpty(pws)) {
-                if (this.rollbackEnable) {
-                    final DefaultAuditedEvent event = DefaultAuditedEvent.of(EventPhase.AFTER_ROLLBACK,
-                        "metadataAuditedEvent");
-                    args.forEach(it -> event.addAll(this.audited(ms, parameter, it, pws)));
-                    return event;
-                } else {
-                    args.forEach(it -> this.audited(ms, parameter, it, pws));
-                }
+    protected AuditedEvent auditedHandle(MappedStatement ms, Object parameter, List<Object> sources,
+                                         boolean isInsert, boolean isLogicDelete) {
+        final Object first = sources.get(0);
+        final List<PropertyWrapper> pws = this.loadProperties(ms, first, isInsert, isLogicDelete);
+        if (Objects.isNotEmpty(pws)) {
+            if (this.rollbackRestore) {
+                final DefaultAuditedEvent event = DefaultAuditedEvent.of(EventPhase.AFTER_ROLLBACK,
+                    "metadataAuditedEvent");
+                sources.forEach(it -> event.addAll(this.audited(ms, parameter, it, pws)));
+                return event;
+            } else {
+                sources.forEach(it -> this.audited(ms, parameter, it, pws));
             }
         }
         return null;

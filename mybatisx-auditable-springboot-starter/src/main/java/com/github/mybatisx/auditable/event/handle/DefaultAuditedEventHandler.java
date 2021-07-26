@@ -13,37 +13,34 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.github.mybatisx.auditable.event;
+package com.github.mybatisx.auditable.event.handle;
 
+import com.github.mybatisx.Objects;
+import com.github.mybatisx.auditable.event.AuditedEvent;
 import com.github.mybatisx.auditable.meta.AuditedMetadata;
-import com.github.mybatisx.event.Event;
+import com.github.mybatisx.event.EventPhase;
 
 import java.util.List;
 
 /**
- * 审计事件
+ * 默认审计元数据处理器
  * @author wvkity
- * @created 2021-07-15
+ * @created 2021-07-16
  * @since 1.0.0
  */
-public interface AuditedEvent extends Event<List<AuditedMetadata>> {
+public class DefaultAuditedEventHandler implements AuditedEventHandler {
 
-    /**
-     * 事件类型唯一标识
-     */
-    String EVENT_UNIQUE = "auditedEvent";
-
-    /**
-     * 获取标识
-     * @return 标识
-     */
-    String getUniqueCode();
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    default String getEventUnique() {
-        return EVENT_UNIQUE;
+    public void doHandle(AuditedEvent event, EventPhase phase) {
+        if (phase == EventPhase.AFTER_ROLLBACK) {
+            final List<AuditedMetadata> source = event.getSource();
+            if (Objects.isNotEmpty(source)) {
+                source.forEach(it -> {
+                    if (!it.isCompleted()) {
+                        it.invoke();
+                    }
+                });
+            }
+        }
     }
 }

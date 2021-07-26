@@ -13,34 +13,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.github.mybatisx.auditable.event.handle;
+package com.github.mybatisx.auditable.event.listener;
 
 import com.github.mybatisx.Objects;
 import com.github.mybatisx.auditable.event.AuditedEvent;
-import com.github.mybatisx.auditable.meta.AuditedMetadata;
+import com.github.mybatisx.auditable.event.handle.AuditedEventHandler;
 import com.github.mybatisx.event.EventPhase;
 
-import java.util.List;
-
 /**
- * 默认审计元数据处理器
+ * 默认审计事件监听器
  * @author wvkity
  * @created 2021-07-16
  * @since 1.0.0
  */
-public class DefaultAuditedEventDataHandler implements AuditedEventDataHandler {
+public class DefaultAuditedEventListener implements AuditedEventListener {
+
+    protected final AuditedEventHandler metadataHandler;
+
+    public DefaultAuditedEventListener(AuditedEventHandler metadataHandler) {
+        this.metadataHandler = metadataHandler;
+    }
 
     @Override
-    public void handle(AuditedEvent event, EventPhase phase) {
-        if (phase == EventPhase.AFTER_ROLLBACK) {
-            final List<AuditedMetadata> source = event.getSource();
-            if (Objects.isNotEmpty(source)) {
-                source.forEach(it -> {
-                    if (!it.isCompleted()) {
-                        it.invoke();
-                    }
-                });
-            }
+    public void listen(AuditedEvent event, EventPhase phase) {
+        if (Objects.nonNull(metadataHandler)) {
+            this.metadataHandler.handle(event, phase);
         }
     }
 }

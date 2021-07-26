@@ -16,9 +16,9 @@
 package com.github.mybatisx.plugin.auditable;
 
 import com.github.mybatisx.Objects;
-import com.github.mybatisx.auditable.PropertyWrapper;
 import com.github.mybatisx.auditable.event.AuditedEvent;
 import com.github.mybatisx.auditable.event.publisher.AuditedEventPublisher;
+import com.github.mybatisx.batch.BatchDataWrapper;
 import com.github.mybatisx.cache.LocalCache;
 import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.plugin.auditable.cache.CacheData;
@@ -39,18 +39,29 @@ import java.util.stream.Collectors;
  * @created 2021-07-21
  * @since 1.0.0
  */
-public abstract class AbstractAuditedHandler extends AbstractUpdateHandler implements
-    AuditedHandler<CacheData<List<PropertyWrapper>>> {
+public abstract class AbstractAuditedHandler<T> extends AbstractUpdateHandler implements
+    AuditedHandler<CacheData<T>> {
 
+    /**
+     * 逻辑删除方法配置属性
+     */
     public static final String PROP_KEY_AUDITED_LOGIC_DELETE_METHODS = "auditedLogicDeleteMethods";
     /**
-     * 是否回滚
+     * 事务回滚属性审计还原配置属性
      */
-    protected boolean rollbackEnable;
+    public static final String PROP_KEY_AUDITED_ROLLBACK_RESTORE = "auditedRollbackRestore";
     /**
-     * 是否启用识别拦截注解
+     * 缓存实现类
      */
-    protected boolean annotationEnable;
+    public static final String PROP_KEY_CACHE_CLASS = "auditedCacheClass";
+    /**
+     * 缓存配置项前缀
+     */
+    public static final String PROP_KEY_CACHE_CFG_PREFIX = "auditedCacheCfgPrefix";
+    /**
+     * 是否回滚还原数据
+     */
+    protected boolean rollbackRestore;
     /**
      * 逻辑删除方法
      */
@@ -58,15 +69,25 @@ public abstract class AbstractAuditedHandler extends AbstractUpdateHandler imple
     /**
      * 本地缓存
      */
-    protected LocalCache<String, CacheData<List<PropertyWrapper>>> localCache;
+    protected LocalCache<String, CacheData<T>> localCache;
     /**
      * 事件发布器
      */
     protected AuditedEventPublisher auditedEventPublisher;
 
+    /**
+     * 检查是否为逻辑删除方法
+     * @param ms {@link MappedStatement}
+     * @return boolean
+     */
+    protected boolean isLogicDeleted(final MappedStatement ms) {
+        return this.isUpdate(ms) && Objects.nonNull(this.logicDeleteMethods)
+            && this.logicDeleteMethods.contains(this.execMethod(ms));
+    }
+
     @Override
     protected Object handle(Invocation invocation, MappedStatement ms, Object parameter) throws Throwable {
-        if (this.filter(ms, parameter) && this.canAudited(ms)) {
+        if (this.filter(ms, parameter) && this.canAudited(ms, parameter)) {
             final AuditedEvent event = this.auditedHandle(ms, parameter);
             if (Objects.nonNull(event)) {
                 this.auditedEventPublisher.publishEvent(event);
@@ -75,8 +96,37 @@ public abstract class AbstractAuditedHandler extends AbstractUpdateHandler imple
         return invocation.proceed();
     }
 
+    /**
+     * 获取实体参数
+     * @param parameter 参数
+     * @return 实体参数
+     */
+    @SuppressWarnings("unchecked")
+    protected List<Object> getSourceParameter(final Object parameter) {
+        return this.getOriginalParameter(parameter, it -> {
+            if (it.containsKey(BatchDataWrapper.PARAM_BATCH_DATA_WRAPPER)) {
+                final Object value = it.get(BatchDataWrapper.PARAM_BATCH_DATA_WRAPPER);
+                if (value instanceof BatchDataWrapper) {
+                    return ((BatchDataWrapper<Object>) value).getData();
+                }
+            }
+            return true;
+        });
+    }
+
     @Override
-    public CacheData<List<PropertyWrapper>> getCache(String cacheKey) {
+    public AuditedEvent auditedHandle(MappedStatement ms, Object parameter) {
+        final List<Object> sources = this.getSourceParameter(parameter);
+        if (Objects.isNotEmpty(sources)) {
+            final boolean isInsert = this.isInsert(ms);
+            final boolean isLogicDelete = this.isLogicDeleted(ms);
+            return this.auditedHandle(ms, parameter, sources, isInsert, isLogicDelete);
+        }
+        return null;
+    }
+
+    @Override
+    public CacheData<T> getCache(String cacheKey) {
         if (Objects.isNotBlank(cacheKey)) {
             return this.localCache.get(cacheKey);
         }
@@ -84,7 +134,7 @@ public abstract class AbstractAuditedHandler extends AbstractUpdateHandler imple
     }
 
     @Override
-    public void cache(String cacheKey, CacheData<List<PropertyWrapper>> data) {
+    public void cache(String cacheKey, CacheData<T> data) {
         if (Objects.isNotBlank(cacheKey) && Objects.nonNull(data)) {
             this.localCache.put(cacheKey, data);
         }
@@ -93,11 +143,15 @@ public abstract class AbstractAuditedHandler extends AbstractUpdateHandler imple
     @Override
     public void setProperties(Properties properties) {
         super.setProperties(properties);
+        final String rrStr;
+        if (Objects.isNotBlank((rrStr = this.getProperty(PROP_KEY_AUDITED_ROLLBACK_RESTORE)))) {
+            this.rollbackRestore = Objects.toBool(rrStr);
+        }
         if (Objects.isEmpty(this.logicDeleteMethods)) {
             if (Objects.isNull(this.logicDeleteMethods)) {
                 this.logicDeleteMethods = new HashSet<>();
             }
-            final String ldmStr = properties.getProperty(PROP_KEY_AUDITED_LOGIC_DELETE_METHODS);
+            final String ldmStr = this.getProperty(PROP_KEY_AUDITED_LOGIC_DELETE_METHODS);
             if (Objects.isNotBlank(ldmStr)) {
                 this.logicDeleteMethods.addAll(Arrays.stream(ldmStr.split(Constants.COMMA)).filter(Objects::isNotBlank)
                     .map(String::trim).collect(Collectors.toSet()));
@@ -106,5 +160,18 @@ public abstract class AbstractAuditedHandler extends AbstractUpdateHandler imple
         this.logicDeleteMethods.add("logicDelete");
         this.logicDeleteMethods.add("logicDeleteByCriteria");
     }
+
+    /**
+     * 审计处理
+     * @param ms            {@link MappedStatement}
+     * @param parameter     参数
+     * @param sources       实体参数
+     * @param isInsert      是否保存操作
+     * @param isLogicDelete 是否逻辑删除操作
+     * @return {@link AuditedEvent}
+     */
+    protected abstract AuditedEvent auditedHandle(final MappedStatement ms, final Object parameter,
+                                                  final List<Object> sources, final boolean isInsert,
+                                                  final boolean isLogicDelete);
 
 }

@@ -27,9 +27,6 @@ import java.util.Properties;
 
 /**
  * 元数据审计拦截器
- * <pre>{@code
- *
- * }</pre>
  * @author wvkity
  * @created 2021-07-16
  * @since 1.0.0

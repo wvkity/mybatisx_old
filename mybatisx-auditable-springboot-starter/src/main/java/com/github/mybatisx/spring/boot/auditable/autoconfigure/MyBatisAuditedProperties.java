@@ -15,18 +15,19 @@
  */
 package com.github.mybatisx.spring.boot.auditable.autoconfigure;
 
+import com.github.mybatisx.event.EventPolicy;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.Properties;
 
 /**
- * 属性审计配置项
+ * 审计配置项
  * @author wvkity
- * @created 2021-07-16
+ * @created 2021-07-23
  * @since 1.0.0
  */
-@ConfigurationProperties(prefix = MyBatisMetadataAuditableProperties.CFG_PREFIX)
-public class MyBatisMetadataAuditableProperties {
+@ConfigurationProperties(prefix = MyBatisAuditedProperties.CFG_PREFIX)
+public class MyBatisAuditedProperties {
 
     public static final String CFG_PREFIX = "github.mybatisx.plugin.auditable";
     /**
@@ -34,13 +35,13 @@ public class MyBatisMetadataAuditableProperties {
      */
     private boolean enable = true;
     /**
+     * 事件处理策略
+     */
+    private EventPolicy policy = EventPolicy.QUEUE;
+    /**
      * 是否开启事务回滚属性值还原
      */
-    private boolean rollbackEnable;
-    /**
-     * 是否开启注解方式拦截
-     */
-    private boolean annotationEnable = true;
+    private boolean rollbackRestore;
     /**
      * 审计属性缓存类([空值,false,caffeine,实现LocalCache接口类])
      */
@@ -50,14 +51,6 @@ public class MyBatisMetadataAuditableProperties {
      */
     private String cacheCfgPrefix;
     /**
-     * 拦截方法列表(英文逗号隔开)
-     */
-    protected String interceptMethods;
-    /**
-     * 忽略方法列表(英文逗号隔开)
-     */
-    protected String ignoreMethods;
-    /**
      * 逻辑删除方法(英文逗号隔开)
      */
     protected String logicDeleteMethods;
@@ -66,7 +59,7 @@ public class MyBatisMetadataAuditableProperties {
      */
     private Properties properties;
 
-    public MyBatisMetadataAuditableProperties() {
+    public MyBatisAuditedProperties() {
     }
 
     public boolean isEnable() {
@@ -77,20 +70,20 @@ public class MyBatisMetadataAuditableProperties {
         this.enable = enable;
     }
 
-    public boolean isRollbackEnable() {
-        return rollbackEnable;
+    public EventPolicy getPolicy() {
+        return policy;
     }
 
-    public void setRollbackEnable(boolean rollbackEnable) {
-        this.rollbackEnable = rollbackEnable;
+    public void setPolicy(EventPolicy policy) {
+        this.policy = policy;
     }
 
-    public boolean isAnnotationEnable() {
-        return annotationEnable;
+    public boolean isRollbackRestore() {
+        return rollbackRestore;
     }
 
-    public void setAnnotationEnable(boolean annotationEnable) {
-        this.annotationEnable = annotationEnable;
+    public void setRollbackRestore(boolean rollbackRestore) {
+        this.rollbackRestore = rollbackRestore;
     }
 
     public String getCacheClass() {
@@ -107,22 +100,6 @@ public class MyBatisMetadataAuditableProperties {
 
     public void setCacheCfgPrefix(String cacheCfgPrefix) {
         this.cacheCfgPrefix = cacheCfgPrefix;
-    }
-
-    public String getInterceptMethods() {
-        return interceptMethods;
-    }
-
-    public void setInterceptMethods(String interceptMethods) {
-        this.interceptMethods = interceptMethods;
-    }
-
-    public String getIgnoreMethods() {
-        return ignoreMethods;
-    }
-
-    public void setIgnoreMethods(String ignoreMethods) {
-        this.ignoreMethods = ignoreMethods;
     }
 
     public String getLogicDeleteMethods() {

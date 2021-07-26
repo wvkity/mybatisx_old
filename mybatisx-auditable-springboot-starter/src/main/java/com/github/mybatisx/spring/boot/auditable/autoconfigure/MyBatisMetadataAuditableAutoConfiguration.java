@@ -16,10 +16,11 @@
 package com.github.mybatisx.spring.boot.auditable.autoconfigure;
 
 import com.github.mybatisx.Objects;
-import com.github.mybatisx.auditable.event.handle.AuditedEventDataHandler;
-import com.github.mybatisx.auditable.event.handle.DefaultAuditedEventDataHandler;
+import com.github.mybatisx.auditable.event.handle.AuditedEventHandler;
+import com.github.mybatisx.auditable.event.handle.DefaultAuditedEventHandler;
 import com.github.mybatisx.auditable.event.listener.AuditedEventListener;
 import com.github.mybatisx.auditable.event.listener.DefaultAuditedEventListener;
+import com.github.mybatisx.auditable.event.listener.DefaultBlockingQueueAuditedEventListener;
 import com.github.mybatisx.auditable.event.publisher.AuditedEventPublisher;
 import com.github.mybatisx.auditable.event.publisher.DefaultAuditedEventPublisher;
 import com.github.mybatisx.plugin.auditable.AbstractMetadataAuditedHandler;
@@ -30,7 +31,10 @@ import com.github.mybatisx.plugin.auditable.support.AuditedPropertyLoader;
 import com.github.mybatisx.plugin.auditable.support.AuditorAware;
 import com.github.mybatisx.plugin.auditable.support.DefaultMetadataAuditable;
 import com.github.mybatisx.plugin.auditable.support.MetadataAuditable;
+import com.github.mybatisx.queue.EventQueue;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -50,21 +54,25 @@ import java.util.function.Function;
  * @since 1.0.0
  */
 @Configuration
-@EnableConfigurationProperties(MyBatisMetadataAuditableProperties.class)
-@ConditionalOnProperty(prefix = MyBatisMetadataAuditableAutoConfiguration.CFG_PREFIX, name = "enable",
+@EnableConfigurationProperties({MyBatisAuditedProperties.class, MyBatisMetadataAuditedProperties.class})
+@ConditionalOnProperty(prefix = MyBatisAuditedProperties.CFG_PREFIX, name = "enable",
     havingValue = "true", matchIfMissing = true)
+@AutoConfigureBefore(name = {"com.github.mybatisx.spring.boot.queue.autoconfigure.MyBatisEventQueueAutoConfiguration"})
 public class MyBatisMetadataAuditableAutoConfiguration {
 
-    public static final String CFG_PREFIX = MyBatisMetadataAuditableProperties.CFG_PREFIX;
-    private final MyBatisMetadataAuditableProperties configProperties;
+    public static final String CFG_PREFIX = MyBatisMetadataAuditedProperties.CFG_PREFIX;
+    private final MyBatisAuditedProperties configProperties;
+    private final MyBatisMetadataAuditedProperties metadataAuditedProperties;
     private final ApplicationContext context;
     private final AuditorAware auditorAware;
     private final Properties properties;
 
-    public MyBatisMetadataAuditableAutoConfiguration(MyBatisMetadataAuditableProperties configProperties,
+    public MyBatisMetadataAuditableAutoConfiguration(MyBatisAuditedProperties configProperties,
+                                                     MyBatisMetadataAuditedProperties metadataAuditedProperties,
                                                      ApplicationContext context,
                                                      ObjectProvider<AuditorAware> auditorAwareProvider) {
         this.configProperties = configProperties;
+        this.metadataAuditedProperties = metadataAuditedProperties;
         this.context = context;
         this.auditorAware = auditorAwareProvider.getIfAvailable();
         if (Objects.isNull(configProperties.getProperties())) {
@@ -72,37 +80,59 @@ public class MyBatisMetadataAuditableAutoConfiguration {
         } else {
             this.properties = configProperties.getProperties();
         }
-        this.ifPresentOfString(DefaultMetadataAuditedHandler.PROP_KEY_MA_CACHE_CLASS,
-            MyBatisMetadataAuditableProperties::getCacheClass);
-        this.ifPresentOfString(DefaultMetadataAuditedHandler.PROP_KEY_MA_CACHE_CFG_PREFIX,
-            MyBatisMetadataAuditableProperties::getCacheCfgPrefix);
-        this.ifPresentOfString(AbstractMetadataAuditedHandler.PROP_KEY_AUDITED_INTERCEPT_METHODS,
-            MyBatisMetadataAuditableProperties::getInterceptMethods);
-        this.ifPresentOfString(AbstractMetadataAuditedHandler.PROP_KEY_AUDITED_IGNORE_METHODS,
-            MyBatisMetadataAuditableProperties::getIgnoreMethods);
+        this.ifPresentOfString(DefaultMetadataAuditedHandler.PROP_KEY_CACHE_CLASS,
+            MyBatisAuditedProperties::getCacheClass);
+        this.ifPresentOfString(DefaultMetadataAuditedHandler.PROP_KEY_CACHE_CFG_PREFIX,
+            MyBatisAuditedProperties::getCacheCfgPrefix);
         this.ifPresentOfString(AbstractMetadataAuditedHandler.PROP_KEY_AUDITED_LOGIC_DELETE_METHODS,
-            MyBatisMetadataAuditableProperties::getLogicDeleteMethods);
+            MyBatisAuditedProperties::getLogicDeleteMethods);
+        this.ifPresentOfString(AbstractMetadataAuditedHandler.PROP_KEY_AUDITED_INTERCEPT_METHODS,
+            this.metadataAuditedProperties.getInterceptMethods());
+        this.ifPresentOfString(AbstractMetadataAuditedHandler.PROP_KEY_AUDITED_IGNORE_METHODS,
+            this.metadataAuditedProperties.getIgnoreMethods());
+        // other properties
+        final Properties ops;
+        if (Objects.nonNull((ops = this.metadataAuditedProperties.getProperties()))) {
+            if (Objects.isNotEmpty(ops)) {
+                for (Object key : ops.keySet()) {
+                    if (Objects.nonNull(key)) {
+                        final String prop = key.toString();
+                        this.properties.setProperty(prop, ops.getProperty(prop));
+                    }
+                }
+            }
+        }
     }
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = CFG_PREFIX, name = "rollback-enable", havingValue = "true")
+    @ConditionalOnProperty(prefix = MyBatisAuditedProperties.CFG_PREFIX, name = "rollback-restore", havingValue = "true")
     public AuditedEventPublisher auditedEventPublisher() {
         return new DefaultAuditedEventPublisher(this.context);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = CFG_PREFIX, name = "rollback-enable", havingValue = "true")
-    public AuditedEventDataHandler auditedEventDataHandler() {
-        return new DefaultAuditedEventDataHandler();
+    @ConditionalOnProperty(prefix = MyBatisAuditedProperties.CFG_PREFIX, name = "rollback-restore", havingValue = "true")
+    public AuditedEventHandler auditedEventHandler() {
+        return new DefaultAuditedEventHandler();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = CFG_PREFIX, name = "rollback-enable", havingValue = "true")
-    public AuditedEventListener auditedEventListener(final ObjectProvider<AuditedEventDataHandler> auditedEventDataHandlerProvider) {
+    @ConditionalOnBean({AuditedEventHandler.class})
+    @ConditionalOnProperty(prefix = MyBatisAuditedProperties.CFG_PREFIX, name = "policy", havingValue = "STANDARD")
+    public AuditedEventListener auditedEventListener(final ObjectProvider<AuditedEventHandler> auditedEventDataHandlerProvider) {
         return new DefaultAuditedEventListener(auditedEventDataHandlerProvider.getIfAvailable());
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnBean({AuditedEventHandler.class})
+    @ConditionalOnProperty(prefix = MyBatisAuditedProperties.CFG_PREFIX, name = "policy", havingValue = "QUEUE",
+        matchIfMissing = true)
+    public AuditedEventListener queueAuditedEventListener(final ObjectProvider<EventQueue> eventQueueProvider) {
+        return new DefaultBlockingQueueAuditedEventListener(eventQueueProvider.getIfAvailable());
     }
 
     @Bean
@@ -116,8 +146,8 @@ public class MyBatisMetadataAuditableAutoConfiguration {
     public MetadataAuditedHandler metadataAuditedHandler(@Lazy MetadataAuditable metadataAuditable,
                                                          @Lazy AuditedPropertyLoader propertyLoader,
                                                          final ObjectProvider<AuditedEventPublisher> auditedEventPublisherProvider) {
-        return new DefaultMetadataAuditedHandler(this.configProperties.isRollbackEnable(),
-            this.configProperties.isAnnotationEnable(), propertyLoader, metadataAuditable,
+        return new DefaultMetadataAuditedHandler(this.configProperties.isRollbackRestore(),
+            this.metadataAuditedProperties.isAnnotationEnable(), propertyLoader, metadataAuditable,
             auditedEventPublisherProvider.getIfAvailable());
 
     }
@@ -133,17 +163,20 @@ public class MyBatisMetadataAuditableAutoConfiguration {
     }
 
     private void ifPresentOfString(final String property,
-                                   final Function<MyBatisMetadataAuditableProperties, String> action) {
+                                   final Function<MyBatisAuditedProperties, String> action) {
         final String value = this.properties.getProperty(property);
         if (Objects.isBlank(value)) {
-            final String newValue = action.apply(this.configProperties);
-            if (Objects.isNotBlank(newValue)) {
-                this.properties.setProperty(property, newValue);
-            }
+            this.ifPresentOfString(property, action.apply(this.configProperties));
         }
     }
 
-    public MyBatisMetadataAuditableProperties getConfigProperties() {
+    private void ifPresentOfString(final String property, final String newValue) {
+        if (Objects.isNotBlank(newValue)) {
+            this.properties.setProperty(property, newValue);
+        }
+    }
+
+    public MyBatisAuditedProperties getConfigProperties() {
         return configProperties;
     }
 
