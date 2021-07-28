@@ -21,21 +21,21 @@ import com.github.mybatisx.basic.metadata.Column;
 import com.github.mybatisx.core.criteria.AbstractCriteria;
 import com.github.mybatisx.core.criteria.ExtCriteria;
 import com.github.mybatisx.core.expr.ExistsExpression;
-import com.github.mybatisx.core.expr.ImmediateBetween;
-import com.github.mybatisx.core.expr.ImmediateEqual;
-import com.github.mybatisx.core.expr.ImmediateGreaterThan;
-import com.github.mybatisx.core.expr.ImmediateGreaterThanOrEqual;
-import com.github.mybatisx.core.expr.ImmediateIn;
-import com.github.mybatisx.core.expr.ImmediateLessThan;
-import com.github.mybatisx.core.expr.ImmediateLessThanOrEqual;
-import com.github.mybatisx.core.expr.ImmediateLike;
-import com.github.mybatisx.core.expr.ImmediateNotBetween;
-import com.github.mybatisx.core.expr.ImmediateNotEqual;
-import com.github.mybatisx.core.expr.ImmediateNotIn;
-import com.github.mybatisx.core.expr.ImmediateNotLike;
-import com.github.mybatisx.core.expr.ImmediateNotNull;
-import com.github.mybatisx.core.expr.ImmediateNull;
-import com.github.mybatisx.core.expr.ImmediateTemplate;
+import com.github.mybatisx.core.expr.ImdBetween;
+import com.github.mybatisx.core.expr.ImdEqual;
+import com.github.mybatisx.core.expr.ImdGreaterThan;
+import com.github.mybatisx.core.expr.ImdGreaterThanOrEqual;
+import com.github.mybatisx.core.expr.ImdIn;
+import com.github.mybatisx.core.expr.ImdLessThan;
+import com.github.mybatisx.core.expr.ImdLessThanOrEqual;
+import com.github.mybatisx.core.expr.ImdLike;
+import com.github.mybatisx.core.expr.ImdNotBetween;
+import com.github.mybatisx.core.expr.ImdNotEqual;
+import com.github.mybatisx.core.expr.ImdNotIn;
+import com.github.mybatisx.core.expr.ImdNotLike;
+import com.github.mybatisx.core.expr.ImdNotNull;
+import com.github.mybatisx.core.expr.ImdNull;
+import com.github.mybatisx.core.expr.ImdTemplate;
 import com.github.mybatisx.core.expr.NativeExpression;
 import com.github.mybatisx.core.expr.SpecialExpression;
 import com.github.mybatisx.support.constant.Like;
@@ -64,7 +64,7 @@ public abstract class AbstractCommonCriteria<T, C extends CommonCriteriaWrapper<
     @Override
     public <V> C colEq(Slot slot, String column, V value, Predicate<V> predicate) {
         if (Objects.isNotBlank(column) && this.early(value, predicate)) {
-            this.where(new ImmediateEqual(this, column, slot, value));
+            this.where(new ImdEqual(this, column, slot, value));
         }
         return this.self();
     }
@@ -87,7 +87,7 @@ public abstract class AbstractCommonCriteria<T, C extends CommonCriteriaWrapper<
     @Override
     public <V> C colNe(Slot slot, String column, V value, Predicate<V> predicate) {
         if (Objects.isNotBlank(column) && this.early(value, predicate)) {
-            this.where(new ImmediateNotEqual(this, column, slot, value));
+            this.where(new ImdNotEqual(this, column, slot, value));
         }
         return this.self();
     }
@@ -100,7 +100,7 @@ public abstract class AbstractCommonCriteria<T, C extends CommonCriteriaWrapper<
     @Override
     public <V> C colGt(Slot slot, String column, V value, Predicate<V> predicate) {
         if (Objects.isNotBlank(column) && this.early(value, predicate)) {
-            this.where(new ImmediateGreaterThan(this, column, slot, value));
+            this.where(new ImdGreaterThan(this, column, slot, value));
         }
         return this.self();
     }
@@ -113,7 +113,7 @@ public abstract class AbstractCommonCriteria<T, C extends CommonCriteriaWrapper<
     @Override
     public <V> C colGe(Slot slot, String column, V value, Predicate<V> predicate) {
         if (Objects.isNotBlank(column) && this.early(value, predicate)) {
-            this.where(new ImmediateGreaterThanOrEqual(this, column, slot, value));
+            this.where(new ImdGreaterThanOrEqual(this, column, slot, value));
         }
         return this.self();
     }
@@ -126,7 +126,7 @@ public abstract class AbstractCommonCriteria<T, C extends CommonCriteriaWrapper<
     @Override
     public <V> C colLt(Slot slot, String column, V value, Predicate<V> predicate) {
         if (Objects.isNotBlank(column) && this.early(value, predicate)) {
-            this.where(new ImmediateLessThan(this, column, slot, value));
+            this.where(new ImdLessThan(this, column, slot, value));
         }
         return this.self();
     }
@@ -139,7 +139,7 @@ public abstract class AbstractCommonCriteria<T, C extends CommonCriteriaWrapper<
     @Override
     public <V> C colLe(Slot slot, String column, V value, Predicate<V> predicate) {
         if (Objects.isNotBlank(column) && this.early(value, predicate)) {
-            this.where(new ImmediateLessThanOrEqual(this, column, slot, value));
+            this.where(new ImdLessThanOrEqual(this, column, slot, value));
         }
         return this.self();
     }
@@ -156,7 +156,7 @@ public abstract class AbstractCommonCriteria<T, C extends CommonCriteriaWrapper<
     @Override
     public C colIn(Slot slot, String column, Collection<?> values) {
         if (Objects.isNotBlank(column)) {
-            this.where(new ImmediateIn(this, column, slot, values));
+            this.where(new ImdIn(this, column, slot, values));
         }
         return this.self();
     }
@@ -169,7 +169,7 @@ public abstract class AbstractCommonCriteria<T, C extends CommonCriteriaWrapper<
     @Override
     public C colNotIn(Slot slot, String column, Collection<?> values) {
         if (Objects.isNotBlank(column)) {
-            this.where(new ImmediateNotIn(this, column, slot, values));
+            this.where(new ImdNotIn(this, column, slot, values));
         }
         return this.self();
     }
@@ -182,7 +182,7 @@ public abstract class AbstractCommonCriteria<T, C extends CommonCriteriaWrapper<
     @Override
     public C colBetween(Slot slot, String column, Object begin, Object end) {
         if (Objects.isNotBlank(column)) {
-            this.where(new ImmediateBetween(this, column, slot, begin, end));
+            this.where(new ImdBetween(this, column, slot, begin, end));
         }
         return this.self();
     }
@@ -190,7 +190,7 @@ public abstract class AbstractCommonCriteria<T, C extends CommonCriteriaWrapper<
     @Override
     public C colNotBetween(Slot slot, String column, Object begin, Object end) {
         if (Objects.isNotBlank(column)) {
-            this.where(new ImmediateNotBetween(this, column, slot, begin, end));
+            this.where(new ImdNotBetween(this, column, slot, begin, end));
         }
         return this.self();
     }
@@ -202,7 +202,7 @@ public abstract class AbstractCommonCriteria<T, C extends CommonCriteriaWrapper<
     @Override
     public C colLike(Slot slot, String column, Object value, Like like, Character escape) {
         if (Objects.isNotBlank(column)) {
-            this.where(new ImmediateLike(this, column, like, escape, slot, value));
+            this.where(new ImdLike(this, column, like, escape, slot, value));
         }
         return this.self();
     }
@@ -210,7 +210,7 @@ public abstract class AbstractCommonCriteria<T, C extends CommonCriteriaWrapper<
     @Override
     public C colNotLike(Slot slot, String column, Object value, Like like, Character escape) {
         if (Objects.isNotBlank(column)) {
-            this.where(new ImmediateNotLike(this, column, like, escape, slot, value));
+            this.where(new ImdNotLike(this, column, like, escape, slot, value));
         }
         return this.self();
     }
@@ -223,7 +223,7 @@ public abstract class AbstractCommonCriteria<T, C extends CommonCriteriaWrapper<
     public C tpl(Slot slot, String template, String column, PlaceholderPattern pattern, Object value,
                  Collection<Object> values, Map<String, Object> mapValues) {
         if (Objects.isNotBlank(template)) {
-            this.where(new ImmediateTemplate(this, column, template, pattern, slot, value, values, mapValues));
+            this.where(new ImdTemplate(this, column, template, pattern, slot, value, values, mapValues));
         }
         return this.self();
     }
@@ -235,7 +235,7 @@ public abstract class AbstractCommonCriteria<T, C extends CommonCriteriaWrapper<
     @Override
     public C colIsNull(Slot slot, String column) {
         if (Objects.isNotBlank(column)) {
-            this.where(new ImmediateNull(this, column, slot));
+            this.where(new ImdNull(this, column, slot));
         }
         return this.self();
     }
@@ -243,7 +243,7 @@ public abstract class AbstractCommonCriteria<T, C extends CommonCriteriaWrapper<
     @Override
     public C colNotNull(Slot slot, String column) {
         if (Objects.isNotBlank(column)) {
-            this.where(new ImmediateNotNull(this, column, slot));
+            this.where(new ImdNotNull(this, column, slot));
         }
         return this.self();
     }

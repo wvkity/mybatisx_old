@@ -20,7 +20,7 @@ import com.github.mybatisx.basic.metadata.Column;
 import com.github.mybatisx.basic.metadata.Table;
 import com.github.mybatisx.core.condition.Criterion;
 import com.github.mybatisx.core.condition.NestedCondition;
-import com.github.mybatisx.core.expr.StandardNesting;
+import com.github.mybatisx.core.expr.StdNesting;
 import com.github.mybatisx.core.expr.SubQueryExpression;
 import com.github.mybatisx.support.constant.Slot;
 import com.github.mybatisx.support.constant.Symbol;
@@ -215,12 +215,12 @@ public abstract class AbstractCriteria<T, C extends CriteriaWrapper<T, C>> exten
 
     @Override
     public C and(boolean not, List<Expression<?>> expressions) {
-        return this.where(new StandardNesting(this, not, Slot.AND, expressions));
+        return this.where(new StdNesting(this, not, Slot.AND, expressions));
     }
 
     @Override
     public C and(boolean not, Criteria<?> criteria, List<Expression<?>> expressions) {
-        return this.where(new StandardNesting(criteria, not, Slot.AND, expressions));
+        return this.where(new StdNesting(criteria, not, Slot.AND, expressions));
     }
 
     @Override
@@ -230,12 +230,12 @@ public abstract class AbstractCriteria<T, C extends CriteriaWrapper<T, C>> exten
 
     @Override
     public C or(boolean not, List<Expression<?>> expressions) {
-        return this.where(new StandardNesting(this, not, Slot.OR, expressions));
+        return this.where(new StdNesting(this, not, Slot.OR, expressions));
     }
 
     @Override
     public C or(boolean not, Criteria<?> criteria, List<Expression<?>> expressions) {
-        return this.where(new StandardNesting(criteria, not, Slot.OR, expressions));
+        return this.where(new StdNesting(criteria, not, Slot.OR, expressions));
     }
 
     @Override

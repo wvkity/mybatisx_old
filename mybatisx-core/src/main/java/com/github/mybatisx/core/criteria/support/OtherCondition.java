@@ -16,8 +16,8 @@
 package com.github.mybatisx.core.criteria.support;
 
 import com.github.mybatisx.core.criteria.ExtCriteria;
-import com.github.mybatisx.core.expr.ImmediateTemplate;
-import com.github.mybatisx.core.expr.StandardTemplate;
+import com.github.mybatisx.core.expr.ImdTemplate;
+import com.github.mybatisx.core.expr.StdTemplate;
 import com.github.mybatisx.support.constant.Slot;
 
 /**
@@ -66,8 +66,8 @@ interface OtherCondition<T, C extends OtherCondition<T, C>> extends SlotSymbol<T
 
     /**
      * 纯SQL条件
-     * <p>本方法存在SQL注入风险，谨慎使用，可参考{@link StandardTemplate StandardTemplate}
-     * 或{@link ImmediateTemplate ImmediateTemplate}模板条件表达式实现对应的功能.</p>
+     * <p>本方法存在SQL注入风险，谨慎使用，可参考{@link StdTemplate StandardTemplate}
+     * 或{@link ImdTemplate ImmediateTemplate}模板条件表达式实现对应的功能.</p>
      * @param condition 条件
      * @return {@code this}
      * @see CommonTemplate
@@ -79,8 +79,8 @@ interface OtherCondition<T, C extends OtherCondition<T, C>> extends SlotSymbol<T
 
     /**
      * 纯SQL条件
-     * <p>本方法存在SQL注入风险，谨慎使用，可参考{@link StandardTemplate StandardTemplate}
-     * 或{@link ImmediateTemplate ImmediateTemplate}模板条件表达式实现对应的功能.</p>
+     * <p>本方法存在SQL注入风险，谨慎使用，可参考{@link StdTemplate StandardTemplate}
+     * 或{@link ImdTemplate ImmediateTemplate}模板条件表达式实现对应的功能.</p>
      * @param slot      {@link Slot}
      * @param condition 条件
      * @return {@code this}

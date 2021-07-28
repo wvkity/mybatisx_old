@@ -35,7 +35,7 @@ import com.github.mybatisx.core.expr.AbstractTemplateExpression;
 import com.github.mybatisx.core.expr.ExistsExpression;
 import com.github.mybatisx.core.expr.NativeExpression;
 import com.github.mybatisx.core.expr.SpecialExpression;
-import com.github.mybatisx.core.expr.StandardNesting;
+import com.github.mybatisx.core.expr.StdNesting;
 import com.github.mybatisx.core.expr.SubQueryExpression;
 import com.github.mybatisx.core.inject.mapping.utils.Scripts;
 import com.github.mybatisx.support.basic.Matched;
@@ -348,7 +348,7 @@ public class DefaultConditionConverter implements Converter<Expression<?>, Crite
      * @return {@link Criterion}
      */
     protected Criterion nestingExprConvert(final Expression<?> expr) {
-        final StandardNesting it = (StandardNesting) expr;
+        final StdNesting it = (StdNesting) expr;
         final List<Expression<?>> expressions = it.getConditions();
         if (Objects.isNotEmpty(expressions)) {
             final List<Criterion> conditions =
