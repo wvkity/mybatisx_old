@@ -56,7 +56,7 @@ public class ImdNotIn extends AbstractInExpression<String> {
         return new ImdNotIn.Builder();
     }
 
-    public static final class Builder extends AbstractRangeExprBuilder<ImdNotIn, String> {
+    public static final class Builder extends AbstractRangeExprBuilder<ImdNotIn, String, Builder> {
 
         private Builder() {
         }

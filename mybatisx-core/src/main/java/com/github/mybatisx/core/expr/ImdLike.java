@@ -61,7 +61,7 @@ public class ImdLike extends AbstractLikeExpression<String> {
         return new ImdLike.Builder();
     }
 
-    public static final class Builder extends AbstractFuzzyExprBuilder<ImdLike, String> {
+    public static final class Builder extends AbstractFuzzyExprBuilder<ImdLike, String, Builder> {
 
         private Builder() {
         }

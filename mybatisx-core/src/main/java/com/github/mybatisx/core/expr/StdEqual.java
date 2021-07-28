@@ -46,7 +46,7 @@ public class StdEqual extends AbstractBasicExpression<Column> {
         return new StdEqual.Builder();
     }
 
-    public static final class Builder extends AbstractBasicExprBuilder<StdEqual, Column> {
+    public static final class Builder extends AbstractBasicExprBuilder<StdEqual, Column, Builder> {
 
         private Builder() {
         }

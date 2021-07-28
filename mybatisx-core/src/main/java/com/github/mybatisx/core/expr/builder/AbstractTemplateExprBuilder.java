@@ -24,11 +24,13 @@ import java.util.Map;
  * 抽象模板条件表达式构建器
  * @param <T> 条件表达式类型
  * @param <E> 字段类型
+ * @param <C> 子类型
  * @author wvkity
  * @created 2021-01-15
  * @since 1.0.0
  */
-public abstract class AbstractTemplateExprBuilder<T, E> extends AbstractExprBuilder<T, E> {
+public abstract class AbstractTemplateExprBuilder<T, E, C extends AbstractTemplateExprBuilder<T, E, C>> extends
+    AbstractExprBuilder<T, E, C> {
 
     /**
      * 模板
@@ -51,28 +53,28 @@ public abstract class AbstractTemplateExprBuilder<T, E> extends AbstractExprBuil
      */
     protected Map<String, Object> mapValues;
 
-    public AbstractTemplateExprBuilder<T, E> template(String template) {
+    public C template(String template) {
         this.template = template;
-        return this;
+        return this.context;
     }
 
-    public AbstractTemplateExprBuilder<T, E> pattern(PlaceholderPattern pattern) {
+    public C pattern(PlaceholderPattern pattern) {
         this.pattern = pattern;
-        return this;
+        return this.context;
     }
 
-    public AbstractTemplateExprBuilder<T, E> value(Object value) {
+    public C value(Object value) {
         this.value = value;
-        return this;
+        return this.context;
     }
 
-    public AbstractTemplateExprBuilder<T, E> values(Collection<Object> listValues) {
+    public C values(Collection<Object> listValues) {
         this.listValues = listValues;
-        return this;
+        return this.context;
     }
 
-    public AbstractTemplateExprBuilder<T, E> values(Map<String, Object> mapValues) {
+    public C values(Map<String, Object> mapValues) {
         this.mapValues = mapValues;
-        return this;
+        return this.context;
     }
 }

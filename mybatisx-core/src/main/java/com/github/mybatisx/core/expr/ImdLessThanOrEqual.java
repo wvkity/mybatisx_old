@@ -51,7 +51,7 @@ public class ImdLessThanOrEqual extends AbstractBasicExpression<String> {
         return new ImdLessThanOrEqual.Builder();
     }
 
-    public static final class Builder extends AbstractBasicExprBuilder<ImdLessThanOrEqual, String> {
+    public static final class Builder extends AbstractBasicExprBuilder<ImdLessThanOrEqual, String, Builder> {
 
         private Builder() {
         }

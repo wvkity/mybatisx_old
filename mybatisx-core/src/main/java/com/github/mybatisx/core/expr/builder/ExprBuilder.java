@@ -22,10 +22,11 @@ import com.github.mybatisx.builder.Builder;
  * 条件表达式构建器
  * @param <T> 条件表达式类
  * @param <E> 字段类型
+ * @param <C> 子类型
  * @author wvkity
  * @created 2021-01-07
  * @since 1.0.0
  */
-public interface ExprBuilder<T, E> extends Builder<T> {
+public interface ExprBuilder<T, E, C extends ExprBuilder<T, E, C>> extends Builder<T> {
 
 }

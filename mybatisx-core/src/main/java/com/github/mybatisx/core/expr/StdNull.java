@@ -45,7 +45,7 @@ public class StdNull extends AbstractNullableExpression<Column> {
         return new StdNull.Builder();
     }
 
-    public static final class Builder extends AbstractExprBuilder<StdNull, Column> {
+    public static final class Builder extends AbstractExprBuilder<StdNull, Column, Builder> {
 
         private Builder() {
         }

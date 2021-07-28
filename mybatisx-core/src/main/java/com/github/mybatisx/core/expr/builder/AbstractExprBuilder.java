@@ -22,11 +22,13 @@ import com.github.mybatisx.support.constant.Slot;
  * 抽象表达式构建器
  * @param <T> 条件表达式类型
  * @param <E> 字段类型
+ * @param <C> 子类型
  * @author wvkity
  * @created 2021-01-14
  * @since 1.0.0
  */
-public abstract class AbstractExprBuilder<T, E> implements ExprBuilder<T, E> {
+public abstract class AbstractExprBuilder<T, E, C extends AbstractExprBuilder<T, E, C>> implements
+    ExprBuilder<T, E, C> {
 
     /**
      * {@link Criteria}
@@ -40,19 +42,21 @@ public abstract class AbstractExprBuilder<T, E> implements ExprBuilder<T, E> {
      * {@link Slot}
      */
     protected Slot slot;
+    @SuppressWarnings("unchecked")
+    protected final C context = (C) this;
 
-    public AbstractExprBuilder<T, E> criteria(Criteria<?> criteria) {
+    public C criteria(Criteria<?> criteria) {
         this.criteria = criteria;
-        return this;
+        return this.context;
     }
 
-    public AbstractExprBuilder<T, E> target(E target) {
+    public C target(E target) {
         this.target = target;
-        return this;
+        return this.context;
     }
 
-    public AbstractExprBuilder<T, E> slot(Slot slot) {
+    public C slot(Slot slot) {
         this.slot = slot;
-        return this;
+        return this.context;
     }
 }

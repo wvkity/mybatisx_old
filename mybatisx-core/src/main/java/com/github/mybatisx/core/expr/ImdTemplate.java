@@ -52,7 +52,7 @@ public class ImdTemplate extends AbstractTemplateExpression<String> {
         return new ImdTemplate.Builder();
     }
 
-    public static final class Builder extends AbstractTemplateExprBuilder<ImdTemplate, String> {
+    public static final class Builder extends AbstractTemplateExprBuilder<ImdTemplate, String, Builder> {
 
         public Builder() {
         }

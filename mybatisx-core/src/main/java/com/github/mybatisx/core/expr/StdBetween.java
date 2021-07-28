@@ -47,7 +47,7 @@ public class StdBetween extends AbstractBetweenExpression<Column> {
         return new StdBetween.Builder();
     }
 
-    public static final class Builder extends AbstractBetweenExprBuilder<StdBetween, Column> {
+    public static final class Builder extends AbstractBetweenExprBuilder<StdBetween, Column, Builder> {
 
         private Builder() {
         }

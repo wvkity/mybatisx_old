@@ -48,7 +48,7 @@ public class StdNotIn extends AbstractInExpression<Column> {
         return new StdNotIn.Builder();
     }
 
-    public static final class Builder extends AbstractRangeExprBuilder<StdNotIn, Column> {
+    public static final class Builder extends AbstractRangeExprBuilder<StdNotIn, Column, Builder> {
 
         private Builder() {
         }

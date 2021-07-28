@@ -49,7 +49,7 @@ public class StdLike extends AbstractLikeExpression<Column> {
         return new StdLike.Builder();
     }
 
-    public static final class Builder extends AbstractFuzzyExprBuilder<StdLike, Column> {
+    public static final class Builder extends AbstractFuzzyExprBuilder<StdLike, Column, Builder> {
 
         private Builder() {
         }

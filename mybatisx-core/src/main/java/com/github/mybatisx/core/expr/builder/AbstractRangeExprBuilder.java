@@ -23,23 +23,25 @@ import java.util.Collection;
  * 抽象范围条件表达式构建器
  * @param <T> 条件表达式类型
  * @param <E> 字段类型
+ * @param <C> 子类型
  * @author wvkity
  * @created 2021-01-07
  * @since 1.0.0
  */
-public abstract class AbstractRangeExprBuilder<T, E> extends AbstractExprBuilder<T, E> {
+public abstract class AbstractRangeExprBuilder<T, E, C extends AbstractRangeExprBuilder<T, E, C>> extends
+    AbstractExprBuilder<T, E, C> {
 
     /**
      * 多个值
      */
     protected Collection<Object> values;
 
-    public AbstractRangeExprBuilder<T, E> values(final Object... values) {
+    public C values(final Object... values) {
         return values(Objects.asList(values));
     }
 
-    public AbstractRangeExprBuilder<T, E> values(Collection<Object> values) {
+    public C values(Collection<Object> values) {
         this.values = values;
-        return this;
+        return this.context;
     }
 }

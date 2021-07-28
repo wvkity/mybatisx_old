@@ -48,7 +48,7 @@ public class StdIn extends AbstractInExpression<Column> {
         return new StdIn.Builder();
     }
 
-    public static final class Builder extends AbstractRangeExprBuilder<StdIn, Column> {
+    public static final class Builder extends AbstractRangeExprBuilder<StdIn, Column, Builder> {
 
         private Builder() {
         }

@@ -52,7 +52,7 @@ public class ImdNull extends AbstractNullableExpression<String> {
         return new ImdNull.Builder();
     }
 
-    public static final class Builder extends AbstractExprBuilder<ImdNull, String> {
+    public static final class Builder extends AbstractExprBuilder<ImdNull, String, Builder> {
 
         private Builder() {
         }

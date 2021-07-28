@@ -50,7 +50,7 @@ public class StdNotLike extends AbstractLikeExpression<Column> {
         return new StdNotLike.Builder();
     }
 
-    public static final class Builder extends AbstractFuzzyExprBuilder<StdNotLike, Column> {
+    public static final class Builder extends AbstractFuzzyExprBuilder<StdNotLike, Column, Builder> {
 
         private Builder() {
         }

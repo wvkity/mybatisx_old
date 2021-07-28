@@ -54,7 +54,7 @@ public class ImdGreaterThan extends AbstractBasicExpression<String> {
         return new ImdGreaterThan.Builder();
     }
 
-    public static final class Builder extends AbstractBasicExprBuilder<ImdGreaterThan, String> {
+    public static final class Builder extends AbstractBasicExprBuilder<ImdGreaterThan, String, Builder> {
 
         private Builder() {
         }

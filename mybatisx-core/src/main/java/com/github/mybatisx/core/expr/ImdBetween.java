@@ -56,7 +56,7 @@ public class ImdBetween extends AbstractBetweenExpression<String> {
         return new ImdBetween.Builder();
     }
 
-    public static final class Builder extends AbstractBetweenExprBuilder<ImdBetween, String> {
+    public static final class Builder extends AbstractBetweenExprBuilder<ImdBetween, String, Builder> {
 
         private Builder() {
         }

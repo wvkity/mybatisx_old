@@ -55,7 +55,7 @@ public class StdTemplate extends AbstractTemplateExpression<Column> {
         return new StdTemplate.Builder();
     }
 
-    public static final class Builder extends AbstractTemplateExprBuilder<StdTemplate, Column> {
+    public static final class Builder extends AbstractTemplateExprBuilder<StdTemplate, Column, Builder> {
 
         public Builder() {
         }

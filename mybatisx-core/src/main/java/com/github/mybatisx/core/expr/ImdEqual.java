@@ -54,7 +54,7 @@ public class ImdEqual extends AbstractBasicExpression<String> {
         return new ImdEqual.Builder();
     }
 
-    public static final class Builder extends AbstractBasicExprBuilder<ImdEqual, String> {
+    public static final class Builder extends AbstractBasicExprBuilder<ImdEqual, String, Builder> {
 
         private Builder() {
         }

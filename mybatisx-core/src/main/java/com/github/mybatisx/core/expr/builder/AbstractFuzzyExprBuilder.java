@@ -21,11 +21,13 @@ import com.github.mybatisx.support.constant.Like;
  * 抽象模糊匹配条件表达式构建器
  * @param <T> 条件表达式类型
  * @param <E> 字段类型
+ * @param <C> 子类型
  * @author wvkity
  * @created 2021-01-08
  * @since 1.0.0
  */
-public abstract class AbstractFuzzyExprBuilder<T, E> extends AbstractExprBuilder<T, E> {
+public abstract class AbstractFuzzyExprBuilder<T, E, C extends AbstractFuzzyExprBuilder<T, E, C>> extends
+    AbstractExprBuilder<T, E, C> {
     /**
      * 匹配模式
      */
@@ -39,18 +41,18 @@ public abstract class AbstractFuzzyExprBuilder<T, E> extends AbstractExprBuilder
      */
     protected Object value;
 
-    public AbstractFuzzyExprBuilder<T, E> like(Like like) {
+    public C like(Like like) {
         this.like = like;
-        return this;
+        return this.context;
     }
 
-    public AbstractFuzzyExprBuilder<T, E> escape(Character escape) {
+    public C escape(Character escape) {
         this.escape = escape;
-        return this;
+        return this.context;
     }
 
-    public AbstractFuzzyExprBuilder<T, E> value(Object value) {
+    public C value(Object value) {
         this.value = value;
-        return this;
+        return this.context;
     }
 }

@@ -46,7 +46,7 @@ public class StdGreaterThan extends AbstractBasicExpression<Column> {
         return new StdGreaterThan.Builder();
     }
 
-    public static final class Builder extends AbstractBasicExprBuilder<StdGreaterThan, Column> {
+    public static final class Builder extends AbstractBasicExprBuilder<StdGreaterThan, Column, Builder> {
 
         private Builder() {
         }
