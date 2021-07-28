@@ -20,6 +20,7 @@ import com.github.mybatisx.core.property.Property;
 import com.github.mybatisx.support.constant.Slot;
 
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * 基础比较条件接口(支持lambda语法)
@@ -36,29 +37,68 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
     /**
      * 主键等于
      * @param value 值
+     * @param <V>   属性值类型
      * @return {@code this}
      */
-    default C idEq(final Object value) {
+    default <V> C idEq(final V value) {
         return this.idEq(this.getSlot(), value);
+    }
+
+
+    /**
+     * 主键等于
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    default <V> C idEq(final V value, final Predicate<V> predicate) {
+        return this.idEq(this.getSlot(), value, predicate);
     }
 
     /**
      * 主键等于
      * @param slot  {@link Slot}
      * @param value 值
+     * @param <V>   属性值类型
      * @return {@code this}
      */
-    C idEq(final Slot slot, final Object value);
+    default <V> C idEq(final Slot slot, final V value) {
+        return this.idEq(slot, value, null);
+    }
+
+    /**
+     * 主键等于
+     * @param slot      {@link Slot}
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    <V> C idEq(final Slot slot, final V value, final Predicate<V> predicate);
 
     /**
      * 等于
      * @param property 属性
      * @param value    值
-     * @param <V>      属性类型
+     * @param <V>      属性值类型
      * @return {@code this}
      */
     default <V> C eq(final Property<T, V> property, final V value) {
+        System.out.println("property: " + property.toProp());
         return this.eq(this.getSlot(), property, value);
+    }
+
+    /**
+     * 等于
+     * @param property  属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    default <V> C eq(final Property<T, V> property, final V value, final Predicate<V> predicate) {
+        return this.eq(this.getSlot(), property, value, predicate);
     }
 
     /**
@@ -66,10 +106,25 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
-     * @param <V>      属性类型
+     * @param <V>      属性值类型
      * @return {@code this}
      */
-    <V> C eq(final Slot slot, final Property<T, V> property, final V value);
+    default <V> C eq(final Slot slot, final Property<T, V> property, final V value) {
+        return this.eq(slot, property, value, null);
+    }
+
+    /**
+     * 等于
+     * @param slot      {@link Slot}
+     * @param property  属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    default <V> C eq(final Slot slot, final Property<T, V> property, final V value, final Predicate<V> predicate) {
+        return this.eq(slot, property.toProp(), value, predicate);
+    }
 
     /**
      * 等于
@@ -83,12 +138,37 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
 
     /**
      * 等于
+     * @param property  属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    default <V> C eq(final String property, final V value, final Predicate<V> predicate) {
+        return this.eq(this.getSlot(), property, value, predicate);
+    }
+
+    /**
+     * 等于
      * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
      * @return {@code this}
      */
-    C eq(final Slot slot, final String property, final Object value);
+    default C eq(final Slot slot, final String property, final Object value) {
+        return this.eq(slot, property, value, null);
+    }
+
+    /**
+     * 等于
+     * @param slot      {@link Slot}
+     * @param property  属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    <V> C eq(final Slot slot, final String property, final V value, final Predicate<V> predicate);
 
     /**
      * 等于
@@ -107,7 +187,9 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      * @param query    {@link ExtCriteria}(查询条件对象)
      * @return {@code this}
      */
-    C eqq(final Slot slot, final Property<T, ?> property, final ExtCriteria<?> query);
+    default C eqq(final Slot slot, final Property<T, ?> property, final ExtCriteria<?> query) {
+        return this.eqq(slot, property.toProp(), query);
+    }
 
     /**
      * 等于
@@ -276,7 +358,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      * 不等于
      * @param property 属性
      * @param value    值
-     * @param <V>      属性类型
+     * @param <V>      属性值类型
      * @return {@code this}
      */
     default <V> C ne(final Property<T, V> property, final V value) {
@@ -285,13 +367,40 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
 
     /**
      * 不等于
+     * @param property  属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    default <V> C ne(final Property<T, V> property, final V value, final Predicate<V> predicate) {
+        return this.ne(this.getSlot(), property, value, predicate);
+    }
+
+    /**
+     * 不等于
      * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
-     * @param <V>      属性类型
+     * @param <V>      属性值类型
      * @return {@code this}
      */
-    <V> C ne(final Slot slot, final Property<T, V> property, final V value);
+    default <V> C ne(final Slot slot, final Property<T, V> property, final V value) {
+        return this.ne(slot, property.toProp(), value);
+    }
+
+    /**
+     * 不等于
+     * @param slot      {@link Slot}
+     * @param property  属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    default <V> C ne(final Slot slot, final Property<T, V> property, final V value, final Predicate<V> predicate) {
+        return this.ne(slot, property.toProp(), value, predicate);
+    }
 
     /**
      * 不等于
@@ -305,12 +414,37 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
 
     /**
      * 不等于
+     * @param property  属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    default <V> C ne(final String property, final V value, final Predicate<V> predicate) {
+        return this.ne(this.getSlot(), property, value, predicate);
+    }
+
+    /**
+     * 不等于
      * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
      * @return {@code this}
      */
-    C ne(final Slot slot, final String property, final Object value);
+    default C ne(final Slot slot, final String property, final Object value) {
+        return this.ne(slot, property, value, null);
+    }
+
+    /**
+     * 不等于
+     * @param slot      {@link Slot}
+     * @param property  属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    <V> C ne(final Slot slot, final String property, final V value, final Predicate<V> predicate);
 
     /**
      * 不等于
@@ -329,7 +463,9 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      * @param query    {@link ExtCriteria}(查询条件对象)
      * @return {@code this}
      */
-    C neq(final Slot slot, final Property<T, ?> property, final ExtCriteria<?> query);
+    default C neq(final Slot slot, final Property<T, ?> property, final ExtCriteria<?> query) {
+        return this.neq(slot, property.toProp(), query);
+    }
 
     /**
      * 不等于
@@ -358,7 +494,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      * 大于
      * @param property 属性
      * @param value    值
-     * @param <V>      属性类型
+     * @param <V>      属性值类型
      * @return {@code this}
      */
     default <V> C gt(final Property<T, V> property, final V value) {
@@ -367,13 +503,40 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
 
     /**
      * 大于
+     * @param property  属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    default <V> C gt(final Property<T, V> property, final V value, final Predicate<V> predicate) {
+        return this.gt(this.getSlot(), property, value, predicate);
+    }
+
+    /**
+     * 大于
      * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
-     * @param <V>      属性类型
+     * @param <V>      属性值类型
      * @return {@code this}
      */
-    <V> C gt(final Slot slot, final Property<T, V> property, final V value);
+    default <V> C gt(final Slot slot, final Property<T, V> property, final V value) {
+        return this.gt(slot, property, value, null);
+    }
+
+    /**
+     * 大于
+     * @param slot      {@link Slot}
+     * @param property  属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    default <V> C gt(final Slot slot, final Property<T, V> property, final V value, final Predicate<V> predicate) {
+        return this.gt(slot, property.toProp(), value, predicate);
+    }
 
     /**
      * 大于
@@ -387,12 +550,37 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
 
     /**
      * 大于
+     * @param property  属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    default <V> C gt(final String property, final V value, final Predicate<V> predicate) {
+        return this.gt(this.getSlot(), property, value, predicate);
+    }
+
+    /**
+     * 大于
      * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
      * @return {@code this}
      */
-    C gt(final Slot slot, final String property, final Object value);
+    default C gt(final Slot slot, final String property, final Object value) {
+        return this.gt(slot, property, value, null);
+    }
+
+    /**
+     * 大于
+     * @param slot      {@link Slot}
+     * @param property  属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    <V> C gt(final Slot slot, final String property, final V value, final Predicate<V> predicate);
 
     /**
      * 大于
@@ -411,7 +599,9 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      * @param query    {@link ExtCriteria}(查询条件对象)
      * @return {@code this}
      */
-    C gtq(final Slot slot, final Property<T, ?> property, final ExtCriteria<?> query);
+    default C gtq(final Slot slot, final Property<T, ?> property, final ExtCriteria<?> query) {
+        return this.gtq(slot, property.toProp(), query);
+    }
 
     /**
      * 大于
@@ -440,7 +630,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      * 大于或等于
      * @param property 属性
      * @param value    值
-     * @param <V>      属性类型
+     * @param <V>      属性值类型
      * @return {@code this}
      */
     default <V> C ge(final Property<T, V> property, final V value) {
@@ -452,10 +642,37 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
-     * @param <V>      属性类型
+     * @param <V>      属性值类型
      * @return {@code this}
      */
-    <V> C ge(final Slot slot, final Property<T, V> property, final V value);
+    default <V> C ge(final Slot slot, final Property<T, V> property, final V value) {
+        return this.ge(slot, property, value, null);
+    }
+
+    /**
+     * 大于或等于
+     * @param property  属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    default <V> C ge(final Property<T, ?> property, final V value, final Predicate<V> predicate) {
+        return this.ge(this.getSlot(), property, value, predicate);
+    }
+
+    /**
+     * 大于或等于
+     * @param slot      {@link Slot}
+     * @param property  属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    default <V> C ge(final Slot slot, final Property<T, ?> property, final V value, final Predicate<V> predicate) {
+        return this.ge(slot, property.toProp(), value, predicate);
+    }
 
     /**
      * 大于或等于
@@ -469,12 +686,37 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
 
     /**
      * 大于或等于
+     * @param property  属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    default <V> C ge(final String property, final V value, final Predicate<V> predicate) {
+        return this.ge(this.getSlot(), property, value, predicate);
+    }
+
+    /**
+     * 大于或等于
      * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
      * @return {@code this}
      */
-    C ge(final Slot slot, final String property, final Object value);
+    default C ge(final Slot slot, final String property, final Object value) {
+        return this.ge(slot, property, value, null);
+    }
+
+    /**
+     * 大于或等于
+     * @param slot      {@link Slot}
+     * @param property  属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    <V> C ge(final Slot slot, final String property, final V value, final Predicate<V> predicate);
 
     /**
      * 大于或等于
@@ -493,7 +735,9 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      * @param query    {@link ExtCriteria}(查询条件对象)
      * @return {@code this}
      */
-    C geq(final Slot slot, final Property<T, ?> property, final ExtCriteria<?> query);
+    default C geq(final Slot slot, final Property<T, ?> property, final ExtCriteria<?> query) {
+        return this.geq(slot, property.toProp(), query);
+    }
 
     /**
      * 大于或等于
@@ -522,7 +766,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      * 小于
      * @param property 属性
      * @param value    值
-     * @param <V>      属性类型
+     * @param <V>      属性值类型
      * @return {@code this}
      */
     default <V> C lt(final Property<T, V> property, final V value) {
@@ -534,10 +778,37 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
-     * @param <V>      属性类型
+     * @param <V>      属性值类型
      * @return {@code this}
      */
-    <V> C lt(final Slot slot, final Property<T, V> property, final V value);
+    default <V> C lt(final Slot slot, final Property<T, V> property, final V value) {
+        return this.lt(slot, property, value, null);
+    }
+
+    /**
+     * 小于
+     * @param property  属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    default <V> C lt(final Property<T, ?> property, final V value, final Predicate<V> predicate) {
+        return this.lt(this.getSlot(), property, value, predicate);
+    }
+
+    /**
+     * 小于
+     * @param slot      {@link Slot}
+     * @param property  属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    default <V> C lt(final Slot slot, final Property<T, ?> property, final V value, final Predicate<V> predicate) {
+        return this.lt(slot, property.toProp(), value, predicate);
+    }
 
     /**
      * 小于
@@ -551,12 +822,37 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
 
     /**
      * 小于
+     * @param property  属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    default <V> C lt(final String property, final V value, final Predicate<V> predicate) {
+        return this.lt(this.getSlot(), property, value, predicate);
+    }
+
+    /**
+     * 小于
      * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
      * @return {@code this}
      */
-    C lt(final Slot slot, final String property, final Object value);
+    default C lt(final Slot slot, final String property, final Object value) {
+        return this.lt(slot, property, value, null);
+    }
+
+    /**
+     * 小于
+     * @param slot      {@link Slot}
+     * @param property  属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    <V> C lt(final Slot slot, final String property, final V value, final Predicate<V> predicate);
 
     /**
      * 小于
@@ -575,7 +871,9 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      * @param query    {@link ExtCriteria}(查询条件对象)
      * @return {@code this}
      */
-    C ltq(final Slot slot, final Property<T, ?> property, final ExtCriteria<?> query);
+    default C ltq(final Slot slot, final Property<T, ?> property, final ExtCriteria<?> query) {
+        return this.ltq(slot, property.toProp(), query);
+    }
 
     /**
      * 小于
@@ -604,7 +902,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      * 小于或等于
      * @param property 属性
      * @param value    值
-     * @param <V>      属性类型
+     * @param <V>      属性值类型
      * @return {@code this}
      */
     default <V> C le(final Property<T, V> property, final V value) {
@@ -616,10 +914,37 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
-     * @param <V>      属性类型
+     * @param <V>      属性值类型
      * @return {@code this}
      */
-    <V> C le(final Slot slot, final Property<T, V> property, final V value);
+    default <V> C le(final Slot slot, final Property<T, V> property, final V value) {
+        return this.le(slot, property, value, null);
+    }
+
+    /**
+     * 小于或等于
+     * @param property  属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    default <V> C le(final Property<T, ?> property, final V value, final Predicate<V> predicate) {
+        return this.le(this.getSlot(), property, value, predicate);
+    }
+
+    /**
+     * 小于或等于
+     * @param slot      {@link Slot}
+     * @param property  属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    default <V> C le(final Slot slot, final Property<T, ?> property, final V value, final Predicate<V> predicate) {
+        return this.le(slot, property.toProp(), value, predicate);
+    }
 
     /**
      * 小于或等于
@@ -633,12 +958,37 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
 
     /**
      * 小于或等于
+     * @param property  属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    default <V> C le(final String property, final V value, final Predicate<V> predicate) {
+        return this.le(this.getSlot(), property, value, predicate);
+    }
+
+    /**
+     * 小于或等于
      * @param slot     {@link Slot}
      * @param property 属性
      * @param value    值
      * @return {@code this}
      */
-    C le(final Slot slot, final String property, final Object value);
+    default C le(final Slot slot, final String property, final Object value) {
+        return this.le(slot, property, value, null);
+    }
+
+    /**
+     * 小于或等于
+     * @param slot      {@link Slot}
+     * @param property  属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       属性值类型
+     * @return {@code this}
+     */
+    <V> C le(final Slot slot, final String property, final V value, final Predicate<V> predicate);
 
     /**
      * 小于或等于
@@ -657,7 +1007,9 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      * @param query    {@link ExtCriteria}(查询条件对象)
      * @return {@code this}
      */
-    C leq(final Slot slot, final Property<T, ?> property, final ExtCriteria<?> query);
+    default C leq(final Slot slot, final Property<T, ?> property, final ExtCriteria<?> query) {
+        return this.leq(slot, property.toProp(), query);
+    }
 
     /**
      * 小于或等于
@@ -690,7 +1042,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      * @return {@code this}
      */
     default <E> C ce(final ExtCriteria<E> otherCriteria, final Property<E, ?> otherProperty) {
-        return this.ce(otherCriteria, otherCriteria.getConverter().toProperty(otherProperty));
+        return this.ce(otherCriteria, otherProperty.toProp());
     }
 
     /**
@@ -707,7 +1059,9 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      * @param otherCriteria {@link ExtCriteria}
      * @return {@code this}
      */
-    C ce(final Property<T, ?> property, final ExtCriteria<?> otherCriteria);
+    default C ce(final Property<T, ?> property, final ExtCriteria<?> otherCriteria) {
+        return this.ce(property.toProp(), otherCriteria);
+    }
 
     /**
      * 字段相等
@@ -727,7 +1081,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      */
     default <E> C ce(final Property<T, ?> property, final ExtCriteria<E> otherCriteria,
                      final Property<E, ?> otherProperty) {
-        return this.ce(property, otherCriteria, otherCriteria.getConverter().toProperty(otherProperty));
+        return this.ce(property, otherCriteria, otherProperty.toProp());
     }
 
     /**
@@ -737,7 +1091,9 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      * @param otherProperty 属性
      * @return {@code this}
      */
-    C ce(final Property<T, ?> property, final ExtCriteria<?> otherCriteria, final String otherProperty);
+    default C ce(final Property<T, ?> property, final ExtCriteria<?> otherCriteria, final String otherProperty) {
+        return this.ce(property.toProp(), otherCriteria, otherProperty);
+    }
 
     /**
      * 字段相等
@@ -748,7 +1104,7 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      * @return {@code this}
      */
     default <E> C ce(final String property, final ExtCriteria<E> otherCriteria, final Property<E, ?> otherProperty) {
-        return this.ce(property, otherCriteria, otherCriteria.getConverter().toProperty(otherProperty));
+        return this.ce(property, otherCriteria, otherProperty.toProp());
     }
 
     /**
@@ -775,7 +1131,9 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      * @param otherColumn   字段名
      * @return {@code this}
      */
-    C ceWith(final Property<T, ?> property, final ExtCriteria<?> otherCriteria, final String otherColumn);
+    default C ceWith(final Property<T, ?> property, final ExtCriteria<?> otherCriteria, final String otherColumn) {
+        return this.ceWith(property.toProp(), otherCriteria, otherColumn);
+    }
 
     /**
      * 字段相等

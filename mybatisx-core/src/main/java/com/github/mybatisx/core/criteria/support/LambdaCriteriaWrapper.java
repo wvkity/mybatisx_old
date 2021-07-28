@@ -46,7 +46,9 @@ public interface LambdaCriteriaWrapper<T, C extends LambdaCriteriaWrapper<T, C>>
      * @param property 属性
      * @return {@code this}
      */
-    C isNull(final Slot slot, final Property<T, ?> property);
+    default C isNull(final Slot slot, final Property<T, ?> property) {
+        return this.isNull(slot, property.toProp());
+    }
 
     /**
      * IS NULL
@@ -80,7 +82,9 @@ public interface LambdaCriteriaWrapper<T, C extends LambdaCriteriaWrapper<T, C>>
      * @param property 属性
      * @return {@code this}
      */
-    C notNull(final Slot slot, final Property<T, ?> property);
+    default C notNull(final Slot slot, final Property<T, ?> property) {
+        return this.notNull(slot, property.toProp());
+    }
 
     /**
      * IS NOT NULL

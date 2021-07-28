@@ -44,6 +44,7 @@ import com.github.mybatisx.support.helper.TableHelper;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * 抽象通用条件包装容器
@@ -62,8 +63,8 @@ public abstract class AbstractGenericCriteria<T, C extends GenericCriteriaWrappe
     // region Compare condition
 
     @Override
-    public C colEq(Slot slot, String column, Object value) {
-        if (Objects.isNotBlank(column)) {
+    public <V> C colEq(Slot slot, String column, V value, Predicate<V> predicate) {
+        if (Objects.isNotBlank(column) && this.early(value, predicate)) {
             this.where(new ImmediateEqual(this, column, slot, value));
         }
         return this.self();
@@ -85,8 +86,8 @@ public abstract class AbstractGenericCriteria<T, C extends GenericCriteriaWrappe
     }
 
     @Override
-    public C colNe(Slot slot, String column, Object value) {
-        if (Objects.isNotBlank(column)) {
+    public <V> C colNe(Slot slot, String column, V value, Predicate<V> predicate) {
+        if (Objects.isNotBlank(column) && this.early(value, predicate)) {
             this.where(new ImmediateNotEqual(this, column, slot, value));
         }
         return this.self();
@@ -98,8 +99,8 @@ public abstract class AbstractGenericCriteria<T, C extends GenericCriteriaWrappe
     }
 
     @Override
-    public C colGt(Slot slot, String column, Object value) {
-        if (Objects.isNotBlank(column)) {
+    public <V> C colGt(Slot slot, String column, V value, Predicate<V> predicate) {
+        if (Objects.isNotBlank(column) && this.early(value, predicate)) {
             this.where(new ImmediateGreaterThan(this, column, slot, value));
         }
         return this.self();
@@ -111,8 +112,8 @@ public abstract class AbstractGenericCriteria<T, C extends GenericCriteriaWrappe
     }
 
     @Override
-    public C colGe(Slot slot, String column, Object value) {
-        if (Objects.isNotBlank(column)) {
+    public <V> C colGe(Slot slot, String column, V value, Predicate<V> predicate) {
+        if (Objects.isNotBlank(column) && this.early(value, predicate)) {
             this.where(new ImmediateGreaterThanOrEqual(this, column, slot, value));
         }
         return this.self();
@@ -124,8 +125,8 @@ public abstract class AbstractGenericCriteria<T, C extends GenericCriteriaWrappe
     }
 
     @Override
-    public C colLt(Slot slot, String column, Object value) {
-        if (Objects.isNotBlank(column)) {
+    public <V> C colLt(Slot slot, String column, V value, Predicate<V> predicate) {
+        if (Objects.isNotBlank(column) && this.early(value, predicate)) {
             this.where(new ImmediateLessThan(this, column, slot, value));
         }
         return this.self();
@@ -137,8 +138,8 @@ public abstract class AbstractGenericCriteria<T, C extends GenericCriteriaWrappe
     }
 
     @Override
-    public C colLe(Slot slot, String column, Object value) {
-        if (Objects.isNotBlank(column)) {
+    public <V> C colLe(Slot slot, String column, V value, Predicate<V> predicate) {
+        if (Objects.isNotBlank(column) && this.early(value, predicate)) {
             this.where(new ImmediateLessThanOrEqual(this, column, slot, value));
         }
         return this.self();

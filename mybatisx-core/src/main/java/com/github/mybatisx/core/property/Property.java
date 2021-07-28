@@ -26,4 +26,12 @@ import java.util.function.Function;
  */
 @FunctionalInterface
 public interface Property<T, R> extends Function<T, R>, Serializable {
+
+    /**
+     * 转成字符串属性
+     * @return 字符串属性
+     */
+    default String toProp() {
+        return PropertiesMappingCache.lambdaToProperty(this);
+    }
 }

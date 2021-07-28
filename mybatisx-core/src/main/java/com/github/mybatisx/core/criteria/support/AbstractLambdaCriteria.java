@@ -38,7 +38,6 @@ import com.github.mybatisx.core.expr.StandardNotLike;
 import com.github.mybatisx.core.expr.StandardNotNull;
 import com.github.mybatisx.core.expr.StandardNull;
 import com.github.mybatisx.core.expr.StandardTemplate;
-import com.github.mybatisx.core.property.Property;
 import com.github.mybatisx.support.constant.Like;
 import com.github.mybatisx.support.constant.Slot;
 import com.github.mybatisx.support.constant.Symbol;
@@ -46,6 +45,7 @@ import com.github.mybatisx.support.helper.TableHelper;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * 抽象基础条件容器(支持lambda语法)
@@ -62,27 +62,22 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
     // region Compare conditions
 
     @Override
-    public C idEq(Slot slot, Object value) {
-        return this.where(new StandardEqual(this, this.id(), slot, value));
-    }
-
-    @Override
-    public <V> C eq(Slot slot, Property<T, V> property, V value) {
-        return this.eq(slot, this.toProperty(property), value);
-    }
-
-    @Override
-    public C eq(Slot slot, String property, Object value) {
-        final Column column;
-        if (Objects.nonNull((column = this.toColumn(property)))) {
-            this.where(new StandardEqual(this, column, slot, value));
+    public <V> C idEq(Slot slot, V value, Predicate<V> predicate) {
+        if (this.early(value, predicate)) {
+            this.where(new StandardEqual(this, this.id(), slot, value));
         }
         return this.self();
     }
 
     @Override
-    public C eqq(Slot slot, Property<T, ?> property, ExtCriteria<?> query) {
-        return this.eqq(slot, this.toProperty(property), query);
+    public <V> C eq(Slot slot, String property, V value, Predicate<V> predicate) {
+        if (this.early(value, predicate)) {
+            final Column column;
+            if (Objects.nonNull((column = this.toColumn(property)))) {
+                this.where(new StandardEqual(this, column, slot, value));
+            }
+        }
+        return this.self();
     }
 
     @Override
@@ -104,22 +99,14 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
     }
 
     @Override
-    public <V> C ne(Slot slot, Property<T, V> property, V value) {
-        return this.ne(slot, this.toProperty(property), value);
-    }
-
-    @Override
-    public C ne(Slot slot, String property, Object value) {
-        final Column column;
-        if (Objects.nonNull((column = this.toColumn(property)))) {
-            this.where(new StandardNotEqual(this, column, slot, value));
+    public <V> C ne(Slot slot, String property, V value, Predicate<V> predicate) {
+        if (this.early(value, predicate)) {
+            final Column column;
+            if (Objects.nonNull((column = this.toColumn(property)))) {
+                this.where(new StandardNotEqual(this, column, slot, value));
+            }
         }
         return this.self();
-    }
-
-    @Override
-    public C neq(Slot slot, Property<T, ?> property, ExtCriteria<?> query) {
-        return this.neq(slot, this.toProperty(property), query);
     }
 
     @Override
@@ -128,22 +115,14 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
     }
 
     @Override
-    public <V> C gt(Slot slot, Property<T, V> property, V value) {
-        return this.gt(slot, this.toProperty(property), value);
-    }
-
-    @Override
-    public C gt(Slot slot, String property, Object value) {
-        final Column column;
-        if (Objects.nonNull((column = this.toColumn(property)))) {
-            this.where(new StandardGreaterThan(this, column, slot, value));
+    public <V> C gt(Slot slot, String property, V value, Predicate<V> predicate) {
+        if (this.early(value, predicate)) {
+            final Column column;
+            if (Objects.nonNull((column = this.toColumn(property)))) {
+                this.where(new StandardGreaterThan(this, column, slot, value));
+            }
         }
         return this.self();
-    }
-
-    @Override
-    public C gtq(Slot slot, Property<T, ?> property, ExtCriteria<?> query) {
-        return this.gtq(slot, this.toProperty(property), query);
     }
 
     @Override
@@ -152,22 +131,14 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
     }
 
     @Override
-    public <V> C ge(Slot slot, Property<T, V> property, V value) {
-        return this.ge(slot, this.toProperty(property), value);
-    }
-
-    @Override
-    public C ge(Slot slot, String property, Object value) {
-        final Column column;
-        if (Objects.nonNull((column = this.toColumn(property)))) {
-            this.where(new StandardGreaterThanOrEqual(this, column, slot, value));
+    public <V> C ge(Slot slot, String property, V value, Predicate<V> predicate) {
+        if (this.early(value, predicate)) {
+            final Column column;
+            if (Objects.nonNull((column = this.toColumn(property)))) {
+                this.where(new StandardGreaterThanOrEqual(this, column, slot, value));
+            }
         }
         return this.self();
-    }
-
-    @Override
-    public C geq(Slot slot, Property<T, ?> property, ExtCriteria<?> query) {
-        return this.geq(slot, this.toProperty(property), query);
     }
 
     @Override
@@ -176,22 +147,14 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
     }
 
     @Override
-    public <V> C lt(Slot slot, Property<T, V> property, V value) {
-        return this.lt(slot, this.toProperty(property), value);
-    }
-
-    @Override
-    public C lt(Slot slot, String property, Object value) {
-        final Column column;
-        if (Objects.nonNull((column = this.toColumn(property)))) {
-            this.where(new StandardLessThan(this, column, slot, value));
+    public <V> C lt(Slot slot, String property, V value, Predicate<V> predicate) {
+        if (this.early(value, predicate)) {
+            final Column column;
+            if (Objects.nonNull((column = this.toColumn(property)))) {
+                this.where(new StandardLessThan(this, column, slot, value));
+            }
         }
         return this.self();
-    }
-
-    @Override
-    public C ltq(Slot slot, Property<T, ?> property, ExtCriteria<?> query) {
-        return this.ltq(slot, this.toProperty(property), query);
     }
 
     @Override
@@ -199,23 +162,16 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
         return this.addSubCondition(slot, this.toColumn(property), query, Symbol.LT);
     }
 
-    @Override
-    public <V> C le(Slot slot, Property<T, V> property, V value) {
-        return this.le(slot, this.toProperty(property), value);
-    }
 
     @Override
-    public C le(Slot slot, String property, Object value) {
-        final Column column;
-        if (Objects.nonNull((column = this.toColumn(property)))) {
-            this.where(new StandardLessThanOrEqual(this, column, slot, value));
+    public <V> C le(Slot slot, String property, V value, Predicate<V> predicate) {
+        if (this.early(value, predicate)) {
+            final Column column;
+            if (Objects.nonNull((column = this.toColumn(property)))) {
+                this.where(new StandardLessThanOrEqual(this, column, slot, value));
+            }
         }
         return this.self();
-    }
-
-    @Override
-    public C leq(Slot slot, Property<T, ?> property, ExtCriteria<?> query) {
-        return this.leq(slot, this.toProperty(property), query);
     }
 
     @Override
@@ -228,11 +184,6 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
     // region Range condition
 
     @Override
-    public <V> C in(Slot slot, Property<T, V> property, Collection<V> values) {
-        return this.in(slot, this.toProperty(property), values);
-    }
-
-    @Override
     public C in(Slot slot, String property, Collection<?> values) {
         final Column column;
         if (Objects.nonNull((column = this.toColumn(property)))) {
@@ -242,18 +193,8 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
     }
 
     @Override
-    public C inq(Slot slot, Property<T, ?> property, ExtCriteria<?> query) {
-        return this.inq(slot, this.toProperty(property), query);
-    }
-
-    @Override
     public C inq(Slot slot, String property, ExtCriteria<?> query) {
         return this.addSubCondition(slot, this.toColumn(property), query, Symbol.IN);
-    }
-
-    @Override
-    public <V> C notIn(Slot slot, Property<T, V> property, Collection<V> values) {
-        return this.notIn(slot, this.toProperty(property), values);
     }
 
     @Override
@@ -266,18 +207,8 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
     }
 
     @Override
-    public C notInq(Slot slot, Property<T, ?> property, ExtCriteria<?> query) {
-        return this.notInq(slot, this.toProperty(property), query);
-    }
-
-    @Override
     public C notInq(Slot slot, String property, ExtCriteria<?> query) {
         return this.addSubCondition(slot, this.toColumn(property), query, Symbol.NOT_IN);
-    }
-
-    @Override
-    public <V> C between(Slot slot, Property<T, V> property, V begin, V end) {
-        return this.between(slot, this.toProperty(property), begin, end);
     }
 
     @Override
@@ -287,11 +218,6 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
             this.where(new StandardBetween(this, column, slot, begin, end));
         }
         return this.self();
-    }
-
-    @Override
-    public <V> C notBetween(Slot slot, Property<T, V> property, V begin, V end) {
-        return this.notBetween(slot, this.toProperty(property), begin, end);
     }
 
     @Override
@@ -308,22 +234,12 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
     // region Like condition
 
     @Override
-    public <V> C like(Slot slot, Property<T, V> property, V value, Like like, Character escape) {
-        return this.like(slot, this.toProperty(property), value, like, escape);
-    }
-
-    @Override
     public C like(Slot slot, String property, Object value, Like like, Character escape) {
         final Column column;
         if (Objects.nonNull((column = this.toColumn(property)))) {
             this.where(new StandardLike(this, column, like, escape, slot, value));
         }
         return this.self();
-    }
-
-    @Override
-    public <V> C notLike(Slot slot, Property<T, V> property, V value, Like like, Character escape) {
-        return this.notLike(slot, this.toProperty(property), value, like, escape);
     }
 
     @Override
@@ -340,22 +256,13 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
     // region Template condition
 
     @Override
-    public C tpl(Slot slot, String template, Property<T, ?> property, Object value) {
-        return this.tpl(slot, template, this.toProperty(property), value);
-    }
-
-    @Override
     public C tpl(Slot slot, String template, String property, Object value) {
         final Column column;
         if (Objects.nonNull((column = this.toColumn(property)))) {
-            this.where(new StandardTemplate(this, column, template, PlaceholderPattern.SINGLE, slot, value, null, null));
+            this.where(new StandardTemplate(this, column, template, PlaceholderPattern.SINGLE, slot, value, null,
+                null));
         }
         return this.self();
-    }
-
-    @Override
-    public C tpl(Slot slot, String template, Property<T, ?> property, Collection<Object> values) {
-        return this.tpl(slot, template, this.toProperty(property), values);
     }
 
     @Override
@@ -365,11 +272,6 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
             this.where(new StandardTemplate(this, column, template, null, slot, null, values, null));
         }
         return this.self();
-    }
-
-    @Override
-    public C tpl(Slot slot, String template, Property<T, ?> property, Map<String, Object> values) {
-        return this.tpl(slot, template, this.toProperty(property), values);
     }
 
     @Override
@@ -386,22 +288,12 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
     // region Null condition
 
     @Override
-    public C isNull(Slot slot, Property<T, ?> property) {
-        return this.isNull(slot, this.toProperty(property));
-    }
-
-    @Override
     public C isNull(Slot slot, String property) {
         final Column column;
         if (Objects.nonNull((column = this.toColumn(property)))) {
             this.where(new StandardNull(this, column, slot));
         }
         return this.self();
-    }
-
-    @Override
-    public C notNull(Slot slot, Property<T, ?> property) {
-        return this.notNull(slot, this.toProperty(property));
     }
 
     @Override
@@ -423,18 +315,8 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
     }
 
     @Override
-    public C ce(Property<T, ?> property, ExtCriteria<?> otherCriteria) {
-        return this.ce(this.toProperty(property), otherCriteria);
-    }
-
-    @Override
     public C ce(String property, ExtCriteria<?> otherCriteria) {
         return this.ce(this.toColumn(property), otherCriteria, TableHelper.getId(otherCriteria.getEntityClass()));
-    }
-
-    @Override
-    public C ce(Property<T, ?> property, ExtCriteria<?> otherCriteria, String otherProperty) {
-        return this.ce(this.toProperty(property), otherCriteria, otherProperty);
     }
 
     @Override
@@ -449,11 +331,6 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
             this.where(new SpecialExpression(this, id.getColumn(), otherCriteria, otherColumn));
         }
         return this.self();
-    }
-
-    @Override
-    public C ceWith(Property<T, ?> property, ExtCriteria<?> otherCriteria, String otherColumn) {
-        return this.ceWith(this.toProperty(property), otherCriteria, otherColumn);
     }
 
     @Override

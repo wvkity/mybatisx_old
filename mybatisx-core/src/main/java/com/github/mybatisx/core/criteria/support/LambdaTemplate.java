@@ -52,7 +52,9 @@ interface LambdaTemplate<T, C extends LambdaTemplate<T, C>> extends SlotSymbol<T
      * @param value    值
      * @return {@code this}
      */
-    C tpl(final Slot slot, final String template, final Property<T, ?> property, final Object value);
+    default C tpl(final Slot slot, final String template, final Property<T, ?> property, final Object value) {
+        return this.tpl(slot, template, property.toProp(), value);
+    }
 
     /**
      * 模板条件
@@ -118,8 +120,10 @@ interface LambdaTemplate<T, C extends LambdaTemplate<T, C>> extends SlotSymbol<T
      * @param values   多个值
      * @return {@code this}
      */
-    C tpl(final Slot slot, final String template, final Property<T, ?> property,
-          final Collection<Object> values);
+    default C tpl(final Slot slot, final String template, final Property<T, ?> property,
+          final Collection<Object> values) {
+        return this.tpl(slot, template, property.toProp(), values);
+    }
 
     /**
      * 模板条件
@@ -250,8 +254,10 @@ interface LambdaTemplate<T, C extends LambdaTemplate<T, C>> extends SlotSymbol<T
      * @param values   多个值
      * @return {@code this}
      */
-    C tpl(final Slot slot, final String template, final Property<T, ?> property,
-          final Map<String, Object> values);
+    default C tpl(final Slot slot, final String template, final Property<T, ?> property,
+          final Map<String, Object> values) {
+        return this.tpl(slot, template, property.toProp(), values);
+    }
 
     /**
      * 模板条件

@@ -20,6 +20,7 @@ import com.github.mybatisx.core.property.Property;
 import com.github.mybatisx.support.constant.Slot;
 
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * 基础比较条件接口
@@ -45,12 +46,37 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> extends SlotSymbol<T, 
 
     /**
      * 等于
+     * @param column    字段名
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       值类型
+     * @return {@code this}
+     */
+    default <V> C colEq(final String column, final V value, final Predicate<V> predicate) {
+        return this.colEq(this.getSlot(), column, value, predicate);
+    }
+
+    /**
+     * 等于
      * @param slot   {@link Slot}
      * @param column 字段名
      * @param value  值
      * @return {@code this}
      */
-    C colEq(final Slot slot, final String column, final Object value);
+    default C colEq(final Slot slot, final String column, final Object value) {
+        return this.colEq(slot, column, value, null);
+    }
+
+    /**
+     * 等于
+     * @param slot      {@link Slot}
+     * @param column    字段名
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       值类型
+     * @return {@code this}
+     */
+    <V> C colEq(final Slot slot, final String column, final V value, final Predicate<V> predicate);
 
     /**
      * 等于
@@ -133,7 +159,7 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> extends SlotSymbol<T, 
      * @return {@code this}
      */
     default C colEq(final Map<String, Object> columns) {
-        return colEq(this.getSlot(), columns);
+        return this.colEq(this.getSlot(), columns);
     }
 
     /**
@@ -155,7 +181,19 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> extends SlotSymbol<T, 
      * @return {@code this}
      */
     default C colNe(final String column, final Object value) {
-        return colNe(this.getSlot(), column, value);
+        return this.colNe(this.getSlot(), column, value);
+    }
+
+    /**
+     * 不等于
+     * @param column    字段
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       值类型
+     * @return {@code this}
+     */
+    default <V> C colNe(final String column, final V value, final Predicate<V> predicate) {
+        return this.colNe(this.getSlot(), column, value, predicate);
     }
 
     /**
@@ -165,7 +203,20 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> extends SlotSymbol<T, 
      * @param value  值
      * @return {@code this}
      */
-    C colNe(final Slot slot, final String column, final Object value);
+    default C colNe(final Slot slot, final String column, final Object value) {
+        return this.colNe(slot, column, value, null);
+    }
+
+    /**
+     * 不等于
+     * @param slot      {@link Slot}
+     * @param column    字段
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       值类型
+     * @return {@code this}
+     */
+    <V> C colNe(final Slot slot, final String column, final V value, final Predicate<V> predicate);
 
     /**
      * 不等于
@@ -197,7 +248,19 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> extends SlotSymbol<T, 
      * @return {@code this}
      */
     default C colGt(final String column, final Object value) {
-        return colGt(this.getSlot(), column, value);
+        return this.colGt(this.getSlot(), column, value);
+    }
+
+    /**
+     * 大于
+     * @param column    属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       值类型
+     * @return {@code this}
+     */
+    default <V> C colGt(final String column, final V value, Predicate<V> predicate) {
+        return this.colGt(this.getSlot(), column, value, predicate);
     }
 
     /**
@@ -207,7 +270,20 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> extends SlotSymbol<T, 
      * @param value  值
      * @return {@code this}
      */
-    C colGt(final Slot slot, final String column, final Object value);
+    default C colGt(final Slot slot, final String column, final Object value) {
+        return this.colGt(slot, column, value, null);
+    }
+
+    /**
+     * 大于
+     * @param slot      {@link Slot}
+     * @param column    属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       值类型
+     * @return {@code this}
+     */
+    <V> C colGt(final Slot slot, final String column, final V value, Predicate<V> predicate);
 
     /**
      * 大于
@@ -239,7 +315,19 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> extends SlotSymbol<T, 
      * @return {@code this}
      */
     default C colGe(final String column, final Object value) {
-        return colGe(this.getSlot(), column, value);
+        return this.colGe(this.getSlot(), column, value);
+    }
+
+    /**
+     * 大于或等于
+     * @param column    字段
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       值类型
+     * @return {@code this}
+     */
+    default <V> C colGe(final String column, final V value, final Predicate<V> predicate) {
+        return this.colGe(this.getSlot(), column, value, predicate);
     }
 
     /**
@@ -249,7 +337,20 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> extends SlotSymbol<T, 
      * @param value  值
      * @return {@code this}
      */
-    C colGe(final Slot slot, final String column, final Object value);
+    default C colGe(final Slot slot, final String column, final Object value) {
+        return this.colGe(slot, column, value, null);
+    }
+
+    /**
+     * 大于或等于
+     * @param slot      {@link Slot}
+     * @param column    字段
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       值类型
+     * @return {@code this}
+     */
+    <V> C colGe(final Slot slot, final String column, final V value, final Predicate<V> predicate);
 
     /**
      * 大于或等于
@@ -286,12 +387,37 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> extends SlotSymbol<T, 
 
     /**
      * 大于
+     * @param column    属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       值类型
+     * @return {@code this}
+     */
+    default <V> C colLt(final String column, final V value, final Predicate<V> predicate) {
+        return this.colLt(this.getSlot(), column, value, predicate);
+    }
+
+    /**
+     * 大于
      * @param slot   {@link Slot}
      * @param column 属性
      * @param value  值
      * @return {@code this}
      */
-    C colLt(final Slot slot, final String column, final Object value);
+    default C colLt(final Slot slot, final String column, final Object value) {
+        return this.colLt(slot, column, value, null);
+    }
+
+    /**
+     * 大于
+     * @param slot      {@link Slot}
+     * @param column    属性
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       值类型
+     * @return {@code this}
+     */
+    <V> C colLt(final Slot slot, final String column, final V value, final Predicate<V> predicate);
 
     /**
      * 小于
@@ -328,12 +454,37 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> extends SlotSymbol<T, 
 
     /**
      * 小于或等于
+     * @param column    字段
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       值类型
+     * @return {@code this}
+     */
+    default <V> C colLe(final String column, final V value, final Predicate<V> predicate) {
+        return this.colLe(this.getSlot(), column, value, predicate);
+    }
+
+    /**
+     * 小于或等于
      * @param slot   {@link Slot}
      * @param column 字段
      * @param value  值
      * @return {@code this}
      */
-    C colLe(final Slot slot, final String column, final Object value);
+    default C colLe(final Slot slot, final String column, final Object value) {
+        return this.colLe(slot, column, value, null);
+    }
+
+    /**
+     * 小于或等于
+     * @param slot      {@link Slot}
+     * @param column    字段
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       值类型
+     * @return {@code this}
+     */
+    <V> C colLe(final Slot slot, final String column, final V value, final Predicate<V> predicate);
 
     /**
      * 小于或等于
@@ -385,7 +536,7 @@ interface CommonCompare<T, C extends CommonCompare<T, C>> extends SlotSymbol<T, 
      */
     default <E> C colCeWith(final String column, final ExtCriteria<E> otherCriteria,
                             final Property<E, ?> otherProperty) {
-        return this.colCeWith(column, otherCriteria, otherCriteria.getConverter().toProperty(otherProperty));
+        return this.colCeWith(column, otherCriteria, otherProperty.toProp());
     }
 
     /**

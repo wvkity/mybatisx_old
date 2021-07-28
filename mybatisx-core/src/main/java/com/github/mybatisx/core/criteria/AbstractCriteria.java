@@ -36,6 +36,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * 抽象条件包装容器
@@ -62,6 +63,17 @@ public abstract class AbstractCriteria<T, C extends CriteriaWrapper<T, C>> exten
     }
 
     /**
+     * 预备处理
+     * @param value     值
+     * @param predicate {@link Predicate}
+     * @param <V>       值类型
+     * @return boolean
+     */
+    protected <V> boolean early(final V value, final Predicate<V> predicate) {
+        return Objects.isNull(predicate) || predicate.test(value);
+    }
+
+    /**
      * 并行
      * <pre>{@code
      *     // Example:
@@ -75,7 +87,6 @@ public abstract class AbstractCriteria<T, C extends CriteriaWrapper<T, C>> exten
      *          .select()
      *          .group("studentId", "period", "subjectId", "grade")
      *          .parallel(it -> it.having(new Sum(it, "SCORE", null), SingleComparator.GT, 1008));
-     *
      *     }
      * </pre>
      * @param action {@link Consumer}

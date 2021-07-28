@@ -78,7 +78,9 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
      * @param <V>      属性类型
      * @return {@code this}
      */
-    <V> C in(final Slot slot, final Property<T, V> property, final Collection<V> values);
+    default <V> C in(final Slot slot, final Property<T, V> property, final Collection<V> values) {
+        return this.in(slot, property.toProp(), values);
+    }
 
     /**
      * IN
@@ -137,7 +139,9 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
      * @param query    {@link ExtCriteria}
      * @return {@code this}
      */
-    C inq(final Slot slot, final Property<T, ?> property, final ExtCriteria<?> query);
+    default C inq(final Slot slot, final Property<T, ?> property, final ExtCriteria<?> query) {
+        return this.inq(slot, property.toProp(), query);
+    }
 
     /**
      * IN
@@ -206,7 +210,9 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
      * @param <V>      属性类型
      * @return {@code this}
      */
-    <V> C notIn(final Slot slot, final Property<T, V> property, final Collection<V> values);
+    default <V> C notIn(final Slot slot, final Property<T, V> property, final Collection<V> values) {
+        return this.notIn(slot, property.toProp(), values);
+    }
 
     /**
      * NOT IN
@@ -265,7 +271,9 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
      * @param query    {@link ExtCriteria}
      * @return {@code this}
      */
-    C notInq(final Slot slot, final Property<T, ?> property, final ExtCriteria<?> query);
+    default C notInq(final Slot slot, final Property<T, ?> property, final ExtCriteria<?> query) {
+        return this.notInq(slot, property.toProp(), query);
+    }
 
     /**
      * NOT IN
@@ -311,7 +319,9 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
      * @param <V>      属性类型
      * @return {@code this}
      */
-    <V> C between(final Slot slot, final Property<T, V> property, final V begin, final V end);
+    default <V> C between(final Slot slot, final Property<T, V> property, final V begin, final V end) {
+        return this.between(slot, property.toProp(), begin, end);
+    }
 
     /**
      * Between
@@ -359,7 +369,9 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
      * @param <V>      属性类型
      * @return {@code this}
      */
-    <V> C notBetween(final Slot slot, final Property<T, V> property, final V begin, final V end);
+    default <V> C notBetween(final Slot slot, final Property<T, V> property, final V begin, final V end) {
+        return this.notBetween(slot, property.toProp(), begin, end);
+    }
 
     /**
      * Not Between
