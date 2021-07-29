@@ -23,7 +23,7 @@ import com.github.mybatisx.support.constant.Symbol;
 import com.github.mybatisx.support.criteria.Criteria;
 
 /**
- * NULL条件表达式
+ * NOT NULL条件表达式
  * @author wvkity
  * @created 2021-01-09
  * @since 1.0.0
@@ -41,7 +41,7 @@ public class ImdNotNull extends AbstractNullableExpression<String> {
     }
 
     public ImdNotNull(String alias, String column, Slot slot) {
-        this.tableAlias = alias;
+        this.alias = alias;
         this.column = column;
         this.slot = slot;
         this.symbol = Symbol.NOT_NULL;
@@ -60,7 +60,9 @@ public class ImdNotNull extends AbstractNullableExpression<String> {
         @Override
         public ImdNotNull build() {
             if (Objects.isNotBlank(this.target)) {
-                return new ImdNotNull(this.criteria, this.target, this.slot);
+                final ImdNotNull it = new ImdNotNull(this.criteria, this.target, this.slot);
+                it.alias(this.alias);
+                return it;
             }
             return null;
         }

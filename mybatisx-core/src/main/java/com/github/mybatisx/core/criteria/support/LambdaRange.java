@@ -38,7 +38,7 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
      * IN
      * @param property 属性
      * @param values   多个值
-     * @param <V>      属性类型
+     * @param <V>      属性值类型
      * @return {@code this}
      */
     @SuppressWarnings({"unchecked"})
@@ -51,7 +51,7 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
      * @param slot     {@link Slot}
      * @param property 属性
      * @param values   多个值
-     * @param <V>      属性类型
+     * @param <V>      属性值类型
      * @return {@code this}
      */
     @SuppressWarnings({"unchecked"})
@@ -63,7 +63,7 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
      * IN
      * @param property 属性
      * @param values   多个值
-     * @param <V>      属性类型
+     * @param <V>      属性值类型
      * @return {@code this}
      */
     default <V> C in(final Property<T, V> property, final Collection<V> values) {
@@ -75,7 +75,7 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
      * @param slot     {@link Slot}
      * @param property 属性
      * @param values   多个值
-     * @param <V>      属性类型
+     * @param <V>      属性值类型
      * @return {@code this}
      */
     default <V> C in(final Slot slot, final Property<T, V> property, final Collection<V> values) {
@@ -170,7 +170,7 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
      * NOT IN
      * @param property 属性
      * @param values   多个值
-     * @param <V>      属性类型
+     * @param <V>      属性值类型
      * @return {@code this}
      */
     @SuppressWarnings({"unchecked"})
@@ -183,7 +183,7 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
      * @param slot     {@link Slot}
      * @param property 属性
      * @param values   多个值
-     * @param <V>      属性类型
+     * @param <V>      属性值类型
      * @return {@code this}
      */
     @SuppressWarnings({"unchecked"})
@@ -195,7 +195,7 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
      * NOT IN
      * @param property 属性
      * @param values   多个值
-     * @param <V>      属性类型
+     * @param <V>      属性值类型
      * @return {@code this}
      */
     default <V> C notIn(final Property<T, V> property, final Collection<V> values) {
@@ -207,7 +207,7 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
      * @param slot     {@link Slot}
      * @param property 属性
      * @param values   多个值
-     * @param <V>      属性类型
+     * @param <V>      属性值类型
      * @return {@code this}
      */
     default <V> C notIn(final Slot slot, final Property<T, V> property, final Collection<V> values) {
@@ -303,7 +303,7 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
      * @param property 属性
      * @param begin    开始值
      * @param end      结束值
-     * @param <V>      属性类型
+     * @param <V>      属性值类型
      * @return {@code this}
      */
     default <V> C between(final Property<T, V> property, final V begin, final V end) {
@@ -316,7 +316,7 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
      * @param property 属性
      * @param begin    开始值
      * @param end      结束值
-     * @param <V>      属性类型
+     * @param <V>      属性值类型
      * @return {@code this}
      */
     default <V> C between(final Slot slot, final Property<T, V> property, final V begin, final V end) {
@@ -328,9 +328,10 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
      * @param property 属性
      * @param begin    开始值
      * @param end      结束值
+     * @param <V>      值类型
      * @return {@code this}
      */
-    default C between(final String property, final Object begin, final Object end) {
+    default <V> C between(final String property, final V begin, final V end) {
         return this.between(this.getSlot(), property, begin, end);
     }
 
@@ -340,9 +341,10 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
      * @param property 属性
      * @param begin    开始值
      * @param end      结束值
+     * @param <V>      值类型
      * @return {@code this}
      */
-    C between(final Slot slot, final String property, final Object begin, final Object end);
+    <V> C between(final Slot slot, final String property, final V begin, final V end);
 
     // endregion
 
@@ -353,7 +355,7 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
      * @param property 属性
      * @param begin    开始值
      * @param end      结束值
-     * @param <V>      属性类型
+     * @param <V>      属性值类型
      * @return {@code this}
      */
     default <V> C notBetween(final Property<T, V> property, final V begin, final V end) {
@@ -366,7 +368,7 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
      * @param property 属性
      * @param begin    开始值
      * @param end      结束值
-     * @param <V>      属性类型
+     * @param <V>      属性值类型
      * @return {@code this}
      */
     default <V> C notBetween(final Slot slot, final Property<T, V> property, final V begin, final V end) {
@@ -378,9 +380,10 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
      * @param property 属性
      * @param begin    开始值
      * @param end      结束值
+     * @param <V>      值类型
      * @return {@code this}
      */
-    default C notBetween(final String property, final Object begin, final Object end) {
+    default <V> C notBetween(final String property, final V begin, final V end) {
         return this.notBetween(this.getSlot(), property, begin, end);
     }
 
@@ -390,9 +393,10 @@ interface LambdaRange<T, C extends LambdaRange<T, C>> extends SlotSymbol<T, C> {
      * @param property 属性
      * @param begin    开始值
      * @param end      结束值
+     * @param <V>      值类型
      * @return {@code this}
      */
-    C notBetween(final Slot slot, final String property, final Object begin, final Object end);
+    <V> C notBetween(final Slot slot, final String property, final V begin, final V end);
 
     // endregion
 }

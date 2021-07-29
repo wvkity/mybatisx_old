@@ -67,7 +67,7 @@ public class SubQueryExpression extends AbstractExpression<String> {
 
     public SubQueryExpression(String alias, String column, ExtCriteria<?> query,
                               Slot slot, Symbol symbol) {
-        this.tableAlias = alias;
+        this.alias = alias;
         this.column = column;
         this.query = query;
         this.slot = slot;

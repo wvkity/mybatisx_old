@@ -82,7 +82,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param value    值
      * @return {@code this}
      */
-    default C likeLeft(final String property, final Object value) {
+    default C likeLeft(final String property, final String value) {
         return this.like(this.getSlot(), property, value, Like.END, null);
     }
 
@@ -93,7 +93,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param value    值
      * @return {@code this}
      */
-    default C likeLeft(final Slot slot, final String property, final Object value) {
+    default C likeLeft(final Slot slot, final String property, final String value) {
         return this.like(slot, property, value, Like.END, null);
     }
 
@@ -104,7 +104,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape   转义字符
      * @return {@code this}
      */
-    default C likeLeft(final String property, final Object value, final Character escape) {
+    default C likeLeft(final String property, final String value, final Character escape) {
         return this.like(this.getSlot(), property, value, Like.END, escape);
     }
 
@@ -116,7 +116,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape   转义字符
      * @return {@code this}
      */
-    default C likeLeft(final Slot slot, final String property, final Object value, final Character escape) {
+    default C likeLeft(final Slot slot, final String property, final String value, final Character escape) {
         return this.like(slot, property, value, Like.END, escape);
     }
 
@@ -171,7 +171,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param value    值
      * @return {@code this}
      */
-    default C likeRight(final String property, final Object value) {
+    default C likeRight(final String property, final String value) {
         return this.like(this.getSlot(), property, value, Like.START, null);
     }
 
@@ -182,7 +182,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param value    值
      * @return {@code this}
      */
-    default C likeRight(final Slot slot, final String property, final Object value) {
+    default C likeRight(final Slot slot, final String property, final String value) {
         return this.like(slot, property, value, Like.START, null);
     }
 
@@ -193,7 +193,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape   转义字符
      * @return {@code this}
      */
-    default C likeRight(final String property, final Object value, final Character escape) {
+    default C likeRight(final String property, final String value, final Character escape) {
         return this.like(this.getSlot(), property, value, Like.START, escape);
     }
 
@@ -205,7 +205,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape   转义字符
      * @return {@code this}
      */
-    default C likeRight(final Slot slot, final String property, final Object value, final Character escape) {
+    default C likeRight(final Slot slot, final String property, final String value, final Character escape) {
         return this.like(slot, property, value, Like.START, escape);
     }
 
@@ -259,7 +259,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param value    值
      * @return {@code this}
      */
-    default C likeAny(final String property, final Object value) {
+    default C likeAny(final String property, final String value) {
         return this.like(this.getSlot(), property, value, Like.ANYWHERE, null);
     }
 
@@ -270,7 +270,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param value    值
      * @return {@code this}
      */
-    default C likeAny(final Slot slot, final String property, final Object value) {
+    default C likeAny(final Slot slot, final String property, final String value) {
         return this.like(slot, property, value, Like.ANYWHERE, null);
     }
 
@@ -281,7 +281,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape   转义字符
      * @return {@code this}
      */
-    default C likeAny(final String property, final Object value, final Character escape) {
+    default C likeAny(final String property, final String value, final Character escape) {
         return this.like(this.getSlot(), property, value, Like.ANYWHERE, escape);
     }
 
@@ -293,7 +293,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape   转义字符
      * @return {@code this}
      */
-    default C likeAny(final Slot slot, final String property, final Object value, final Character escape) {
+    default C likeAny(final Slot slot, final String property, final String value, final Character escape) {
         return this.like(slot, property, value, Like.ANYWHERE, escape);
     }
 
@@ -353,7 +353,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param like     匹配模式
      * @return {@code this}
      */
-    default C like(final String property, final Object value, final Like like) {
+    default C like(final String property, final String value, final Like like) {
         return this.like(this.getSlot(), property, value, like, null);
     }
 
@@ -365,7 +365,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param like     匹配模式
      * @return {@code this}
      */
-    default C like(final Slot slot, final String property, final Object value, final Like like) {
+    default C like(final Slot slot, final String property, final String value, final Like like) {
         return this.like(slot, property, value, like, null);
     }
 
@@ -377,7 +377,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape   转义字符
      * @return {@code this}
      */
-    default C like(final String property, final Object value, final Like like,
+    default C like(final String property, final String value, final Like like,
                    final Character escape) {
         return this.like(this.getSlot(), property, value, like, escape);
     }
@@ -391,7 +391,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param slot     {@link Slot}
      * @return {@code this}
      */
-    C like(final Slot slot, final String property, final Object value, final Like like,
+    C like(final Slot slot, final String property, final String value, final Like like,
            final Character escape);
 
     // endregion
@@ -449,7 +449,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param value    值
      * @return {@code this}
      */
-    default C notLikeLeft(final String property, final Object value) {
+    default C notLikeLeft(final String property, final String value) {
         return this.notLike(this.getSlot(), property, value, Like.END, null);
     }
 
@@ -460,7 +460,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param value    值
      * @return {@code this}
      */
-    default C notLikeLeft(final Slot slot, final String property, final Object value) {
+    default C notLikeLeft(final Slot slot, final String property, final String value) {
         return this.notLike(slot, property, value, Like.END, null);
     }
 
@@ -471,7 +471,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape   转义字符
      * @return {@code this}
      */
-    default C notLikeLeft(final String property, final Object value, final Character escape) {
+    default C notLikeLeft(final String property, final String value, final Character escape) {
         return this.notLike(this.getSlot(), property, value, Like.END, escape);
     }
 
@@ -483,7 +483,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape   转义字符
      * @return {@code this}
      */
-    default C notLikeLeft(final Slot slot, final String property, final Object value, final Character escape) {
+    default C notLikeLeft(final Slot slot, final String property, final String value, final Character escape) {
         return this.notLike(slot, property, value, Like.END, escape);
     }
 
@@ -538,7 +538,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param value    值
      * @return {@code this}
      */
-    default C notLikeRight(final String property, final Object value) {
+    default C notLikeRight(final String property, final String value) {
         return this.notLike(this.getSlot(), property, value, Like.START, null);
     }
 
@@ -549,7 +549,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param value    值
      * @return {@code this}
      */
-    default C notLikeRight(final Slot slot, final String property, final Object value) {
+    default C notLikeRight(final Slot slot, final String property, final String value) {
         return this.notLike(slot, property, value, Like.START, null);
     }
 
@@ -560,7 +560,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape   转义字符
      * @return {@code this}
      */
-    default C notLikeRight(final String property, final Object value, final Character escape) {
+    default C notLikeRight(final String property, final String value, final Character escape) {
         return this.notLike(this.getSlot(), property, value, Like.START, escape);
     }
 
@@ -572,7 +572,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape   转义字符
      * @return {@code this}
      */
-    default C notLikeRight(final Slot slot, final String property, final Object value, final Character escape) {
+    default C notLikeRight(final Slot slot, final String property, final String value, final Character escape) {
         return this.notLike(slot, property, value, Like.START, escape);
     }
 
@@ -627,7 +627,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param value    值
      * @return {@code this}
      */
-    default C notLikeAny(final String property, final Object value) {
+    default C notLikeAny(final String property, final String value) {
         return this.notLike(this.getSlot(), property, value, Like.ANYWHERE, null);
     }
 
@@ -638,7 +638,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param value    值
      * @return {@code this}
      */
-    default C notLikeAny(final Slot slot, final String property, final Object value) {
+    default C notLikeAny(final Slot slot, final String property, final String value) {
         return this.notLike(slot, property, value, Like.ANYWHERE, null);
     }
 
@@ -649,7 +649,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape   转义字符
      * @return {@code this}
      */
-    default C notLikeAny(final String property, final Object value, final Character escape) {
+    default C notLikeAny(final String property, final String value, final Character escape) {
         return this.notLike(this.getSlot(), property, value, Like.ANYWHERE, escape);
     }
 
@@ -661,7 +661,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape   转义字符
      * @return {@code this}
      */
-    default C notLikeAny(final Slot slot, final String property, final Object value, final Character escape) {
+    default C notLikeAny(final Slot slot, final String property, final String value, final Character escape) {
         return this.notLike(slot, property, value, Like.ANYWHERE, escape);
     }
 
@@ -722,7 +722,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param like     匹配模式
      * @return {@code this}
      */
-    default C notLike(final String property, final Object value, final Like like) {
+    default C notLike(final String property, final String value, final Like like) {
         return this.notLike(this.getSlot(), property, value, like, null);
     }
 
@@ -734,7 +734,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param like     匹配模式
      * @return {@code this}
      */
-    default C notLike(final Slot slot, final String property, final Object value, final Like like) {
+    default C notLike(final Slot slot, final String property, final String value, final Like like) {
         return this.notLike(slot, property, value, like, null);
     }
 
@@ -746,7 +746,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape   转义字符
      * @return {@code this}
      */
-    default C notLike(final String property, final Object value, final Like like, final Character escape) {
+    default C notLike(final String property, final String value, final Like like, final Character escape) {
         return this.notLike(this.getSlot(), property, value, like, escape);
     }
 
@@ -759,7 +759,7 @@ interface LambdaLike<T, C extends LambdaLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape   转义字符
      * @return {@code this}
      */
-    C notLike(final Slot slot, final String property, final Object value, final Like like,
+    C notLike(final Slot slot, final String property, final String value, final Like like,
               final Character escape);
 
     // endregion

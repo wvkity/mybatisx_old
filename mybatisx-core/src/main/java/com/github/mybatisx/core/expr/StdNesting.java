@@ -115,7 +115,7 @@ public class StdNesting extends AbstractExpression<Expression<?>> {
         return new StdNesting.Builder();
     }
 
-    public static final class Builder implements ExprBuilder<StdNesting, Object> {
+    public static final class Builder implements ExprBuilder<StdNesting, Object, Builder> {
         /**
          * {@link Criteria}
          */

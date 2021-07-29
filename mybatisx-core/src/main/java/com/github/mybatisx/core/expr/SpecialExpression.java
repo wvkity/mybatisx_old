@@ -70,7 +70,7 @@ public class SpecialExpression extends AbstractExpression<String> {
     public SpecialExpression(Criteria<?> criteria, String tableAlias, String target, Criteria<?> otherCriteria,
                              String otherTableAlias, String otherTarget) {
         this.criteria = criteria;
-        this.tableAlias = tableAlias;
+        this.alias = tableAlias;
         this.column = target;
         this.otherCriteria = otherCriteria;
         this.otherTableAlias = otherTableAlias;

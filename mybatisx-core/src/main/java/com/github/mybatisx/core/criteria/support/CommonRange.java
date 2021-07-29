@@ -164,9 +164,10 @@ interface CommonRange<T, C extends CommonRange<T, C>> extends SlotSymbol<T, C> {
      * @param column 字段
      * @param begin  开始值
      * @param end    结束值
+     * @param <V>    值类型
      * @return {@code this}
      */
-    default C colBetween(final String column, final Object begin, final Object end) {
+    default <V> C colBetween(final String column, final V begin, final V end) {
         return colBetween(this.getSlot(), column, begin, end);
     }
 
@@ -176,9 +177,10 @@ interface CommonRange<T, C extends CommonRange<T, C>> extends SlotSymbol<T, C> {
      * @param column 字段
      * @param begin  开始值
      * @param end    结束值
+     * @param <V>    值类型
      * @return {@code this}
      */
-    C colBetween(final Slot slot, final String column, final Object begin, final Object end);
+    <V> C colBetween(final Slot slot, final String column, final V begin, final V end);
 
     // endregion
 
@@ -189,9 +191,10 @@ interface CommonRange<T, C extends CommonRange<T, C>> extends SlotSymbol<T, C> {
      * @param column 字段
      * @param begin  开始值
      * @param end    结束值
+     * @param <V>    值类型
      * @return {@code this}
      */
-    default C colNotBetween(final String column, final Object begin, final Object end) {
+    default <V> C colNotBetween(final String column, final V begin, final V end) {
         return colNotBetween(this.getSlot(), column, begin, end);
     }
 
@@ -201,9 +204,10 @@ interface CommonRange<T, C extends CommonRange<T, C>> extends SlotSymbol<T, C> {
      * @param column 字段
      * @param begin  开始值
      * @param end    结束值
+     * @param <V>    值类型
      * @return {@code this}
      */
-    C colNotBetween(final Slot slot, final String column, final Object begin, final Object end);
+    <V> C colNotBetween(final Slot slot, final String column, final V begin, final V end);
 
     // endregion
 }

@@ -42,6 +42,10 @@ public abstract class AbstractExprBuilder<T, E, C extends AbstractExprBuilder<T,
      * {@link Slot}
      */
     protected Slot slot;
+    /**
+     * 表别名
+     */
+    protected String alias;
     @SuppressWarnings("unchecked")
     protected final C context = (C) this;
 
@@ -57,6 +61,11 @@ public abstract class AbstractExprBuilder<T, E, C extends AbstractExprBuilder<T,
 
     public C slot(Slot slot) {
         this.slot = slot;
+        return this.context;
+    }
+
+    public C alias(String alias) {
+        this.alias = alias;
         return this.context;
     }
 }

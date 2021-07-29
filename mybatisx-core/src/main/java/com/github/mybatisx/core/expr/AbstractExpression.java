@@ -41,7 +41,7 @@ public abstract class AbstractExpression<E> implements Expression<E> {
     /**
      * 表别名
      */
-    protected String tableAlias;
+    protected String alias;
     /**
      * 条件符号
      */
@@ -77,7 +77,7 @@ public abstract class AbstractExpression<E> implements Expression<E> {
 
     @Override
     public String getAlias() {
-        return this.tableAlias;
+        return this.alias;
     }
 
     @Override
@@ -88,7 +88,7 @@ public abstract class AbstractExpression<E> implements Expression<E> {
 
     @Override
     public AbstractExpression<E> alias(String alias) {
-        this.tableAlias = alias;
+        this.alias = alias;
         return this;
     }
 

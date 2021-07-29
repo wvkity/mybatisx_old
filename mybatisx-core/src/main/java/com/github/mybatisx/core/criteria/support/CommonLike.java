@@ -38,7 +38,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param value  值
      * @return {@code this}
      */
-    default C colLikeLeft(final String column, final Object value) {
+    default C colLikeLeft(final String column, final String value) {
         return this.colLike(this.getSlot(), column, value, Like.END, null);
     }
 
@@ -49,7 +49,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param value  值
      * @return {@code this}
      */
-    default C colLikeLeft(final Slot slot, final String column, final Object value) {
+    default C colLikeLeft(final Slot slot, final String column, final String value) {
         return this.colLike(slot, column, value, Like.END, null);
     }
 
@@ -60,7 +60,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape 转义字符
      * @return {@code this}
      */
-    default C colLikeLeft(final String column, final Object value, final Character escape) {
+    default C colLikeLeft(final String column, final String value, final Character escape) {
         return this.colLike(this.getSlot(), column, value, Like.END, escape);
     }
 
@@ -72,7 +72,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param slot   {@link Slot}
      * @return {@code this}
      */
-    default C colLikeLeft(final Slot slot, final String column, final Object value, final Character escape) {
+    default C colLikeLeft(final Slot slot, final String column, final String value, final Character escape) {
         return this.colLike(slot, column, value, Like.END, escape);
     }
 
@@ -86,7 +86,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param value  值
      * @return {@code this}
      */
-    default C colLikeRight(final String column, final Object value) {
+    default C colLikeRight(final String column, final String value) {
         return this.colLike(this.getSlot(), column, value, Like.START, null);
     }
 
@@ -97,7 +97,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param value  值
      * @return {@code this}
      */
-    default C colLikeRight(final Slot slot, final String column, final Object value) {
+    default C colLikeRight(final Slot slot, final String column, final String value) {
         return this.colLike(slot, column, value, Like.START, null);
     }
 
@@ -108,7 +108,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape 转义字符
      * @return {@code this}
      */
-    default C colLikeRight(final String column, final Object value, final Character escape) {
+    default C colLikeRight(final String column, final String value, final Character escape) {
         return this.colLike(this.getSlot(), column, value, Like.START, escape);
     }
 
@@ -120,7 +120,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param slot   {@link Slot}
      * @return {@code this}
      */
-    default C colLikeRight(final Slot slot, final String column, final Object value, final Character escape) {
+    default C colLikeRight(final Slot slot, final String column, final String value, final Character escape) {
         return this.colLike(slot, column, value, Like.START, escape);
     }
 
@@ -134,7 +134,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param value  值
      * @return {@code this}
      */
-    default C colLikeAny(final String column, final Object value) {
+    default C colLikeAny(final String column, final String value) {
         return this.colLike(this.getSlot(), column, value, Like.ANYWHERE, null);
     }
 
@@ -145,7 +145,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param value  值
      * @return {@code this}
      */
-    default C colLikeAny(final Slot slot, final String column, final Object value) {
+    default C colLikeAny(final Slot slot, final String column, final String value) {
         return this.colLike(slot, column, value, Like.ANYWHERE, null);
     }
 
@@ -156,7 +156,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape 转义字符
      * @return {@code this}
      */
-    default C colLikeAny(final String column, final Object value, final Character escape) {
+    default C colLikeAny(final String column, final String value, final Character escape) {
         return this.colLike(this.getSlot(), column, value, Like.ANYWHERE, escape);
     }
 
@@ -168,7 +168,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape 转义字符
      * @return {@code this}
      */
-    default C colLikeAny(final Slot slot, final String column, final Object value, final Character escape) {
+    default C colLikeAny(final Slot slot, final String column, final String value, final Character escape) {
         return this.colLike(slot, column, value, Like.ANYWHERE, escape);
     }
 
@@ -183,7 +183,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param like   匹配模式
      * @return {@code this}
      */
-    default C colLike(final String column, final Object value, final Like like) {
+    default C colLike(final String column, final String value, final Like like) {
         return this.colLike(this.getSlot(), column, value, like, null);
     }
 
@@ -195,7 +195,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param like   匹配模式
      * @return {@code this}
      */
-    default C colLike(final Slot slot, final String column, final Object value, final Like like) {
+    default C colLike(final Slot slot, final String column, final String value, final Like like) {
         return this.colLike(slot, column, value, like, null);
     }
 
@@ -207,7 +207,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape 转义字符
      * @return {@code this}
      */
-    default C colLike(final String column, final Object value, final Like like,
+    default C colLike(final String column, final String value, final Like like,
                       final Character escape) {
         return this.colLike(this.getSlot(), column, value, like, escape);
     }
@@ -221,7 +221,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape 转义字符
      * @return {@code this}
      */
-    C colLike(final Slot slot, final String column, final Object value, final Like like,
+    C colLike(final Slot slot, final String column, final String value, final Like like,
               final Character escape);
 
     // endregion
@@ -238,7 +238,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param value  值
      * @return {@code this}
      */
-    default C colNotLikeLeft(final String column, final Object value) {
+    default C colNotLikeLeft(final String column, final String value) {
         return this.colNotLike(this.getSlot(), column, value, Like.END, null);
     }
 
@@ -249,7 +249,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param value  值
      * @return {@code this}
      */
-    default C colNotLikeLeft(final Slot slot, final String column, final Object value) {
+    default C colNotLikeLeft(final Slot slot, final String column, final String value) {
         return this.colNotLike(slot, column, value, Like.END, null);
     }
 
@@ -260,7 +260,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape 转义字符
      * @return {@code this}
      */
-    default C colNotLikeLeft(final String column, final Object value, final Character escape) {
+    default C colNotLikeLeft(final String column, final String value, final Character escape) {
         return this.colNotLike(this.getSlot(), column, value, Like.END, escape);
     }
 
@@ -272,7 +272,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape 转义字符
      * @return {@code this}
      */
-    default C colNotLikeLeft(final Slot slot, final String column, final Object value, final Character escape) {
+    default C colNotLikeLeft(final Slot slot, final String column, final String value, final Character escape) {
         return this.colNotLike(slot, column, value, Like.END, escape);
     }
 
@@ -286,7 +286,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param value  值
      * @return {@code this}
      */
-    default C colNotLikeRight(final String column, final Object value) {
+    default C colNotLikeRight(final String column, final String value) {
         return this.colNotLike(this.getSlot(), column, value, Like.START, null);
     }
 
@@ -297,7 +297,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param value  值
      * @return {@code this}
      */
-    default C colNotLikeRight(final Slot slot, final String column, final Object value) {
+    default C colNotLikeRight(final Slot slot, final String column, final String value) {
         return this.colNotLike(slot, column, value, Like.START, null);
     }
 
@@ -308,7 +308,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape 转义字符
      * @return {@code this}
      */
-    default C colNotLikeRight(final String column, final Object value, final Character escape) {
+    default C colNotLikeRight(final String column, final String value, final Character escape) {
         return this.colNotLike(this.getSlot(), column, value, Like.START, escape);
     }
 
@@ -320,7 +320,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape 转义字符
      * @return {@code this}
      */
-    default C colNotLikeRight(final Slot slot, final String column, final Object value, final Character escape) {
+    default C colNotLikeRight(final Slot slot, final String column, final String value, final Character escape) {
         return this.colNotLike(slot, column, value, Like.START, escape);
     }
 
@@ -334,7 +334,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param value  值
      * @return {@code this}
      */
-    default C colNotLikeAny(final String column, final Object value) {
+    default C colNotLikeAny(final String column, final String value) {
         return this.colNotLike(this.getSlot(), column, value, Like.ANYWHERE, null);
     }
 
@@ -345,7 +345,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param value  值
      * @return {@code this}
      */
-    default C colNotLikeAny(final Slot slot, final String column, final Object value) {
+    default C colNotLikeAny(final Slot slot, final String column, final String value) {
         return this.colNotLike(slot, column, value, Like.ANYWHERE, null);
     }
 
@@ -356,7 +356,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape 转义字符
      * @return {@code this}
      */
-    default C colNotLikeAny(final String column, final Object value, final Character escape) {
+    default C colNotLikeAny(final String column, final String value, final Character escape) {
         return this.colNotLike(this.getSlot(), column, value, Like.ANYWHERE, escape);
     }
 
@@ -368,7 +368,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape 转义字符
      * @return {@code this}
      */
-    default C colNotLikeAny(final Slot slot, final String column, final Object value, final Character escape) {
+    default C colNotLikeAny(final Slot slot, final String column, final String value, final Character escape) {
         return this.colNotLike(slot, column, value, Like.ANYWHERE, escape);
     }
 
@@ -383,7 +383,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param like   匹配模式
      * @return {@code this}
      */
-    default C colNotLike(final String column, final Object value, final Like like) {
+    default C colNotLike(final String column, final String value, final Like like) {
         return this.colNotLike(this.getSlot(), column, value, like, null);
     }
 
@@ -395,7 +395,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param like   匹配模式
      * @return {@code this}
      */
-    default C colNotLike(final Slot slot, final String column, final Object value, final Like like) {
+    default C colNotLike(final Slot slot, final String column, final String value, final Like like) {
         return this.colNotLike(slot, column, value, like, null);
     }
 
@@ -407,7 +407,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape 转义字符
      * @return {@code this}
      */
-    default C colNotLike(final String column, final Object value, final Like like, final Character escape) {
+    default C colNotLike(final String column, final String value, final Like like, final Character escape) {
         return this.colNotLike(this.getSlot(), column, value, like, escape);
     }
 
@@ -420,7 +420,7 @@ interface CommonLike<T, C extends CommonLike<T, C>> extends SlotSymbol<T, C> {
      * @param escape 转义字符
      * @return {@code this}
      */
-    C colNotLike(final Slot slot, final String column, final Object value, final Like like,
+    C colNotLike(final Slot slot, final String column, final String value, final Like like,
                  final Character escape);
 
     // endregion

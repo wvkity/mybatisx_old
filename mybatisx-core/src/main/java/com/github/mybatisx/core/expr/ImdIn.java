@@ -44,7 +44,7 @@ public class ImdIn extends AbstractInExpression<String> {
     }
 
     public ImdIn(String alias, String property, Slot slot, Collection<?> values) {
-        this.tableAlias = alias;
+        this.alias = alias;
         this.column = property;
         this.slot = slot;
         this.values = values;
@@ -64,7 +64,9 @@ public class ImdIn extends AbstractInExpression<String> {
         @Override
         public ImdIn build() {
             if (Objects.isNotBlank(this.target)) {
-                return new ImdIn(this.criteria, this.target, this.slot, this.values);
+                final ImdIn it = new ImdIn(this.criteria, this.target, this.slot, this.values);
+                it.alias(this.alias);
+                return it;
             }
             return null;
         }

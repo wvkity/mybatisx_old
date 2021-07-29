@@ -41,7 +41,7 @@ public class ImdNull extends AbstractNullableExpression<String> {
     }
 
     public ImdNull(String alias, String column, Slot slot) {
-        this.tableAlias = alias;
+        this.alias = alias;
         this.column = column;
         this.slot = slot;
         this.symbol = Symbol.NULL;
@@ -60,7 +60,9 @@ public class ImdNull extends AbstractNullableExpression<String> {
         @Override
         public ImdNull build() {
             if (Objects.isNotBlank(this.target)) {
-                return new ImdNull(this.criteria, this.target, this.slot);
+                final ImdNull it = new ImdNull(this.criteria, this.target, this.slot);
+                it.alias(this.alias);
+                return it;
             }
             return null;
         }

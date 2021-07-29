@@ -180,7 +180,7 @@ public abstract class AbstractCommonCriteria<T, C extends CommonCriteriaWrapper<
     }
 
     @Override
-    public C colBetween(Slot slot, String column, Object begin, Object end) {
+    public <V> C colBetween(Slot slot, String column, V begin, V end) {
         if (Objects.isNotBlank(column)) {
             this.where(new ImdBetween(this, column, slot, begin, end));
         }
@@ -188,7 +188,7 @@ public abstract class AbstractCommonCriteria<T, C extends CommonCriteriaWrapper<
     }
 
     @Override
-    public C colNotBetween(Slot slot, String column, Object begin, Object end) {
+    public <V> C colNotBetween(Slot slot, String column, V begin, V end) {
         if (Objects.isNotBlank(column)) {
             this.where(new ImdNotBetween(this, column, slot, begin, end));
         }
@@ -200,7 +200,7 @@ public abstract class AbstractCommonCriteria<T, C extends CommonCriteriaWrapper<
     // region Like condition
 
     @Override
-    public C colLike(Slot slot, String column, Object value, Like like, Character escape) {
+    public C colLike(Slot slot, String column, String value, Like like, Character escape) {
         if (Objects.isNotBlank(column)) {
             this.where(new ImdLike(this, column, like, escape, slot, value));
         }
@@ -208,7 +208,7 @@ public abstract class AbstractCommonCriteria<T, C extends CommonCriteriaWrapper<
     }
 
     @Override
-    public C colNotLike(Slot slot, String column, Object value, Like like, Character escape) {
+    public C colNotLike(Slot slot, String column, String value, Like like, Character escape) {
         if (Objects.isNotBlank(column)) {
             this.where(new ImdNotLike(this, column, like, escape, slot, value));
         }

@@ -42,7 +42,7 @@ public class ImdEqual extends AbstractBasicExpression<String> {
     }
 
     public ImdEqual(String alias, String column, Slot slot, Object value) {
-        this.tableAlias = alias;
+        this.alias = alias;
         this.column = column;
         this.slot = slot;
         this.value = value;
@@ -62,7 +62,9 @@ public class ImdEqual extends AbstractBasicExpression<String> {
         @Override
         public ImdEqual build() {
             if (Objects.isNotBlank(this.target)) {
-                return new ImdEqual(this.criteria, this.target, this.slot, this.value);
+                final ImdEqual it = new ImdEqual(this.criteria, this.target, this.slot, this.value);
+                it.alias(this.alias);
+                return it;
             }
             return null;
         }

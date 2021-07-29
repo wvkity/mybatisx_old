@@ -43,7 +43,7 @@ public class ImdNotBetween extends AbstractBetweenExpression<String> {
     }
 
     public ImdNotBetween(String alias, String column, Slot slot, Object begin, Object end) {
-        this.tableAlias = alias;
+        this.alias = alias;
         this.column = column;
         this.slot = slot;
         this.symbol = Symbol.NOT_BETWEEN;
@@ -64,7 +64,9 @@ public class ImdNotBetween extends AbstractBetweenExpression<String> {
         @Override
         public ImdNotBetween build() {
             if (Objects.isNotBlank(this.target)) {
-                return new ImdNotBetween(this.criteria, this.target, this.slot, this.begin, this.end);
+                final ImdNotBetween it = new ImdNotBetween(this.criteria, this.target, this.slot, this.begin, this.end);
+                it.alias(this.alias);
+                return it;
             }
             return null;
         }

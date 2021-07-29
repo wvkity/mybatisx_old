@@ -212,7 +212,7 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
     }
 
     @Override
-    public C between(Slot slot, String property, Object begin, Object end) {
+    public <V> C between(Slot slot, String property, V begin, V end) {
         final Column column;
         if (Objects.nonNull((column = this.toColumn(property)))) {
             this.where(new StdBetween(this, column, slot, begin, end));
@@ -221,7 +221,7 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
     }
 
     @Override
-    public C notBetween(Slot slot, String property, Object begin, Object end) {
+    public <V> C notBetween(Slot slot, String property, V begin, V end) {
         final Column column;
         if (Objects.nonNull((column = this.toColumn(property)))) {
             this.where(new StdNotBetween(this, column, slot, begin, end));
@@ -234,7 +234,7 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
     // region Like condition
 
     @Override
-    public C like(Slot slot, String property, Object value, Like like, Character escape) {
+    public C like(Slot slot, String property, String value, Like like, Character escape) {
         final Column column;
         if (Objects.nonNull((column = this.toColumn(property)))) {
             this.where(new StdLike(this, column, like, escape, slot, value));
@@ -243,7 +243,7 @@ public abstract class AbstractLambdaCriteria<T, C extends LambdaCriteriaWrapper<
     }
 
     @Override
-    public C notLike(Slot slot, String property, Object value, Like like, Character escape) {
+    public C notLike(Slot slot, String property, String value, Like like, Character escape) {
         final Column column;
         if (Objects.nonNull((column = this.toColumn(property)))) {
             this.where(new StdNotLike(this, column, like, escape, slot, value));

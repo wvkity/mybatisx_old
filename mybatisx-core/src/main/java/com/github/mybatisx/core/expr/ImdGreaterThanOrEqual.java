@@ -42,7 +42,7 @@ public class ImdGreaterThanOrEqual extends AbstractBasicExpression<String> {
     }
 
     public ImdGreaterThanOrEqual(String alias, String column, Slot slot, Object value) {
-        this.tableAlias = alias;
+        this.alias = alias;
         this.column = column;
         this.slot = slot;
         this.symbol = Symbol.GE;
@@ -62,7 +62,10 @@ public class ImdGreaterThanOrEqual extends AbstractBasicExpression<String> {
         @Override
         public ImdGreaterThanOrEqual build() {
             if (Objects.isNotBlank(this.target)) {
-                return new ImdGreaterThanOrEqual(this.criteria, this.target, this.slot, this.value);
+                final ImdGreaterThanOrEqual it = new ImdGreaterThanOrEqual(this.criteria, this.target, this.slot,
+                    this.value);
+                it.alias(this.alias);
+                return it;
             }
             return null;
         }

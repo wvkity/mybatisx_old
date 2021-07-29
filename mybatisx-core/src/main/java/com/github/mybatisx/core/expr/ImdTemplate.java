@@ -60,8 +60,10 @@ public class ImdTemplate extends AbstractTemplateExpression<String> {
         @Override
         public ImdTemplate build() {
             if (Objects.isNotBlank(this.template)) {
-                return new ImdTemplate(this.criteria, this.target, this.template, this.pattern, this.slot,
-                    this.value, this.listValues, this.mapValues);
+                final ImdTemplate it = new ImdTemplate(this.criteria, this.target, this.template, this.pattern,
+                    this.slot, this.value, this.listValues, this.mapValues);
+                it.alias(this.alias);
+                return it;
             }
             return null;
         }

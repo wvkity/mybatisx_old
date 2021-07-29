@@ -44,7 +44,7 @@ public class ImdNotIn extends AbstractInExpression<String> {
     }
 
     public ImdNotIn(String alias, String column, Slot slot, Collection<?> values) {
-        this.tableAlias = alias;
+        this.alias = alias;
         this.column = column;
         this.slot = slot;
         this.values = values;
@@ -64,7 +64,9 @@ public class ImdNotIn extends AbstractInExpression<String> {
         @Override
         public ImdNotIn build() {
             if (Objects.isNotBlank(this.target)) {
-                return new ImdNotIn(this.criteria, this.target, this.slot, this.values);
+                final ImdNotIn it = new ImdNotIn(this.criteria, this.target, this.slot, this.values);
+                it.alias(this.alias);
+                return it;
             }
             return null;
         }

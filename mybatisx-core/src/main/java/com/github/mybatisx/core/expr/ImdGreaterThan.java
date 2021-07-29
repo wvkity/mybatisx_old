@@ -42,7 +42,7 @@ public class ImdGreaterThan extends AbstractBasicExpression<String> {
     }
 
     public ImdGreaterThan(String alias, String column, Slot slot, Object value) {
-        this.tableAlias = alias;
+        this.alias = alias;
         this.column = column;
         this.slot = slot;
         this.symbol = Symbol.GT;
@@ -62,7 +62,9 @@ public class ImdGreaterThan extends AbstractBasicExpression<String> {
         @Override
         public ImdGreaterThan build() {
             if (Objects.isNotBlank(this.target)) {
-                return new ImdGreaterThan(this.criteria, this.target, this.slot, this.value);
+                final ImdGreaterThan it = new ImdGreaterThan(this.criteria, this.target, this.slot, this.value);
+                it.alias(this.alias);
+                return it;
             }
             return null;
         }
