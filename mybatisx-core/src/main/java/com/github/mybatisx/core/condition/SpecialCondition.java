@@ -50,8 +50,19 @@ public class SpecialCondition implements Criterion {
         this.symbol = Objects.isNull(symbol) ? Symbol.EQ : symbol;
         this.slot = slot;
     }
+
     protected String getAlias(final Criteria<?> criteria, final String alias) {
         return Objects.isNotBlank(alias) ? alias : Objects.nonNull(criteria) ? criteria.as() : null;
+    }
+
+    @Override
+    public Symbol getSymbol() {
+        return this.symbol;
+    }
+
+    @Override
+    public String getColumn() {
+        return this.column;
     }
 
     @Override

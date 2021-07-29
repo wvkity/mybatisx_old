@@ -180,7 +180,7 @@ public class DefaultConditionConverter implements Converter<Expression<?>, Crite
         final AbstractBasicExpression<?> it = (AbstractBasicExpression<?>) expr;
         return new StandardCondition(it.getCriteria(), it.getAlias(), column,
             Scripts.convertConditionPartArg(it.getSymbol(), it.getSlot(), typeHandler, useJavaType,
-                javaType, jdbcType, this.parameterConverter.convert(it.getValue())));
+                javaType, jdbcType, this.parameterConverter.convert(it.getValue())), it.getSymbol(), it.getValue());
     }
 
     /**
@@ -199,7 +199,7 @@ public class DefaultConditionConverter implements Converter<Expression<?>, Crite
         final AbstractBetweenExpression<?> it = (AbstractBetweenExpression<?>) expr;
         return new StandardCondition(it.getCriteria(), it.getAlias(), column,
             Scripts.convertConditionPartArg(it.getSymbol(), it.getSlot(), typeHandler, useJavaType,
-                javaType, jdbcType, this.parameterConverter.converts(it.getBegin(), it.getEnd())));
+                javaType, jdbcType, this.parameterConverter.converts(it.getBegin(), it.getEnd())), it.getSymbol());
     }
 
     /**
@@ -224,7 +224,8 @@ public class DefaultConditionConverter implements Converter<Expression<?>, Crite
             builder.append(" ESCAPE ").append(Constants.SINGLE_QUOTES).append(it.getEscape())
                 .append(Constants.SINGLE_QUOTES);
         }
-        return new StandardCondition(it.getCriteria(), it.getAlias(), column, builder.toString());
+        return new StandardCondition(it.getCriteria(), it.getAlias(), column, builder.toString(), it.getSymbol(),
+            it.getValue());
     }
 
     /**
@@ -243,7 +244,7 @@ public class DefaultConditionConverter implements Converter<Expression<?>, Crite
         final AbstractNullableExpression<?> it = (AbstractNullableExpression<?>) expr;
         return new StandardCondition(it.getCriteria(), it.getAlias(), column,
             Scripts.convertConditionPartArg(it.getSymbol(), it.getSlot(), typeHandler, useJavaType,
-                javaType, jdbcType));
+                javaType, jdbcType), it.getSymbol());
     }
 
     /**
@@ -262,7 +263,7 @@ public class DefaultConditionConverter implements Converter<Expression<?>, Crite
         final AbstractInExpression<?> it = (AbstractInExpression<?>) expr;
         return new StandardCondition(it.getCriteria(), it.getAlias(), column,
             Scripts.convertConditionPartArg(it.getSymbol(), it.getSlot(), typeHandler, useJavaType,
-                javaType, jdbcType, this.parameterConverter.converts(it.getValues())));
+                javaType, jdbcType, this.parameterConverter.converts(it.getValues())), it.getSymbol());
     }
 
     /**
@@ -325,7 +326,7 @@ public class DefaultConditionConverter implements Converter<Expression<?>, Crite
                     }
                     break;
             }
-            return new StandardCondition(it.getCriteria(), it.getAlias(), column, builder.toString());
+            return new StandardCondition(it.getCriteria(), it.getAlias(), column, builder.toString(), it.getSymbol());
         }
         return null;
     }

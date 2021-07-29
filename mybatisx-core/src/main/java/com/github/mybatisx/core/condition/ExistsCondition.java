@@ -43,6 +43,11 @@ public class ExistsCondition implements Criterion {
     }
 
     @Override
+    public Symbol getSymbol() {
+        return this.symbol;
+    }
+
+    @Override
     public String getSegment() {
         return this.slot.getSegment() + Constants.SPACE + this.symbol.getSegment() + Constants.SPACE +
             Constants.BRACKET_OPEN + this.parser.smartExistsParse(this.criteria.getSegment()) + Constants.BRACKET_CLOSE;

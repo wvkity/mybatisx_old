@@ -78,6 +78,7 @@ public abstract class AbstractTemplateExpression<E> extends AbstractExpression<E
         return pattern;
     }
 
+    @Override
     public Object getValue() {
         return value;
     }

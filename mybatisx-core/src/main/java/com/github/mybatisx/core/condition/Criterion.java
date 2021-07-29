@@ -15,6 +15,7 @@
  */
 package com.github.mybatisx.core.condition;
 
+import com.github.mybatisx.support.constant.Symbol;
 import com.github.mybatisx.support.fragment.Fragment;
 
 /**
@@ -23,4 +24,28 @@ import com.github.mybatisx.support.fragment.Fragment;
  * @since 1.0.0
  */
 public interface Criterion extends Fragment {
+
+    /**
+     * 获取条件符号类型
+     * @return 条件符号类型
+     */
+    default Symbol getSymbol() {
+        return null;
+    }
+
+    /**
+     * 获取字段名
+     * @return 字段名
+     */
+    default String getColumn() {
+        return null;
+    }
+
+    /**
+     * 获取原始值
+     * @return 原始值
+     */
+    default Object getOriginalValue() {
+        return null;
+    }
 }

@@ -60,6 +60,14 @@ public interface Expression<E> {
     String getAlias();
 
     /**
+     * 获取值
+     * @return 值
+     */
+    default Object getValue() {
+        return null;
+    }
+
+    /**
      * 设置表别名
      * @param alias 别名
      * @return {@link Expression}

@@ -29,6 +29,7 @@ public abstract class AbstractBasicExpression<E> extends AbstractExpression<E> {
      */
     protected Object value;
 
+    @Override
     public Object getValue() {
         return value;
     }

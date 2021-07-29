@@ -17,6 +17,7 @@ package com.github.mybatisx.core.condition;
 
 import com.github.mybatisx.Objects;
 import com.github.mybatisx.constant.Constants;
+import com.github.mybatisx.support.constant.Symbol;
 import com.github.mybatisx.support.criteria.Criteria;
 
 import java.util.Optional;
@@ -34,12 +35,21 @@ public class StandardCondition implements Criterion {
     protected final String alias;
     protected final String column;
     protected final String fragment;
+    protected final Symbol symbol;
+    protected final Object originalValue;
 
-    public StandardCondition(Criteria<?> criteria, String alias, String column, String fragment) {
+    public StandardCondition(Criteria<?> criteria, String alias, String column, String fragment, Symbol symbol) {
+        this(criteria, alias, column, fragment, symbol, null);
+    }
+
+    public StandardCondition(Criteria<?> criteria, String alias, String column, String fragment,
+                             Symbol symbol, Object originalValue) {
         this.criteria = criteria;
         this.alias = alias;
         this.column = column;
         this.fragment = fragment;
+        this.symbol = symbol;
+        this.originalValue = originalValue;
     }
 
     protected Optional<Criteria<?>> optional() {
@@ -48,6 +58,21 @@ public class StandardCondition implements Criterion {
 
     protected String getAlias() {
         return Objects.nonNull(this.alias) ? this.alias : this.optional().map(Criteria::as).orElse(Constants.EMPTY);
+    }
+
+    @Override
+    public Symbol getSymbol() {
+        return this.symbol;
+    }
+
+    @Override
+    public String getColumn() {
+        return this.column;
+    }
+
+    @Override
+    public Object getOriginalValue() {
+        return this.originalValue;
     }
 
     @Override

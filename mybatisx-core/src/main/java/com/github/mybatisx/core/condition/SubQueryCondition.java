@@ -62,6 +62,16 @@ public class SubQueryCondition implements Criterion {
     }
 
     @Override
+    public Symbol getSymbol() {
+        return this.symbol;
+    }
+
+    @Override
+    public String getColumn() {
+        return this.column;
+    }
+
+    @Override
     public String getSegment() {
         final StringBuilder builder = new StringBuilder(145);
         if (this.slot != null && this.slot != Slot.NONE) {

@@ -47,6 +47,7 @@ public abstract class AbstractLikeExpression<E> extends AbstractExpression<E> {
         return escape;
     }
 
+    @Override
     public Object getValue() {
         return value;
     }
