@@ -46,7 +46,9 @@ interface LambdaFunctionSelect<T, C extends LambdaFunctionSelect<T, C>> {
      * @param distinct 是否去重
      * @return {@code this}
      */
-    C count(final Property<T, ?> property, final String alias, final boolean distinct);
+    default C count(final Property<T, ?> property, final String alias, final boolean distinct) {
+        return this.count(property.toProp(), alias, distinct);
+    }
 
     /**
      * {@code Count}聚合函数
@@ -120,7 +122,9 @@ interface LambdaFunctionSelect<T, C extends LambdaFunctionSelect<T, C>> {
      * @param distinct 是否去重
      * @return {@code this}
      */
-    C sum(final Property<T, ?> property, final String alias, final Integer scale, final boolean distinct);
+    default C sum(final Property<T, ?> property, final String alias, final Integer scale, final boolean distinct) {
+        return this.sum(property.toProp(), alias, scale, distinct);
+    }
 
     /**
      * {@code Sum}聚合函数
@@ -226,7 +230,9 @@ interface LambdaFunctionSelect<T, C extends LambdaFunctionSelect<T, C>> {
      * @param distinct 是否去重
      * @return {@code this}
      */
-    C avg(final Property<T, ?> property, final String alias, final Integer scale, final boolean distinct);
+    default C avg(final Property<T, ?> property, final String alias, final Integer scale, final boolean distinct) {
+        return this.avg(property.toProp(), alias, scale, distinct);
+    }
 
     /**
      * {@code Avg}聚合函数
@@ -319,7 +325,9 @@ interface LambdaFunctionSelect<T, C extends LambdaFunctionSelect<T, C>> {
      * @param scale    保留小数位数
      * @return {@code this}
      */
-    C min(final Property<T, ?> property, final String alias, final Integer scale);
+    default C min(final Property<T, ?> property, final String alias, final Integer scale) {
+        return this.min(property.toProp(), alias, scale);
+    }
 
     /**
      * {@code Min}聚合函数
@@ -399,7 +407,9 @@ interface LambdaFunctionSelect<T, C extends LambdaFunctionSelect<T, C>> {
      * @param scale    保留小数位数
      * @return {@code this}
      */
-    C max(final Property<T, ?> property, final String alias, final Integer scale);
+    default C max(final Property<T, ?> property, final String alias, final Integer scale) {
+        return this.max(property.toProp(), alias, scale);
+    }
 
     /**
      * {@code Max}聚合函数
@@ -502,7 +512,10 @@ interface LambdaFunctionSelect<T, C extends LambdaFunctionSelect<T, C>> {
      * @param distinct    是否去重
      * @return {@code this}
      */
-    C func(final Property<T, ?> property, final String aliasPrefix, final Integer scale, final boolean distinct);
+    default C func(final Property<T, ?> property, final String aliasPrefix, final Integer scale,
+                   final boolean distinct) {
+        return this.func(property.toProp(), aliasPrefix, scale, distinct);
+    }
 
     /**
      * 所有聚合函数

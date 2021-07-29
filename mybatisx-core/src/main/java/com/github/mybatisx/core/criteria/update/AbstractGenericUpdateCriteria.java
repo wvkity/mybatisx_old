@@ -17,7 +17,6 @@ package com.github.mybatisx.core.criteria.update;
 
 import com.github.mybatisx.Objects;
 import com.github.mybatisx.core.criteria.support.AbstractGenericCriteria;
-import com.github.mybatisx.core.property.Property;
 
 import java.util.Locale;
 
@@ -29,16 +28,6 @@ import java.util.Locale;
 @SuppressWarnings("serial")
 public abstract class AbstractGenericUpdateCriteria<T, C extends GenericUpdateCriteria<T, C>> extends
     AbstractGenericCriteria<T, C> implements GenericUpdateCriteria<T, C> {
-
-    @Override
-    public <V> C set(Property<T, V> property, V value) {
-        return this.set(this.toProperty(property), value);
-    }
-
-    @Override
-    public <V> C setIfAbsent(Property<T, V> property, V value) {
-        return this.setIfAbsent(this.toProperty(property), value);
-    }
 
     @Override
     public C set(String property, Object value) {

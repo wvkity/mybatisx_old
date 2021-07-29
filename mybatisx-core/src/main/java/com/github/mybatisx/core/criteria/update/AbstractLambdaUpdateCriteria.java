@@ -19,7 +19,6 @@ import com.github.mybatisx.Objects;
 import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.core.criteria.support.AbstractLambdaCriteria;
 import com.github.mybatisx.core.inject.mapping.utils.Scripts;
-import com.github.mybatisx.core.property.Property;
 import com.github.mybatisx.support.constant.Slot;
 import com.github.mybatisx.support.constant.Symbol;
 
@@ -36,16 +35,6 @@ import java.util.stream.Collectors;
 @SuppressWarnings("serial")
 public abstract class AbstractLambdaUpdateCriteria<T, C extends LambdaUpdateCriteria<T, C>> extends
     AbstractLambdaCriteria<T, C> implements LambdaUpdateCriteria<T, C> {
-
-    @Override
-    public <V> C set(Property<T, V> property, V value) {
-        return this.set(this.toProperty(property), value);
-    }
-
-    @Override
-    public <V> C setIfAbsent(Property<T, V> property, V value) {
-        return this.setIfAbsent(this.toProperty(property), value);
-    }
 
     @Override
     public C set(String property, Object value) {

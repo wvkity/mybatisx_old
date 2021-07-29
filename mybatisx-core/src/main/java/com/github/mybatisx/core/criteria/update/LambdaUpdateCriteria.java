@@ -36,7 +36,9 @@ public interface LambdaUpdateCriteria<T, C extends LambdaUpdateCriteria<T, C>> e
      * @param <V>      值类型
      * @return {@code this}
      */
-    <V> C set(final Property<T, V> property, final V value);
+    default <V> C set(final Property<T, V> property, final V value) {
+        return this.set(property.toProp(), value);
+    }
 
     /**
      * 更新字段值
@@ -45,7 +47,9 @@ public interface LambdaUpdateCriteria<T, C extends LambdaUpdateCriteria<T, C>> e
      * @param <V>      值类型
      * @return {@code this}
      */
-    <V> C setIfAbsent(final Property<T, V> property, final V value);
+    default <V> C setIfAbsent(final Property<T, V> property, final V value) {
+        return this.setIfAbsent(property.toProp(), value);
+    }
 
     /**
      * 更新字段值

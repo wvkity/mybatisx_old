@@ -207,11 +207,6 @@ public abstract class AbstractGenericQueryCriteria<T, C extends GenericQueryCrit
     }
 
     @Override
-    public C select(Property<T, ?> property, String alias) {
-        return this.select(this.toProperty(property), alias);
-    }
-
-    @Override
     public C select(String property, String alias) {
         final Column column;
         if (Objects.nonNull((column = this.toColumn(property)))) {
@@ -264,22 +259,12 @@ public abstract class AbstractGenericQueryCriteria<T, C extends GenericQueryCrit
     }
 
     @Override
-    public C count(Property<T, ?> property, String alias, boolean distinct) {
-        return this.count(this.toProperty(property), alias, distinct);
-    }
-
-    @Override
     public C count(String property, String alias, boolean distinct) {
         final Column column = this.toColumn(property);
         if (Objects.nonNull(column)) {
             this.function(new Count(this, column.getColumn(), alias, distinct));
         }
         return this.self();
-    }
-
-    @Override
-    public C sum(Property<T, ?> property, String alias, Integer scale, boolean distinct) {
-        return this.sum(this.toProperty(property), alias, scale, distinct);
     }
 
     @Override
@@ -292,11 +277,6 @@ public abstract class AbstractGenericQueryCriteria<T, C extends GenericQueryCrit
     }
 
     @Override
-    public C avg(Property<T, ?> property, String alias, Integer scale, boolean distinct) {
-        return this.avg(this.toProperty(property), alias, scale, distinct);
-    }
-
-    @Override
     public C avg(String property, String alias, Integer scale, boolean distinct) {
         final Column column = this.toColumn(property);
         if (Objects.nonNull(column)) {
@@ -306,22 +286,12 @@ public abstract class AbstractGenericQueryCriteria<T, C extends GenericQueryCrit
     }
 
     @Override
-    public C min(Property<T, ?> property, String alias, Integer scale) {
-        return this.min(this.toProperty(property), alias, scale);
-    }
-
-    @Override
     public C min(String property, String alias, Integer scale) {
         final Column column = this.toColumn(property);
         if (Objects.nonNull(column)) {
             this.function(new Min(this, column.getColumn(), alias, scale));
         }
         return this.self();
-    }
-
-    @Override
-    public C max(Property<T, ?> property, String alias, Integer scale) {
-        return this.max(this.toProperty(property), alias, scale);
     }
 
     @Override
@@ -414,11 +384,6 @@ public abstract class AbstractGenericQueryCriteria<T, C extends GenericQueryCrit
     }
 
     @Override
-    public C func(Property<T, ?> property, String aliasPrefix, Integer scale, boolean distinct) {
-        return this.func(this.toProperty(property), aliasPrefix, scale, distinct);
-    }
-
-    @Override
     public C func(String property, String aliasPrefix, Integer scale, boolean distinct) {
         Optional.ofNullable(this.toColumn(property)).ifPresent(it ->
             this.genFunctions(this, null, it.getColumn(), aliasPrefix, scale, distinct).stream()
@@ -463,11 +428,6 @@ public abstract class AbstractGenericQueryCriteria<T, C extends GenericQueryCrit
     // region Group by methods
 
     @Override
-    public C group(Property<T, ?> property) {
-        return this.group(this.toProperty(property));
-    }
-
-    @Override
     public C group(String property) {
         final Column column = this.toColumn(property);
         if (Objects.nonNull(column)) {
@@ -506,11 +466,6 @@ public abstract class AbstractGenericQueryCriteria<T, C extends GenericQueryCrit
     // region Order by methods
 
     @Override
-    public C asc(Property<T, ?> property) {
-        return this.asc(this.toProperty(property));
-    }
-
-    @Override
     public C asc(String property) {
         final Column column = this.toColumn(property);
         if (Objects.nonNull(column)) {
@@ -532,11 +487,6 @@ public abstract class AbstractGenericQueryCriteria<T, C extends GenericQueryCrit
     @Override
     public C funcAsc(List<String> funcAliases) {
         return this.order(FuncOrder.asc(this.genFunctions(funcAliases)));
-    }
-
-    @Override
-    public C desc(Property<T, ?> property) {
-        return this.desc(this.toProperty(property));
     }
 
     @Override

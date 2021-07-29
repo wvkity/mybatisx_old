@@ -47,7 +47,9 @@ public interface LambdaQueryWrapper<T, C extends LambdaQueryWrapper<T, C>> exten
      * @param property Lambda属性
      * @return {@code this}
      */
-    C group(final Property<T, ?> property);
+    default C group(final Property<T, ?> property) {
+        return this.group(property.toProp());
+    }
 
     /**
      * 分组
@@ -81,7 +83,9 @@ public interface LambdaQueryWrapper<T, C extends LambdaQueryWrapper<T, C>> exten
      * @param property Lambda属性
      * @return {@code this}
      */
-    C asc(final Property<T, ?> property);
+    default C asc(final Property<T, ?> property) {
+        return this.asc(property.toProp());
+    }
 
     /**
      * 升序
@@ -111,7 +115,9 @@ public interface LambdaQueryWrapper<T, C extends LambdaQueryWrapper<T, C>> exten
      * @param property Lambda属性
      * @return {@code this}
      */
-    C desc(final Property<T, ?> property);
+    default C desc(final Property<T, ?> property) {
+        return this.desc(property.toProp());
+    }
 
     /**
      * 降序

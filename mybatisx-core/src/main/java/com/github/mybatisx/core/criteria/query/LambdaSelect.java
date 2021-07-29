@@ -53,7 +53,9 @@ interface LambdaSelect<T, C extends LambdaSelect<T, C>> extends Criteria<T> {
      * @param alias    别名
      * @return {@code this}
      */
-    C select(final Property<T, ?> property, final String alias);
+    default C select(final Property<T, ?> property, final String alias) {
+        return this.select(property.toProp(), alias);
+    }
 
     /**
      * 查询字段
@@ -184,7 +186,9 @@ interface LambdaSelect<T, C extends LambdaSelect<T, C>> extends Criteria<T> {
      * @param property 属性
      * @return {@code this}
      */
-    C ignore(final Property<T, ?> property);
+    default C ignore(final Property<T, ?> property) {
+        return this.ignore(property.toProp());
+    }
 
     /**
      * 忽略查询字段
