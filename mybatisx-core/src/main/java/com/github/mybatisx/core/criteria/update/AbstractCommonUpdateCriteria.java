@@ -44,6 +44,17 @@ public abstract class AbstractCommonUpdateCriteria<T, C extends CommonUpdateCrit
     }
 
     @Override
+    public Object getVersionUpdateValue() {
+        return this.optimisticLockUpdateValue();
+    }
+
+    @Override
+    public C version(Object value) {
+        this.optimisticLockColumn().ifPresent(it -> this.setOfUpdate(it, value));
+        return this.self();
+    }
+
+    @Override
     public String getUpdateSegment() {
         return this.intactUpdateString();
     }

@@ -98,6 +98,13 @@ public interface ExtCriteria<T> extends Criteria<T> {
         return null;
     }
 
+
+    /**
+     * 获取乐观锁条件值
+     * @return 值
+     */
+    Object getVersionConditionValue();
+
     /**
      * 转换成抽象扩展条件
      * @return {@link AbstractExtCriteria}

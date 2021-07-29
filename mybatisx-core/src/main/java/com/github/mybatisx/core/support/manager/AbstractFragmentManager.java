@@ -15,6 +15,7 @@
  */
 package com.github.mybatisx.core.support.manager;
 
+import com.github.mybatisx.basic.metadata.Column;
 import com.github.mybatisx.core.condition.Criterion;
 import com.github.mybatisx.support.criteria.Criteria;
 
@@ -80,4 +81,10 @@ public abstract class AbstractFragmentManager<C extends Criteria<?>> implements 
     public String getSegment() {
         return this.getWhereString();
     }
+
+    @Override
+    public Object getVersionValue(Column column) {
+        return this.whereStorage.getVersionValue(column);
+    }
+
 }

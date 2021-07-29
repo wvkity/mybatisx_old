@@ -56,6 +56,17 @@ public abstract class AbstractGenericUpdateCriteria<T, C extends GenericUpdateCr
     }
 
     @Override
+    public Object getVersionUpdateValue() {
+        return this.optimisticLockUpdateValue();
+    }
+
+    @Override
+    public C version(Object value) {
+        this.optimisticLockColumn().ifPresent(it -> this.setOfUpdate(it, value));
+        return this.self();
+    }
+
+    @Override
     public String getUpdateSegment() {
         return this.intactUpdateString();
     }

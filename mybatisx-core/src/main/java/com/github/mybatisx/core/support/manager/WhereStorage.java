@@ -16,9 +16,12 @@
 package com.github.mybatisx.core.support.manager;
 
 import com.github.mybatisx.Objects;
+import com.github.mybatisx.basic.metadata.Column;
 import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.core.condition.Criterion;
+import com.github.mybatisx.core.condition.StandardCondition;
 import com.github.mybatisx.immutable.ImmutableList;
+import com.github.mybatisx.support.constant.Symbol;
 import com.github.mybatisx.support.fragment.AbstractFragmentList;
 
 import java.util.ArrayList;
@@ -60,4 +63,24 @@ public class WhereStorage extends AbstractFragmentList<Criterion> {
         }
         return Constants.EMPTY;
     }
+
+    /**
+     * 获取乐观锁条件值
+     * @param column {@link Column}
+     * @return 乐观锁条件值
+     */
+    public Object getVersionValue(final Column column) {
+        if (Objects.nonNull(column) && !this.isEmpty()) {
+            for (Criterion it: this.fragments) {
+                if (Symbol.EQ.equals(it.getSymbol()) && it instanceof StandardCondition) {
+                    final String target = it.getColumn();
+                    if (column.getColumn().equalsIgnoreCase(target)) {
+                        return it.getOriginalValue();
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
 }

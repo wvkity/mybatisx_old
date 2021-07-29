@@ -50,6 +50,17 @@ public abstract class AbstractLambdaUpdateCriteria<T, C extends LambdaUpdateCrit
     }
 
     @Override
+    public Object getVersionUpdateValue() {
+        return this.optimisticLockUpdateValue();
+    }
+
+    @Override
+    public C version(Object value) {
+        this.optimisticLockColumn().ifPresent(it -> this.setOfUpdate(it, value));
+        return this.self();
+    }
+
+    @Override
     public String getUpdateSegment() {
         if (Objects.isNotEmpty(this.updateColumnsOfWrap)) {
             return this.updateColumnsOfWrap.entrySet().stream().map(it -> Scripts.convertToConditionArg(Symbol.EQ,

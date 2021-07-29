@@ -16,6 +16,7 @@
 package com.github.mybatisx.core.support.manager;
 
 import com.github.mybatisx.Objects;
+import com.github.mybatisx.basic.metadata.Column;
 import com.github.mybatisx.core.condition.Criterion;
 import com.github.mybatisx.support.criteria.Criteria;
 import com.github.mybatisx.support.fragment.Fragment;
@@ -80,4 +81,12 @@ public interface FragmentManager<C extends Criteria<?>> extends Fragment {
      * @return SQL条件语句
      */
     String getWhereString();
+
+    /**
+     * 获取乐观锁条件值
+     * @param column {@link Column}
+     * @return 乐观锁条件值
+     */
+    Object getVersionValue(final Column column);
+
 }

@@ -55,6 +55,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -454,6 +455,14 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
     }
 
     /**
+     * 获取乐观锁字段映射对象
+     * @return {@link Column}
+     */
+    protected Optional<Column> optimisticLockColumn() {
+        return Optional.ofNullable(TableHelper.getTable(this.entityClass).getOptimisticLockColumn());
+    }
+
+    /**
      * 生成聚合函数别名
      * @param func        {@link Func}
      * @param column      字段名称
@@ -506,6 +515,34 @@ public abstract class AbstractExtCriteria<T> implements ExtCriteria<T> {
             return it;
         }
         return new ArrayList<>(0);
+    }
+
+    /**
+     * 获取乐观锁更新值
+     * @return 乐观锁更新值
+     */
+    protected Object optimisticLockUpdateValue() {
+        final Optional<Column> optional = this.optimisticLockColumn();
+        if (optional.isPresent() && Objects.isNotEmpty(this.updateColumns)) {
+            final Column it = optional.get();
+            final String column = it.getColumn();
+            if (this.updateColumns.contains(column.toUpperCase(Locale.ENGLISH))) {
+                if (this.updateColumnsOfWrap.containsKey(it)) {
+                    return this.updateColumnsOfWrap.get(it);
+                }
+                for (Map.Entry<String, Object> entry : this.updateColumnsOfOrg.entrySet()) {
+                    if (entry.getKey().equalsIgnoreCase(column)) {
+                        return entry.getValue();
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Object getVersionConditionValue() {
+        return this.fragmentManager.getVersionValue(this.optimisticLockColumn().orElse(null));
     }
 
     @Override
