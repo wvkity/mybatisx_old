@@ -35,7 +35,7 @@ import java.util.function.Consumer;
  * @created 2021-05-11
  * @since 1.0.0
  */
-public interface QueryWrapper<T, C extends QueryWrapper<T, C>> extends CriteriaWrapper<T, C>,
+public interface QCriteria<T, C extends QCriteria<T, C>> extends CriteriaWrapper<T, C>,
     EmbedResult, RangeFetch {
 
     // region Extension methods

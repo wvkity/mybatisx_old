@@ -25,7 +25,7 @@ import com.github.mybatisx.core.criteria.CriteriaWrapper;
  * @created 2021-05-18
  * @since 1.0.0
  */
-public interface UpdateWrapper<T, C extends UpdateWrapper<T, C>> extends CriteriaWrapper<T, C> {
+public interface UCriteria<T, C extends UCriteria<T, C>> extends CriteriaWrapper<T, C> {
 
     /**
      * 获取更新语句片段

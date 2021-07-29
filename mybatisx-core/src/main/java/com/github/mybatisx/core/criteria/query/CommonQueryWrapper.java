@@ -30,7 +30,7 @@ import java.util.List;
  * @created 2021-05-10
  * @since 1.0.0
  */
-public interface CommonQueryWrapper<T, C extends CommonQueryWrapper<T, C>> extends QueryWrapper<T, C>,
+public interface CommonQueryWrapper<T, C extends CommonQueryWrapper<T, C>> extends QCriteria<T, C>,
     CommonSelect<T, C>, OtherSelect<T, C>, CommonFunctionSelect<T, C>, MixinWrapper<T, C>, HavingWrapper<T, C> {
 
     // region Group by methods

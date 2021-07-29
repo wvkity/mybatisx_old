@@ -23,5 +23,5 @@ package com.github.mybatisx.core.criteria.query;
  * @created 2021-05-19
  * @since 1.0.0
  */
-public interface SubQueryWrapper<T, C extends SubQueryWrapper<T, C>> extends QueryWrapper<T, C> {
+public interface SubQueryWrapper<T, C extends SubQueryWrapper<T, C>> extends QCriteria<T, C> {
 }

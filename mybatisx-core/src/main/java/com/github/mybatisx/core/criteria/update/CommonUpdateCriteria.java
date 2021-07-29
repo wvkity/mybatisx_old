@@ -28,7 +28,7 @@ import java.util.Map;
  * @created 2021-05-18
  * @since 1.0.0
  */
-public interface CommonUpdateCriteria<T, C extends CommonUpdateCriteria<T, C>> extends UpdateWrapper<T, C>,
+public interface CommonUpdateCriteria<T, C extends CommonUpdateCriteria<T, C>> extends UCriteria<T, C>,
     CommonCriteriaWrapper<T, C> {
 
     /**

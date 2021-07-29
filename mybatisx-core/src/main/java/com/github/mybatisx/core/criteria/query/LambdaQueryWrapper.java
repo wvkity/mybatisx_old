@@ -29,7 +29,7 @@ import java.util.List;
  * @created 2021-05-11
  * @since 1.0.0
  */
-public interface LambdaQueryWrapper<T, C extends LambdaQueryWrapper<T, C>> extends QueryWrapper<T, C>,
+public interface LambdaQueryWrapper<T, C extends LambdaQueryWrapper<T, C>> extends QCriteria<T, C>,
     LambdaSelect<T, C>, OtherSelect<T, C>, LambdaFunctionSelect<T, C>, MixinWrapper<T, C>, HavingWrapper<T, C> {
 
     /**

@@ -26,7 +26,7 @@ import com.github.mybatisx.core.property.Property;
  * @created 2021-05-18
  * @since 1.0.0
  */
-public interface LambdaUpdateCriteria<T, C extends LambdaUpdateCriteria<T, C>> extends UpdateWrapper<T, C>,
+public interface LambdaUpdateCriteria<T, C extends LambdaUpdateCriteria<T, C>> extends UCriteria<T, C>,
     LambdaCriteriaWrapper<T, C> {
 
     /**

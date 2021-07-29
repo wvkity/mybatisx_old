@@ -25,7 +25,7 @@ import com.github.mybatisx.core.criteria.ExtCriteria;
  * @created 2021-05-19
  * @since 1.0.0
  */
-public interface ForeignQueryWrapper<T, C extends ForeignQueryWrapper<T, C>> extends QueryWrapper<T, C> {
+public interface ForeignQueryWrapper<T, C extends ForeignQueryWrapper<T, C>> extends QCriteria<T, C> {
 
     /**
      * 获取主条件对象
@@ -54,7 +54,7 @@ public interface ForeignQueryWrapper<T, C extends ForeignQueryWrapper<T, C>> ext
      */
     @SuppressWarnings("unchecked")
     default C join() {
-        ((QueryWrapper<T, C>) this.getMaster()).foreign(this);
+        ((QCriteria<T, C>) this.getMaster()).foreign(this);
         return (C) this;
     }
 
