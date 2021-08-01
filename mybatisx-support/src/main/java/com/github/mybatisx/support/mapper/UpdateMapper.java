@@ -29,20 +29,20 @@ import org.apache.ibatis.annotations.Param;
 public interface UpdateMapper<T> {
 
     /**
-     * 更新记录
-     * <p>排除逻辑删除标识、逻辑删除审计标识、保存审计标识、多租户标识等字段</p>
+     * 根据ID、乐观锁、逻辑删除标识[+多租户标识]更新记录
+     * <p>排除逻辑删除标识、保存审计标识、多租户标识等字段
      * @param entity 待更新记录
      * @return 受影响行数
      */
     int update(@Param(Constants.PARAM_ENTITY) final T entity);
 
     /**
-     * 更新记录(排除空值)
-     * <p>排除逻辑删除标识、逻辑删除审计标识、保存审计标识、多租户标识等字段</p>
+     * 根据ID、乐观锁、逻辑删除标识[+多租户标识]更新记录
+     * <p>排除逻辑删除标识、保存审计标识、多租户标识等字段
      * @param entity 待更新记录
      * @return 受影响行数
      */
-    int updateWithNonNull(@Param(Constants.PARAM_ENTITY) final T entity);
+    int updateWithoutNull(@Param(Constants.PARAM_ENTITY) final T entity);
 
     /**
      * 更新记录
@@ -50,4 +50,38 @@ public interface UpdateMapper<T> {
      * @return 受影响行数
      */
     int updateByCriteria(@Param(Constants.PARAM_CRITERIA) final Criteria<T> criteria);
+
+    /**
+     * 更新记录(排除空值)
+     * <p>排除逻辑删除标识、保存审计标识、多租户标识等字段
+     * @param entity   待更新记录
+     * @param criteria {@link Criteria}
+     * @return 受影响行数
+     */
+    int updateMixed(@Param(Constants.PARAM_ENTITY) final T entity,
+                    @Param(Constants.PARAM_CRITERIA) final Criteria<T> criteria);
+
+    /**
+     * 根据ID[+多租户标识]更新记录
+     * @param entity 待更新记录
+     * @return 受影响行数
+     */
+    int updateWithSpecial(@Param(Constants.PARAM_ENTITY) final T entity);
+
+    /**
+     * 根据ID[+多租户标识]更新记录(排除空值)
+     * @param entity 待更新记录
+     * @return 受影响行数
+     */
+    int updateWithSpecialExcNull(@Param(Constants.PARAM_ENTITY) final T entity);
+
+    /**
+     * 更新记录
+     * @param entity   待更新记录
+     * @param criteria {@link Criteria}
+     * @return 受影响行数
+     */
+    int updateMixedWithSpecial(@Param(Constants.PARAM_ENTITY) final T entity,
+                               @Param(Constants.PARAM_CRITERIA) final Criteria<T> criteria);
+
 }

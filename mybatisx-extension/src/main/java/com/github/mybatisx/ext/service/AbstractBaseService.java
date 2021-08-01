@@ -63,8 +63,8 @@ public abstract class AbstractBaseService<M extends BaseMapper<T, U, ID>, T, U, 
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public int saveWithNonNull(T entity) {
-        return this.mapper.insertWithNonNull(entity);
+    public int saveWithoutNull(T entity) {
+        return this.mapper.insertWithoutNull(entity);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -117,14 +117,38 @@ public abstract class AbstractBaseService<M extends BaseMapper<T, U, ID>, T, U, 
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public int updateWithNonNull(T entity) {
-        return this.mapper.updateWithNonNull(entity);
+    public int updateWithoutNull(T entity) {
+        return this.mapper.updateWithoutNull(entity);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public int update(Criteria<T> criteria) {
         return this.mapper.updateByCriteria(criteria);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public int updateMixed(T entity, Criteria<T> criteria) {
+        return this.mapper.updateMixed(entity, criteria);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public int updateWithSpecial(T entity) {
+        return this.mapper.updateWithSpecial(entity);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public int updateWithSpecialExcNull(T entity) {
+        return this.mapper.updateWithSpecialExcNull(entity);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public int updateMixedWithSpecial(T entity, Criteria<T> criteria) {
+        return this.mapper.updateMixedWithSpecial(entity, criteria);
     }
 
     @Override

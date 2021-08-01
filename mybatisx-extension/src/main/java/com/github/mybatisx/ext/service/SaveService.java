@@ -37,5 +37,5 @@ public interface SaveService<T> {
      * @param entity 待保存记录
      * @return 受影响行数
      */
-    int saveWithNonNull(final T entity);
+    int saveWithoutNull(final T entity);
 }

@@ -26,14 +26,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * {@code insertWithNonNull}方法SQL供应器
+ * {@code insertWithoutNull}方法SQL供应器
  * @author wvkity
  * @created 2020-11-08
  * @since 1.0.0
  */
-public class InsertWithNonNullSupplier extends AbstractSupplier {
+public class InsertWithoutNullSupplier extends AbstractSupplier {
 
-    public InsertWithNonNullSupplier(Table table, MyBatisGlobalConfiguration configuration) {
+    public InsertWithoutNullSupplier(Table table, MyBatisGlobalConfiguration configuration) {
         super(table, configuration);
     }
 

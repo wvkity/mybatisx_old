@@ -15,14 +15,14 @@
  */
 package com.github.mybatisx.core.inject.method.invoke;
 
-import com.github.mybatisx.core.inject.mapping.sql.insert.InsertWithNonNullSupplier;
+import com.github.mybatisx.core.inject.mapping.sql.insert.InsertWithoutNullSupplier;
 import com.github.mybatisx.core.inject.method.support.AbstractInsertMethod;
 
 /**
- * {@code insertWithNonNull}方法映射
+ * {@code insertWithoutNull}方法映射
  * @author wvkity
  * @created 2020-11-08
  * @since 1.0.0
  */
-public class InsertWithNonNull extends AbstractInsertMethod<InsertWithNonNullSupplier> {
+public class InsertWithoutNull extends AbstractInsertMethod<InsertWithoutNullSupplier> {
 }
