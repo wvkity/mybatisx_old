@@ -17,52 +17,43 @@ package com.github.mybatisx.core.inject.mapping.sql.update;
 
 import com.github.mybatisx.basic.metadata.Column;
 import com.github.mybatisx.basic.metadata.Table;
-import com.github.mybatisx.support.config.MyBatisGlobalConfiguration;
-import com.github.mybatisx.support.constant.Slot;
-import com.github.mybatisx.support.constant.Operation;
-import com.github.mybatisx.support.constant.Symbol;
 import com.github.mybatisx.core.inject.mapping.sql.AbstractSupplier;
 import com.github.mybatisx.core.inject.mapping.utils.Scripts;
+import com.github.mybatisx.support.config.MyBatisGlobalConfiguration;
+import com.github.mybatisx.support.constant.Operation;
+import com.github.mybatisx.support.constant.Slot;
+import com.github.mybatisx.support.constant.Symbol;
 
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * {@code updateWithNonNull}方法SQL提供器
+ * {@code updateWithoutNull}方法SQL提供器
  * @author wvkity
  * @created 2020-10-29
  * @since 1.0.0
  */
-public class UpdateWithNonNullSupplier extends AbstractSupplier {
+public class UpdateWithoutNullSupplier extends AbstractSupplier {
 
-    public UpdateWithNonNullSupplier(Table table, MyBatisGlobalConfiguration configuration) {
+    public UpdateWithoutNullSupplier(Table table, MyBatisGlobalConfiguration configuration) {
         super(table, configuration);
     }
 
     @Override
     public String get() {
-        final Set<Column> columns = table.updateColumnsNonWithSpecial();
+        final Set<Column> columns = table.updateColumnsWithoutSpecial();
         final StringBuilder script = new StringBuilder(100);
         script.append(columns.stream().map(it -> Scripts.convertToIfTag(PARAM_ENTITY, Symbol.EQ,
             Operation.REPLACE, NULL, it, COMMA_SPACE, false, true, Slot.NONE)).collect(Collectors.joining(NEW_LINE)));
         // 乐观锁
-        final Optional<Column> optional = Optional.ofNullable(table.getOptimisticLockColumn());
-        optional.map(this::convertToOptimisticLockIfTag).ifPresent(it -> script.append(NEW_LINE).append(it));
-        final StringBuilder condition = new StringBuilder(80);
-        if (this.table.isOnlyOneId()) {
-            final Column idColumn = this.table.getIdColumn();
-            condition.append(SPACE_AND_SPACE).append(Scripts.convertToPartArg(PARAM_ENTITY, Operation.REPLACE, idColumn));
-        } else {
-            this.table.getIdColumns().forEach(it ->
-                condition.append(SPACE_AND_SPACE).append(Scripts.convertToPartArg(PARAM_ENTITY, Operation.REPLACE, it)));
-        }
+        this.table.optimisticLockOptional().map(this::convertToOptimisticLockIfTag).ifPresent(it ->
+            script.append(NEW_LINE).append(it));
+        // 主键
+        final StringBuilder condition = this.addPrimaryKeyCondition();
         // 乐观锁
-        optional.ifPresent(it ->
-            condition.append(SPACE_AND_SPACE).append(Scripts.convertToPartArg(PARAM_ENTITY, Operation.REPLACE, it)));
+        this.addOptimisticLockCondition(condition);
         // 租户
-        Optional.ofNullable(this.table.getMultiTenantColumn()).ifPresent(it ->
-            condition.append(SPACE_AND_SPACE).append(Scripts.convertToPartArg(PARAM_ENTITY, Operation.REPLACE, it)));
+        this.addMultiTenantCondition(condition);
         return update(Scripts.convertToTrimTag(script.toString(), "SET", null, null, COMMA_SPACE),
             Scripts.convertToTrimTag(condition.toString(), "WHERE", "AND |OR ", NULL, NULL));
     }

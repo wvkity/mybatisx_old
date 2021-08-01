@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,51 +17,38 @@ package com.github.mybatisx.core.inject.mapping.sql.update;
 
 import com.github.mybatisx.basic.metadata.Column;
 import com.github.mybatisx.basic.metadata.Table;
-import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.core.inject.mapping.sql.AbstractSupplier;
 import com.github.mybatisx.core.inject.mapping.utils.Scripts;
 import com.github.mybatisx.support.config.MyBatisGlobalConfiguration;
 import com.github.mybatisx.support.constant.Operation;
+import com.github.mybatisx.support.constant.Slot;
+import com.github.mybatisx.support.constant.Symbol;
 
-import java.util.Iterator;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
- * {@code update}方法SQL提供器
+ * {@code updateWithSpecialExcNull}方法SQL提供器
  * @author wvkity
- * @created 2020-10-22
+ * @created 2021-08-02
  * @since 1.0.0
  */
-public class UpdateSupplier extends AbstractSupplier {
+public class UpdateWithSpecialExcNullSupplier extends AbstractSupplier {
 
-    public UpdateSupplier(Table table, MyBatisGlobalConfiguration configuration) {
+    public UpdateWithSpecialExcNullSupplier(Table table, MyBatisGlobalConfiguration configuration) {
         super(table, configuration);
     }
 
     @Override
     public String get() {
-        final Set<Column> columns = table.updateColumnsWithoutSpecial();
-        final StringBuilder script = new StringBuilder(100);
-        final Iterator<Column> iterator = columns.iterator();
-        boolean hasNext = iterator.hasNext();
-        while (hasNext) {
-            final Column it = iterator.next();
-            script.append(SPACE).append(Scripts.convertToPartArg(Constants.PARAM_ENTITY, Operation.REPLACE, it))
-                .append(COMMA);
-            hasNext = iterator.hasNext();
-            if (hasNext) {
-                script.append(NEW_LINE);
-            }
-        }
-        table.optimisticLockOptional().map(this::convertToOptimisticLockIfTag).ifPresent(it ->
-            script.append(NEW_LINE).append(it));
+        final Set<Column> columns = table.filtrate(it -> it.isUpdatable() && !it.isMultiTenant());
         // 主键
         final StringBuilder condition = this.addPrimaryKeyCondition();
-        // 乐观锁
-        this.addOptimisticLockCondition(condition);
         // 租户
         this.addMultiTenantCondition(condition);
-        return update(Scripts.convertToTrimTag(script.toString(), "SET", null, null, COMMA_SPACE),
+        String script = columns.stream().map(it -> Scripts.convertToIfTag(PARAM_ENTITY, Symbol.EQ,
+            Operation.REPLACE, NULL, it, COMMA_SPACE, false, true, Slot.NONE)).collect(Collectors.joining(NEW_LINE));
+        return update(Scripts.convertToTrimTag(script, "SET", null, null, COMMA_SPACE),
             Scripts.convertToTrimTag(condition.toString(), "WHERE", "AND |OR ", NULL, NULL));
     }
 }

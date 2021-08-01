@@ -25,7 +25,7 @@ import com.github.mybatisx.core.inject.method.invoke.Exists;
 import com.github.mybatisx.core.inject.method.invoke.ExistsById;
 import com.github.mybatisx.core.inject.method.invoke.Insert;
 import com.github.mybatisx.core.inject.method.invoke.InsertBatch;
-import com.github.mybatisx.core.inject.method.invoke.InsertWithNonNull;
+import com.github.mybatisx.core.inject.method.invoke.InsertWithoutNull;
 import com.github.mybatisx.core.inject.method.invoke.SelectAll;
 import com.github.mybatisx.core.inject.method.invoke.SelectCount;
 import com.github.mybatisx.core.inject.method.invoke.SelectListByCriteria;
@@ -48,7 +48,11 @@ import com.github.mybatisx.core.inject.method.invoke.SelectPageableMapWithEmbed;
 import com.github.mybatisx.core.inject.method.invoke.SelectTotal;
 import com.github.mybatisx.core.inject.method.invoke.Update;
 import com.github.mybatisx.core.inject.method.invoke.UpdateByCriteria;
-import com.github.mybatisx.core.inject.method.invoke.UpdateWithNonNull;
+import com.github.mybatisx.core.inject.method.invoke.UpdateMixed;
+import com.github.mybatisx.core.inject.method.invoke.UpdateMixedWithSpecial;
+import com.github.mybatisx.core.inject.method.invoke.UpdateWithSpecialExcNull;
+import com.github.mybatisx.core.inject.method.invoke.UpdateWithoutNull;
+import com.github.mybatisx.core.inject.method.invoke.UpdateWithSpecial;
 import com.github.mybatisx.immutable.ImmutableSet;
 import com.github.mybatisx.support.config.MyBatisLocalConfigurationCache;
 import com.github.mybatisx.support.helper.TableHelper;
@@ -91,14 +95,18 @@ public abstract class AbstractInjector implements Injector {
         // insert
         MAPPED_METHOD_CACHE.put(InsertMapper.class, ImmutableSet.construct(
             new Insert(),
-            new InsertWithNonNull(),
-            new InsertBatch()
+            new InsertBatch(),
+            new InsertWithoutNull()
         ));
         // update
         MAPPED_METHOD_CACHE.put(UpdateMapper.class, ImmutableSet.construct(
             new Update(),
-            new UpdateWithNonNull(),
-            new UpdateByCriteria()
+            new UpdateByCriteria(),
+            new UpdateMixed(),
+            new UpdateMixedWithSpecial(),
+            new UpdateWithoutNull(),
+            new UpdateWithSpecial(),
+            new UpdateWithSpecialExcNull()
         ));
         // delete
         MAPPED_METHOD_CACHE.put(DeleteMapper.class, ImmutableSet.construct(

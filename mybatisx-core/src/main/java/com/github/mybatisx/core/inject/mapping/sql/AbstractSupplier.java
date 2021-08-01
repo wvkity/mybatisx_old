@@ -21,10 +21,13 @@ import com.github.mybatisx.basic.metadata.Table;
 import com.github.mybatisx.constant.Constants;
 import com.github.mybatisx.core.inject.mapping.utils.Scripts;
 import com.github.mybatisx.support.config.MyBatisGlobalConfiguration;
+import com.github.mybatisx.support.constant.Operation;
 import com.github.mybatisx.support.criteria.Criteria;
 import com.github.mybatisx.support.inject.mapping.sql.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
 
 /**
  * 抽象SQL语句供应器
@@ -121,6 +124,42 @@ public abstract class AbstractSupplier implements Supplier, Constants {
      */
     public String criteriaSelect() {
         return "${" + PARAM_CRITERIA + ".segment}";
+    }
+
+    /**
+     * 主键条件
+     * @return 条件
+     */
+    protected StringBuilder addPrimaryKeyCondition() {
+        final StringBuilder condition = new StringBuilder(120);
+        if (this.table.isOnlyOneId()) {
+            final Column idColumn = this.table.getIdColumn();
+            condition.append(SPACE_AND_SPACE).append(Scripts.convertToPartArg(PARAM_ENTITY, Operation.REPLACE,
+                idColumn));
+        } else {
+            this.table.getIdColumns().forEach(it ->
+                condition.append(SPACE_AND_SPACE).append(Scripts.convertToPartArg(PARAM_ENTITY, Operation.REPLACE,
+                    it)));
+        }
+        return condition;
+    }
+
+    /**
+     * 追加乐观锁条件
+     * @param condition 条件拼接
+     */
+    protected void addOptimisticLockCondition(final StringBuilder condition) {
+        this.table.optimisticLockOptional().ifPresent(it ->
+            condition.append(SPACE_AND_SPACE).append(Scripts.convertToPartArg(PARAM_ENTITY, Operation.REPLACE, it)));
+    }
+
+    /**
+     * 追加多租户条件
+     * @param condition 条件拼接
+     */
+    protected void addMultiTenantCondition(final StringBuilder condition) {
+        Optional.ofNullable(this.table.getMultiTenantColumn()).ifPresent(it ->
+            condition.append(SPACE_AND_SPACE).append(Scripts.convertToPartArg(PARAM_ENTITY, Operation.REPLACE, it)));
     }
 
     /**

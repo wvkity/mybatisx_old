@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, wvkity(wvkity@gmail.com).
+ * Copyright (c) 2020-2021, wvkity(wvkity@gmail.com).
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,15 +15,14 @@
  */
 package com.github.mybatisx.core.inject.method.invoke;
 
-import com.github.mybatisx.core.inject.mapping.sql.update.UpdateWithNonNullSupplier;
+import com.github.mybatisx.core.inject.mapping.sql.update.UpdateWithSpecialSupplier;
 import com.github.mybatisx.core.inject.method.support.AbstractUpdateMethod;
 
 /**
- * {@code updateWithNonNull}方法映射
+ * {@code updateWithSpecial}方法映射
  * @author wvkity
- * @created 2020-10-29
+ * @created 2021-07-30
  * @since 1.0.0
  */
-public class UpdateWithNonNull extends AbstractUpdateMethod<UpdateWithNonNullSupplier> {
-
+public class UpdateWithSpecial extends AbstractUpdateMethod<UpdateWithSpecialSupplier> {
 }
