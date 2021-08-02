@@ -171,7 +171,8 @@ public abstract class AbstractSupplier implements Supplier, Constants {
         Objects.isTrue(column.isVersion(), "The specified table field object is not an optimistic lock field. " +
             "Check the \"" + column.getProperty() + "\" attribute on the \"" + column.getEntity().getName() + "\" " +
             "entity class for the \"@Version\" annotation.");
-        final StringBuilder condition = new StringBuilder(30);
+        final StringBuilder condition = new StringBuilder(80);
+        condition.append("_parameter.containsKey('").append(PARAM_OPTIMISTIC_LOCK_KEY).append("') and ");
         condition.append(PARAM_OPTIMISTIC_LOCK_KEY).append(" != null");
         if (column.isCheckNotEmpty() && String.class.isAssignableFrom(column.getJavaType())) {
             condition.append(" and ").append(PARAM_OPTIMISTIC_LOCK_KEY).append(" != ''");

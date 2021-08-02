@@ -39,11 +39,14 @@ public class UpdateMixedSupplier extends AbstractCriteriaSupplier {
 
     @Override
     public String get() {
-        final String setBody =
-            this.table.filtrate(it -> it.isUpdatable() && !it.isLogicDelete() && !it.isMultiTenant()).stream().map(it ->
-            Scripts.convertToIfTag(PARAM_ENTITY, Symbol.EQ, Operation.REPLACE, NULL, it, COMMA_SPACE,
-                false, true, Slot.NONE)).collect(Collectors.joining(NEW_LINE));
-        return this.update(Scripts.convertToTrimTag(setBody, "SET", null, null, COMMA_SPACE),
+        final StringBuilder script = new StringBuilder(100);
+        script.append(table.updateColumnsWithoutSpecial().stream().map(it -> Scripts.convertToIfTag(PARAM_ENTITY,
+            Symbol.EQ, Operation.REPLACE, NULL, it, COMMA_SPACE, false, true, Slot.NONE))
+            .collect(Collectors.joining(NEW_LINE)));
+        // 乐观锁
+        this.table.optimisticLockOptional().map(this::convertToOptimisticLockIfTag).ifPresent(it ->
+            script.append(NEW_LINE).append(it));
+        return this.update(Scripts.convertToTrimTag(script.toString(), "SET", null, null, COMMA_SPACE),
             this.getUpdateCondition());
     }
 }
