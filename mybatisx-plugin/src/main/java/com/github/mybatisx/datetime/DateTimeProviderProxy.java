@@ -15,6 +15,7 @@
  */
 package com.github.mybatisx.datetime;
 
+import com.github.mybatisx.Objects;
 import com.github.mybatisx.datetime.provider.DateTimeProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,7 @@ import java.util.Optional;
 public class DateTimeProviderProxy implements InvocationHandler {
 
     private static final Logger log = LoggerFactory.getLogger(DateTimeProviderProxy.class);
+    private static final ThreadLocal<Object> THREAD_LOCAL = new ThreadLocal<>();
     private final DateTimeProvider<?> target;
 
     public DateTimeProviderProxy(DateTimeProvider<?> target) {
@@ -96,4 +98,39 @@ public class DateTimeProviderProxy implements InvocationHandler {
             return null;
         }
     }
+
+    /**
+     * 获取当前时间
+     * @param target 时间类
+     * @return 时间值
+     */
+    public static Object getNow(final Class<?> target) {
+        return Optional.ofNullable(DateTimeProviderProxy.create().target(target).build())
+            .map(DateTimeProvider::getNow).orElse(null);
+    }
+
+    /**
+     * 从{@link ThreadLocal}中获取时间
+     * @param target 时间类
+     * @return 时间值
+     */
+    public static Object get(final Class<?> target) {
+        Object value = THREAD_LOCAL.get();
+        if (Objects.nonNull(value)) {
+            return value;
+        }
+        value = getNow(target);
+        if (Objects.nonNull(value)) {
+            THREAD_LOCAL.set(value);
+        }
+        return value;
+    }
+
+    /**
+     * 移除{@link ThreadLocal}值
+     */
+    public static void remove() {
+        THREAD_LOCAL.remove();
+    }
+
 }
