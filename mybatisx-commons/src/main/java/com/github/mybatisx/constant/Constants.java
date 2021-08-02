@@ -282,11 +282,11 @@ public interface Constants {
     /**
      * 乐观锁审计值key
      */
-    String PARAM_OPTIMISTIC_LOCK_KEY = "optimistic_lock_auditing_value";
+    String PARAM_OPTIMISTIC_LOCK_KEY = "optimistic_lock_value";
     /**
      * 逻辑删除审计值key
      */
-    String PARAM_LOGICAL_DELETED_KEY = "logical_deleted_auditing_value";
+    String PARAM_LOGIC_DELETED_KEY = "logic_deleted_value";
     /**
      * 未定义
      */
