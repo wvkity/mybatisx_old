@@ -99,6 +99,12 @@ public abstract class AbstractCriteria<T, C extends CriteriaWrapper<T, C>> exten
         return this.self();
     }
 
+    @Override
+    public C setVersion(Object value) {
+        this.optimisticLockColumn().ifPresent(it -> this.setOfUpdate(it, value));
+        return this.self();
+    }
+
     /**
      * {@code Slot.AND}
      * @return {@code this}
