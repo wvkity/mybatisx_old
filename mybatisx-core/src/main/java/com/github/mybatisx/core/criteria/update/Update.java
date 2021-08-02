@@ -28,14 +28,14 @@ import java.util.function.Consumer;
  * @created 2021-05-18
  * @since 1.0.0
  */
-public class CommonUpdate<T> extends AbstractCommonUpdateCriteria<T, CommonUpdate<T>> {
+public class Update<T> extends AbstractCommonUpdateCriteria<T, Update<T>> {
 
     private static final long serialVersionUID = -1818263259702171624L;
 
-    private CommonUpdate() {
+    private Update() {
     }
 
-    public CommonUpdate(Class<T> entity) {
+    public Update(Class<T> entity) {
         this.entityClass = entity;
         this.initialize(null, Category.UPDATE);
         this.sqlManager = new DefaultUpdateSqlManager(this, this.parameterConverter, this.updateColumnsOfWrap,
@@ -43,31 +43,31 @@ public class CommonUpdate<T> extends AbstractCommonUpdateCriteria<T, CommonUpdat
     }
 
     @Override
-    protected CommonUpdate<T> newInstance() {
-        final CommonUpdate<T> it = new CommonUpdate<>();
+    protected Update<T> newInstance() {
+        final Update<T> it = new Update<>();
         it.depClone(this);
         return this;
     }
 
     /**
-     * 创建{@link CommonUpdate}
+     * 创建{@link Update}
      * @param entity 实体类
      * @param <T>    实体类型
-     * @return {@link CommonUpdate}
+     * @return {@link Update}
      */
-    public static <T> CommonUpdate<T> from(final Class<T> entity) {
+    public static <T> Update<T> from(final Class<T> entity) {
         return from(entity, null);
     }
 
     /**
-     * 创建{@link CommonUpdate}
+     * 创建{@link Update}
      * @param entity 实体类
      * @param action {@link Consumer}
      * @param <T>    实体类型
-     * @return {@link CommonUpdate}
+     * @return {@link Update}
      */
-    public static <T> CommonUpdate<T> from(final Class<T> entity, final Consumer<CommonUpdate<T>> action) {
-        final CommonUpdate<T> it = new CommonUpdate<>(entity);
+    public static <T> Update<T> from(final Class<T> entity, final Consumer<Update<T>> action) {
+        final Update<T> it = new Update<>(entity);
         if (Objects.nonNull(action)) {
             action.accept(it);
         }
