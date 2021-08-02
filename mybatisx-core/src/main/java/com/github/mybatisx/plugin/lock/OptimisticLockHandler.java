@@ -13,13 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.github.mybatisx.plugin.locker;
+package com.github.mybatisx.plugin.lock;
+
+import com.github.mybatisx.plugin.handler.Handler;
 
 /**
- * 乐观锁拦截器
+ * 乐观锁拦截处理器
  * @author wvkity
  * @created 2021-03-27
  * @since 1.0.0
  */
-public class OptimisticLockerInterceptor {
+public interface OptimisticLockHandler extends Handler {
 }

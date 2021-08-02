@@ -27,6 +27,17 @@
             "name": "github.mybatisx.plugin.sys.properties",
             "sourceMethod": "getProperties()",
             "type": "java.util.Properties"
+        },
+        {
+            "sourceType": "com.github.mybatisx.spring.boot.lock.autoconfigure.MyBatisOptimisticLockProperties",
+            "name": "github.mybatisx.plugin.lock",
+            "type": "com.github.mybatisx.spring.boot.lock.autoconfigure.MyBatisOptimisticLockProperties"
+        },
+        {
+            "sourceType": "com.github.mybatisx.spring.boot.lock.autoconfigure.MyBatisOptimisticLockProperties",
+            "name": "github.mybatisx.plugin.lock.properties",
+            "sourceMethod": "getProperties()",
+            "type": "java.util.Properties"
         }
     ]
 }
