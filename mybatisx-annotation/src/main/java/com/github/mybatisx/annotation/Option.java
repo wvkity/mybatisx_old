@@ -30,9 +30,9 @@ public enum Option {
     /**
      * 忽略
      */
-    DISABLE,
+    IGNORE,
     /**
-     * 启用
+     * 需要
      */
-    ENABLE
+    REQUIRE
 }
