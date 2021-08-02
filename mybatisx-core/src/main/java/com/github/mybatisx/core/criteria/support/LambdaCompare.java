@@ -85,7 +85,6 @@ interface LambdaCompare<T, C extends LambdaCompare<T, C>> extends SlotSymbol<T, 
      * @return {@code this}
      */
     default <V> C eq(final Property<T, V> property, final V value) {
-        System.out.println("property: " + property.toProp());
         return this.eq(this.getSlot(), property, value);
     }
 
