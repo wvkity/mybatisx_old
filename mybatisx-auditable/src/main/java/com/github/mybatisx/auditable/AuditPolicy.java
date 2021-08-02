@@ -39,7 +39,7 @@ public enum AuditPolicy {
     /**
      * 保存
      */
-    Created(Created.class),
+    CREATED(Created.class),
     /**
      * 更新
      */
@@ -80,7 +80,7 @@ public enum AuditPolicy {
         if (policy >= 0) {
             switch (policy) {
                 case 0:
-                    return Created;
+                    return CREATED;
                 case 1:
                     return MODIFIED;
                 case 2:

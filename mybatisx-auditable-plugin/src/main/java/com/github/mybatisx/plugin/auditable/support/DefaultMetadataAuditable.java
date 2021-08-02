@@ -19,10 +19,7 @@ import com.github.mybatisx.Objects;
 import com.github.mybatisx.auditable.AuditType;
 import com.github.mybatisx.auditable.PropertyWrapper;
 import com.github.mybatisx.datetime.DateTimeProviderProxy;
-import com.github.mybatisx.datetime.provider.DateTimeProvider;
 import org.apache.ibatis.mapping.MappedStatement;
-
-import java.util.Optional;
 
 /**
  * 默认元数据审计处理
@@ -48,8 +45,7 @@ public class DefaultMetadataAuditable extends AbstractMetadataAuditable {
                 case NAME:
                     return this.auditorAware.getOptUserName().orElse(null);
                 case TIME:
-                    return Optional.ofNullable(DateTimeProviderProxy.create().target(property.getJavaType()).build())
-                        .map(DateTimeProvider::getNow).orElse(null);
+                    return DateTimeProviderProxy.getNow(property.getJavaType());
                 default:
                     return null;
             }

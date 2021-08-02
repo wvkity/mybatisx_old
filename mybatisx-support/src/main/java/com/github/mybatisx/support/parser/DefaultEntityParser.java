@@ -202,7 +202,7 @@ public class DefaultEntityParser implements EntityParser, Constants {
         // 解析属性
         final Set<Field> fields = fieldParser.parse(reflector);
         if (Objects.isNotEmpty(fields)) {
-            final boolean autoAddedIsPrefixed = mgc.isBooleanPropertyAutoAddedPrefixedWithIs();
+            final boolean autoAddedIsPrefixed = mgc.isBooleanPropAutoAddedPrefixedWithIs();
             final Class<?> entityClass = reflector.getClazz();
             fields.forEach(it -> {
                 // 数据库表字段构建器
@@ -287,9 +287,9 @@ public class DefaultEntityParser implements EntityParser, Constants {
             if (Objects.isBlank(cb.column())) {
                 cb.column(ext.name());
             }
-            cb.useJavaType(ext.javaType() == Option.ENABLE);
-            cb.checkNotNull(ext.notNull() == Option.ENABLE);
-            cb.checkNotEmpty(ext.notEmpty() == Option.ENABLE);
+            cb.useJavaType(ext.javaType() == Option.REQUIRE);
+            cb.checkNotNull(ext.notNull() == Option.REQUIRE);
+            cb.checkNotEmpty(ext.notEmpty() == Option.REQUIRE);
             Optional.of(ext.jdbcType()).filter(it -> it != JdbcType.UNDEFINED).ifPresent(cb::jdbcType);
             Optional.of(ext.typeHandler()).filter(it -> !it.equals(UnknownTypeHandler.class))
                 .ifPresent(cb::typeHandler);
@@ -306,6 +306,9 @@ public class DefaultEntityParser implements EntityParser, Constants {
             cb.useJavaType(mgc.isAutoSplicingJavaType());
             cb.checkNotNull(mgc.isDynamicSqlNotNullChecking());
             cb.checkNotEmpty(mgc.isDynamicSqlNotEmptyChecking());
+        }
+        if (cb.checkNotEmpty()) {
+            cb.checkNotNull(true);
         }
         if (cb.jdbcType() == null && mgc.isJdbcTypeAutoMapping()) {
             cb.jdbcType(JdbcTypeMappingRegistry.getJdbcType(field.getJavaType(), JdbcType.UNDEFINED));

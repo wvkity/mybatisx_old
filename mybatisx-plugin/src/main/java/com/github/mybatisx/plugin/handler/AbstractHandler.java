@@ -205,6 +205,19 @@ public abstract class AbstractHandler implements Handler, Filter {
     }
 
     /**
+     * 获取{@code Criteria}对象
+     * @param parameter 参数
+     * @return {@code Criteria}对象
+     */
+    protected Object getCriteriaTarget(final Object parameter) {
+        final Map<?, ?> paramMap;
+        if (parameter instanceof Map && ((paramMap = (Map<?, ?>) parameter)).containsKey(Constants.PARAM_CRITERIA)) {
+            return paramMap.get(Constants.PARAM_CRITERIA);
+        }
+        return null;
+    }
+
+    /**
      * {@link Collection}参数转{@link List}参数
      * @param values 参数列表
      * @return {@link List}参数
