@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * @since 1.0.0
  */
 @Remark
-@Deleted
+@Modified
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface LastModifiedByName {
