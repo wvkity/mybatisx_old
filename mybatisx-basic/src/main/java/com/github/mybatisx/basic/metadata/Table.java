@@ -27,6 +27,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
@@ -97,6 +98,10 @@ public class Table {
      */
     private final Column optimisticLockColumn;
     /**
+     * 乐观锁字段
+     */
+    private transient final Optional<Column> optimisticLockOptional;
+    /**
      * 逻辑删除字段
      */
     private final Column logicalDeleteColumn;
@@ -159,6 +164,7 @@ public class Table {
         this.idProperty = idProperty;
         this.idColumn = idColumn;
         this.optimisticLockColumn = optimisticLockColumn;
+        this.optimisticLockOptional = Optional.ofNullable(optimisticLockColumn);
         this.logicalDeleteColumn = logicalDeleteColumn;
         this.multiTenantColumn = multiTenantColumn;
         this.idColumns = idColumns == null ? ImmutableLinkedSet.of() : ImmutableLinkedSet.of(idColumns);
@@ -174,8 +180,7 @@ public class Table {
         MethodHandle handle = null;
         try {
             handle = lookup.findConstructor(this.entity, MethodType.methodType(void.class));
-        } catch (NoSuchMethodException | IllegalAccessException e) {
-            // throw new MyBatisException(e.getMessage(), e);
+        } catch (NoSuchMethodException | IllegalAccessException ignore) {
             // ignore
         }
         this.constructMethod = handle;
@@ -284,13 +289,13 @@ public class Table {
     }
 
     /**
-     * 排除逻辑删除标识、逻辑删除审计、保存审计、多租户、乐观锁等特殊字段
+     * 排除逻辑删除标识、多租户、乐观锁等特殊字段
      * @return 字段集合
      */
-    public Set<Column> updateColumnsNonWithSpecial() {
+    public Set<Column> updateColumnsWithoutSpecial() {
         return this.readOnlyUpdatableColumnCache.stream().filter(it ->
-            !it.isLogicDelete() && !it.isVersion() && !it.getAuditMeta().insertedAuditable()
-                && !it.getAuditMeta().deletedAuditable()).collect(Collectors.toCollection(LinkedHashSet::new));
+            !it.isLogicDelete() && !it.isVersion() && !it.isMultiTenant() && !it.getAuditMeta().insertedAuditable())
+            .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     /**
@@ -363,6 +368,10 @@ public class Table {
 
     public Column getOptimisticLockColumn() {
         return optimisticLockColumn;
+    }
+
+    public Optional<Column> optimisticLockOptional() {
+        return this.optimisticLockOptional;
     }
 
     public Column getLogicalDeleteColumn() {
