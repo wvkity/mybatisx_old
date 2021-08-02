@@ -16,6 +16,7 @@
 package com.github.mybatisx.core.criteria.update;
 
 import com.github.mybatisx.core.criteria.Category;
+import com.github.mybatisx.core.sql.DefaultUpdateSqlManager;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -37,6 +38,8 @@ public class LambdaUpdate<T> extends AbstractLambdaUpdateCriteria<T, LambdaUpdat
     public LambdaUpdate(Class<T> entity) {
         this.entityClass = entity;
         this.initialize(null, Category.UPDATE);
+        this.sqlManager = new DefaultUpdateSqlManager(this, this.parameterConverter, this.updateColumnsOfWrap,
+            this.updateColumnsOfOrg, this.fragmentManager);
     }
 
     @Override
