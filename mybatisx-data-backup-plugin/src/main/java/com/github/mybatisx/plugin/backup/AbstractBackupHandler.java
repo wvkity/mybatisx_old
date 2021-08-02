@@ -36,6 +36,7 @@ import com.github.mybatisx.plugin.backup.process.QueryProcessor;
 import com.github.mybatisx.plugin.handler.AbstractUpdateHandler;
 import com.github.mybatisx.plugin.utils.PluginUtil;
 import com.github.mybatisx.reflect.Reflections;
+import com.github.mybatisx.reflection.MetaObjects;
 import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
@@ -47,6 +48,7 @@ import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.plugin.Invocation;
+import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
@@ -149,7 +151,10 @@ public abstract class AbstractBackupHandler extends AbstractUpdateHandler implem
             final List<Object> entitySources = this.getSourceParameter(parameter, sourceAlias);
             final boolean isInsert = this.isInsert(ms);
             final boolean hasEntitySource = Objects.isNotEmpty(entitySources);
-            final boolean isBreak = (!hasFilter || isInsert) && !hasEntitySource;
+            final Object criteriaTarget = this.getCriteriaTarget(parameter);
+            final boolean hasCriteria =
+                Objects.nonNull(criteriaTarget) && !Reflections.isSimpleJavaObject(criteriaTarget);
+            final boolean isBreak = (!hasFilter || isInsert) && !hasEntitySource && !hasCriteria;
             if (isBreak) {
                 // 无拦截注解且获取不到实体参数或者保存操作并且无实体参 => 不拦截
                 return invocation.proceed();
@@ -161,6 +166,15 @@ public abstract class AbstractBackupHandler extends AbstractUpdateHandler implem
             }
             if (Objects.isNull(sourceClass) && hasEntitySource) {
                 sourceClass = entitySources.get(0).getClass();
+            }
+            if (Objects.isNull(sourceClass) && hasCriteria) {
+                final MetaObject metaObject = MetaObjects.forObject(criteriaTarget);
+                if (metaObject.hasGetter("entityClass")) {
+                    final Object value = metaObject.getValue("entityClass");
+                    if (Objects.nonNull(value)) {
+                        sourceClass = (Class<?>) value;
+                    }
+                }
             }
             if (canIntercept || Reflections.isAnnotationPresent(sourceClass, BackupListener.class)) {
                 final Executor executor = (Executor) invocation.getTarget();
@@ -553,7 +567,7 @@ public abstract class AbstractBackupHandler extends AbstractUpdateHandler implem
      * @param policy {@link BackupPolicy}
      * @return boolean
      */
-    public boolean specifiedFilterMatches(final BackupPolicy policy) {
+    protected boolean specifiedFilterMatches(final BackupPolicy policy) {
         return this.filterPolicies.contains(policy);
     }
 
