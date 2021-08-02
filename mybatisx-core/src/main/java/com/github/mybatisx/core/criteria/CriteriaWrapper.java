@@ -35,6 +35,12 @@ public interface CriteriaWrapper<T, C extends CriteriaWrapper<T, C>> extends Ext
     // region Nesting condition
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    C setVersion(final Object value);
+
+    /**
      * and嵌套条件
      * @param expressions 条件列表
      * @return {@code this}

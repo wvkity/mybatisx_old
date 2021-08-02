@@ -34,13 +34,6 @@ public interface UCriteria<T, C extends UCriteria<T, C>> extends CriteriaWrapper
     Object getVersionUpdateValue();
 
     /**
-     * 设置乐观锁值
-     * @param value 乐观锁值
-     * @return {@code this}
-     */
-    C version(final Object value);
-
-    /**
      * 获取更新语句片段
      * @return 更新SQL片段
      */

@@ -56,6 +56,19 @@ public interface Criteria<T> extends Fragment {
      */
     String getWhereSegment();
 
+    /**
+     * 获取乐观锁条件值
+     * @return 值
+     */
+    Object getVersionConditionValue();
+
+    /**
+     * 设置乐观锁值
+     * @param value 乐观锁值
+     * @return {@code this}
+     */
+    Criteria<T> setVersion(final Object value);
+
     // region Default methods
 
     /**
