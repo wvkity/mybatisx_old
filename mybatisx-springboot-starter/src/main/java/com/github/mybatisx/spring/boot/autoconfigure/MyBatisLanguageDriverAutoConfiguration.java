@@ -38,7 +38,7 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnClass(LanguageDriver.class)
 public class MyBatisLanguageDriverAutoConfiguration {
 
-    private static final String CONFIGURATION_PROPERTY_PREFIX = "wvkity.mybatis.scripting-language-driver";
+    private static final String CONFIGURATION_PROPERTY_PREFIX = "github.mybatisx.scripting-language-driver";
 
     /**
      * Configuration class for mybatis-freemarker 1.1.x or under.

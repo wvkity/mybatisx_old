@@ -142,7 +142,7 @@ public class MyBatisGlobalConfiguration {
     /**
      * Boolean类型属性映射的数据库表字段是否自动添加IS前缀
      */
-    private boolean booleanPropertyAutoAddedPrefixedWithIs = true;
+    private boolean booleanPropAutoAddedPrefixedWithIs = true;
     /**
      * 自动映射JDBC类型
      */
@@ -154,7 +154,7 @@ public class MyBatisGlobalConfiguration {
     /**
      * 动态SQL中非空检查
      */
-    private boolean dynamicSqlNotNullChecking;
+    private boolean dynamicSqlNotNullChecking = true;
     /**
      * 动态SQL中非空值检查
      */
@@ -189,6 +189,10 @@ public class MyBatisGlobalConfiguration {
      */
     private String undeletedValue = "0";
     /**
+     * 更新操作是否自动添加逻辑删除条件
+     */
+    private boolean updateAutoAddedLogicDeleteCondition;
+    /**
      * 自动扫描乐观锁属性
      */
     private boolean optimisticLockAutoScan;
@@ -203,7 +207,7 @@ public class MyBatisGlobalConfiguration {
     /**
      * 乐观锁默认初始值(数字类型)
      */
-    private int optimisticLockInitValue = 0;
+    private int optimisticLockInitValue = 1;
     /**
      * 关键词格式化模板
      */
@@ -431,12 +435,12 @@ public class MyBatisGlobalConfiguration {
         this.enumAsSimpleType = enumAsSimpleType;
     }
 
-    public boolean isBooleanPropertyAutoAddedPrefixedWithIs() {
-        return booleanPropertyAutoAddedPrefixedWithIs;
+    public boolean isBooleanPropAutoAddedPrefixedWithIs() {
+        return booleanPropAutoAddedPrefixedWithIs;
     }
 
-    public void setBooleanPropertyAutoAddedPrefixedWithIs(boolean booleanPropertyAutoAddedPrefixedWithIs) {
-        this.booleanPropertyAutoAddedPrefixedWithIs = booleanPropertyAutoAddedPrefixedWithIs;
+    public void setBooleanPropAutoAddedPrefixedWithIs(boolean booleanPropAutoAddedPrefixedWithIs) {
+        this.booleanPropAutoAddedPrefixedWithIs = booleanPropAutoAddedPrefixedWithIs;
     }
 
     public boolean isJdbcTypeAutoMapping() {
@@ -509,6 +513,14 @@ public class MyBatisGlobalConfiguration {
 
     public void setUndeletedValue(String undeletedValue) {
         this.undeletedValue = undeletedValue;
+    }
+
+    public boolean isUpdateAutoAddedLogicDeleteCondition() {
+        return updateAutoAddedLogicDeleteCondition;
+    }
+
+    public void setUpdateAutoAddedLogicDeleteCondition(boolean updateAutoAddedLogicDeleteCondition) {
+        this.updateAutoAddedLogicDeleteCondition = updateAutoAddedLogicDeleteCondition;
     }
 
     public boolean isOptimisticLockAutoScan() {
