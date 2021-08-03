@@ -147,8 +147,7 @@ public class MyBatisMetadataAuditableAutoConfiguration {
                                                          @Lazy AuditedPropertyLoader propertyLoader,
                                                          final ObjectProvider<AuditedEventPublisher> auditedEventPublisherProvider) {
         return new DefaultMetadataAuditedHandler(this.configProperties.isRollbackRestore(),
-            this.metadataAuditedProperties.isAnnotationEnable(), propertyLoader, metadataAuditable,
-            auditedEventPublisherProvider.getIfAvailable());
+            propertyLoader, metadataAuditable, auditedEventPublisherProvider.getIfAvailable());
 
     }
 

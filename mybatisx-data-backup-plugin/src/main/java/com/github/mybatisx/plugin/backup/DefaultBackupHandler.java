@@ -38,15 +38,14 @@ public class DefaultBackupHandler extends AbstractBackupHandler {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultBackupHandler.class);
 
-    public DefaultBackupHandler(boolean annotationEnable, boolean nonConditionFilter, QueryProcessor queryProcessor,
+    public DefaultBackupHandler(boolean nonConditionFilter, QueryProcessor queryProcessor,
                                 Set<BackupPolicy> filterPolicies, BackupEventPublisher eventPublisher) {
-        this(annotationEnable, nonConditionFilter, queryProcessor, filterPolicies, null, eventPublisher);
+        this(nonConditionFilter, queryProcessor, filterPolicies, null, eventPublisher);
     }
 
-    public DefaultBackupHandler(boolean annotationEnable, boolean nonConditionFilter, QueryProcessor queryProcessor,
+    public DefaultBackupHandler(boolean nonConditionFilter, QueryProcessor queryProcessor,
                                 Set<BackupPolicy> filterPolicies, LocalCache<String, MappedStatement> localCache,
                                 BackupEventPublisher eventPublisher) {
-        this.annotationEnable = annotationEnable;
         this.nonConditionFilter = nonConditionFilter;
         this.queryProcessor = queryProcessor;
         this.filterPolicies = filterPolicies;

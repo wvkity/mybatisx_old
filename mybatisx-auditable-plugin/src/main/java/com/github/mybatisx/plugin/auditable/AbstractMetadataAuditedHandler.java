@@ -59,7 +59,7 @@ public abstract class AbstractMetadataAuditedHandler extends AbstractAuditedHand
 
     @Override
     protected boolean isEnableReflect() {
-        return this.annotationEnable;
+        return true;
     }
 
     @Override

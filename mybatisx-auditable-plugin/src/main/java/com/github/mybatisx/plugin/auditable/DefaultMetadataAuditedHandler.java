@@ -57,36 +57,33 @@ public class DefaultMetadataAuditedHandler extends AbstractMetadataAuditedHandle
      */
     protected final MetadataAuditable metadataAuditable;
 
-    public DefaultMetadataAuditedHandler(boolean rollbackEnable, boolean annotationEnable,
-                                         AuditedPropertyLoader propertyLoader, MetadataAuditable metadataAuditable,
+    public DefaultMetadataAuditedHandler(boolean rollbackEnable, AuditedPropertyLoader propertyLoader,
+                                         MetadataAuditable metadataAuditable,
                                          AuditedEventPublisher auditedEventPublisher) {
         this.rollbackRestore = rollbackEnable;
-        this.annotationEnable = annotationEnable;
         this.propertyLoader = propertyLoader;
         this.metadataAuditable = metadataAuditable;
         this.auditedEventPublisher = auditedEventPublisher;
     }
 
-    public DefaultMetadataAuditedHandler(boolean rollbackEnable, boolean annotationEnable,
-                                         AuditedPropertyLoader propertyLoader, MetadataAuditable metadataAuditable,
+    public DefaultMetadataAuditedHandler(boolean rollbackEnable, AuditedPropertyLoader propertyLoader,
+                                         MetadataAuditable metadataAuditable,
                                          LocalCache<String, CacheData<List<PropertyWrapper>>> localCache,
                                          AuditedEventPublisher auditedEventPublisher) {
         this.rollbackRestore = rollbackEnable;
-        this.annotationEnable = annotationEnable;
         this.localCache = localCache;
         this.propertyLoader = propertyLoader;
         this.metadataAuditable = metadataAuditable;
         this.auditedEventPublisher = auditedEventPublisher;
     }
 
-    public DefaultMetadataAuditedHandler(boolean rollbackEnable, boolean annotationEnable,
+    public DefaultMetadataAuditedHandler(boolean rollbackEnable,
                                          Set<String> interceptMethods, Set<String> ignoreMethods,
                                          Set<String> logicMethods,
                                          AuditedPropertyLoader propertyLoader, MetadataAuditable metadataAuditable,
                                          LocalCache<String, CacheData<List<PropertyWrapper>>> localCache,
                                          AuditedEventPublisher auditedEventPublisher) {
         this.rollbackRestore = rollbackEnable;
-        this.annotationEnable = annotationEnable;
         this.interceptMethods = interceptMethods;
         this.ignoreMethods = ignoreMethods;
         this.logicDeleteMethods = logicMethods;

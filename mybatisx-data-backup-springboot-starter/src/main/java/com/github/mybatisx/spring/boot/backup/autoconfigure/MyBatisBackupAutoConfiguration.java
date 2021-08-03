@@ -95,8 +95,7 @@ public class MyBatisBackupAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public BackupHandler backupHandler(final BackupEventPublisher backupEventPublisher) {
-        return new DefaultBackupHandler(this.configProperties.isAnnotationEnable(),
-            this.configProperties.isNonConditionFilter(), queryProcessor,
+        return new DefaultBackupHandler(this.configProperties.isNonConditionFilter(), queryProcessor,
             this.configProperties.getFilterPolicies(), backupEventPublisher);
     }
 

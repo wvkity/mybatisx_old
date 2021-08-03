@@ -41,10 +41,6 @@ public class MyBatisBackupProperties {
      */
     private EventPolicy policy = EventPolicy.QUEUE;
     /**
-     * 是否开启注解方式拦截
-     */
-    private boolean annotationEnable = true;
-    /**
      * 无条件是否拦截备份
      */
     private boolean nonConditionFilter;
@@ -83,15 +79,7 @@ public class MyBatisBackupProperties {
     public void setPolicy(EventPolicy policy) {
         this.policy = policy;
     }
-
-    public boolean isAnnotationEnable() {
-        return annotationEnable;
-    }
-
-    public void setAnnotationEnable(boolean annotationEnable) {
-        this.annotationEnable = annotationEnable;
-    }
-
+    
     public boolean isNonConditionFilter() {
         return nonConditionFilter;
     }

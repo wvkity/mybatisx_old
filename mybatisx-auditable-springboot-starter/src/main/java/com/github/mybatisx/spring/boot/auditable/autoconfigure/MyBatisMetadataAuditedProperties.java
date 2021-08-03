@@ -29,10 +29,7 @@ import java.util.Properties;
 public class MyBatisMetadataAuditedProperties {
 
     public static final String CFG_PREFIX = "github.mybatisx.plugin.auditable.metadata";
-    /**
-     * 是否开启注解方式拦截
-     */
-    private boolean annotationEnable = true;
+
     /**
      * 拦截方法列表(英文逗号隔开)
      */
@@ -47,14 +44,6 @@ public class MyBatisMetadataAuditedProperties {
     private Properties properties;
 
     public MyBatisMetadataAuditedProperties() {
-    }
-
-    public boolean isAnnotationEnable() {
-        return annotationEnable;
-    }
-
-    public void setAnnotationEnable(boolean annotationEnable) {
-        this.annotationEnable = annotationEnable;
     }
 
     public String getInterceptMethods() {

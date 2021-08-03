@@ -85,10 +85,6 @@ public abstract class AbstractBackupHandler extends AbstractUpdateHandler implem
      */
     public static final String PROP_KEY_CACHE_CFG_PREFIX = "backupCacheCfgPrefix";
     /**
-     * 是否开启注解方式拦截属性
-     */
-    public static final String PROP_KEY_BACKUP_ANNOTATION_ENABLE = "backupAnnotationEnable";
-    /**
      * 无条件是否拦截备份属性
      */
     public static final String PROP_KEY_BACKUP_NON_CONDITION_FILTER = "backupNonConditionFilter";
@@ -100,10 +96,7 @@ public abstract class AbstractBackupHandler extends AbstractUpdateHandler implem
      * MappedStatement缓存后缀
      */
     protected static final String BACKUP_QUERY_CACHE_SUFFIX = ".plugin-data-backup-query-list";
-    /**
-     * 是否开启注解方式拦截
-     */
-    protected boolean annotationEnable;
+
     /**
      * 无条件是否拦截备份
      */
@@ -131,7 +124,7 @@ public abstract class AbstractBackupHandler extends AbstractUpdateHandler implem
 
     @Override
     protected boolean isEnableReflect() {
-        return this.annotationEnable;
+        return true;
     }
 
     @Override
@@ -574,10 +567,6 @@ public abstract class AbstractBackupHandler extends AbstractUpdateHandler implem
     @Override
     public void setProperties(Properties properties) {
         super.setProperties(properties);
-        final String antStr;
-        if (Objects.isNotBlank((antStr = properties.getProperty(PROP_KEY_BACKUP_ANNOTATION_ENABLE)))) {
-            this.annotationEnable = Objects.toBool(antStr);
-        }
         final String ncfStr;
         if (Objects.isNotBlank((ncfStr = properties.getProperty(PROP_KEY_BACKUP_NON_CONDITION_FILTER)))) {
             this.nonConditionFilter = Objects.toBool(ncfStr);
