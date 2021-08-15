@@ -1,0 +1,71 @@
+{
+    "groups": [
+        {
+            "sourceType": "com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.MultiDataSourceProperties",
+            "name": "spring.datasource.multi",
+            "type": "com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.MultiDataSourceProperties"
+        },
+        {
+            "sourceType": "com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.MultiDataSourceProperties",
+            "name": "spring.datasource.multi.transaction",
+            "sourceMethod": "getTransaction()",
+            "type": "com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.TransactionProperties"
+        },
+        {
+            "sourceType": "com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.MultiDataSourceProperties",
+            "name": "spring.datasource.multi.master",
+            "sourceMethod": "getMaster()",
+            "type": "com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.WriteDataSourceProperties"
+        },
+        {
+            "sourceType": "com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.MultiDataSourceProperties",
+            "name": "spring.datasource.multi.slave",
+            "sourceMethod": "getSlave()",
+            "type": "com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.ReadDataSourceProperties"
+        },
+        {
+            "sourceType": "com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.MultiDataSourceProperties",
+            "name": "spring.datasource.multi.group",
+            "sourceMethod": "getGroup()",
+            "type": "com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.GroupedDataSourceProperties"
+        }
+    ],
+    "properties": [
+        {
+            "sourceType": "com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.GroupingDataSourceProperties",
+            "name": "spring.datasource.multi.group.list",
+            "description": "分组数据源列表.",
+            "type": "java.util.List<com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.GroupingDataSourceProperties>"
+        },
+        {
+            "sourceType": "com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.GroupingDataSourceProperties",
+            "name": "spring.datasource.multi.group.map",
+            "description": "分组数据源列表.",
+            "type": "java.util.Map<java.lang.String, com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.GroupingDataSourceProperties>"
+        },
+        {
+            "sourceType": "com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.WriteDataSourceProperties",
+            "name": "spring.datasource.multi.master.list",
+            "description": "主库数据源列表.",
+            "type": "java.util.List<com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.WriteDataSourceProperties>"
+        },
+        {
+            "sourceType": "com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.WriteDataSourceProperties",
+            "name": "spring.datasource.multi.master.map",
+            "description": "主库数据源列表.",
+            "type": "java.util.Map<java.lang.String, com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.WriteDataSourceProperties>"
+        },
+        {
+            "sourceType": "com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.ReadDataSourceProperties",
+            "name": "spring.datasource.multi.slave.list",
+            "description": "读库数据源列表.",
+            "type": "java.util.List<com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.ReadDataSourceProperties>"
+        },
+        {
+            "sourceType": "com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.ReadDataSourceProperties",
+            "name": "spring.datasource.multi.slave.map",
+            "description": "读库数据源列表.",
+            "type": "java.util.Map<java.lang.String, com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.ReadDataSourceProperties>"
+        }
+    ]
+}
