@@ -5,7 +5,7 @@ dependencies {
     implementation(enforcedPlatform("${libs["springboot-dependencies"]}" as String))
     implementation "${libs["springboot-autoconfigure-processor"]}"
     implementation "${libs["springboot-configuration-processor"]}"
-    annotationProcessor "${libs["springboot-autoconfigure-processor"]}:${springBoot}"
-    annotationProcessor "${libs["springboot-configuration-processor"]}:${springBoot}"
+    annotationProcessor "${libs["springboot-autoconfigure-processor"]}:${springbootVersion}"
+    annotationProcessor "${libs["springboot-configuration-processor"]}:${springbootVersion}"
 }
 compileJava.dependsOn(processResources)

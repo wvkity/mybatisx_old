@@ -1,7 +1,7 @@
 dependencies {
     api project(":mybatisx-spring")
     api project(":mybatisx-extension")
-    api project(":mybatisx-datasource-springboot-starter")
+    api project(":mybatisx-multi-datasource-springboot-starter")
     api project(":mybatisx-pageable-springboot-starter")
     api project(":mybatisx-sequence-springboot-starter")
     api project(':mybatisx-batch-springboot-starter')
@@ -16,8 +16,8 @@ dependencies {
     implementation(enforcedPlatform("${libs["springboot-dependencies"]}" as String))
     implementation "${libs["springboot-autoconfigure-processor"]}"
     implementation "${libs["springboot-configuration-processor"]}"
-    annotationProcessor "${libs["springboot-autoconfigure-processor"]}:${springBoot}"
-    annotationProcessor "${libs["springboot-configuration-processor"]}:${springBoot}"
+    annotationProcessor "${libs["springboot-autoconfigure-processor"]}:${springbootVersion}"
+    annotationProcessor "${libs["springboot-configuration-processor"]}:${springbootVersion}"
 }
 
 compileJava.dependsOn(processResources)
