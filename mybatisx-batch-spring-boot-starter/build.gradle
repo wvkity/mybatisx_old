@@ -1,8 +1,8 @@
 dependencies {
-    api project(':mybatisx-auditable-plugin')
-    api project(':mybatisx-event-listener-springboot-starter')
+    api project(':mybatisx-batch-plugin')
+    api project(':mybatisx-event-listener-spring-boot-starter')
+    implementation "${libs["mybatis-spring"]}"
     implementation "${libs["spring-context"]}"
-    implementation "${libs["spring-tx"]}"
     implementation "${libs["springboot-autoconfigure"]}"
     implementation(enforcedPlatform("${libs["springboot-dependencies"]}" as String))
     implementation "${libs["springboot-autoconfigure-processor"]}"
