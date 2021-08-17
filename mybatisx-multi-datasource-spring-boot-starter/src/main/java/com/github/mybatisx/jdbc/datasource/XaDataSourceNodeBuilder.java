@@ -101,7 +101,18 @@ public class XaDataSourceNodeBuilder implements DataSourceNodeBuilder<DataSource
         Assert.state(Objects.isNotBlank(className), "No XA DataSource class name specified");
         final XADataSource xaDataSource = this.createXaDataSourceInstance(property, className);
         this.bindXaProperties(xaDataSource, property, properties);
-        return this.setUniqueName(this.xaDataSourceWrapper.wrapDataSource(xaDataSource), property, className);
+        return bindProperties(this.setUniqueName(this.xaDataSourceWrapper.wrapDataSource(xaDataSource), property,
+            className), property);
+    }
+
+    private DataSource bindProperties(final DataSource dataSource, final DataSourceProperty property) {
+        final Map<String, String> poolConfig = property.getPoolConfig();
+        if (Objects.isNotEmpty(poolConfig)) {
+            final Map<String, String> properties = new LinkedHashMap<>(poolConfig);
+            MapConfigurationPropertySource source = new MapConfigurationPropertySource(properties);
+            new Binder(source).bind(ConfigurationPropertyName.EMPTY, Bindable.ofInstance(dataSource));
+        }
+        return dataSource;
     }
 
     private DataSource setUniqueName(final DataSource dataSource, final DataSourceProperty property,
