@@ -297,3 +297,5 @@ DerivedData/
 /*.gcno
 
 /mybatisx-example/
+/transaction-logs/
+*.lck
