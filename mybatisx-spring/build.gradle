@@ -1,5 +1,6 @@
 dependencies {
     api project(":mybatisx-core")
+    api project(":mybatisx-multi-datasource")
     api "${libs["mybatis-spring"]}"
     runtimeOnly "${libs["spring-jdbc"]}"
     compileOnly "${libs["spring-jdbc"]}"

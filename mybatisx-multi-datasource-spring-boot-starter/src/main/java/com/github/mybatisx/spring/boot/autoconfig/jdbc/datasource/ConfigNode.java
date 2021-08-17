@@ -24,8 +24,8 @@ import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
 
 import javax.sql.DataSource;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -49,8 +49,9 @@ public class ConfigNode {
     private String poolAlias;
     private String poolSourceKey;
     private boolean hasConfigPoolAlias;
-    private Properties fastPoolConfig;
-    private Properties poolConfig;
+    private Xa xa;
+    private Map<String, String> fastPoolConfig;
+    private Map<String, String> poolConfig;
     private boolean selfHasPoolConfig;
     private DataSourceNodeType nodeType;
     private final MultiDataSourceEnvKey sourceEnvKey;
@@ -66,6 +67,7 @@ public class ConfigNode {
             this.password = property.getPassword();
             this.type = property.getType();
             this.driverClassName = property.getDriverClassName();
+            this.xa = property.getXa();
             this.parsePoolAlias().parsePoolConfig(property);
         }
     }
@@ -80,6 +82,7 @@ public class ConfigNode {
             this.password = this.ifMatch(property.getPassword(), parent.getPassword());
             this.type = this.ifMatch(property.getType(), parent.getType());
             this.driverClassName = this.ifMatch(property.getDriverClassName(), parent.getDriverClassName());
+            this.xa = this.ifMatch(property.getXa(), parent.getXa());
             this.parsePoolAlias().parsePoolConfig(property);
             if (Objects.isNull(this.poolConfig)) {
                 this.poolConfig = parent.getPoolConfig();
@@ -106,11 +109,12 @@ public class ConfigNode {
                 .set(DataSourceProperty::setType, property.getType(), this.type)
                 .set(DataSourceProperty::setDriverClassName, property.getDriverClassName(), this.driverClassName)
                 .set(DataSourceProperty::setGroup, property.getGroup(), this.group)
-                .set(DataSourceProperty::setName, property.getName(), this.name);
+                .set(DataSourceProperty::setName, property.getName(), this.name)
+                .set(DataSourceProperty::setXa, property.getXa(), this.xa);
             if (Objects.isNull(property.getPoolConfig())) {
-                property.setPoolConfig(new Properties());
+                property.setPoolConfig(new LinkedHashMap<>());
             }
-            final Properties poolConfig = property.getPoolConfig();
+            final Map<String, String> poolConfig = property.getPoolConfig();
             if (!this.selfHasPoolConfig) {
                 this.merge(this.poolConfig, poolConfig);
             }
@@ -128,9 +132,9 @@ public class ConfigNode {
                 } else {
                     builder.append("-").append(COUNTER.incrementAndGet());
                 }
-                poolConfig.setProperty("pool-name", builder.toString());
+                poolConfig.put("pool-name", builder.toString());
             } else {
-                poolConfig.setProperty("pool-name", property.getPoolName());
+                poolConfig.put("pool-name", property.getPoolName());
             }
         }
     }
@@ -146,6 +150,7 @@ public class ConfigNode {
         this.nodeKeyPrefix = other.getNodeKeyPrefix();
         this.poolConfig = other.getPoolConfig();
         this.fastPoolConfig = other.getFastPoolConfig();
+        this.xa = other.getXa();
     }
 
     public ConfigNode parsePoolAlias() {
@@ -158,13 +163,14 @@ public class ConfigNode {
         return this;
     }
 
+    @SuppressWarnings("unchecked")
     void parsePoolConfig(final BasicDataSourceProperty property) {
         this.fastPoolConfig = property.getPoolConfig();
         this.selfHasPoolConfig = this.fastPoolConfig != null;
         if (Objects.nonNull(this.sourceEnvKey) && this.hasConfigPoolAlias) {
             try {
                 final Binder binder = Binder.get(this.sourceEnvKey.getEnvironment());
-                this.poolConfig = binder.bind(this.poolSourceKey, Bindable.of(Properties.class)).get();
+                this.poolConfig = binder.bind(this.poolSourceKey, Bindable.of(LinkedHashMap.class)).get();
             } catch (Exception e) {
                 log.warn("The data source connection pool configuration fails to be resolved: ", e);
             }
@@ -176,9 +182,9 @@ public class ConfigNode {
         }
     }
 
-    void merge(final Properties desc, final Properties target) {
+    void merge(final Map<String, String> desc, final Map<String, String> target) {
         if (Objects.nonNull(desc) && Objects.nonNull(target)) {
-            for (Map.Entry<?, ?> entry : desc.entrySet()) {
+            for (Map.Entry<String, String> entry : desc.entrySet()) {
                 target.putIfAbsent(entry.getKey(), entry.getValue());
             }
         }
@@ -270,15 +276,23 @@ public class ConfigNode {
         return poolSourceKey;
     }
 
-    public Properties getFastPoolConfig() {
+    public Xa getXa() {
+        return xa;
+    }
+
+    public void setXa(Xa xa) {
+        this.xa = xa;
+    }
+
+    public Map<String, String> getFastPoolConfig() {
         return fastPoolConfig;
     }
 
-    public Properties getPoolConfig() {
+    public Map<String, String> getPoolConfig() {
         return poolConfig;
     }
 
-    public void setPoolConfig(Properties poolConfig) {
+    public void setPoolConfig(Map<String, String> poolConfig) {
         this.poolConfig = poolConfig;
     }
 

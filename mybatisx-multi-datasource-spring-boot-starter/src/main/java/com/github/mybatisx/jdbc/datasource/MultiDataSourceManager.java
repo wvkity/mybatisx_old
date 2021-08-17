@@ -112,6 +112,8 @@ public class MultiDataSourceManager implements DataSourceManager, InitializingBe
     public DataSource determine(String group, String name, DataSourceNodeType nodeType) {
         final boolean hasGroup = Objects.isNotBlank(group);
         final boolean hasName = Objects.isNotBlank(name);
+        log.debug("determine dataSource: nodeType({}), group({}), node({})", nodeType,
+            hasGroup ? group : "\"\"", hasName ? name : "\"\"");
         if (hasGroup && hasName) {
             return this.smart(group, name, nodeType);
         } else if (hasGroup) {
@@ -171,11 +173,12 @@ public class MultiDataSourceManager implements DataSourceManager, InitializingBe
     @Override
     public void addDataSource(String group, String name, DataSourceNodeType nodeType, DataSource dataSource) {
         final Lock curLock = this.lock;
-        try {
-            curLock.lock();
-            this.add(group, name, nodeType, dataSource);
-        } finally {
-            curLock.unlock();
+        if (curLock.tryLock()) {
+            try {
+                this.add(group, name, nodeType, dataSource);
+            } finally {
+                curLock.unlock();
+            }
         }
     }
 

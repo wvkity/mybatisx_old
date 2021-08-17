@@ -154,8 +154,8 @@ public final class Strings {
     /**
      * 如果表达式结果为真则返回s1否则返回s2
      * @param expression 表达式结果
-     * @param s1 字符串1
-     * @param s2 字符串2
+     * @param s1         字符串1
+     * @param s2         字符串2
      * @return 字符串
      */
     public static String nvl(final Predicate<String> expression, final String s1, final String s2) {
@@ -165,11 +165,32 @@ public final class Strings {
     /**
      * 如果表达式结果为真则返回s1否则返回s2
      * @param expression 表达式结果
-     * @param s1 字符串1
-     * @param s2 字符串2
+     * @param s1         字符串1
+     * @param s2         字符串2
      * @return 字符串
      */
     public static String nvl(final boolean expression, final String s1, final String s2) {
         return expression ? s1 : s2;
+    }
+
+    /**
+     * 下划线字符串转小驼峰
+     * @param value 待转换字符串
+     * @return 新的字符串
+     */
+    public static String underscoreToLowerCamelCase(final String value) {
+        if (Objects.isNotBlank(value)) {
+            String[] ss = value.split("_");
+            if (ss.length == 1) {
+                return value;
+            }
+            final StringBuilder builder = new StringBuilder(value.length());
+            builder.append(ss[0]);
+            for (int i = 1; i < ss.length; i++) {
+                builder.append(firstCharOnlyToUpper(ss[i]));
+            }
+            return firstCharToLower(builder.toString());
+        }
+        return null;
     }
 }

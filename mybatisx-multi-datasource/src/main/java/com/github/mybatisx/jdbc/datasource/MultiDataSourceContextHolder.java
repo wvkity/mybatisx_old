@@ -20,12 +20,21 @@ import com.github.mybatisx.Objects;
 /**
  * 读写数据源切换决策工具
  * @author wvkity
- * @created 2021-08-05
+ * @created 2021-08-17
  * @since 1.0.0
  */
 public class MultiDataSourceContextHolder {
 
-    private static final ThreadLocal<LocalDataSource> DATA_SOURCE_LOOKUP = new ThreadLocal<>();
+    private static final ThreadLocal<LocalDataSourceNodeManager> DATA_SOURCE_CACHE =
+        ThreadLocal.withInitial(LocalDataSourceNodeManager::new);
+
+    /**
+     * 获取{@link LocalDataSourceNodeManager}
+     * @return {@link LocalDataSourceNodeManager}
+     */
+    public static LocalDataSourceNodeManager getLocal() {
+        return DATA_SOURCE_CACHE.get();
+    }
 
     /**
      * 是否选择读库
@@ -46,93 +55,40 @@ public class MultiDataSourceContextHolder {
     }
 
     /**
-     * 获取当前线程数据源
+     * 添加{@link LocalDataSource}
+     * @param local {@link LocalDataSource}
+     */
+    public static void push(final LocalDataSource local) {
+        if (Objects.nonNull(local)) {
+            final LocalDataSourceNodeManager manager = DATA_SOURCE_CACHE.get();
+            manager.push(local);
+        }
+    }
+
+    /**
+     * 添加{@link LocalDataSource}
      * @return {@link LocalDataSource}
      */
     public static LocalDataSource get() {
-        return DATA_SOURCE_LOOKUP.get();
-    }
-
-    /**
-     * 选择写数据源
-     */
-    public static void makeWrite() {
-        MultiDataSourceContextHolder.makeWrite("");
-    }
-
-    /**
-     * 选择写数据源
-     * @param name 节点名称
-     */
-    public static void makeWrite(final String name) {
-        MultiDataSourceContextHolder.makeWrite("", name);
-    }
-
-    /**
-     * 选择写数据源
-     * @param group 所属分组
-     * @param name  节点名称
-     */
-    public static void makeWrite(final String group, final String name) {
-        MultiDataSourceContextHolder.set(DataSourceNodeType.SLAVE, group, name);
-    }
-
-    /**
-     * 选择只读数据源
-     */
-    public static void makeRead() {
-        MultiDataSourceContextHolder.makeRead("");
-    }
-
-    /**
-     * 选择只读数据源
-     * @param name 节点名称
-     */
-    public static void makeRead(final String name) {
-        MultiDataSourceContextHolder.makeRead("", name);
-    }
-
-    /**
-     * 选择只读数据源
-     * @param group 所属分组
-     * @param name  节点名称
-     */
-    public static void makeRead(final String group, final String name) {
-        MultiDataSourceContextHolder.set(DataSourceNodeType.SLAVE, group, name);
-    }
-
-    /**
-     * 添加当前线程数据源
-     * @param type  数据源类型
-     * @param group 所属分组
-     * @param name  节点名称
-     */
-    public static void set(final DataSourceNodeType type, final String group, final String name) {
-        MultiDataSourceContextHolder.set(CurrentThreadDataSource.of(type, group, name));
-    }
-
-    /**
-     * 添加当前线程数据源
-     * @param dataSource {@link LocalDataSource}
-     */
-    public static void set(final LocalDataSource dataSource) {
-        if (Objects.nonNull(dataSource)) {
-            DATA_SOURCE_LOOKUP.set(dataSource);
-        }
+        return DATA_SOURCE_CACHE.get().get();
     }
 
     /**
      * 移除当前线程数据源
      */
     public static void remove() {
-        MultiDataSourceContextHolder.clear();
+        final LocalDataSourceNodeManager manager = DATA_SOURCE_CACHE.get();
+        manager.remove();
+        if (manager.canClear()) {
+            clear();
+        }
     }
 
     /**
      * 清空本地线程
      */
     public static void clear() {
-        DATA_SOURCE_LOOKUP.remove();
+        DATA_SOURCE_CACHE.get().clear();
+        DATA_SOURCE_CACHE.remove();
     }
-
 }

@@ -19,7 +19,6 @@ import com.github.mybatisx.Objects;
 import com.github.mybatisx.jdbc.datasource.annotation.DataSource;
 import com.github.mybatisx.jdbc.datasource.annotation.Master;
 import com.github.mybatisx.jdbc.datasource.annotation.Slave;
-import com.github.mybatisx.transaction.interceptor.MultiDataSourceTxInterceptor;
 import org.aopalliance.aop.Advice;
 import org.springframework.aop.Pointcut;
 import org.springframework.aop.aspectj.AspectJExpressionPointcut;
@@ -43,7 +42,7 @@ public class MultiDataSourcePointcutAdvisor extends AbstractPointcutAdvisor impl
     private final Pointcut pointcut;
     private final Advice advice;
 
-    public MultiDataSourcePointcutAdvisor(String pointcutExpression, MultiDataSourceTxInterceptor advice) {
+    public MultiDataSourcePointcutAdvisor(String pointcutExpression, Advice advice) {
         this.pointcut = this.buildPointcut(pointcutExpression);
         this.advice = advice;
     }
@@ -67,10 +66,7 @@ public class MultiDataSourcePointcutAdvisor extends AbstractPointcutAdvisor impl
 
     protected Pointcut buildPointcut(final String expression) {
         final ComposablePointcut it = new ComposablePointcut(new AnnotationMatchingPointcut(DataSource.class));
-        it.union(new AnnotationMethodMatchingPointcut(DataSource.class));
-        it.union(new AnnotationMatchingPointcut(Master.class));
         it.union(new AnnotationMethodMatchingPointcut(Master.class));
-        it.union(new AnnotationMatchingPointcut(Slave.class));
         it.union(new AnnotationMethodMatchingPointcut(Slave.class));
         if (Objects.isNotBlank(expression)) {
             final AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();

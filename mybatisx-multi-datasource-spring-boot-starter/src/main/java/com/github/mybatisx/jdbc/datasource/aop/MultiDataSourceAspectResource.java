@@ -16,19 +16,14 @@
 package com.github.mybatisx.jdbc.datasource.aop;
 
 import com.github.mybatisx.Objects;
+import com.github.mybatisx.immutable.ImmutableMap;
 import com.github.mybatisx.jdbc.datasource.CurrentThreadDataSource;
 import com.github.mybatisx.jdbc.datasource.DataSourceNodeType;
 import com.github.mybatisx.jdbc.datasource.LocalDataSource;
-import com.github.mybatisx.jdbc.datasource.MultiDataSourceContextHolder;
 import com.github.mybatisx.jdbc.datasource.annotation.DataSource;
 import com.github.mybatisx.jdbc.datasource.annotation.Master;
 import com.github.mybatisx.jdbc.datasource.annotation.Slave;
 import com.github.mybatisx.jdbc.datasource.exception.MultiDataSourceTransactionException;
-import com.github.mybatisx.jdbc.datasource.resolver.ProxyClassResolver;
-import org.aopalliance.intercept.MethodInvocation;
-import org.aspectj.lang.annotation.Aspect;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -47,96 +42,66 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 读写数据源切换AOP处理器
+ * 读写数据源资源
  * @author wvkity
- * @created 2021-08-04
+ * @created 2021-08-17
  * @since 1.0.0
  */
-@Aspect
-public class MultiDataSourceAspectProcessor implements BeanPostProcessor, DataSourceDeterminingProcessor {
+public class MultiDataSourceAspectResource implements BeanPostProcessor, AspectResource {
 
-    private static final Logger log = LoggerFactory.getLogger(MultiDataSourceAspectProcessor.class);
     /**
-     * 数据源缓存
+     * 方法自身数据源缓存
      */
-    private static final Map<String, LocalDataSource> DATA_SOURCE_CACHE = new ConcurrentReferenceHashMap<>(256);
+    protected static final Map<String, LocalDataSource> SELF_DATA_SOURCE_CACHE = new ConcurrentReferenceHashMap<>(256);
     /**
      * 当之前操作是写的时候，是否强制从从库读 默认（false） 当之前操作是写，默认强制从写库读
      */
-    private boolean forceChoiceReadWhenWrite = false;
-    /**
-     * 代理类解析器
-     */
-    private ProxyClassResolver proxyClassResolver;
+    protected boolean forceChoiceReadWhenWrite = false;
     /**
      * 只读事务方法缓存
      */
-    private final Map<String, Boolean> readMethodCache = new ConcurrentHashMap<>();
+    protected final Map<String, Boolean> readMethodCache = new ConcurrentHashMap<>();
 
-    @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        return bean;
-    }
-
-    @SuppressWarnings("unchecked")
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         if (bean instanceof NameMatchTransactionAttributeSource) {
-            NameMatchTransactionAttributeSource tas = (NameMatchTransactionAttributeSource) bean;
-            try {
-                final Field nameMapField =
-                    ReflectionUtils.findField(NameMatchTransactionAttributeSource.class, "nameMap");
-                Objects.requireNonNull(nameMapField, "The nameMap attribute cannot be null.");
-                nameMapField.setAccessible(true);
-                final Map<String, TransactionAttribute> nameMap =
-                    (Map<String, TransactionAttribute>) nameMapField.get(tas);
-                if (Objects.isNotEmpty(nameMap)) {
-                    for (Map.Entry<String, TransactionAttribute> entry : nameMap.entrySet()) {
-                        final RuleBasedTransactionAttribute rbt = (RuleBasedTransactionAttribute) entry.getValue();
-                        if (!rbt.isReadOnly()) {
-                            continue;
-                        }
-                        final String methodName = entry.getKey();
-                        Boolean isForceChoiceRead = Boolean.FALSE;
-                        if (this.forceChoiceReadWhenWrite) {
-                            // 强制从读库读取，挂起之前的事务
-                            rbt.setPropagationBehavior(Propagation.NOT_SUPPORTED.value());
-                            isForceChoiceRead = Boolean.TRUE;
-                        } else {
-                            // 切换到写事务
-                            rbt.setPropagationBehavior(Propagation.SUPPORTS.value());
-                        }
-                        readMethodCache.put(methodName, isForceChoiceRead);
-                    }
-                }
-            } catch (Exception e) {
-                throw new MultiDataSourceTransactionException("Failed to process dynamic read/write transaction " +
-                    "data source", e);
-            }
+            this.parseResource(bean);
         }
         return bean;
     }
 
-    @Override
-    public Object determineDataSource(MethodInvocation invocation) throws Throwable {
+    @SuppressWarnings("unchecked")
+    protected void parseResource(final Object bean) {
+        NameMatchTransactionAttributeSource tas = (NameMatchTransactionAttributeSource) bean;
         try {
-            // 切换数据源
-            final Method method = invocation.getMethod();
-            final Class<?> targetClass = this.proxyClassResolver.getTargetClass(invocation);
-            final DsSpec spec = new DsSpec(invocation, method, targetClass, this.readMethodCache);
-            LocalDataSource dataSource = spec.get();
-            final Boolean forceChoiceRead = spec.getForceChoiceRead();
-            // 当前选择读库，若之前选择是写库且当前不强制切换到读库，则必须切换至写库
-            if (dataSource.isRead() && Objects.nonNull(forceChoiceRead)
-                && !Objects.equals(forceChoiceRead, Boolean.TRUE) && MultiDataSourceContextHolder.isChoiceWrite()) {
-                log.debug("Force the primary data source selection.");
-                dataSource = CurrentThreadDataSource.of(DataSourceNodeType.MASTER, dataSource.getGroup(), "");
+            final Field nameMapField =
+                ReflectionUtils.findField(NameMatchTransactionAttributeSource.class, "nameMap");
+            Objects.requireNonNull(nameMapField, "The nameMap attribute cannot be null.");
+            nameMapField.setAccessible(true);
+            final Map<String, TransactionAttribute> nameMap =
+                (Map<String, TransactionAttribute>) nameMapField.get(tas);
+            if (Objects.isNotEmpty(nameMap)) {
+                for (Map.Entry<String, TransactionAttribute> entry : nameMap.entrySet()) {
+                    final RuleBasedTransactionAttribute rbt = (RuleBasedTransactionAttribute) entry.getValue();
+                    if (!rbt.isReadOnly()) {
+                        continue;
+                    }
+                    final String methodName = entry.getKey();
+                    Boolean isForceChoiceRead = Boolean.FALSE;
+                    if (this.forceChoiceReadWhenWrite) {
+                        // 强制从读库读取，挂起之前的事务
+                        rbt.setPropagationBehavior(Propagation.NOT_SUPPORTED.value());
+                        isForceChoiceRead = Boolean.TRUE;
+                    } else {
+                        // 切换到写事务
+                        rbt.setPropagationBehavior(Propagation.SUPPORTS.value());
+                    }
+                    readMethodCache.put(methodName, isForceChoiceRead);
+                }
             }
-            log.debug("Switch data source: '{}'", dataSource);
-            MultiDataSourceContextHolder.set(dataSource);
-            return invocation.proceed();
-        } finally {
-            MultiDataSourceContextHolder.remove();
+        } catch (Exception e) {
+            throw new MultiDataSourceTransactionException("Failed to process dynamic read/write transaction " +
+                "data source", e);
         }
     }
 
@@ -144,19 +109,17 @@ public class MultiDataSourceAspectProcessor implements BeanPostProcessor, DataSo
         return forceChoiceReadWhenWrite;
     }
 
+    @Override
     public void setForceChoiceReadWhenWrite(boolean forceChoiceReadWhenWrite) {
         this.forceChoiceReadWhenWrite = forceChoiceReadWhenWrite;
     }
 
-    public ProxyClassResolver getProxyClassResolver() {
-        return proxyClassResolver;
+    @Override
+    public Map<String, Boolean> getReadMethodCache() {
+        return ImmutableMap.of(this.readMethodCache);
     }
 
-    public void setProxyClassResolver(ProxyClassResolver proxyClassResolver) {
-        this.proxyClassResolver = proxyClassResolver;
-    }
-
-    private static class DsSpec {
+    public static class ResourceSpec {
         private DataSourceNodeType type;
         private String group;
         private String name;
@@ -164,8 +127,7 @@ public class MultiDataSourceAspectProcessor implements BeanPostProcessor, DataSo
         private final Boolean forceChoiceRead;
         private LocalDataSource dataSource;
 
-        DsSpec(MethodInvocation invocation, Method method, Class<?> targetClass,
-               Map<String, Boolean> readMethodCache) {
+        ResourceSpec(Method method, Class<?> targetClass, Map<String, Boolean> readMethodCache) {
             this.cacheKey = targetClass.getCanonicalName() + "." + method.getName();
             this.forceChoiceRead = this.isForceReadMethod(method, readMethodCache);
             LocalDataSource cache = this.readCache();
@@ -176,7 +138,7 @@ public class MultiDataSourceAspectProcessor implements BeanPostProcessor, DataSo
             }
         }
 
-        LocalDataSource get() {
+        public LocalDataSource get() {
             if (Objects.nonNull(this.dataSource)) {
                 return this.dataSource;
             }
@@ -186,7 +148,7 @@ public class MultiDataSourceAspectProcessor implements BeanPostProcessor, DataSo
                 return this.dataSource;
             }
             this.dataSource = CurrentThreadDataSource.of(this.type, this.group, this.name);
-            DATA_SOURCE_CACHE.putIfAbsent(this.cacheKey, this.dataSource);
+            SELF_DATA_SOURCE_CACHE.putIfAbsent(this.cacheKey, this.dataSource);
             return this.dataSource;
         }
 
@@ -244,7 +206,7 @@ public class MultiDataSourceAspectProcessor implements BeanPostProcessor, DataSo
         }
 
         private LocalDataSource readCache() {
-            return DATA_SOURCE_CACHE.get(this.cacheKey);
+            return SELF_DATA_SOURCE_CACHE.get(this.cacheKey);
         }
 
         Boolean getForceChoiceRead() {
@@ -267,5 +229,4 @@ public class MultiDataSourceAspectProcessor implements BeanPostProcessor, DataSo
             return PatternMatchUtils.simpleMatch(methodNameMatcher, methodName);
         }
     }
-
 }

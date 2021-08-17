@@ -16,7 +16,7 @@
 package com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource;
 
 import javax.sql.DataSource;
-import java.util.Properties;
+import java.util.Map;
 
 /**
  * 数据源基础配置
@@ -52,9 +52,14 @@ public class BasicDataSourceProperty {
     protected String password;
 
     /**
+     * XA数据源配置
+     */
+    protected Xa xa;
+
+    /**
      * 连接池配置
      */
-    protected Properties poolConfig;
+    protected Map<String, String> poolConfig;
 
     public ClassLoader getClassLoader() {
         return classLoader;
@@ -96,11 +101,19 @@ public class BasicDataSourceProperty {
         this.password = password;
     }
 
-    public Properties getPoolConfig() {
+    public Xa getXa() {
+        return xa;
+    }
+
+    public void setXa(Xa xa) {
+        this.xa = xa;
+    }
+
+    public Map<String, String> getPoolConfig() {
         return poolConfig;
     }
 
-    public void setPoolConfig(Properties poolConfig) {
+    public void setPoolConfig(Map<String, String> poolConfig) {
         this.poolConfig = poolConfig;
     }
 }

@@ -15,21 +15,25 @@
  */
 package com.github.mybatisx.jdbc.datasource.aop;
 
-import org.aopalliance.intercept.MethodInvocation;
+import java.util.Map;
 
 /**
- * 数据源选择处理器
+ * 切面资源
  * @author wvkity
- * @created 2021-08-05
+ * @created 2021-08-17
  * @since 1.0.0
  */
-public interface DataSourceDeterminingProcessor {
+public interface AspectResource {
 
     /**
-     * 选择数据源
-     * @param invocation {@link MethodInvocation}
-     * @return 执行结果
-     * @throws Throwable if the interceptors or the target object throws an exception
+     * 当之前操作是写的时候，是否强制选择读库
+     * @param forceChoiceReadWhenWrite 是否强制选择读库
      */
-    Object determineDataSource(final MethodInvocation invocation) throws Throwable;
+    void setForceChoiceReadWhenWrite(final boolean forceChoiceReadWhenWrite);
+
+    /**
+     * 只读事务方法缓存
+     * @return 方法缓存
+     */
+    Map<String, Boolean> getReadMethodCache();
 }

@@ -13,24 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.github.mybatisx.jdbc.datasource.resolver;
+package com.github.mybatisx.spring.transaction;
 
-import org.aopalliance.intercept.MethodInvocation;
+import org.mybatis.spring.transaction.SpringManagedTransaction;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
- * 代理类解析器
+ * 多数据源事务
  * @author wvkity
- * @created 2021-08-05
+ * @created 2021-08-17
  * @since 1.0.0
  */
-public interface ProxyClassResolver {
+public class MultiDataSourceSpringManagedTransaction extends SpringManagedTransaction {
 
-    /**
-     * 获取真实目标类
-     * @param target 目标对象
-     * @return 真实类
-     * @throws IllegalAccessException if this Field object is enforcing Java language access control and the
-     *                                underlying field is inaccessible.
-     */
-    Class<?> getTargetClass(final Object target) throws IllegalAccessException;
+    public MultiDataSourceSpringManagedTransaction(DataSource dataSource) {
+        super(dataSource);
+    }
+
+    @Override
+    public Connection getConnection() throws SQLException {
+        return super.getConnection();
+    }
 }

@@ -25,6 +25,7 @@ import com.github.mybatisx.builder.xml.MyBatisXMLConfigBuilder;
 import com.github.mybatisx.session.MyBatisConfiguration;
 import com.github.mybatisx.session.MyBatisSqlSessionFactoryBuilder;
 import com.github.mybatisx.spring.comparator.AnnotationAwareInterceptorOrderComparator;
+import com.github.mybatisx.spring.transaction.MultiDataSourceSpringManagedTransactionFactory;
 import com.github.mybatisx.support.config.MyBatisGlobalConfiguration;
 import com.github.mybatisx.support.config.MyBatisLocalConfigurationCache;
 import com.github.sequence.Sequence;
@@ -309,7 +310,8 @@ public class MyBatisSqlSessionFactoryBean implements
     }
 
     /**
-     * If true, a final check is done on Configuration to assure that all mapped statements are fully loaded and there is
+     * If true, a final check is done on Configuration to assure that all mapped statements are fully loaded and
+     * there is
      * no one still pending to resolve includes. Defaults to false.
      * @param failFast enable failFast
      * @since 1.0.1
@@ -337,7 +339,8 @@ public class MyBatisSqlSessionFactoryBean implements
     }
 
     /**
-     * Set locations of MyBatis mapper files that are going to be merged into the {@code SqlSessionFactory} configuration
+     * Set locations of MyBatis mapper files that are going to be merged into the {@code SqlSessionFactory}
+     * configuration
      * at runtime.
      * <p>
      * This is an alternative to specifying "&lt;sqlmapper&gt;" entries in an MyBatis config file. This property being
@@ -364,7 +367,8 @@ public class MyBatisSqlSessionFactoryBean implements
      * match the one used by the {@code SqlSessionFactory}: for example, you could specify the same JNDI DataSource for
      * both.
      * <p>
-     * A transactional JDBC {@code Connection} for this {@code DataSource} will be provided to application code accessing
+     * A transactional JDBC {@code Connection} for this {@code DataSource} will be provided to application code
+     * accessing
      * this {@code DataSource} directly via {@code DataSourceUtils} or {@code DataSourceTransactionManager}.
      * <p>
      * The {@code DataSource} specified here should be the target {@code DataSource} to manage transactions for, not a
@@ -414,7 +418,8 @@ public class MyBatisSqlSessionFactoryBean implements
     }
 
     /**
-     * <b>NOTE:</b> This class <em>overrides</em> any {@code Environment} you have set in the MyBatis config file. This is
+     * <b>NOTE:</b> This class <em>overrides</em> any {@code Environment} you have set in the MyBatis config file.
+     * This is
      * used only as a placeholder name. The default value is {@code SqlSessionFactoryBean.class.getSimpleName()}.
      * @param environment the environment name
      */
@@ -488,7 +493,8 @@ public class MyBatisSqlSessionFactoryBean implements
                 this.globalConfiguration, this.configurationProperties);
             targetConfiguration = xmlConfigBuilder.getConfiguration();
         } else {
-            LOGGER.debug("Property 'configuration' or 'configLocation' not specified, using default MyBatis Configuration");
+            LOGGER.debug("Property 'configuration' or 'configLocation' not specified, using default MyBatis " +
+                "Configuration");
             targetConfiguration = new MyBatisConfiguration();
             Optional.ofNullable(this.configurationProperties).ifPresent(targetConfiguration::setVariables);
         }
@@ -599,8 +605,8 @@ public class MyBatisSqlSessionFactoryBean implements
         }
 
         targetConfiguration.setEnvironment(new Environment(this.environment,
-            this.transactionFactory == null ? new SpringManagedTransactionFactory() : this.transactionFactory,
-            this.dataSource));
+            this.transactionFactory == null ?
+                new MultiDataSourceSpringManagedTransactionFactory() : this.transactionFactory, this.dataSource));
 
         if (this.mapperLocations != null) {
             if (this.mapperLocations.length == 0) {
@@ -696,11 +702,13 @@ public class MyBatisSqlSessionFactoryBean implements
         String[] packagePatternArray = tokenizeToStringArray(packagePatterns,
             ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
         for (String packagePattern : packagePatternArray) {
-            Resource[] resources = RESOURCE_PATTERN_RESOLVER.getResources(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX
+            Resource[] resources =
+                RESOURCE_PATTERN_RESOLVER.getResources(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX
                 + ClassUtils.convertClassNameToResourcePath(packagePattern) + "/**/*.class");
             for (Resource resource : resources) {
                 try {
-                    ClassMetadata classMetadata = METADATA_READER_FACTORY.getMetadataReader(resource).getClassMetadata();
+                    ClassMetadata classMetadata =
+                        METADATA_READER_FACTORY.getMetadataReader(resource).getClassMetadata();
                     Class<?> clazz = Resources.classForName(classMetadata.getClassName());
                     if (assignableType == null || assignableType.isAssignableFrom(clazz)) {
                         classes.add(clazz);

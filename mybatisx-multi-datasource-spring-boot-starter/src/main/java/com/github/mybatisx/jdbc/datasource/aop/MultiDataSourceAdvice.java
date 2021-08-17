@@ -16,10 +16,19 @@
 package com.github.mybatisx.jdbc.datasource.aop;
 
 import com.github.mybatisx.Objects;
+import com.github.mybatisx.jdbc.datasource.CurrentThreadDataSource;
+import com.github.mybatisx.jdbc.datasource.DataSourceNodeType;
+import com.github.mybatisx.jdbc.datasource.LocalDataSource;
+import com.github.mybatisx.jdbc.datasource.MultiDataSourceContextHolder;
+import com.github.mybatisx.jdbc.datasource.resolver.ProxyClassResolver;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.MethodBeforeAdvice;
+
+import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
  * 读写数据源拦截器
@@ -27,22 +36,53 @@ import org.slf4j.LoggerFactory;
  * @created 2021-08-04
  * @since 1.0.0
  */
-public class MultiDataSourceAdvice implements MethodInterceptor {
+public class MultiDataSourceAdvice implements MethodBeforeAdvice, MethodInterceptor {
 
     private static final Logger log = LoggerFactory.getLogger(MultiDataSourceAdvice.class);
-    private final DataSourceDeterminingProcessor processor;
 
-    public MultiDataSourceAdvice(DataSourceDeterminingProcessor processor) {
-        this.processor = processor;
+    /**
+     * 代理类解析器
+     */
+    protected ProxyClassResolver proxyClassResolver;
+    /**
+     * 切面资源
+     */
+    protected AspectResource aspectResource;
+    /**
+     * 只读事务方法缓存
+     */
+    protected final Map<String, Boolean> readMethodCache;
+
+    public MultiDataSourceAdvice(ProxyClassResolver proxyClassResolver, AspectResource aspectResource) {
+        this.proxyClassResolver = proxyClassResolver;
+        this.aspectResource = aspectResource;
+        this.readMethodCache = aspectResource.getReadMethodCache();
     }
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
-        if (Objects.nonNull(this.processor)) {
-            return this.processor.determineDataSource(invocation);
+        try {
+            return invocation.proceed();
+        } finally {
+            MultiDataSourceContextHolder.remove();
         }
-        return invocation.proceed();
     }
 
 
+    @Override
+    public void before(Method method, Object[] args, Object target) throws Throwable {
+        final Class<?> targetClass = this.proxyClassResolver.getTargetClass(target);
+        final MultiDataSourceAspectResource.ResourceSpec spec =
+            new MultiDataSourceAspectResource.ResourceSpec(method, targetClass, this.readMethodCache);
+        LocalDataSource dataSource = spec.get();
+        final Boolean forceChoiceRead = spec.getForceChoiceRead();
+        // 当前选择读库，若之前选择是写库且当前不强制切换到读库，则必须切换至写库
+        if (dataSource.isRead() && Objects.nonNull(forceChoiceRead)
+            && !Objects.equals(forceChoiceRead, Boolean.TRUE) && MultiDataSourceContextHolder.isChoiceWrite()) {
+            log.debug("Force the primary data source selection.");
+            dataSource = CurrentThreadDataSource.of(DataSourceNodeType.MASTER, dataSource.getGroup(),
+                dataSource.getName());
+        }
+        MultiDataSourceContextHolder.push(dataSource);
+    }
 }

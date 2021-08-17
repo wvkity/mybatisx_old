@@ -13,24 +13,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.github.mybatisx.jdbc.datasource.resolver;
-
-import org.aopalliance.intercept.MethodInvocation;
+package com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource;
 
 /**
- * 代理类解析器
+ * 数据源模式
  * @author wvkity
- * @created 2021-08-05
+ * @created 2021-08-15
  * @since 1.0.0
  */
-public interface ProxyClassResolver {
+public enum DataSourceMode {
 
     /**
-     * 获取真实目标类
-     * @param target 目标对象
-     * @return 真实类
-     * @throws IllegalAccessException if this Field object is enforcing Java language access control and the
-     *                                underlying field is inaccessible.
+     * 本地
      */
-    Class<?> getTargetClass(final Object target) throws IllegalAccessException;
+    LOCAL,
+    /**
+     * seata
+     */
+    SEATA,
+    /**
+     * XA
+     */
+    XA,
+    /**
+     * 其他
+     */
+    OTHER
 }

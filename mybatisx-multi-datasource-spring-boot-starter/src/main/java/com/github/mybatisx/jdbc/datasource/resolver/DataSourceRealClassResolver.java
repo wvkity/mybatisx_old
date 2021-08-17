@@ -16,7 +16,6 @@
 package com.github.mybatisx.jdbc.datasource.resolver;
 
 import com.github.mybatisx.Objects;
-import org.aopalliance.intercept.MethodInvocation;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
@@ -55,13 +54,12 @@ public class DataSourceRealClassResolver implements ProxyClassResolver {
     }
 
     @Override
-    public Class<?> getTargetClass(MethodInvocation invocation) throws IllegalAccessException {
+    public Class<?> getTargetClass(Object target) throws IllegalAccessException {
         if (findMapperInterface) {
-            final Object target = invocation.getThis();
             final Class<?> targetClass = target.getClass();
             return Proxy.isProxyClass(targetClass) ?
                 (Class<?>) mapperInterfaceField.get(Proxy.getInvocationHandler(target)) : targetClass;
         }
-        return invocation.getMethod().getDeclaringClass();
+        return target.getClass();
     }
 }

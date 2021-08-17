@@ -2,7 +2,6 @@ dependencies {
     api project(':mybatisx-multi-datasource')
     implementation "${libs["springboot-autoconfigure"]}"
     implementation "${libs["springboot-jdbc"]}"
-    implementation "${libs["springboot-atomikos"]}"
     implementation "${libs["springboot-aop"]}"
     implementation(enforcedPlatform("${libs["springboot-dependencies"]}" as String))
     implementation "${libs["springboot-autoconfigure-processor"]}"
@@ -11,6 +10,8 @@ dependencies {
     annotationProcessor "${libs["springboot-configuration-processor"]}:${springbootVersion}"
     runtimeOnly "${libs["seata-spring"]}"
     compileOnly "${libs["seata-spring"]}"
+    runtimeOnly "${libs["springboot-atomikos"]}"
+    compileOnly "${libs["springboot-atomikos"]}"
     runtimeOnly "${libs.dbcp2}"
     compileOnly "${libs.dbcp2}"
     runtimeOnly "${libs.druid}"

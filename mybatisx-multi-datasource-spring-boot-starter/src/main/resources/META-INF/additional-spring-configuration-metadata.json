@@ -7,12 +7,6 @@
         },
         {
             "sourceType": "com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.MultiDataSourceProperties",
-            "name": "spring.datasource.multi.transaction",
-            "sourceMethod": "getTransaction()",
-            "type": "com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.TransactionProperties"
-        },
-        {
-            "sourceType": "com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.MultiDataSourceProperties",
             "name": "spring.datasource.multi.master",
             "sourceMethod": "getMaster()",
             "type": "com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.WriteDataSourceProperties"

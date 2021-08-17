@@ -1,3 +1,8 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.MultiDataSourceAutoConfiguration
+  com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.MultiDataSourceAutoConfiguration, \
+  com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.MultiDataSourceAutoConfiguration$LocalDataSourceConfiguration, \
+  com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.MultiDataSourceAutoConfiguration$XaDistributedDataSourceConfiguration, \
+  com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.MultiDataSourceAutoConfiguration$SeataDistributeDataSourceConfiguration
+
+

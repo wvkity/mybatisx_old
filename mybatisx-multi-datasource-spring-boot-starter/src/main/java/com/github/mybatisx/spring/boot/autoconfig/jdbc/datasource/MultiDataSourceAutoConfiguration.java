@@ -15,14 +15,19 @@
  */
 package com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource;
 
+import com.atomikos.icatch.jta.UserTransactionImp;
+import com.atomikos.icatch.jta.UserTransactionManager;
+import com.atomikos.jdbc.AtomikosDataSourceBean;
 import com.github.mybatisx.Objects;
 import com.github.mybatisx.jdbc.datasource.DataSourceManager;
 import com.github.mybatisx.jdbc.datasource.DataSourceNodeBuilder;
-import com.github.mybatisx.jdbc.datasource.GenericDataSourceNodeBuilder;
+import com.github.mybatisx.jdbc.datasource.LocalDataSourceNodeBuilder;
 import com.github.mybatisx.jdbc.datasource.MultiDataSourceManager;
 import com.github.mybatisx.jdbc.datasource.MultiRoutingDataSource;
-import com.github.mybatisx.jdbc.datasource.aop.DataSourceDeterminingProcessor;
-import com.github.mybatisx.jdbc.datasource.aop.MultiDataSourceAspectProcessor;
+import com.github.mybatisx.jdbc.datasource.XaDataSourceNodeBuilder;
+import com.github.mybatisx.jdbc.datasource.aop.AspectResource;
+import com.github.mybatisx.jdbc.datasource.aop.MultiDataSourceAdvice;
+import com.github.mybatisx.jdbc.datasource.aop.MultiDataSourceAspectResource;
 import com.github.mybatisx.jdbc.datasource.aop.MultiDataSourcePointcutAdvisor;
 import com.github.mybatisx.jdbc.datasource.policy.BalanceDataSourcePolicy;
 import com.github.mybatisx.jdbc.datasource.policy.DataSourcePolicy;
@@ -30,16 +35,22 @@ import com.github.mybatisx.jdbc.datasource.resolver.DataSourceRealClassResolver;
 import com.github.mybatisx.jdbc.datasource.resolver.ProxyClassResolver;
 import com.github.mybatisx.reflect.Reflections;
 import com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.condition.ConditionalOnPropertyNotEmpty;
-import com.github.mybatisx.transaction.interceptor.MultiDataSourceTxInterceptor;
+import io.seata.rm.datasource.DataSourceProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.XADataSourceAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.jdbc.XADataSourceWrapper;
+import org.springframework.boot.jta.atomikos.AtomikosXADataSourceWrapper;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,8 +63,13 @@ import org.springframework.transaction.interceptor.RuleBasedTransactionAttribute
 import org.springframework.transaction.interceptor.TransactionAttribute;
 import org.springframework.transaction.interceptor.TransactionAttributeSource;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
+import org.springframework.transaction.jta.JtaTransactionManager;
 
 import javax.sql.DataSource;
+import javax.sql.XADataSource;
+import javax.transaction.SystemException;
+import javax.transaction.TransactionManager;
+import javax.transaction.UserTransaction;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -69,7 +85,8 @@ import java.util.stream.Collectors;
  * @since 1.0.0
  */
 @Configuration
-@AutoConfigureBefore({DataSourceAutoConfiguration.class})
+@ConditionalOnClass({DataSource.class})
+@AutoConfigureBefore({XADataSourceAutoConfiguration.class, DataSourceAutoConfiguration.class})
 @EnableConfigurationProperties({MultiDataSourceProperties.class})
 @ConditionalOnProperty(prefix = MultiDataSourceAutoConfiguration.CFG_PREFIX, name = "enable",
     havingValue = "true", matchIfMissing = true)
@@ -81,29 +98,21 @@ public class MultiDataSourceAutoConfiguration {
         "find*", "exists*", "list*", "count*"));
     private static final Set<String> REQUIRE_METHODS = new HashSet<>(Arrays.asList("save*", "add*", "create*",
         "insert*", "update*", "modify*", "delete*", "del*", "remove*", "drop*", "merge*", "put*", "sync*", "*"));
-    private final MultiDataSourceProperties basicProperties;
-    private final TransactionProperties txProperties;
+    private final MultiDataSourceProperties properties;
     private final DataSourcePropertyNodeManager nodeManager;
 
     public MultiDataSourceAutoConfiguration(MultiDataSourceProperties properties,
                                             ApplicationContext context) {
-        this.basicProperties = properties;
-        this.txProperties = properties.getTransaction();
-        this.nodeManager = DataSourcePropertyNodeManager.of(context, this.basicProperties);
+        this.properties = properties;
+        this.nodeManager = DataSourcePropertyNodeManager.of(context, this.properties);
         this.nodeManager.parse();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public DataSourceNodeBuilder<DataSource> dataSourceNodeBuilder() {
-        return new GenericDataSourceNodeBuilder(this.nodeManager.getNodes());
     }
 
     @Bean
     @ConditionalOnMissingBean
     public DataSourcePolicy dataSourcePolicy() {
         final Class<? extends DataSourcePolicy> target;
-        if (Objects.nonNull((target = this.basicProperties.getPolicy()))) {
+        if (Objects.nonNull((target = this.properties.getPolicy()))) {
             try {
                 return Reflections.newInstance(target);
             } catch (Exception ignore) {
@@ -113,25 +122,6 @@ public class MultiDataSourceAutoConfiguration {
         return new BalanceDataSourcePolicy();
     }
 
-    @Bean
-    @ConditionalOnMissingBean
-    public DataSourceManager dataSourceManager(DataSourceNodeBuilder<DataSource> dataSourceNodeBuilder,
-                                               final DataSourcePolicy dataSourcePolicy) {
-        return new MultiDataSourceManager(dataSourcePolicy, dataSourceNodeBuilder);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public DataSource dataSource(final DataSourceManager dataSourceManager) {
-        return new MultiRoutingDataSource(dataSourceManager);
-    }
-
-    @Bean("txManager")
-    @ConditionalOnMissingBean
-    public PlatformTransactionManager transactionManager(final DataSource dataSource) {
-        return new DataSourceTransactionManager(dataSource);
-    }
-
     @Bean("txSource")
     @ConditionalOnMissingBean
     public TransactionAttributeSource transactionAttributeSource() {
@@ -139,11 +129,11 @@ public class MultiDataSourceAutoConfiguration {
         final Map<String, TransactionAttribute> nameMap = new HashMap<>(32);
         // 只读事务，不做更新操作
         final RuleBasedTransactionAttribute readOnlyTx = new RuleBasedTransactionAttribute();
-        readOnlyTx.setReadOnly(this.txProperties.isReadOnly());
-        readOnlyTx.setPropagationBehavior(this.txProperties.getReadPropagation().value());
+        readOnlyTx.setReadOnly(this.properties.isReadOnly());
+        readOnlyTx.setPropagationBehavior(this.properties.getReadPropagation().value());
         Set<String> methods = new HashSet<>(READ_ONLY_METHODS);
         final Set<String> readMethods;
-        if (Objects.isNotEmpty((readMethods = this.txProperties.getReadOnlyMethods()))) {
+        if (Objects.isNotEmpty((readMethods = this.properties.getReadOnlyMethods()))) {
             methods.addAll(readMethods);
         }
         for (String method : methods) {
@@ -154,20 +144,20 @@ public class MultiDataSourceAutoConfiguration {
         // 当前存在事务就使用当前事务，否则创建一个新的事务
         final RuleBasedTransactionAttribute requiredTx = new RuleBasedTransactionAttribute();
         final Set<Class<?>> rollbackRules;
-        if (Objects.isNotNullElement((rollbackRules = this.txProperties.getRollbackRules()))) {
+        if (Objects.isNotNullElement((rollbackRules = this.properties.getRollbackRules()))) {
             requiredTx.setRollbackRules(rollbackRules.stream().map(RollbackRuleAttribute::new)
                 .collect(Collectors.toList()));
         } else {
             requiredTx.setRollbackRules(Collections.singletonList(new RollbackRuleAttribute(Exception.class)));
         }
         requiredTx.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
-        final int timeout = this.txProperties.getTimeout();
+        final int timeout = this.properties.getTimeout();
         if (timeout > 0) {
             requiredTx.setTimeout(timeout);
         }
         methods = new HashSet<>(REQUIRE_METHODS);
         final Set<String> requireMethods;
-        if (Objects.isNotEmpty((requireMethods = this.txProperties.getRequireMethods()))) {
+        if (Objects.isNotEmpty((requireMethods = this.properties.getRequireMethods()))) {
             methods.addAll(requireMethods);
         }
         for (String method : methods) {
@@ -179,26 +169,12 @@ public class MultiDataSourceAutoConfiguration {
         return source;
     }
 
-    @Bean("txInterceptor")
+    @Bean
     @ConditionalOnMissingBean
-    public TransactionInterceptor transactionInterceptor(final PlatformTransactionManager txManager,
-                                                         final TransactionAttributeSource txSource) {
-        final TransactionInterceptor it = new TransactionInterceptor();
-        it.setTransactionManager(txManager);
-        it.setTransactionAttributeSource(txSource);
-        return it;
-    }
-
-    @Bean("txAdvisor")
-    @ConditionalOnMissingBean
-    @ConditionalOnPropertyNotEmpty(prefix = CFG_PREFIX + ".transaction", name = "pointcut-expression")
-    public DefaultPointcutAdvisor defaultPointcutAdvisor(final TransactionInterceptor txInterceptor) {
-        final AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
-        pointcut.setExpression(this.txProperties.getPointcutExpression());
-        DefaultPointcutAdvisor it = new DefaultPointcutAdvisor();
-        it.setPointcut(pointcut);
-        it.setAdvice(txInterceptor);
-        return it;
+    public AspectResource aspectResource() {
+        final AspectResource aspectResource = new MultiDataSourceAspectResource();
+        aspectResource.setForceChoiceReadWhenWrite(this.properties.isForceChoiceReadWhenWrite());
+        return aspectResource;
     }
 
     @Bean
@@ -209,29 +185,163 @@ public class MultiDataSourceAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public DataSourceDeterminingProcessor dataSourceDeterminingProcessor(final TransactionInterceptor txInterceptor,
-                                                                         final ProxyClassResolver proxyClassResolver) {
-        final MultiDataSourceAspectProcessor it = new MultiDataSourceAspectProcessor();
-        it.setForceChoiceReadWhenWrite(this.basicProperties.isForceChoiceReadWhenWrite());
-        it.setProxyClassResolver(proxyClassResolver);
-        final TransactionAttributeSource tas = txInterceptor.getTransactionAttributeSource();
-        if (Objects.nonNull(tas)) {
-            it.postProcessAfterInitialization(tas, "txSource");
-        }
-        return it;
+    public MultiDataSourceAdvice multiDataSourceAdvice(final ProxyClassResolver proxyClassResolver,
+                                                       final AspectResource aspectResource) {
+        return new MultiDataSourceAdvice(proxyClassResolver, aspectResource);
     }
 
-    @Bean
+    @Bean("txAspectAdvisor")
     @ConditionalOnMissingBean
-    public MultiDataSourcePointcutAdvisor multiDataSourcePointcutAdvisor(DataSourceDeterminingProcessor processor) {
-        final MultiDataSourceTxInterceptor interceptor = new MultiDataSourceTxInterceptor(processor);
+    public MultiDataSourcePointcutAdvisor multiDataSourcePointcutAdvisor(final MultiDataSourceAdvice advice) {
         final MultiDataSourcePointcutAdvisor advisor =
-            new MultiDataSourcePointcutAdvisor(this.txProperties.getPointcutExpression(), interceptor);
-        advisor.setOrder(this.basicProperties.getOrder());
+            new MultiDataSourcePointcutAdvisor(this.properties.getPointcutExpression(), advice);
+        advisor.setOrder(this.properties.getOrder());
         return advisor;
     }
 
-    public MultiDataSourceProperties getBasicProperties() {
-        return basicProperties;
+
+    @Configuration
+    @ConditionalOnProperty(prefix = MultiDataSourceProperties.CFG_PREFIX, name = "mode", havingValue = "LOCAL",
+        matchIfMissing = true)
+    class LocalDataSourceConfiguration {
+
+        @Bean
+        @ConditionalOnMissingBean
+        public DataSourceNodeBuilder<DataSource> dataSourceNodeBuilder() {
+            return new LocalDataSourceNodeBuilder(nodeManager.getNodes());
+        }
+
+        @Bean
+        @ConditionalOnMissingBean
+        public DataSourceManager dataSourceManager(ObjectProvider<DataSourceNodeBuilder<DataSource>> dsNodeBuilderProvider,
+                                                   final ObjectProvider<DataSourcePolicy> dsPolicyProvider) {
+            return new MultiDataSourceManager(dsPolicyProvider.getIfAvailable(),
+                dsNodeBuilderProvider.getIfAvailable());
+        }
+
+        @Bean
+        @ConditionalOnMissingBean
+        public DataSource dataSource(final DataSourceManager dataSourceManager) {
+            return new MultiRoutingDataSource(dataSourceManager);
+        }
+
+        @Bean("txManager")
+        @ConditionalOnMissingBean
+        public PlatformTransactionManager transactionManager(final DataSource dataSource) {
+            return new DataSourceTransactionManager(dataSource);
+        }
+
+        @Bean("txInterceptor")
+        @ConditionalOnMissingBean
+        public TransactionInterceptor transactionInterceptor(@Qualifier("txManager") final PlatformTransactionManager txManager,
+                                                             @Qualifier("txSource") final ObjectProvider<TransactionAttributeSource> txSourceProvider) {
+            final TransactionInterceptor it = new TransactionInterceptor();
+            it.setTransactionManager(txManager);
+            it.setTransactionAttributeSource(txSourceProvider.getIfAvailable());
+            return it;
+        }
+
+        @Bean("txAdvisor")
+        @ConditionalOnMissingBean
+        @ConditionalOnPropertyNotEmpty(prefix = CFG_PREFIX, name = "pointcut-expression")
+        public DefaultPointcutAdvisor defaultPointcutAdvisor(final TransactionInterceptor txInterceptor) {
+            final AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
+            pointcut.setExpression(properties.getPointcutExpression());
+            DefaultPointcutAdvisor it = new DefaultPointcutAdvisor();
+            it.setPointcut(pointcut);
+            it.setAdvice(txInterceptor);
+            return it;
+        }
     }
+
+    @Configuration
+    @ConditionalOnClass({XADataSource.class})
+    @ConditionalOnProperty(prefix = MultiDataSourceProperties.CFG_PREFIX, name = "mode", havingValue = "XA")
+    class XaDistributedDataSourceConfiguration {
+
+        @Bean
+        @ConditionalOnMissingBean
+        @ConditionalOnClass({AtomikosDataSourceBean.class})
+        public XADataSourceWrapper xaDataSourceWrapper() {
+            return new AtomikosXADataSourceWrapper();
+        }
+
+        @Bean
+        @ConditionalOnMissingBean
+        public DataSourceNodeBuilder<DataSource> dataSourceNodeBuilder(final ObjectProvider<XADataSourceWrapper> xaDataSourceWrapperProvider) {
+            return new XaDataSourceNodeBuilder(xaDataSourceWrapperProvider.getIfAvailable(), nodeManager.getNodes());
+        }
+
+        @Bean
+        @ConditionalOnMissingBean
+        public DataSourceManager dataSourceManager(ObjectProvider<DataSourceNodeBuilder<DataSource>> dsNodeBuilderProvider,
+                                                   final ObjectProvider<DataSourcePolicy> dsPolicyProvider) {
+            return new MultiDataSourceManager(dsPolicyProvider.getIfAvailable(),
+                dsNodeBuilderProvider.getIfAvailable());
+        }
+
+        @Bean
+        @ConditionalOnMissingBean
+        public DataSource dataSource(final DataSourceManager dataSourceManager) {
+            return new MultiRoutingDataSource(dataSourceManager);
+        }
+
+        @Bean("jtaUserTransactionManager")
+        @ConditionalOnMissingBean
+        @ConditionalOnClass({UserTransactionManager.class})
+        public TransactionManager userTransactionManager() {
+            UserTransactionManager userTransactionManager = new UserTransactionManager();
+            userTransactionManager.setForceShutdown(properties.isForceShutdown());
+            return userTransactionManager;
+        }
+
+        @Bean("jtaUserTransaction")
+        @ConditionalOnMissingBean
+        @ConditionalOnClass({UserTransactionImp.class})
+        public UserTransaction userTransactionImp() throws SystemException {
+            UserTransactionImp userTransactionImp = new UserTransactionImp();
+            userTransactionImp.setTransactionTimeout(properties.getTimeout());
+            return userTransactionImp;
+        }
+
+        @Bean("txManager")
+        @ConditionalOnMissingBean
+        public JtaTransactionManager jtaTransactionManager(@Qualifier("jtaUserTransactionManager") final TransactionManager transactionManager,
+                                                           @Qualifier("jtaUserTransaction") final UserTransaction userTransaction) {
+            final JtaTransactionManager jtaTransactionManager =
+                new JtaTransactionManager(userTransaction, transactionManager);
+            jtaTransactionManager.setAllowCustomIsolationLevels(properties.isAllowCustomIsolationLevels());
+            return jtaTransactionManager;
+        }
+
+        @Bean("txInterceptor")
+        @ConditionalOnMissingBean
+        public TransactionInterceptor transactionInterceptor(@Qualifier("txManager") final PlatformTransactionManager txManager,
+                                                             @Qualifier("txSource") final ObjectProvider<TransactionAttributeSource> txSourceProvider) {
+            final TransactionInterceptor it = new TransactionInterceptor();
+            it.setTransactionManager(txManager);
+            it.setTransactionAttributeSource(txSourceProvider.getIfAvailable());
+            return it;
+        }
+
+        @Bean("txAdvisor")
+        @ConditionalOnMissingBean
+        @ConditionalOnPropertyNotEmpty(prefix = CFG_PREFIX, name = "pointcut-expression")
+        public DefaultPointcutAdvisor defaultPointcutAdvisor(final TransactionInterceptor txInterceptor) {
+            final AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
+            pointcut.setExpression(properties.getPointcutExpression());
+            DefaultPointcutAdvisor it = new DefaultPointcutAdvisor();
+            it.setPointcut(pointcut);
+            it.setAdvice(txInterceptor);
+            return it;
+        }
+
+    }
+
+    @Configuration
+    @ConditionalOnClass(DataSourceProxy.class)
+    @ConditionalOnProperty(prefix = MultiDataSourceProperties.CFG_PREFIX, name = "mode", havingValue = "SEATA")
+    class SeataDistributeDataSourceConfiguration {
+    }
+
 }

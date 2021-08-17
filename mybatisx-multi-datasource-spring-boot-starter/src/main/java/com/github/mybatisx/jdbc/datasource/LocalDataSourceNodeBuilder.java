@@ -31,20 +31,20 @@ import org.springframework.boot.context.properties.source.MapConfigurationProper
 import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
+import java.util.Map;
 
 /**
- * 通用数据源节点构建器
+ * 本地数据源节点构建器
  * @author wvkity
  * @created 2021-08-11
  * @since 1.0.0
  */
-public class GenericDataSourceNodeBuilder implements DataSourceNodeBuilder<DataSource> {
+public class LocalDataSourceNodeBuilder implements DataSourceNodeBuilder<DataSource> {
 
-    private static final Logger log = LoggerFactory.getLogger(GenericDataSourceNodeBuilder.class);
+    private static final Logger log = LoggerFactory.getLogger(LocalDataSourceNodeBuilder.class);
     private final List<DataSourcePropertyNode> propertyNodes;
 
-    public GenericDataSourceNodeBuilder(List<DataSourcePropertyNode> propertyNodes) {
+    public LocalDataSourceNodeBuilder(List<DataSourcePropertyNode> propertyNodes) {
         this.propertyNodes = propertyNodes;
     }
 
@@ -62,18 +62,20 @@ public class GenericDataSourceNodeBuilder implements DataSourceNodeBuilder<DataS
                     final ConfigNode cn = it.getConfigNode();
                     final DataSourceProperty property = it.getProperty();
                     final DataSource dataSource = this.createDataSource(it.getProperty(), property.getType());
-                    final Properties poolConfig = property.getPoolConfig();
-                    if (Objects.isNotEmpty(poolConfig)) {
-                        final ConfigurationPropertySource source = new MapConfigurationPropertySource(poolConfig);
-                        ConfigurationPropertyNameAliases aliases = new ConfigurationPropertyNameAliases();
-                        aliases.addAliases("pool-name", "name");
-                        final Binder binder = new Binder(source.withAliases(aliases));
-                        binder.bind(ConfigurationPropertyName.EMPTY, Bindable.ofInstance(dataSource));
+                    if (Objects.nonNull(dataSource)) {
+                        final Map<String, String> poolConfig = property.getPoolConfig();
+                        if (Objects.isNotEmpty(poolConfig)) {
+                            final ConfigurationPropertySource source = new MapConfigurationPropertySource(poolConfig);
+                            ConfigurationPropertyNameAliases aliases = new ConfigurationPropertyNameAliases();
+                            aliases.addAliases("pool-name", "name");
+                            final Binder binder = new Binder(source.withAliases(aliases));
+                            binder.bind(ConfigurationPropertyName.EMPTY, Bindable.ofInstance(dataSource));
+                        }
+                        final DataSourceNode<DataSource> node = new GenericDataSourceNode(property.getGroup(),
+                            property.getName(), cn.getNodeType(), property.getSchema(), property.getData(),
+                            property.getSeparator(), dataSource);
+                        dataSourceNodes.add(node);
                     }
-                    final DataSourceNode<DataSource> node = new GenericDataSourceNode(property.getGroup(),
-                        property.getName(), cn.getNodeType(), property.getSchema(), property.getData(),
-                        property.getSeparator(), dataSource);
-                    dataSourceNodes.add(node);
                 }
             } catch (Exception e) {
                 log.warn("Failed to create the data source node: " + e.getMessage(), e);
