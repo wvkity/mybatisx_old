@@ -43,7 +43,10 @@ import java.util.concurrent.locks.ReentrantLock;
 public class MultiDataSourceManager implements DataSourceManager, InitializingBean, DisposableBean {
 
     private static final Logger log = LoggerFactory.getLogger(MultiDataSourceManager.class);
-
+    /**
+     * 默认组名
+     */
+    private static final String DEF_GROUP = "default";
     /**
      * 数据源选择策略
      */
@@ -75,14 +78,6 @@ public class MultiDataSourceManager implements DataSourceManager, InitializingBe
      */
     private final Map<DataSourceNodeType, Map<String, DataSource>> nodeDataSourceCache = new ConcurrentHashMap<>();
     /**
-     * 主库数据源
-     */
-    private final List<DataSource> noMarksWriteDataSourceCache = new CopyOnWriteArrayList<>();
-    /**
-     * 从库数据源
-     */
-    private final List<DataSource> noMarksReadDataSourceCache = new CopyOnWriteArrayList<>();
-    /**
      * 所有主库数据源
      */
     private final List<DataSource> allWriteDataSourceCache = new CopyOnWriteArrayList<>();
@@ -110,18 +105,16 @@ public class MultiDataSourceManager implements DataSourceManager, InitializingBe
 
     @Override
     public DataSource determine(String group, String name, DataSourceNodeType nodeType) {
-        final boolean hasGroup = Objects.isNotBlank(group);
-        final boolean hasName = Objects.isNotBlank(name);
-        log.debug("determine dataSource: nodeType({}), group({}), node({})", nodeType,
-            hasGroup ? group : "\"\"", hasName ? name : "\"\"");
-        if (hasGroup && hasName) {
-            return this.smart(group, name, nodeType);
-        } else if (hasGroup) {
-            return this.groupSmart(group, nodeType);
-        } else if (hasName) {
-            return this.nameSmart(name, nodeType);
+        if (Objects.isBlank(group)) {
+            group = DEF_GROUP;
         }
-        return this.other(nodeType);
+        final boolean hasName = Objects.isNotBlank(name);
+        log.debug("determine dataSource: nodeType({}), group({}), node({})", nodeType, group, hasName ? name : "\"\"");
+        if (hasName) {
+            return this.smart(group, name, nodeType);
+        } else {
+            return this.groupSmart(group, nodeType);
+        }
     }
 
     private DataSource smart(final String group, final String name, final DataSourceNodeType nodeType) {
@@ -157,19 +150,6 @@ public class MultiDataSourceManager implements DataSourceManager, InitializingBe
             "nodeType: " + nodeType.getType() + ", node: " + name + "'");
     }
 
-    private DataSource other(final DataSourceNodeType nodeType) {
-        if (nodeType == DataSourceNodeType.SLAVE) {
-            if (Objects.isEmpty(this.noMarksReadDataSourceCache)) {
-                return this.dataSourcePolicy.determine(this.allReadDataSourceCache);
-            }
-            return this.dataSourcePolicy.determine(this.noMarksReadDataSourceCache);
-        }
-        if (Objects.isEmpty(this.noMarksWriteDataSourceCache)) {
-            return this.dataSourcePolicy.determine(this.allWriteDataSourceCache);
-        }
-        return this.dataSourcePolicy.determine(this.noMarksWriteDataSourceCache);
-    }
-
     @Override
     public void addDataSource(String group, String name, DataSourceNodeType nodeType, DataSource dataSource) {
         final Lock curLock = this.lock;
@@ -184,31 +164,25 @@ public class MultiDataSourceManager implements DataSourceManager, InitializingBe
 
     private void add(String group, String name, DataSourceNodeType nodeType, DataSource dataSource) {
         if (Objects.nonNull(nodeType) && Objects.nonNull(dataSource)) {
-            final boolean hasGroup = Objects.isNotBlank(group);
-            final boolean hasName = Objects.isNotBlank(name);
-            if (hasGroup) {
-                final Map<DataSourceNodeType, List<DataSource>> dsc =
-                    this.groupDataSourceCache.computeIfAbsent(group, k -> new ConcurrentHashMap<>(16));
-                dsc.computeIfAbsent(nodeType, k -> new CopyOnWriteArrayList<>()).add(dataSource);
+            if (Objects.isBlank(group)) {
+                group = DEF_GROUP;
             }
+            // 分组 + 节点类型
+            final boolean hasName = Objects.isNotBlank(name);
+            final Map<DataSourceNodeType, List<DataSource>> dsc =
+                this.groupDataSourceCache.computeIfAbsent(group, k -> new ConcurrentHashMap<>(16));
+            dsc.computeIfAbsent(nodeType, k -> new CopyOnWriteArrayList<>()).add(dataSource);
             if (hasName) {
+                // 节点类型 + 节点名称
                 final Map<String, DataSource> nds =
                     this.nodeDataSourceCache.computeIfAbsent(nodeType, k -> new ConcurrentHashMap<>(16));
                 nds.putIfAbsent(name, dataSource);
-                if (hasGroup) {
-                    final Map<DataSourceNodeType, Map<String, DataSource>> dsc =
-                        this.groupNodeDataSourceCache.computeIfAbsent(group, k -> new ConcurrentHashMap<>(16));
-                    final Map<String, DataSource> nsc =
-                        dsc.computeIfAbsent(nodeType, k -> new ConcurrentHashMap<>(16));
-                    nsc.putIfAbsent(name, dataSource);
-                }
-            }
-            if (!hasGroup && !hasName) {
-                if (nodeType == DataSourceNodeType.MASTER) {
-                    this.noMarksWriteDataSourceCache.add(dataSource);
-                } else {
-                    this.noMarksReadDataSourceCache.add(dataSource);
-                }
+                // 分组 + 节点类型 + 节点名称
+                final Map<DataSourceNodeType, Map<String, DataSource>> gns =
+                    this.groupNodeDataSourceCache.computeIfAbsent(group, k -> new ConcurrentHashMap<>(16));
+                final Map<String, DataSource> nsc =
+                    gns.computeIfAbsent(nodeType, k -> new ConcurrentHashMap<>(16));
+                nsc.putIfAbsent(name, dataSource);
             }
             if (nodeType == DataSourceNodeType.MASTER) {
                 this.allWriteDataSourceCache.add(dataSource);
@@ -216,7 +190,7 @@ public class MultiDataSourceManager implements DataSourceManager, InitializingBe
                 this.allReadDataSourceCache.add(dataSource);
             }
             log.debug("Adding data source: {}, nodeType: {}, group: {}, node: {}", dataSource,
-                nodeType.getType(), hasGroup ? group : "\"\"", hasName ? name : "\"\"");
+                nodeType.getType(), group, hasName ? name : "\"\"");
         }
     }
 
@@ -237,7 +211,7 @@ public class MultiDataSourceManager implements DataSourceManager, InitializingBe
         }
     }
 
-    private void close(final DataSource dataSource) throws NoSuchMethodException, IllegalAccessException,
+    private void close(final DataSource dataSource) throws IllegalAccessException,
         InvocationTargetException {
         try {
             final Method method = dataSource.getClass().getMethod("close");
