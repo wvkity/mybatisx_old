@@ -158,7 +158,9 @@ public class MultiDataSourceAspectResource implements BeanPostProcessor, AspectR
             String name = "";
             final DataSource ds = AnnotationUtils.findAnnotation(targetClass, DataSource.class);
             if (Objects.nonNull(ds)) {
-                type = ds.type();
+                if (ds.type() != DataSourceNodeType.UNKNOWN) {
+                    type = ds.type();
+                }
                 group = ds.group();
                 name = ds.value();
             }

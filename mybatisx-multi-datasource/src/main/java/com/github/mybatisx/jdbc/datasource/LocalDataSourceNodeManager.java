@@ -91,6 +91,7 @@ public class LocalDataSourceNodeManager {
             if (Objects.nonNull(this.nodes)) {
                 this.nodes.clear();
                 this.nodes = null;
+                this.more = false;
             }
             this.clear = true;
         }

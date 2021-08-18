@@ -17,6 +17,8 @@ package com.github.mybatisx.jdbc.datasource;
 
 import com.github.mybatisx.Objects;
 
+import java.util.Optional;
+
 /**
  * 读写数据源切换决策工具
  * @author wvkity
@@ -25,15 +27,22 @@ import com.github.mybatisx.Objects;
  */
 public class MultiDataSourceContextHolder {
 
-    private static final ThreadLocal<LocalDataSourceNodeManager> DATA_SOURCE_CACHE =
-        ThreadLocal.withInitial(LocalDataSourceNodeManager::new);
+    private static final ThreadLocal<LocalDataSourceNodeManager> DATA_SOURCE_CACHE = new ThreadLocal<>();
 
     /**
-     * 获取{@link LocalDataSourceNodeManager}
-     * @return {@link LocalDataSourceNodeManager}
+     * {@link Optional}
+     * @return {@link Optional}
      */
-    public static LocalDataSourceNodeManager getLocal() {
-        return DATA_SOURCE_CACHE.get();
+    private static Optional<LocalDataSourceNodeManager> optional() {
+        return Optional.ofNullable(DATA_SOURCE_CACHE.get());
+    }
+
+    /**
+     * 检查当前线程是否存在节点
+     * @return boolean
+     */
+    public static boolean nonNull() {
+        return Objects.nonNull(DATA_SOURCE_CACHE.get());
     }
 
     /**
@@ -60,35 +69,41 @@ public class MultiDataSourceContextHolder {
      */
     public static void push(final LocalDataSource local) {
         if (Objects.nonNull(local)) {
-            final LocalDataSourceNodeManager manager = DATA_SOURCE_CACHE.get();
-            manager.push(local);
+            if (optional().isPresent()) {
+                optional().get().push(local);
+            } else {
+                final LocalDataSourceNodeManager manager = new LocalDataSourceNodeManager();
+                manager.push(local);
+                DATA_SOURCE_CACHE.set(manager);
+            }
         }
     }
 
     /**
-     * 添加{@link LocalDataSource}
+     * 获取{@link LocalDataSource}
      * @return {@link LocalDataSource}
      */
     public static LocalDataSource get() {
-        return DATA_SOURCE_CACHE.get().get();
+        return optional().map(LocalDataSourceNodeManager::get).orElse(null);
     }
 
     /**
      * 移除当前线程数据源
      */
     public static void remove() {
-        final LocalDataSourceNodeManager manager = DATA_SOURCE_CACHE.get();
-        manager.remove();
-        if (manager.canClear()) {
-            clear();
-        }
+        optional().ifPresent(it -> {
+            it.remove();
+            if (it.canClear()) {
+                clear();
+            }
+        });
     }
 
     /**
      * 清空本地线程
      */
     public static void clear() {
-        DATA_SOURCE_CACHE.get().clear();
+        optional().ifPresent(LocalDataSourceNodeManager::clear);
         DATA_SOURCE_CACHE.remove();
     }
 }

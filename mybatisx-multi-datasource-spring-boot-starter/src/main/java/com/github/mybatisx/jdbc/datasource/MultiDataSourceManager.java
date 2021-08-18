@@ -240,7 +240,8 @@ public class MultiDataSourceManager implements DataSourceManager, InitializingBe
     private void close(final DataSource dataSource) throws NoSuchMethodException, IllegalAccessException,
         InvocationTargetException {
         try {
-            final Method method = dataSource.getClass().getDeclaredMethod("close");
+            final Method method = dataSource.getClass().getMethod("close");
+            method.setAccessible(true);
             method.invoke(dataSource);
         } catch (NoSuchMethodException e) {
             log.warn("Data source shutdown failure: ", e);

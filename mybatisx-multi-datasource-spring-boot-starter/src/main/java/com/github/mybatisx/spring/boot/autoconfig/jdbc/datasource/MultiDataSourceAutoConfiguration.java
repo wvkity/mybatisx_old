@@ -34,6 +34,7 @@ import com.github.mybatisx.jdbc.datasource.policy.DataSourcePolicy;
 import com.github.mybatisx.jdbc.datasource.resolver.DataSourceRealClassResolver;
 import com.github.mybatisx.jdbc.datasource.resolver.ProxyClassResolver;
 import com.github.mybatisx.reflect.Reflections;
+import com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.condition.ConditionalOnEnableProperty;
 import com.github.mybatisx.spring.boot.autoconfig.jdbc.datasource.condition.ConditionalOnPropertyNotEmpty;
 import io.seata.rm.datasource.DataSourceProxy;
 import org.slf4j.Logger;
@@ -88,8 +89,8 @@ import java.util.stream.Collectors;
 @ConditionalOnClass({DataSource.class})
 @AutoConfigureBefore({XADataSourceAutoConfiguration.class, DataSourceAutoConfiguration.class})
 @EnableConfigurationProperties({MultiDataSourceProperties.class})
-@ConditionalOnProperty(prefix = MultiDataSourceAutoConfiguration.CFG_PREFIX, name = "enable",
-    havingValue = "true", matchIfMissing = true)
+@ConditionalOnEnableProperty(prefix = MultiDataSourceAutoConfiguration.CFG_PREFIX, havingValue = "true",
+    matchIfMissing = true)
 public class MultiDataSourceAutoConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(MultiDataSourceAutoConfiguration.class);
@@ -201,8 +202,8 @@ public class MultiDataSourceAutoConfiguration {
 
 
     @Configuration
-    @ConditionalOnProperty(prefix = MultiDataSourceProperties.CFG_PREFIX, name = "mode", havingValue = "LOCAL",
-        matchIfMissing = true)
+    @ConditionalOnProperty(prefix = CFG_PREFIX, name = "mode", havingValue = "LOCAL", matchIfMissing = true)
+    @ConditionalOnEnableProperty(prefix = CFG_PREFIX, havingValue = "true", matchIfMissing = true)
     class LocalDataSourceConfiguration {
 
         @Bean
@@ -256,7 +257,8 @@ public class MultiDataSourceAutoConfiguration {
 
     @Configuration
     @ConditionalOnClass({XADataSource.class})
-    @ConditionalOnProperty(prefix = MultiDataSourceProperties.CFG_PREFIX, name = "mode", havingValue = "XA")
+    @ConditionalOnProperty(prefix = CFG_PREFIX, name = "mode", havingValue = "XA")
+    @ConditionalOnEnableProperty(prefix = CFG_PREFIX, havingValue = "true", matchIfMissing = true)
     class XaDistributedDataSourceConfiguration {
 
         @Bean
@@ -340,7 +342,8 @@ public class MultiDataSourceAutoConfiguration {
 
     @Configuration
     @ConditionalOnClass(DataSourceProxy.class)
-    @ConditionalOnProperty(prefix = MultiDataSourceProperties.CFG_PREFIX, name = "mode", havingValue = "SEATA")
+    @ConditionalOnProperty(prefix = CFG_PREFIX, name = "mode", havingValue = "SEATA")
+    @ConditionalOnEnableProperty(prefix = CFG_PREFIX, havingValue = "true", matchIfMissing = true)
     class SeataDistributeDataSourceConfiguration {
     }
 

@@ -23,6 +23,7 @@ import com.github.mybatisx.jdbc.datasource.MultiDataSourceContextHolder;
 import com.github.mybatisx.jdbc.datasource.resolver.ProxyClassResolver;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.MethodBeforeAdvice;
@@ -36,6 +37,7 @@ import java.util.Map;
  * @created 2021-08-04
  * @since 1.0.0
  */
+@Aspect
 public class MultiDataSourceAdvice implements MethodBeforeAdvice, MethodInterceptor {
 
     private static final Logger log = LoggerFactory.getLogger(MultiDataSourceAdvice.class);
