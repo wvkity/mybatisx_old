@@ -36,7 +36,7 @@ public @interface DataSource {
      * 数据源节点类型
      * @return 数据源类型
      */
-    DataSourceNodeType type() default DataSourceNodeType.MASTER;
+    DataSourceNodeType type() default DataSourceNodeType.UNKNOWN;
 
     /**
      * 指定数据源组
