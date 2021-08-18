@@ -24,6 +24,10 @@ package com.github.mybatisx.jdbc.datasource;
 public enum DataSourceNodeType {
 
     /**
+     * 未指定
+     */
+    UNKNOWN("UNKNOWN", "未指定"),
+    /**
      * 主
      */
     MASTER("MASTER", "主库"),
