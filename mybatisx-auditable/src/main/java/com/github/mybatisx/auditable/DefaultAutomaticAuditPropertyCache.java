@@ -61,7 +61,7 @@ public final class DefaultAutomaticAuditPropertyCache {
         PROPS_C_DATE.addAll(Arrays.asList("createdTime", "createdDate", "createdDateTime", "gmtCreated"));
         PROPS_U_ID.addAll(Arrays.asList("updatedById", "lastModifiedById", "lastModifiedUserId"));
         PROPS_U_NAME.addAll(Arrays.asList("updatedByName", "lastModifiedByName", "lastModifiedUserName"));
-        PROPS_U_DATE.addAll(Arrays.asList("updatedTime", "updatedDate", "updatedDateTime", "gmtLastModifiedDate"));
+        PROPS_U_DATE.addAll(Arrays.asList("updatedTime", "updatedDate", "updatedDateTime", "gmtLastModified", "gmtLastModifiedDate"));
         PROPS_D_ID.addAll(Arrays.asList("deletedById", "deletedUserId"));
         PROPS_D_NAME.addAll(Arrays.asList("deletedByName", "deletedUserName"));
         PROPS_D_DATE.addAll(Arrays.asList("deletedTime", "deletedDate", "deletedDateTime", "gmtDeleted"));
