@@ -61,6 +61,8 @@ ext {
         "slf4j"                             : "org.slf4j:slf4j-api:${slf4j}",
         "slf4j-simple"                      : "org.slf4j:slf4j-simple:${slf4j}",
         "log4j2"                            : "org.apache.logging.log4j:log4j-api:${log4j2}",
+        "log4j2-core"                       : "org.apache.logging.log4j:log4j-core:${log4j2}",
+        "log4j2-slf4j-impl"                 : "org.apache.logging.log4j:log4j-slf4j-impl:${log4j2}",
         "disruptor"                         : "com.lmax:disruptor:${disruptor}",
         "guava"                             : "com.google.guava:guava:${guava}",
         "fastjson"                          : "com.alibaba:fastjson:${fastjson}",
