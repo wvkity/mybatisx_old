@@ -1,12 +1,12 @@
 {
     "groups": [
         {
-            "sourceType": "com.github.mybatisx.spring.boot.pageable.config.MyBatisPageableProperties",
+            "sourceType": "io.github.mybatisx.spring.boot.pageable.config.MyBatisPageableProperties",
             "name": "github.mybatisx.plugin.pageable",
-            "type": "com.github.mybatisx.spring.boot.pageable.config.MyBatisPageableProperties"
+            "type": "io.github.mybatisx.spring.boot.pageable.config.MyBatisPageableProperties"
         },
         {
-            "sourceType": "com.github.mybatisx.spring.boot.pageable.config.MyBatisPageableProperties",
+            "sourceType": "io.github.mybatisx.spring.boot.pageable.config.MyBatisPageableProperties",
             "name": "github.mybatisx.plugin.pageable.properties",
             "sourceMethod": "getProperties()",
             "type": "java.util.Properties"

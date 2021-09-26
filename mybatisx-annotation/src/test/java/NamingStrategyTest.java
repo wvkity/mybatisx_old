@@ -14,7 +14,7 @@
  * the License.
  */
 
-import com.github.mybatisx.annotation.NamingPolicy;
+import io.github.mybatisx.annotation.NamingPolicy;
 import org.junit.jupiter.api.Test;
 
 /**

@@ -1,4 +1,4 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.github.mybatisx.spring.boot.pageable.config.MyBatisPageableConfigurer,\
-  com.github.mybatisx.spring.boot.pageable.MyBatisPageableAutoConfiguration
+  io.github.mybatisx.spring.boot.pageable.config.MyBatisPageableConfigurer,\
+  io.github.mybatisx.spring.boot.pageable.MyBatisPageableAutoConfiguration

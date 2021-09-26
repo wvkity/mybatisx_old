@@ -49,5 +49,5 @@ include 'mybatisx-data-backup'
 include 'mybatisx-data-backup-plugin'
 include 'mybatisx-data-backup-spring-boot-starter'
 include 'mybatisx-generator-core'
-include 'mybatisx-example'
+//include 'mybatisx-example'
 

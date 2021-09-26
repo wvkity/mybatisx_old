@@ -1,4 +1,4 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.github.mybatisx.spring.boot.batch.config.MyBatisBatchConfigurer,\
-  com.github.mybatisx.spring.boot.batch.MyBatisBatchAutoConfiguration
+  io.github.mybatisx.spring.boot.batch.config.MyBatisBatchConfigurer,\
+  io.github.mybatisx.spring.boot.batch.MyBatisBatchAutoConfiguration

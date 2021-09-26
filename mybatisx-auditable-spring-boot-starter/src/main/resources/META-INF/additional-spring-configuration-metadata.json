@@ -1,23 +1,23 @@
 {
     "groups": [
         {
-            "sourceType": "com.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisAuditedProperties",
+            "sourceType": "io.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisAuditedProperties",
             "name": "github.mybatisx.plugin.auditable",
-            "type": "com.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisAuditedProperties"
+            "type": "io.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisAuditedProperties"
         },
         {
-            "sourceType": "com.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisMetadataAuditedProperties",
+            "sourceType": "io.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisMetadataAuditedProperties",
             "name": "github.mybatisx.plugin.auditable.metadata",
-            "type": "com.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisMetadataAuditedProperties"
+            "type": "io.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisMetadataAuditedProperties"
         },
         {
-            "sourceType": "com.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisAuditedProperties",
+            "sourceType": "io.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisAuditedProperties",
             "name": "github.mybatisx.plugin.auditable.properties",
             "sourceMethod": "getProperties()",
             "type": "java.util.Properties"
         },
         {
-            "sourceType": "com.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisMetadataAuditedProperties",
+            "sourceType": "io.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisMetadataAuditedProperties",
             "name": "github.mybatisx.plugin.auditable.sys.properties",
             "sourceMethod": "getProperties()",
             "type": "java.util.Properties"

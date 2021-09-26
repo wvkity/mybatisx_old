@@ -6,7 +6,7 @@ dependencies {
     api "${libs.inject}"
     api "${libs.cglib}"
     api "${libs.slf4j}"
-    compileOnly "${libs.jpa}"
-    compileOnly "${libs.fastjson}"
-    compileOnly "${libs["spring-tx"]}"
+    implementation "${libs.jpa}"
+    implementation "${libs.fastjson}"
+    implementation "${libs["spring-tx"]}"
 }

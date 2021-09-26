@@ -1,4 +1,3 @@
 dependencies {
-    runtimeOnly "${libs.mybatis}"
-    compileOnly "${libs.mybatis}"
+    implementation "${libs.mybatis}"
 }

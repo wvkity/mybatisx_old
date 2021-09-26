@@ -1,40 +1,40 @@
 {
     "groups": [
         {
-            "sourceType": "com.github.mybatisx.spring.boot.autoconfigure.MyBatisProperties",
+            "sourceType": "io.github.mybatisx.spring.boot.autoconfigure.MyBatisProperties",
             "name": "github.mybatisx",
-            "type": "com.github.mybatisx.spring.boot.autoconfigure.MyBatisProperties"
+            "type": "io.github.mybatisx.spring.boot.autoconfigure.MyBatisProperties"
         },
         {
-            "sourceType": "com.github.mybatisx.spring.boot.autoconfigure.MyBatisProperties",
+            "sourceType": "io.github.mybatisx.spring.boot.autoconfigure.MyBatisProperties",
             "name": "github.mybatisx.configuration",
             "sourceMethod": "getConfiguration()",
-            "type": "com.github.mybatisx.session.MyBatisConfiguration"
+            "type": "io.github.mybatisx.session.MyBatisConfiguration"
         },
         {
-            "sourceType": "com.github.mybatisx.spring.boot.autoconfigure.MyBatisProperties",
+            "sourceType": "io.github.mybatisx.spring.boot.autoconfigure.MyBatisProperties",
             "name": "github.mybatisx.globalConfiguration",
             "sourceMethod": "getGlobalConfiguration()",
-            "type": "com.github.mybatisx.support.config.MyBatisGlobalConfiguration"
+            "type": "io.github.mybatisx.support.config.MyBatisGlobalConfiguration"
         },
         {
-            "sourceType": "com.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisSysBuiltAuditedProperties",
+            "sourceType": "io.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisSysBuiltAuditedProperties",
             "name": "github.mybatisx.plugin.sys",
-            "type": "com.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisSysBuiltAuditedProperties"
+            "type": "io.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisSysBuiltAuditedProperties"
         },
         {
-            "sourceType": "com.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisSysBuiltAuditedProperties",
+            "sourceType": "io.github.mybatisx.spring.boot.auditable.autoconfigure.MyBatisSysBuiltAuditedProperties",
             "name": "github.mybatisx.plugin.sys.properties",
             "sourceMethod": "getProperties()",
             "type": "java.util.Properties"
         },
         {
-            "sourceType": "com.github.mybatisx.spring.boot.lock.autoconfigure.MyBatisOptimisticLockProperties",
+            "sourceType": "io.github.mybatisx.spring.boot.lock.autoconfigure.MyBatisOptimisticLockProperties",
             "name": "github.mybatisx.plugin.lock",
-            "type": "com.github.mybatisx.spring.boot.lock.autoconfigure.MyBatisOptimisticLockProperties"
+            "type": "io.github.mybatisx.spring.boot.lock.autoconfigure.MyBatisOptimisticLockProperties"
         },
         {
-            "sourceType": "com.github.mybatisx.spring.boot.lock.autoconfigure.MyBatisOptimisticLockProperties",
+            "sourceType": "io.github.mybatisx.spring.boot.lock.autoconfigure.MyBatisOptimisticLockProperties",
             "name": "github.mybatisx.plugin.lock.properties",
             "sourceMethod": "getProperties()",
             "type": "java.util.Properties"
