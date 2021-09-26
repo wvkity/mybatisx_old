@@ -96,7 +96,7 @@ ext {
 }
 
 allprojects {
-    group 'io.github.mybatisx'
+    group 'io.github.wvkity'
     version '1.0.0-SNAPSHOT'
     apply from: rootDir.canonicalPath + '/.gradle/publish.gradle'
     tasks.withType(Javadoc) {
