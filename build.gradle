@@ -97,7 +97,7 @@ ext {
 
 allprojects {
     group 'io.github.wvkity'
-    version '1.0.0-SNAPSHOT'
+    version '1.0.0'
     apply from: rootDir.canonicalPath + '/.gradle/publish.gradle'
     tasks.withType(Javadoc) {
         options.addStringOption('Xdoclint:none', '-quiet')
@@ -219,8 +219,8 @@ subprojects {
             maven {
                 def userName = ossUserName
                 def passWord = ossPassword
-                def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-                def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+                def releasesRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+                def snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
                 url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
                 credentials {
                     username userName
